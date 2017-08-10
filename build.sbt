@@ -41,3 +41,5 @@ assemblyMergeStrategy in assembly := {
 }
 
 assemblyJarName in assembly := "ndelius2-" + version.value + ".jar"
+
+javaOptions += "-Xmx1G"
