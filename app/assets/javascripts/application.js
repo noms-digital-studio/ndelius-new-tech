@@ -5,7 +5,8 @@
     $(function () {
 
         // Show/hide content
-        var showHideContent = new GOVUK.ShowHideContent();
+        var showHideContent = new GOVUK.ShowHideContent(),
+            saveTimer;
 
         showHideContent.init();
 
@@ -32,9 +33,54 @@
         }
 
         /**
+         * Save
+         */
+        function saveProgress(elem, stop) {
+
+            var form = $('form');
+            elem.addClass('active');
+            if (saveTimer) {
+                clearTimeout(saveTimer);
+            }
+
+            if (form.length) {
+
+                var data = _.map(form.serializeArray(), function (entry) {
+                    if (entry.name === 'jumpNumber') {
+                        entry.value = 0;
+                    }
+                    return entry;
+                });
+
+                $.ajax({
+                    type: 'POST',
+                    url: form.attr('action'),
+                    data: data,
+                    complete: function () {
+                        setTimeout(function () {
+                            elem.removeClass('active');
+                        }, 1500);
+                        if (!stop) {
+                            saveTimer = setTimeout(function () {
+                                saveProgress(elem);
+                            }, 15000);
+                        }
+                    }
+                });
+            }
+        }
+
+        /**
          * Textarea elements
          */
-        $('textarea').keyup(function () {
+        $('textarea').focus(function () {
+            var saveIcon = $('#' + $(this).attr('id') + '_save'),
+                spinner = $('.spinner', saveIcon);
+
+            saveIcon.removeClass('js-hidden');
+            saveProgress(spinner);
+
+        }).keyup(function () {
             var textArea = $(this),
                 limit = textArea.data('limit'),
                 current = textArea.val().length,
@@ -43,10 +89,16 @@
 
             if (limit && current > 0) {
                 messageHolder.removeClass('js-hidden');
-                messageTarget.text(limit + " recommended characters, you have used " + current);
+                messageTarget.text(limit + ' recommended characters, you have used ' + current);
             } else {
                 messageHolder.addClass('js-hidden');
             }
+
+        }).blur(function () {
+            var saveIcon = $('#' + $(this).attr('id') + '_save'),
+                spinner = $('.spinner', saveIcon);
+
+            saveProgress(spinner, true);
         });
 
         /**
@@ -88,32 +140,6 @@
             $('#jumpNumber').val(0);
             $('form').submit();
         });
-
-        /**
-         * Auto-save every 15 seconds
-         */
-        function autoSave() {
-
-            var form = $('form');
-
-            if (form.length) {
-                var data =_.map(form.serializeArray(), function(entry) {
-
-                    if (entry.name === 'jumpNumber') {
-                        entry.value = 0;
-                    }
-                    return entry;
-                });
-
-                $.ajax({
-                    type: 'POST',
-                    url: form.attr('action'),
-                    data: data,
-                    complete: function() { setTimeout(autoSave, 15000); }
-                });
-            }
-        }
-        autoSave();
 
         /**
          *
