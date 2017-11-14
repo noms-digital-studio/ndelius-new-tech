@@ -21,7 +21,7 @@
         function showHint(parent, child) {
             child.hasClass('js-hidden') ? child.removeClass('js-hidden') : child.addClass('js-hidden');
 
-            if(child.hasClass('js-hidden')) {
+            if (child.hasClass('js-hidden')) {
                 parent.removeClass('active');
                 parent.attr('aria-expanded', 'false');
                 child.attr('aria-hidden', 'true');
@@ -33,15 +33,43 @@
         }
 
         /**
+         * Start save icon
+         * @param elem
+         */
+        function startSaveIcon(elem) {
+            var saveIcon = $('#' + elem.attr('id') + '_save'),
+                spinner = $('.spinner', saveIcon);
+
+            saveIcon.removeClass('js-hidden');
+            spinner.removeClass('error');
+            spinner.addClass('active');
+        }
+
+        /**
+         * End save icon
+         * @param elem
+         * @param error
+         */
+        function endSaveIcon(elem, error) {
+            var saveIcon = $('#' + elem.attr('id') + '_save'),
+                spinner = $('.spinner', saveIcon);
+
+            spinner.removeClass('active');
+            error ? spinner.addClass('error') : spinner.removeClass('error');
+        }
+
+        /**
          * Save
          */
         function saveProgress(elem, stop) {
 
             var form = $('form');
-            elem.addClass('active');
+
             if (saveTimer) {
                 clearTimeout(saveTimer);
             }
+
+            startSaveIcon(elem);
 
             if (form.length) {
 
@@ -56,9 +84,12 @@
                     type: 'POST',
                     url: form.attr('action'),
                     data: data,
-                    complete: function () {
+                    error: function () {
+                        endSaveIcon(elem, true);
+                    },
+                    success: function () {
                         setTimeout(function () {
-                            elem.removeClass('active');
+                            endSaveIcon(elem);
                         }, 1500);
                         if (!stop) {
                             saveTimer = setTimeout(function () {
@@ -74,12 +105,9 @@
          * Textarea elements
          */
         $('textarea').focus(function () {
-            var saveIcon = $('#' + $(this).attr('id') + '_save'),
-                spinner = $('.spinner', saveIcon);
-
-            saveIcon.removeClass('js-hidden');
-            saveProgress(spinner);
-
+            saveTimer = setTimeout(function () {
+                saveProgress($(this));
+            }.bind(this), 5000);
         }).keyup(function () {
             var textArea = $(this),
                 limit = textArea.data('limit'),
@@ -95,10 +123,7 @@
             }
 
         }).blur(function () {
-            var saveIcon = $('#' + $(this).attr('id') + '_save'),
-                spinner = $('.spinner', saveIcon);
-
-            saveProgress(spinner, true);
+            saveProgress($(this), true);
         });
 
         /**
@@ -148,7 +173,7 @@
             var parent = $(this),
                 child = $('#' + elem.getAttribute('data-target'));
             parent.attr('aria-controls', elem.getAttribute('data-target'));
-            parent.click(function() {
+            parent.click(function () {
                 showHint(parent, child)
             });
         });
