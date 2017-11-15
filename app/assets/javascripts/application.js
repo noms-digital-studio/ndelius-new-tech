@@ -186,7 +186,6 @@
             // Autocomplete
             var autoComplete = document.querySelector('.auto-complete');
             if (autoComplete) {
-                console.info(autoComplete.id);
                 accessibleAutocomplete.enhanceSelectElement({
                     selectElement: autoComplete,
                     name: autoComplete.id,
