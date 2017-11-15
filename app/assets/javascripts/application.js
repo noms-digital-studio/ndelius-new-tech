@@ -84,17 +84,18 @@
                     type: 'POST',
                     url: form.attr('action'),
                     data: data,
-                    error: function () {
-                        endSaveIcon(elem, true);
-                    },
-                    success: function () {
-                        setTimeout(function () {
-                            endSaveIcon(elem);
-                        }, 1500);
-                        if (!stop) {
-                            saveTimer = setTimeout(function () {
-                                saveProgress(elem);
-                            }, 15000);
+                    complete: function (response) {
+                        if (response.status >= 200 && response.status < 400) {
+                            setTimeout(function () {
+                                endSaveIcon(elem);
+                            }, 1500);
+                            if (!stop) {
+                                saveTimer = setTimeout(function () {
+                                    saveProgress(elem);
+                                }, 15000);
+                            }
+                        } else {
+                            endSaveIcon(elem, true);
                         }
                     }
                 });
