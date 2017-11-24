@@ -4,22 +4,57 @@ general:
     only:
       - master
 jobs:
-    build:
-        working_directory: ~/pdf-generator
-        docker:
-            - image: openjdk:8
-        steps:
-            - checkout
-            - setup_remote_docker
-            - run:
-                name: Install sbt into build container
-                command: |
-                    apt-get update
-                    apt-get install apt-transport-https
-                    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
-                    echo "deb https://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
-                    apt-get update
-                    apt-get install sbt
-            - run:
-                name: Run sbt build
-                command: sbt assembly
+  build:
+    working_directory: ~/app
+    docker:
+      - image: circleci/openjdk:8
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - sbt-{{ checksum "build.sbt" }}
+            - sbt-
+      - run:
+          name: Install sbt into build container
+          command: |
+            sudo apt-get install apt-transport-https
+            echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+            sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
+            sudo apt-get update
+            sudo apt-get install sbt
+      - run:
+          name: Install nodejs into build container
+          command: |
+            curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | sudo apt-key add -
+            echo 'deb https://deb.nodesource.com/node_6.x stretch main' | sudo tee /etc/apt/sources.list.d/nodesource.list
+            echo 'deb-src https://deb.nodesource.com/node_6.x stretch main' | sudo tee -a /etc/apt/sources.list.d/nodesource.list
+            sudo apt-get update
+            sudo apt-get install -y nodejs
+      - run:
+          name: Build and Test
+          command: |
+            export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which node)"
+            sbt assembly
+      - run:
+          name: Cleanup some cache noise
+          command: |
+            find ~/.ivy2/cache -name "ivydata-*.properties" -print -delete
+            find ~/.sbt -name "*.lock" -print -delete
+      - save_cache:
+          paths:
+            - ~/.ivy2/cache
+            - ~/.sbt
+          key: sbt-{{ checksum "build.sbt" }}
+      - store_test_results:
+          path: ./target/test-reports/
+      - run:
+          name: Generate Build version
+          command: |
+            echo "export BUILD_VERSION=$(date +%Y%m%d%H%M)-$CIRCLE_BUILD_NUM" >> $BASH_ENV
+      - deploy:
+          name: Save Fat Jar
+          command: |
+            mkdir -p ./build/artifacts
+            mv target/scala-*/ndelius2-*.jar ./build/artifacts/ndelius2-$BUILD_VERSION.jar
+      - store_artifacts:
+          path: ./build/artifacts
