@@ -24,8 +24,8 @@ import static play.test.Helpers.*;
 
 public class SentencingCourtDetailsTest extends WithApplication {
 
-    private static final ImmutableList LONDON_LOCALES =
-        ImmutableList.builder()
+    private static final ImmutableList<String> LONDON_LOCALES =
+        ImmutableList.<String>builder()
             .add("West London")
             .add("North East London")
             .add("North West London")
@@ -47,7 +47,7 @@ public class SentencingCourtDetailsTest extends WithApplication {
         val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
-        LONDON_LOCALES.stream().forEach((locale) -> assertTrue(contentAsString(result).contains(locale.toString())));
+        LONDON_LOCALES.forEach((locale) -> assertTrue(contentAsString(result).contains(locale)));
     }
 
     @Test
