@@ -11,9 +11,7 @@ import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Http;
 import play.test.WithApplication;
-import utils.AnalyticsStoreMock;
-import utils.DocumentStoreMock;
-import utils.PdfGeneratorMock;
+import utils.*;
 
 import java.util.HashMap;
 import java.util.function.Function;
@@ -24,8 +22,7 @@ import static play.api.test.CSRFTokenHelper.addCSRFToken;
 import static play.inject.Bindings.bind;
 import static play.test.Helpers.*;
 
-public class SentencingCourtDetailsTest extends WithApplication
-    implements PdfGeneratorMock, DocumentStoreMock, AnalyticsStoreMock {
+public class SentencingCourtDetailsTest extends WithApplication {
 
     private static final ImmutableList LONDON_LOCALES =
         ImmutableList.builder()
@@ -74,22 +71,13 @@ public class SentencingCourtDetailsTest extends WithApplication
     }
 
     @Override
-    public void setPdfGenerated(boolean flag) {}
-
-    @Override
-    public void setPdfUploaded(boolean flag) {}
-
-    @Override
-    public void setPdfUpdated(boolean flag) {}
-
-    @Override
     protected Application provideApplication() {
 
         return new GuiceApplicationBuilder().
             overrides(
-                bind(PdfGenerator.class).toInstance(this),
-                bind(DocumentStore.class).toInstance(this),
-                bind(AnalyticsStore.class).toInstance(this)
+                bind(PdfGenerator.class).toInstance(new SimplePdfGeneratorMock()),
+                bind(DocumentStore.class).toInstance(new SimpleDocumentStoreMock()),
+                bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock())
             )
             .build();
     }
