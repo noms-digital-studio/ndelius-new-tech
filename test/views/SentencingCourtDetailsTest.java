@@ -16,6 +16,7 @@ import utils.*;
 import java.util.HashMap;
 import java.util.function.Function;
 
+import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static play.api.test.CSRFTokenHelper.addCSRFToken;
@@ -29,7 +30,6 @@ public class SentencingCourtDetailsTest extends WithApplication {
             .add("West London")
             .add("North East London")
             .add("North West London")
-            .add("North East London")
             .add("South West London")
             .add("South London")
             .add("South East London")
@@ -47,7 +47,7 @@ public class SentencingCourtDetailsTest extends WithApplication {
         val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
-        LONDON_LOCALES.forEach((locale) -> assertTrue("should contain " + locale, contentAsString(result).contains(locale)));
+        LONDON_LOCALES.forEach((locale) -> assertTrue(format("should contain [%s]", locale), contentAsString(result).contains(locale)));
     }
 
     @Test
