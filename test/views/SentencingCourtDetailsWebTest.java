@@ -27,11 +27,11 @@ public class SentencingCourtDetailsWebTest extends WithBrowser {
     private static final List<String> SORTED_LONDON_LOCALES =
             ImmutableList.<String>builder()
                     .add("Central London (Hammersmith and Fulham and Kensington and Chelsea, City of London, City of Westminster)")
+                    .add("East London (Hackney and Tower Hamlets, Newham, Waltham Forest)")
                     .add("North East London (Barking, Havering, Redbridge)")
                     .add("North London (Camden and Islington, Enfield, Haringey)")
                     .add("North West London (Barnet, Brent, Harrow Gore)")
                     .add("South East London (Greenwich and Lewisham, Bexley, Bromley)")
-                    .add("East London (Hackney and Tower Hamlets, Newham, Waltham Forest)")
                     .add("South London (Croydon, Lambeth and Southwark, Sutton)")
                     .add("South West London (Kingston, Merton, Richmon-upon-Thames, Wandsworth)")
                     .add("West London (Ealing, Hounslow, Hillingdon)")
