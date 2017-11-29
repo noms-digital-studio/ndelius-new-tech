@@ -42,7 +42,12 @@ public class SentencingCourtDetailsTest extends WithApplication {
 
     @Test
     public void localJusticeAreaDropDownContainsLondonLocales() {
-        // TODO
+        val request = givenARequestForTheSentencingCourtDetailsPage();
+
+        val result = route(app, addCSRFToken(request));
+
+        assertEquals(OK, result.status());
+        LONDON_LOCALES.stream().forEach((locale) -> assertTrue(contentAsString(result).contains(locale.toString())));
     }
 
     @Test
