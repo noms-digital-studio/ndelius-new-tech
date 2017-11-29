@@ -47,7 +47,7 @@ public class SentencingCourtDetailsTest extends WithApplication {
         val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
-        LONDON_LOCALES.forEach((locale) -> assertTrue(contentAsString(result).contains(locale)));
+        LONDON_LOCALES.forEach((locale) -> assertTrue("should contain " + locale, contentAsString(result).contains(locale)));
     }
 
     @Test
