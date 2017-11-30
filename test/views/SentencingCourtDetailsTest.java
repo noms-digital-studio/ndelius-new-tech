@@ -31,7 +31,7 @@ public class SentencingCourtDetailsTest extends WithApplication {
             .add("North East London")
             .add("North West London")
             .add("South West London")
-            .add("XSouth London")
+            .add("South London")
             .add("South East London")
             .add("Central London")
             .add("North London")

@@ -25,8 +25,12 @@ jobs:
                   apt-get install -y nodejs
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   sbt assembly
+            - run:
+                name: Save Fat Jar
+                command: |
+                  mkdir -p ./target/artifacts
+                  mv target/scala-2.12/*.jar ./target/artifacts/
             - store_artifacts:
-                path: target/scala-2.12
-                destination: artifacts
+                path: target/artifacts
             - store_test_results:
                 path: target/test-reports
