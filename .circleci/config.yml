@@ -25,3 +25,6 @@ jobs:
                   apt-get install -y nodejs
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   sbt assembly
+            - store_artifacts:
+                path: ~/ndelius-new-tech/target/scala-2.12/
+                destination: artifacts
