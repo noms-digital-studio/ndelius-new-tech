@@ -30,4 +30,4 @@ jobs:
                 destination: artifacts
             - store_artifacts:
                 path: ~/ndelius-new-tech/target/test-reports
-                destination: reportts
+                destination: reports
