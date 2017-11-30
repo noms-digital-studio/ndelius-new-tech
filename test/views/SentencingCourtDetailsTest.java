@@ -27,7 +27,7 @@ public class SentencingCourtDetailsTest extends WithApplication {
 
     private static final ImmutableList<String> LONDON_LOCALES =
         ImmutableList.<String>builder()
-            .add("West London")
+            .add("XWest London")
             .add("North East London")
             .add("North West London")
             .add("South West London")
