@@ -31,3 +31,5 @@ jobs:
             - store_artifacts:
                 path: ~/ndelius-new-tech/target/test-reports
                 destination: reports
+            - store_test_results:
+                path: ~/ndelius-new-tech/target/test-reports
