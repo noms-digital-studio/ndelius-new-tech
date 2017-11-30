@@ -40,6 +40,7 @@ jobs:
                 path: target/artifacts
                 destination: jars
             - store_artifacts:
-                path: junit
+                path: ~/junit
+                destination: reports
             - store_test_results:
-                path: junit
+                path: ~/junit
