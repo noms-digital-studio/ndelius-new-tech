@@ -26,9 +26,7 @@ public class SignAndDateReportWebTest extends WithBrowser {
 
     @Test
     public void shouldNavigateToSignAndDateYourReportPage() {
-        signAndDateReportPage.navigateHere();
-
-        assertThat(signAndDateReportPage.getMainHeading()).isEqualTo("Sign and date your report");
+        assertThat(signAndDateReportPage.navigateHere().getMainHeading()).isEqualTo("Sign and date your report");
     }
 
     @Override
