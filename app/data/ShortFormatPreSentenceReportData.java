@@ -218,6 +218,18 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     @JsonProperty("REPORT_DATE")
     private String reportDate;
 
+    @OnPage(11)
+    @JsonProperty("COURT_OFFICE_PHONE_NUMBER")
+    private String courtOfficePhoneNumber;
+
+    @OnPage(11)
+    @JsonProperty("COUNTER_SIGNATURE")
+    private String counterSignature;
+
+    @OnPage(11)
+    @JsonProperty("START_DATE")
+    private String startDate;
+
 
     @Override
     public List<ValidationError> validate() {

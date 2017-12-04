@@ -33,7 +33,7 @@ public class SignAndDateReportPage extends FluentPage {
     }
 
     public boolean isStartDateFieldReadonly() {
-        return $(id("startDate")).attribute("readonly") != null;
+        return $(id("startDate")).attribute("type").equals("hidden");
     }
 
     public boolean hasReportAuthorField() {
