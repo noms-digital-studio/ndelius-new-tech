@@ -24,9 +24,26 @@ public class SignAndDateReportWebTest extends WithBrowser {
         signAndDateReportPage = new SignAndDateReportPage(browser);
     }
 
+
     @Test
-    public void shouldNavigateToSignAndDateYourReportPage() {
-        assertThat(signAndDateReportPage.navigateHere().getMainHeading()).isEqualTo("Sign and date your report");
+    public void shouldBePresentedWithReportAuthorField() {
+        assertThat(signAndDateReportPage.navigateHere().hasReportAuthorField()).isTrue();
+    }
+
+    @Test
+    public void shouldBePresentedWithCounterSignatureField() {
+        assertThat(signAndDateReportPage.navigateHere().hasCounterSignatureField()).isTrue();
+    }
+
+    @Test
+    public void shouldBePresentedWithCourtOfficePhoneNumberField() {
+        assertThat(signAndDateReportPage.navigateHere().hasCourtOfficePhoneNumberField()).isTrue();
+    }
+
+    @Test
+    public void shouldBePresentedWithReadOnlyStartDateField() {
+        assertThat(signAndDateReportPage.navigateHere().hasStartDateField()).isTrue();
+        assertThat(signAndDateReportPage.navigateHere().isStartDateFieldReadonly()).isTrue();
     }
 
     @Override

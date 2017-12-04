@@ -2,8 +2,9 @@ package views.pages;
 
 import org.fluentlenium.core.FluentControl;
 import org.fluentlenium.core.FluentPage;
+import org.openqa.selenium.By;
 
-import static org.openqa.selenium.By.tagName;
+import static org.openqa.selenium.By.id;
 
 
 public class SignAndDateReportPage extends FluentPage {
@@ -19,7 +20,23 @@ public class SignAndDateReportPage extends FluentPage {
         return this;
     }
 
-    public String getMainHeading() {
-        return find(tagName("h1")).text();
+    public boolean hasCounterSignatureField() {
+        return $(id("counterSignature")).present();
+    }
+
+    public boolean hasCourtOfficePhoneNumberField() {
+        return $(id("courtOfficePhoneNumber")).present();
+    }
+
+    public boolean hasStartDateField() {
+        return $(id("startDate")).present();
+    }
+
+    public boolean isStartDateFieldReadonly() {
+        return $(id("startDate")).attribute("readonly") != null;
+    }
+
+    public boolean hasReportAuthorField() {
+        return $(id("reportAuthor")).present();
     }
 }
