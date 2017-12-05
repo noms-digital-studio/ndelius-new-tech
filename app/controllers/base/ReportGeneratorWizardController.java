@@ -130,7 +130,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                     return ImmutableMap.of("errorMessage", ThrowableHelper.toMessageCauseStack(error));
                 }).
                 thenApply(stored -> {
-                    params.put("startDate", LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+
                     params.put("documentId", stored.get("ID"));
                     params.put("errorMessage", stored.get("errorMessage"));
 
