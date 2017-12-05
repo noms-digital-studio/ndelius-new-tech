@@ -39,4 +39,9 @@ public class SignAndDateReportPage extends FluentPage {
     public boolean hasReportAuthorField() {
         return $(id("reportAuthor")).present();
     }
+
+    public String getStartDate() {
+        return $(id("value_startDate")).text();
+    }
+
 }

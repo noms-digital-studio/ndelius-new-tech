@@ -227,6 +227,7 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     private String counterSignature;
 
     @OnPage(11)
+    @Encrypted
     @JsonProperty("START_DATE")
     private String startDate;
 

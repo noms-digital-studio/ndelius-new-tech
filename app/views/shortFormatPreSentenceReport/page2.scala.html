@@ -29,6 +29,7 @@
             @inputHidden(reportForm("onBehalfOfUser"), encrypter)
             @inputHidden(reportForm("entityId"), encrypter)
             @inputHidden(reportForm("documentId"), encrypter)
+            @inputHidden(reportForm("startDate"), encrypter)
 
             @readOnlyField(reportForm("name"), "Full name", encrypter)
             @readOnlyField(reportForm("dateOfBirth"), "Date of birth", encrypter)

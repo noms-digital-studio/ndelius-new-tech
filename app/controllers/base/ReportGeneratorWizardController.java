@@ -9,6 +9,9 @@ import helpers.ThrowableHelper;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -127,7 +130,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                     return ImmutableMap.of("errorMessage", ThrowableHelper.toMessageCauseStack(error));
                 }).
                 thenApply(stored -> {
-
+                    params.put("startDate", LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
                     params.put("documentId", stored.get("ID"));
                     params.put("errorMessage", stored.get("errorMessage"));
 
