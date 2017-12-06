@@ -82,11 +82,7 @@ public class SignAndDateReportWebTest extends WithBrowser {
         return new GuiceApplicationBuilder().
             overrides(
                 bind(PdfGenerator.class).toInstance(new SimplePdfGeneratorMock()),
-                bind(DocumentStore.class).toInstance(new SimpleDocumentStoreMock() {
-                    public CompletionStage<String> retrieveOriginalData(String documentId, String onBehalfOfUser) {
-                        return CompletableFuture.supplyAsync(mockOriginalReportData);
-                    }
-                }),
+                bind(DocumentStore.class).toInstance(new DocumentStoreMock()),
                 bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock())
             )
             .build();
@@ -96,4 +92,9 @@ public class SignAndDateReportWebTest extends WithBrowser {
         return new SimpleDateFormat("dd/MM/yyyy").format(new Date());
     }
 
+    class DocumentStoreMock extends SimpleDocumentStoreMock {
+        public CompletionStage<String> retrieveOriginalData(String documentId, String onBehalfOfUser) {
+            return CompletableFuture.supplyAsync(mockOriginalReportData);
+        }
+    }
 }
