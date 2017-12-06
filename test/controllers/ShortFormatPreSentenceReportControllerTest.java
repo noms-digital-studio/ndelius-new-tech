@@ -916,7 +916,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("officePhone", "0114 114 114");
                 put("counterSignature", "Some other person");
                 put("reportDate", "21/06/2017");
-//                put("startDate", encrypter.apply("21/06/2017"));
 
                 put("pageNumber", "11");
             }

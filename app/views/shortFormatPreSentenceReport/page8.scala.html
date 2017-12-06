@@ -43,7 +43,6 @@
             @inputHidden(reportForm("onBehalfOfUser"), encrypter)
             @inputHidden(reportForm("entityId"), encrypter)
             @inputHidden(reportForm("documentId"), encrypter)
-            @inputHidden(reportForm("startDate"), encrypter)
 
             @inputHidden(reportForm("name"), encrypter)
             @inputHidden(reportForm("dateOfBirth"), encrypter)
@@ -85,6 +84,9 @@
             @inputHidden(reportForm("issueHealth"))
             @inputHidden(reportForm("issueBehaviour"))
             @inputHidden(reportForm("offenderAssessment"))
+            @inputHidden(reportForm("courtOfficePhoneNumber"))
+            @inputHidden(reportForm("counterSignature"))
+            @inputHidden(reportForm("startDate"), encrypter)
 
             @textarea(reportForm("likelihoodOfReOffending"), '_label -> "Likelihood of reoffending", '_hint -> likelihoodHint, 'class -> "wide", 'required -> "true", '_error -> "Tell us their likelihood of re-offending")
 

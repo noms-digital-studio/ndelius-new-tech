@@ -35,7 +35,6 @@
                 @inputHidden(reportForm("onBehalfOfUser"), encrypter)
                 @inputHidden(reportForm("entityId"), encrypter)
                 @inputHidden(reportForm("documentId"), encrypter)
-                @inputHidden(reportForm("startDate"), encrypter)
 
                 @inputHidden(reportForm("name"), encrypter)
                 @inputHidden(reportForm("dateOfBirth"), encrypter)
@@ -88,6 +87,9 @@
                 @inputHidden(reportForm("reportAuthor"))
                 @inputHidden(reportForm("office"))
                 @inputHidden(reportForm("reportDate"))
+                @inputHidden(reportForm("courtOfficePhoneNumber"))
+                @inputHidden(reportForm("counterSignature"))
+                @inputHidden(reportForm("startDate"), encrypter)
 
                 <input type="hidden" id="jumpNumber" name="jumpNumber" value="@reportForm("pageNumber").getValue.orElse("")"/>
                 @inputHidden(reportForm("pageNumber"))
