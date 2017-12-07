@@ -1,3 +1,12 @@
+function formWithZeroJumpNumber(form) {
+    return _.map(form.serializeArray(), function (entry) {
+        if (entry.name === 'jumpNumber') {
+            entry.value = 0;
+        }
+        return entry;
+    });
+}
+
 (function ($) {
 
     'use strict';
@@ -62,41 +71,18 @@
          * Save
          */
         function saveProgress(elem, stop) {
-
-            var form = $('form');
-
-            if (saveTimer) {
-                clearTimeout(saveTimer);
-            }
-
             startSaveIcon(elem);
 
-            if (form.length) {
 
-                var data = _.map(form.serializeArray(), function (entry) {
-                    if (entry.name === 'jumpNumber') {
-                        entry.value = 0;
-                    }
-                    return entry;
-                });
-
+            if ($('form').length) {
                 $.ajax({
                     type: 'POST',
-                    url: form.attr('action'),
-                    data: data,
+                    url: $('form').attr('action'),
+                    data: formWithZeroJumpNumber($('form')),
                     complete: function (response) {
-                        if (response.status >= 200 && response.status < 400) {
-                            setTimeout(function () {
-                                endSaveIcon(elem);
-                            }, 1500);
-                            if (!stop) {
-                                saveTimer = setTimeout(function () {
-                                    saveProgress(elem);
-                                }, 15000);
-                            }
-                        } else {
-                            endSaveIcon(elem, true);
-                        }
+                        setTimeout(function () {
+                            endSaveIcon(elem, response.status !== 200);
+                        }, 1000);
                     }
                 });
             }
@@ -105,11 +91,14 @@
         /**
          * Textarea elements
          */
-        $('textarea').focus(function () {
+        $('textarea').keyup(function () {
+            if (saveTimer) clearTimeout(saveTimer);
+
+
             saveTimer = setTimeout(function () {
                 saveProgress($(this));
-            }.bind(this), 5000);
-        }).keyup(function () {
+            }.bind(this), 500);
+
             var textArea = $(this),
                 limit = textArea.data('limit'),
                 current = textArea.val().length,
@@ -123,9 +112,7 @@
                 messageHolder.addClass('js-hidden');
             }
 
-        }).blur(function () {
-            saveProgress($(this), true);
-        });
+        })
 
         /**
          * Navigation items
