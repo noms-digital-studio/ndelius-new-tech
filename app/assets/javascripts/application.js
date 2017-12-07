@@ -70,11 +70,9 @@ function formWithZeroJumpNumber(form) {
         /**
          * Save
          */
-        function saveProgress(elem, stop) {
-            startSaveIcon(elem);
-
-
+        function saveProgress(elem) {
             if ($('form').length) {
+                startSaveIcon(elem);
                 $.ajax({
                     type: 'POST',
                     url: $('form').attr('action'),
