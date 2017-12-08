@@ -18,7 +18,6 @@ import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Http;
 import play.test.WithApplication;
-import utils.SimpleAnalyticsStoreMock;
 
 import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
@@ -44,6 +43,9 @@ public class ReportGeneratorWizardController_AutoSave_Test extends WithApplicati
     private DocumentStore alfrescoDocumentStore;
     @Mock
     private PdfGenerator pdfGenerator;
+    @Mock
+    private AnalyticsStore analyticsStore;
+
     @Captor
     private ArgumentCaptor<ShortFormatPreSentenceReportData> reportData;
 
@@ -62,6 +64,13 @@ public class ReportGeneratorWizardController_AutoSave_Test extends WithApplicati
         assertThat(result.status()).isEqualTo(OK);
         verify(pdfGenerator).generate(any(), any());
         verify(alfrescoDocumentStore).updateExistingPdf(any(), any(), any(), any(), any());
+    }
+
+    @Test
+    public void autosaveReportDoesNotRecordAnyAnalytics() {
+        route(app, addCSRFToken(givenAnAutoSaveRequest()));
+
+        verify(analyticsStore, never()).recordEvent(any());
     }
 
     @Test
@@ -165,7 +174,7 @@ public class ReportGeneratorWizardController_AutoSave_Test extends WithApplicati
             overrides(
                 bind(PdfGenerator.class).toInstance(pdfGenerator),
                 bind(DocumentStore.class).toInstance(alfrescoDocumentStore),
-                bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock())
+                bind(AnalyticsStore.class).toInstance(analyticsStore)
             )
             .build();
     }
