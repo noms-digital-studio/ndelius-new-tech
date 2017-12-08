@@ -10,8 +10,8 @@ import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -122,6 +122,10 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
     private CompletionStage<Map<String, String>> addPageAndDocumentId(Map<String, String> params) {
 
         params.put("pageNumber", "1");
+
+        // TODO the nasty thing about having this is here is that this class's corresponding
+        // data bean does not know about startDate
+        params.put("startDate", new SimpleDateFormat("dd/MM/yyy").format(new Date()));
 
         return generateAndStoreReport(wizardForm.bind(params).value().orElseGet(this::newWizardData)).
                 exceptionally(error -> {
