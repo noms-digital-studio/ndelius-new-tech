@@ -75,7 +75,7 @@ function formWithZeroJumpNumber(form) {
                 startSaveIcon(elem);
                 $.ajax({
                     type: 'POST',
-                    url: $('form').attr('action'),
+                    url: $('form').attr('action') + '/save',
                     data: formWithZeroJumpNumber($('form')),
                     complete: function (response) {
                         setTimeout(function () {

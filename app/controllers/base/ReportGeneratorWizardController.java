@@ -55,6 +55,23 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
         standaloneOperation = configuration.getBoolean("standalone.operation");
     }
 
+    public CompletionStage<Result> saveReport() {
+        val wizardData = wizardForm.bindFromRequest().get();
+
+        return generateAndStoreReport(wizardData).
+                thenApply(result -> okJsonResult()).
+                exceptionally(error -> internalServerErrorJsonResult(wizardData, error));
+    }
+
+    private Result okJsonResult() {
+        return ok("{\"status\":\"ok\"}").as("application/json");
+    }
+
+    private Result internalServerErrorJsonResult(T wizardData, Throwable error) {
+        Logger.error("Save: Generation or Storage error - " + wizardData.toString(), error);
+        return internalServerError("{\"status\":\"error\"").as("application/json");
+    }
+
     @Override
     protected CompletionStage<Map<String, String>> initialParams() {
 
