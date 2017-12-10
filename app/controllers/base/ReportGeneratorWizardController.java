@@ -30,6 +30,7 @@ import play.twirl.api.Content;
 
 import static helpers.FluentHelper.not;
 import static helpers.FluentHelper.value;
+import static play.libs.Json.toJson;
 
 public abstract class ReportGeneratorWizardController<T extends ReportGeneratorWizardData> extends WizardController<T> {
 
@@ -64,12 +65,12 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
     }
 
     private Result okJsonResult() {
-        return ok("{\"status\":\"ok\"}").as("application/json");
+        return ok(toJson(ImmutableMap.of("status", "ok"))).as("application/json");
     }
 
     private Result internalServerErrorJsonResult(T wizardData, Throwable error) {
         Logger.error("Save: Generation or Storage error - " + wizardData.toString(), error);
-        return internalServerError("{\"status\":\"error\"").as("application/json");
+        return internalServerError(toJson(ImmutableMap.of("status", "error"))).as("application/json");
     }
 
     @Override

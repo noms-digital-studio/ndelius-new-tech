@@ -67,6 +67,13 @@ public class ReportGeneratorWizardController_AutoSave_Test extends WithApplicati
     }
 
     @Test
+    public void autosaveReportReturnsSuccessStatus() {
+        val result = route(app, addCSRFToken(givenAnAutoSaveRequest()));
+
+        assertThat(contentAsString(result)).isEqualTo("{\"status\":\"ok\"}");
+    }
+
+    @Test
     public void autosaveReportDoesNotRecordAnyAnalytics() {
         route(app, addCSRFToken(givenAnAutoSaveRequest()));
 
@@ -75,6 +82,16 @@ public class ReportGeneratorWizardController_AutoSave_Test extends WithApplicati
 
     @Test
     public void autosaveReportServerErrorWhenAlfrescoIsNotWorking() {
+        when(alfrescoDocumentStore.updateExistingPdf(any(), any(), any(), any(), any()))
+            .thenReturn(supplyAsync(() -> { throw new RuntimeException("boom"); }));
+
+        val result = route(app, addCSRFToken(givenAnAutoSaveRequest()));
+
+        assertThat(contentAsString(result)).isEqualTo("{\"status\":\"error\"}");
+    }
+
+    @Test
+    public void autosaveReportReturnsErrorWhenAlfrescoIsNotWorking() {
         when(alfrescoDocumentStore.updateExistingPdf(any(), any(), any(), any(), any()))
             .thenReturn(supplyAsync(() -> { throw new RuntimeException("boom"); }));
 
