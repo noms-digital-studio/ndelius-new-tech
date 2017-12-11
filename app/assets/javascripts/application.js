@@ -80,7 +80,7 @@ function formWithZeroJumpNumber(form) {
                     complete: function (response) {
                         setTimeout(function () {
                             endSaveIcon(elem, response.status !== 200);
-                        }, 1000);
+                        }, 200);
                     }
                 });
             }
