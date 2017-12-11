@@ -17,6 +17,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Http;
+import play.mvc.Result;
 import play.test.WithApplication;
 
 import java.util.HashMap;
@@ -74,6 +75,13 @@ public class ReportGeneratorWizardController_AutoSave_Test extends WithApplicati
     }
 
     @Test
+    public void autosaveReportReturnsJsonContentType() {
+        val result = route(app, addCSRFToken(givenAnAutoSaveRequest()));
+
+        assertThat(contentType(result)).isEqualTo("application/json");
+    }
+
+    @Test
     public void autosaveReportDoesNotRecordAnyAnalytics() {
         route(app, addCSRFToken(givenAnAutoSaveRequest()));
 
@@ -97,7 +105,18 @@ public class ReportGeneratorWizardController_AutoSave_Test extends WithApplicati
 
         val result = route(app, addCSRFToken(givenAnAutoSaveRequest()));
 
-        assertThat(result.status()).isEqualTo(INTERNAL_SERVER_ERROR);
+        assertThat(result.status()).isEqualTo(SERVICE_UNAVAILABLE);
+        verify(alfrescoDocumentStore).updateExistingPdf(any(), any(), any(), any(), any());
+    }
+
+    @Test
+    public void autosaveReportReturnsErrorWhenAlfrescoReturnsError() {
+        when(alfrescoDocumentStore.updateExistingPdf(any(), any(), any(), any(), any()))
+                .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("errorMessage", "It has all gone wrong")));
+
+        val result = route(app, addCSRFToken(givenAnAutoSaveRequest()));
+
+        assertThat(result.status()).isEqualTo(SERVICE_UNAVAILABLE);
         verify(alfrescoDocumentStore).updateExistingPdf(any(), any(), any(), any(), any());
     }
 
@@ -107,7 +126,7 @@ public class ReportGeneratorWizardController_AutoSave_Test extends WithApplicati
 
         val result = route(app, addCSRFToken(givenAnAutoSaveRequest()));
 
-        assertThat(result.status()).isEqualTo(INTERNAL_SERVER_ERROR);
+        assertThat(result.status()).isEqualTo(SERVICE_UNAVAILABLE);
         verify(alfrescoDocumentStore, never()).updateExistingPdf(any(), any(), any(), any(), any());
     }
 
@@ -162,6 +181,10 @@ public class ReportGeneratorWizardController_AutoSave_Test extends WithApplicati
     private Http.RequestBuilder givenAnAutoSaveRequest() {
         val formData = someFormData();
         return new Http.RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport/save");
+    }
+
+    private String contentType(Result result) {
+        return result.body().contentType().orElseThrow(() -> new AssertionError("Not json"));
     }
 
     private HashMap<String, String> someFormData() {

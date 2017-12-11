@@ -15,7 +15,7 @@ GET     /spellcheck/:text                           controllers.NationalSearchCo
 
 GET     /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSentenceReportController.wizardGet
 POST    /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSentenceReportController.wizardPost
-POST    /report/shortFormatPreSentenceReport/save   controllers.ShortFormatPreSentenceReportController.saveReport
+POST    /report/shortFormatPreSentenceReport/save   controllers.ShortFormatPreSentenceReportController.reportPost
 
 POST    /report/shortFormatPreSentenceReport/feedback   controllers.ShortFormatPreSentenceReportController.feedbackPost
 

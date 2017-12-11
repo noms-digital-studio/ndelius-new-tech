@@ -30,7 +30,9 @@ import play.twirl.api.Content;
 
 import static helpers.FluentHelper.not;
 import static helpers.FluentHelper.value;
-import static play.libs.Json.toJson;
+import static helpers.JsonHelper.badRequestJson;
+import static helpers.JsonHelper.okJson;
+import static helpers.JsonHelper.serverUnavailableJson;
 
 public abstract class ReportGeneratorWizardController<T extends ReportGeneratorWizardData> extends WizardController<T> {
 
@@ -56,21 +58,29 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
         standaloneOperation = configuration.getBoolean("standalone.operation");
     }
 
-    public CompletionStage<Result> saveReport() {
-        val wizardData = wizardForm.bindFromRequest().get();
-
-        return generateAndStoreReport(wizardData).
-                thenApply(result -> okJsonResult()).
-                exceptionally(error -> internalServerErrorJsonResult(wizardData, error));
+    public CompletionStage<Result> reportPost() {
+        return wizardForm.bindFromRequest().value().
+                map(wizardData -> generateAndStoreReport(wizardData).
+                    exceptionally(error -> error(wizardData, error)).
+                    thenApply(this::toJsonResult)).
+                orElse(CompletableFuture.supplyAsync(() -> badRequestJson(ImmutableMap.of("status", "badRequest")), ec.current()));
     }
 
-    private Result okJsonResult() {
-        return ok(toJson(ImmutableMap.of("status", "ok"))).as("application/json");
-    }
-
-    private Result internalServerErrorJsonResult(T wizardData, Throwable error) {
+    private Map<String, String> error(T wizardData, Throwable error) {
         Logger.error("Save: Generation or Storage error - " + wizardData.toString(), error);
-        return internalServerError(toJson(ImmutableMap.of("status", "error"))).as("application/json");
+        return ImmutableMap.of("errorMessage", error.getMessage());
+    }
+
+    private Result toJsonResult(Map<String, String> result) {
+        return Optional.ofNullable(result.get("errorMessage")).
+                map(data -> serverUnavailableJsonResult(result)).
+                orElse(okJson(ImmutableMap.of("status", "ok")));
+
+    }
+
+    private Result serverUnavailableJsonResult(Map<String, String> response) {
+        Logger.error("Save: Generation or Storage error - " + response);
+        return serverUnavailableJson(ImmutableMap.of("status", "error"));
     }
 
     @Override
