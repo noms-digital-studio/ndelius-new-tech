@@ -37,7 +37,7 @@ public interface JsonHelper {
 
     static <T> Result okJson(T data) {
 
-        return ok(Json.toJson(data)).as(JSON);
+        return ok(Json.toJson(data));
     }
 
     static <T> Result serverUnavailableJson(T data) {

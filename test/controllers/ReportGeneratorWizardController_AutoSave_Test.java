@@ -78,7 +78,7 @@ public class ReportGeneratorWizardController_AutoSave_Test extends WithApplicati
     public void autosaveReportReturnsJsonContentType() {
         val result = route(app, addCSRFToken(givenAnAutoSaveRequest()));
 
-        assertThat(contentType(result)).isEqualTo("application/json");
+        assertThat(contentType(result)).contains("application/json");
     }
 
     @Test
