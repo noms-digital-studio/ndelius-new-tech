@@ -86,16 +86,12 @@ function formWithZeroJumpNumber(form) {
             }
         }
 
+        var quietSaveProgress = _.debounce(saveProgress, 500);
         /**
          * Textarea elements
          */
-        $('textarea').keyup(function () {
-            if (saveTimer) clearTimeout(saveTimer);
-
-
-            saveTimer = setTimeout(function () {
-                saveProgress($(this));
-            }.bind(this), 500);
+         $('textarea').keyup(function () {
+            quietSaveProgress($(this));
 
             var textArea = $(this),
                 limit = textArea.data('limit'),
