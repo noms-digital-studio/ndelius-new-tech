@@ -122,9 +122,6 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
     private CompletionStage<Map<String, String>> addPageAndDocumentId(Map<String, String> params) {
 
         params.put("pageNumber", "1");
-
-        // TODO the nasty thing about having this is here is that this class's corresponding
-        // data bean does not know about startDate
         params.put("startDate", new SimpleDateFormat("dd/MM/yyy").format(new Date()));
 
         return generateAndStoreReport(wizardForm.bind(params).value().orElseGet(this::newWizardData)).
@@ -178,7 +175,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                 "values", BeanMap.create(data)
         ));
 
-        CompletionStage<Map<String, String>> result = null;
+        CompletionStage<Map<String, String>> result;
 
         if (Strings.isNullOrEmpty(data.getDocumentId())) {
 

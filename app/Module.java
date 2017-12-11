@@ -7,7 +7,6 @@ import interfaces.PdfGenerator;
 import services.AlfrescoStore;
 import services.MongoDbStore;
 import services.RestPdfGenerator;
-import services.DocumentStoreStub;
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -26,7 +25,6 @@ public class Module extends AbstractModule {
 
         bind(PdfGenerator.class).to(RestPdfGenerator.class);
         bind(DocumentStore.class).to(AlfrescoStore.class);
-        // bind(DocumentStore.class).to(DocumentStoreStub.class); for running locally
         bind(AnalyticsStore.class).to(MongoDbStore.class);
 
         bind(MongoClient.class).toProvider(MongoClientProvider.class).asEagerSingleton();
