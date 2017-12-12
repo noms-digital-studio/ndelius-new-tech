@@ -14,8 +14,7 @@ function formWithZeroJumpNumber(form) {
     $(function () {
 
         // Show/hide content
-        var showHideContent = new GOVUK.ShowHideContent(),
-            saveTimer;
+        var showHideContent = new GOVUK.ShowHideContent();
 
         showHideContent.init();
 
@@ -77,10 +76,8 @@ function formWithZeroJumpNumber(form) {
                     type: 'POST',
                     url: $('form').attr('action') + '/save',
                     data: formWithZeroJumpNumber($('form')),
-                    complete: function (response) {
-                        setTimeout(function () {
-                            endSaveIcon(elem, response.status !== 200);
-                        }, 200);
+                    complete: function(response) {
+                        _.delay(endSaveIcon, 500, elem, response.status !== 200)
                     }
                 });
             }
