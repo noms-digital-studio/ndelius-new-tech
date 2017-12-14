@@ -62,13 +62,13 @@ function formWithZeroJumpNumber(form) {
             var saveIcon = $('#' + elem.attr('id') + '_save'),
                 spinner = $('.spinner', saveIcon),
                 errorMessage = $('#' + elem.attr('id') + '-autosave_error'),
-                formGroup = $(elem).closest('.form-group')
+                formGroup = $(elem).closest('.form-group');
 
             if (error) {
                 saveIcon.addClass('js-hidden');
                 spinner.removeClass('active');
                 errorMessage.removeClass('js-hidden');
-                formGroup.addClass('form-group-autosave-error')
+                formGroup.addClass('form-group-autosave-error');
             } else {
                 // remove all autosave errors on this page
                 $('.form-group-autosave-error').removeClass('form-group-autosave-error');
