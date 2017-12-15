@@ -1,0 +1,11 @@
+@import helper._
+
+@(checkboxField: Field, textAreaField: Field, label: String, detailsLabel: String)
+
+@implicitField = @{ FieldConstructor(govukElements.f) }
+
+@sectionId = @{checkboxField.id + "-details"}
+@checkbox(checkboxField, '_label -> label, Symbol("data-target") -> sectionId)
+<div class="panel panel-border-narrow js-hidden" id="@sectionId">
+@textarea(textAreaField, '_label -> detailsLabel, 'class -> "wide")
+</div>
