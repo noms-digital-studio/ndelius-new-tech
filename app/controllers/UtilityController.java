@@ -27,8 +27,8 @@ public class UtilityController extends Controller {
 
     private final String version;
 
-    private PdfGenerator pdfGenerator;
-    private DocumentStore documentStore;
+    private final PdfGenerator pdfGenerator;
+    private final DocumentStore documentStore;
 
     @Inject
     public UtilityController(Config configuration, PdfGenerator pdfGenerator, DocumentStore documentStore) {
@@ -44,26 +44,22 @@ public class UtilityController extends Controller {
         val allHealthFutures = CompletableFuture.allOf(pdfGeneratorHealthFuture, documentGeneratorHealthFuture);
 
         return allHealthFutures
-            .thenApply((ignored) -> buildResult(pdfGeneratorHealthFuture.join(), documentGeneratorHealthFuture.join()));
+            .thenApply(ignored -> buildResult(pdfGeneratorHealthFuture.join(), documentGeneratorHealthFuture.join()));
     }
 
     private Result buildResult(Boolean pdfGeneratorStatus, Boolean documentStoreStatus) {
-        return JsonHelper.okJson(new HashMap<String, Object>() {
-        {
-            put("status", pdfGeneratorStatus && documentStoreStatus ? "OK" : "FAILED");
-            put("dateTime", DateTime.now().toString());
-            put("version", version);
-            put("runtime", runtimeInfo());
-            put("fileSystems", fileSystemDetails());
-            put("localHost", localhost());
-            put("dependencies", new HashMap<String, Object>() {
-                {
-                    put("pdf-generator", pdfGeneratorStatus ? "OK" : "FAILED");
-                    put("document-store", documentStoreStatus ? "OK" : "FAILED");
-                }
-            });
-        }
-    });
+        return JsonHelper.okJson(
+            ImmutableMap.builder()
+                .put("status", pdfGeneratorStatus && documentStoreStatus ? "OK" : "FAILED")
+                .put("dateTime", DateTime.now().toString())
+                .put("version", version)
+                .put("runtime", runtimeInfo())
+                .put("fileSystems", fileSystemDetails())
+                .put("localHost", localhost())
+                .put("dependencies", ImmutableMap.of(
+                    "pdf-generator", pdfGeneratorStatus ? "OK" : "FAILED",
+                    "document-store", documentStoreStatus ? "OK" : "FAILED"))
+                .build());
     }
 
     private ImmutableMap<String, ? extends Number> runtimeInfo() {
