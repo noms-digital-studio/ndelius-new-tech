@@ -113,8 +113,8 @@ public class MongoDbStore implements AnalyticsStore {
 
          database.runCommand(new Document("dbStats", 1))
              .timeout(5000, TimeUnit.MILLISECONDS)
-             .map((document) -> document.get("ok").equals(1.0))
-             .onErrorReturn(value -> result.complete(false))
+             .map(document -> document.get("ok").equals(1.0))
+             .onErrorReturn(ignored -> result.complete(false))
              .subscribe(result::complete);
 
         return result;
