@@ -3,11 +3,11 @@ package controllers;
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import helpers.JsonHelper;
+import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.joda.time.DateTime;
-import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
 
@@ -16,7 +16,6 @@ import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Stream;
@@ -29,25 +28,36 @@ public class UtilityController extends Controller {
 
     private final PdfGenerator pdfGenerator;
     private final DocumentStore documentStore;
+    private final AnalyticsStore analyticsStore;
 
     @Inject
-    public UtilityController(Config configuration, PdfGenerator pdfGenerator, DocumentStore documentStore) {
+    public UtilityController(Config configuration, PdfGenerator pdfGenerator,
+                             DocumentStore documentStore,
+                             AnalyticsStore analyticsStore) {
 
         version = configuration.getString("app.version");
         this.pdfGenerator = pdfGenerator;
         this.documentStore = documentStore;
+        this.analyticsStore = analyticsStore;
     }
 
     public CompletionStage<Result> healthcheck() {
         val pdfGeneratorHealthFuture = pdfGenerator.isHealthy().toCompletableFuture();
         val documentGeneratorHealthFuture = documentStore.isHealthy().toCompletableFuture();
-        val allHealthFutures = CompletableFuture.allOf(pdfGeneratorHealthFuture, documentGeneratorHealthFuture);
+        val analyticsStoreHealthFuture = analyticsStore.isUp();
+
+        val allHealthFutures =
+            CompletableFuture.allOf(pdfGeneratorHealthFuture,
+                                    documentGeneratorHealthFuture,
+                                    analyticsStoreHealthFuture);
 
         return allHealthFutures
-            .thenApply(ignored -> buildResult(pdfGeneratorHealthFuture.join(), documentGeneratorHealthFuture.join()));
+            .thenApply(ignored -> buildResult(pdfGeneratorHealthFuture.join(),
+                                              documentGeneratorHealthFuture.join(),
+                                              analyticsStoreHealthFuture.join()));
     }
 
-    private Result buildResult(Boolean pdfGeneratorStatus, Boolean documentStoreStatus) {
+    private Result buildResult(Boolean pdfGeneratorStatus, Boolean documentStoreStatus, Boolean analyticsStoreStatus) {
         return JsonHelper.okJson(
             ImmutableMap.builder()
                 .put("status", pdfGeneratorStatus && documentStoreStatus ? "OK" : "FAILED")
@@ -58,7 +68,8 @@ public class UtilityController extends Controller {
                 .put("localHost", localhost())
                 .put("dependencies", ImmutableMap.of(
                     "pdf-generator", pdfGeneratorStatus ? "OK" : "FAILED",
-                    "document-store", documentStoreStatus ? "OK" : "FAILED"))
+                    "document-store", documentStoreStatus ? "OK" : "FAILED",
+                    "analytics-store", analyticsStoreStatus ? "OK" : "FAILED"))
                 .build());
     }
 

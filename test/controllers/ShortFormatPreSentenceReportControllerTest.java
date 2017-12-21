@@ -17,6 +17,7 @@ import utils.PdfGeneratorMock;
 
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
@@ -963,6 +964,11 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
     @Override
     public CompletionStage<Boolean> isHealthy() {
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    @Override
+    public CompletableFuture<Boolean> isUp() {
         throw new RuntimeException("Not yet implemented");
     }
 }
