@@ -122,4 +122,10 @@ public class UtilityController extends Controller {
                     "usableSpace", root.getUsableSpace()
             ));
     }
+
+    private String version() {
+        Package aPackage = UtilityController.class.getPackage();
+        return aPackage != null && aPackage.getImplementationVersion() != null
+            ? aPackage.getImplementationVersion() : "UNKNOWN";
+    }
 }
