@@ -104,12 +104,7 @@ public class WizardData implements Validatable<List<ValidationError>> {
         return requiredGroupFields().
                 filter(field -> mustValidateField(options, field) && noFieldInPageGroupSelected(field)).
                 filter(field -> field.getAnnotation(RequiredGroupOnPage.class).leader()).
-                map(field -> new ValidationError(field.getName(), groupErrorMessage(field)));
-    }
-
-    private String groupErrorMessage(Field field) {
-        System.err.println(toString());
-        return String.format("error.group.required.%s", field.getAnnotation(RequiredGroupOnPage.class).group());
+                map(field -> new ValidationError(field.getName(), RequiredValidator.message));
     }
 
     private boolean shouldCheckAll(Map<String, Object> options) {

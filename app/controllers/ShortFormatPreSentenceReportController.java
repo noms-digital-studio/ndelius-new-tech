@@ -57,13 +57,13 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
     }
 
     private Map<String, String> migrateLegacyOffenderAssessmentIssues(Map<String, String> params) {
-        if(Boolean.parseBoolean(params.getOrDefault("issueDrugs", "false"))) {
+        if(Boolean.parseBoolean(params.get("issueDrugs"))) {
             params.putIfAbsent("issueSubstanceMisuse", "true");
         }
-        if(Boolean.parseBoolean(params.getOrDefault("issueAlcohol", "false"))) {
+        if(Boolean.parseBoolean(params.get("issueAlcohol"))) {
             params.putIfAbsent("issueSubstanceMisuse", "true");
         }
-        if(StringUtils.isNotBlank(params.getOrDefault("offenderAssessment", ""))) {
+        if(StringUtils.isNotBlank(params.get("offenderAssessment"))) {
             params.putIfAbsent("issueOther", "true");
             params.putIfAbsent("issueOtherDetails", params.get("offenderAssessment"));
         }

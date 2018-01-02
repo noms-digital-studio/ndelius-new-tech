@@ -1,11 +1,17 @@
 @import helper._
 
-@(checkboxField: Field, textAreaField: Field, label: String, detailsLabel: String)
+@(checkboxField: Field, textAreaField: Field, label: String, detailsLabel: String, error: Option[String] = None)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @sectionId = @{checkboxField.id + "-details"}
-@checkbox(checkboxField, '_label -> label, Symbol("data-target") -> sectionId)
+@arguments = @{ scala.Predef.Map('_label -> label, Symbol("data-target") -> sectionId) }
+@allArguments = @{ error match {
+    case Some(text) => arguments + ('_error -> text)
+    case _ => arguments
+} }
+
+@checkbox(checkboxField, allArguments.toSeq: _*)
 <div class="panel panel-border-narrow js-hidden" id="@sectionId">
 @textarea(textAreaField, '_label -> detailsLabel, 'class -> "wide")
 </div>

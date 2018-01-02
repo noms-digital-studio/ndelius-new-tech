@@ -143,7 +143,7 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
 
     // Page 7
 
-    @RequiredGroupOnPage(value = 7, group = "offender.assessment.issue", leader = true)
+    @RequiredGroupOnPage(value = 7, leader = true)
     @JsonProperty("ISSUE_ACCOMMODATION")
     private boolean issueAccommodation;
 
@@ -151,7 +151,7 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     @JsonProperty("ISSUE_ACCOMMODATION_DETAILS")
     private String issueAccommodationDetails;
 
-    @RequiredGroupOnPage(value = 7, group = "offender.assessment.issue")
+    @RequiredGroupOnPage(value = 7)
     @JsonProperty("ISSUE_EMPLOYMENT")
     private boolean issueEmployment;
 
@@ -159,7 +159,7 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     @JsonProperty("ISSUE_EMPLOYMENT_DETAILS")
     private String issueEmploymentDetails;
 
-    @RequiredGroupOnPage(value = 7, group = "offender.assessment.issue")
+    @RequiredGroupOnPage(value = 7)
     @JsonProperty("ISSUE_FINANCE")
     private boolean issueFinance;
 
@@ -167,7 +167,7 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     @JsonProperty("ISSUE_FINANCE_DETAILS")
     private String issueFinanceDetails;
 
-    @RequiredGroupOnPage(value = 7, group = "offender.assessment.issue")
+    @RequiredGroupOnPage(value = 7)
     @JsonProperty("ISSUE_RELATIONSHIPS")
     private boolean issueRelationships;
 
@@ -175,7 +175,7 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     @JsonProperty("ISSUE_RELATIONSHIPS_DETAILS")
     private String issueRelationshipsDetails;
 
-    @RequiredGroupOnPage(value = 7, group = "offender.assessment.issue")
+    @RequiredGroupOnPage(value = 7)
     @JsonProperty("ISSUE_SUBSTANCE_MISUSE")
     private boolean issueSubstanceMisuse;
 
@@ -183,7 +183,7 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     @JsonProperty("ISSUE_SUBSTANCE_MISUSE_DETAILS")
     private String issueSubstanceMisuseDetails;
 
-    @RequiredGroupOnPage(value = 7, group = "offender.assessment.issue")
+    @RequiredGroupOnPage(value = 7)
     @JsonProperty("ISSUE_HEALTH")
     private boolean issueHealth;
 
@@ -191,7 +191,7 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     @JsonProperty("ISSUE_HEALTH_DETAILS")
     private String issueHealthDetails;
 
-    @RequiredGroupOnPage(value = 7, group = "offender.assessment.issue")
+    @RequiredGroupOnPage(value = 7)
     @JsonProperty("ISSUE_BEHAVIOUR")
     private boolean issueBehaviour;
 
@@ -199,7 +199,7 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     @JsonProperty("ISSUE_BEHAVIOUR_DETAILS")
     private String issueBehaviourDetails;
 
-    @RequiredGroupOnPage(value = 7, group = "offender.assessment.issue")
+    @RequiredGroupOnPage(value = 7)
     @JsonProperty("ISSUE_OTHER")
     private boolean issueOther;
 
