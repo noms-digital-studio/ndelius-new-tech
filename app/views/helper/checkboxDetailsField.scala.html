@@ -1,7 +1,5 @@
 @import helper._
-@import data._
-
-@(reportForm: Form[ShortFormatPreSentenceReportData], checkboxField: String, textAreaField: String, label: String, detailsLabel: String, error: Option[String] = None)
+@(reportForm: Form[_], checkboxField: String, textAreaField: String, label: String, detailsLabel: String, error: Option[String] = None)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
