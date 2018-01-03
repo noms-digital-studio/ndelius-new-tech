@@ -92,13 +92,13 @@
                 @inputHidden(reportForm("patternOfOffending"))
                 <div class="form-group@if(reportForm.hasErrors) { form-group-error}">
                 @checkboxDetailsField(reportForm("issueAccommodation"), reportForm("issueAccommodationDetails"), "Accommodation", "Provide a brief assessment for accommodation", Some("Select underlying issues from the options below"))
-                @checkboxDetailsField(reportForm("issueEmployment"), reportForm("issueEmploymentDetails"), "Employment, training and education", "Provide a brief assessment for employment")
-                @checkboxDetailsField(reportForm("issueFinance"), reportForm("issueFinanceDetails"), "Finance", "Provide a brief assessment for finance")
-                @checkboxDetailsField(reportForm("issueRelationships"), reportForm("issueRelationshipsDetails"), "Relationships", "Provide a brief assessment for relationships")
-                @checkboxDetailsField(reportForm("issueSubstanceMisuse"), reportForm("issueSubstanceMisuseDetails"), "Substance misuse", "Provide a brief assessment for substance misuse")
-                @checkboxDetailsField(reportForm("issueHealth"), reportForm("issueHealthDetails"), "Physical & mental health", "Provide a brief assessment for physical & mental health")
-                @checkboxDetailsField(reportForm("issueBehaviour"), reportForm("issueBehaviourDetails"), "Thinking & behaviour", "Provide a brief assessment for behaviour")
-                @checkboxDetailsField(reportForm("issueOther"), reportForm("issueOtherDetails"), "Other (Please specify below)", "Provide a brief assessment of other issues")
+                @checkboxDetailsField(reportForm("issueEmployment"), reportForm("issueEmploymentDetails"), "Employment, training and education", "Provide a brief assessment for employment", Some(""))
+                @checkboxDetailsField(reportForm("issueFinance"), reportForm("issueFinanceDetails"), "Finance", "Provide a brief assessment for finance", Some(""))
+                @checkboxDetailsField(reportForm("issueRelationships"), reportForm("issueRelationshipsDetails"), "Relationships", "Provide a brief assessment for relationships", Some(""))
+                @checkboxDetailsField(reportForm("issueSubstanceMisuse"), reportForm("issueSubstanceMisuseDetails"), "Substance misuse", "Provide a brief assessment for substance misuse", Some(""))
+                @checkboxDetailsField(reportForm("issueHealth"), reportForm("issueHealthDetails"), "Physical & mental health", "Provide a brief assessment for physical & mental health", Some(""))
+                @checkboxDetailsField(reportForm("issueBehaviour"), reportForm("issueBehaviourDetails"), "Thinking & behaviour", "Provide a brief assessment for behaviour", Some(""))
+                @checkboxDetailsField(reportForm("issueOther"), reportForm("issueOtherDetails"), "Other (Please specify below)", "Provide a brief assessment of other issues", Some(""))
                 </div>
 
                 @inputHidden(reportForm("likelihoodOfReOffending"))

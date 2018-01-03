@@ -12,6 +12,4 @@ public @interface RequiredGroupOnPage {
     int value();
 
     String group() default "defaultGroup";
-
-    boolean leader() default false;
 }

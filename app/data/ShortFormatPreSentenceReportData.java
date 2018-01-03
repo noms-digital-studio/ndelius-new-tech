@@ -143,7 +143,7 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
 
     // Page 7
 
-    @RequiredGroupOnPage(value = 7, leader = true)
+    @RequiredGroupOnPage(value = 7)
     @JsonProperty("ISSUE_ACCOMMODATION")
     private boolean issueAccommodation;
 

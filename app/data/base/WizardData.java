@@ -103,7 +103,6 @@ public class WizardData implements Validatable<List<ValidationError>> {
 
         return requiredGroupFields().
                 filter(field -> mustValidateField(options, field) && noFieldInPageGroupSelected(field)).
-                filter(field -> field.getAnnotation(RequiredGroupOnPage.class).leader()).
                 map(field -> new ValidationError(field.getName(), RequiredValidator.message));
     }
 
@@ -188,7 +187,8 @@ public class WizardData implements Validatable<List<ValidationError>> {
     }
 
     private Stream<Field> onPageFields() {
-
-        return Stream.concat(Stream.concat(annotatedFields(OnPage.class), requiredFields()), requiredGroupFields());
+        return Stream.of(annotatedFields(OnPage.class), requiredFields(), requiredGroupFields())
+                .reduce(Stream::concat)
+                .orElseGet(Stream::empty);
     }
 }
