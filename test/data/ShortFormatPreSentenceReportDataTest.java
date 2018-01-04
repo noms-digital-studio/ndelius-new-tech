@@ -22,7 +22,7 @@ public class ShortFormatPreSentenceReportDataTest {
                 "South Yorkshire\n" +
                 "S11 2XZ\n");
 
-        assertThat(data.getAddressLines()).contains(
+        assertThat(data.addressLines()).contains(
                 "Green Gardens",
                 "123 Fake St",
                 "Hunters Bar",
@@ -41,7 +41,7 @@ public class ShortFormatPreSentenceReportDataTest {
                 "South Yorkshire\n" +
                 "S11 2XZ\n");
 
-        assertThat(data.getAddressLines()).contains(
+        assertThat(data.addressLines()).contains(
                 "Green Gardens",
                 "123 Fake St",
                 "Sheffield",
@@ -54,26 +54,26 @@ public class ShortFormatPreSentenceReportDataTest {
     public void singleAddressLineCreatesSingleValue() {
         data.setAddress("Green Gardens\n");
 
-        assertThat(data.getAddressLines()).contains(
+        assertThat(data.addressLines()).contains(
                 "Green Gardens").hasSize(1);
     }
     @Test
     public void singleAddressLineWithNoNewlineCreatesSingleValue() {
         data.setAddress("Green Gardens");
 
-        assertThat(data.getAddressLines()).contains(
+        assertThat(data.addressLines()).contains(
                 "Green Gardens").hasSize(1);
     }
     @Test
     public void nullAddressHasEmptyAddressLineList() {
         data.setAddress(null);
 
-        assertThat(data.getAddressLines()).isEmpty();
+        assertThat(data.addressLines()).isEmpty();
     }
     @Test
     public void blankAddressHasEmptyAddressLineList() {
         data.setAddress("");
 
-        assertThat(data.getAddressLines()).isEmpty();
+        assertThat(data.addressLines()).isEmpty();
     }
 }

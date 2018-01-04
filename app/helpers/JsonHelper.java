@@ -8,8 +8,6 @@ import play.Logger;
 import play.libs.Json;
 import play.mvc.Result;
 
-import static com.fasterxml.jackson.databind.DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT;
-import static com.fasterxml.jackson.databind.DeserializationFeature.UNWRAP_SINGLE_VALUE_ARRAYS;
 import static play.mvc.Http.Status.SERVICE_UNAVAILABLE;
 import static play.mvc.Results.badRequest;
 import static play.mvc.Results.ok;
@@ -24,10 +22,7 @@ public interface JsonHelper {
 
     static Map<String, String> jsonToMap(JsonNode json) {
 
-        // mapper that allows array to be serialised as a String
-        val mapper = Json.newDefaultMapper()
-                .configure(UNWRAP_SINGLE_VALUE_ARRAYS, true)
-                .configure(ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true);
+        val mapper = Json.mapper();
 
         try {
             return mapper.readValue(

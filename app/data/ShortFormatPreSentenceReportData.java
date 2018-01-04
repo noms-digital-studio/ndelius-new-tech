@@ -269,7 +269,7 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     private String counterSignature;
 
     @JsonProperty("ADDRESS_LINES")
-    public List<String> getAddressLines() {
+    public List<String> addressLines() {
         return Optional.ofNullable(address)
                 .map(addressLines ->
                         ImmutableList.copyOf(addressLines.split("\n"))
