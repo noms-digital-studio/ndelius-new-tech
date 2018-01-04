@@ -43,7 +43,7 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
 
     @Encrypted
     @OnPage(2)
-    @JsonProperty("_ADDRESS_")
+    @JsonIgnore
     private String address;
 
     @JsonIgnore
