@@ -53,7 +53,7 @@ class OffenderSearch extends React.Component {
 
     render() {
 
-        var searchChange = ev => this.setState({ name: ev.target.value }, this.performSearch);
+        let searchChange = ev => this.setState({ name: ev.target.value }, this.performSearch);
 
         return (
             <div>

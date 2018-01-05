@@ -10,7 +10,7 @@ version := conf.getString("app.version")
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava, SbtWeb)
 
-ReactJsKeys.harmony := true
+JsEngineKeys.engineType := JsEngineKeys.EngineType.Node
 
 scalaVersion := "2.12.2"
 
