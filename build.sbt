@@ -1,4 +1,7 @@
 import com.typesafe.config.ConfigFactory
+import com.typesafe.sbt.jse.SbtJsEngine.autoImport.JsEngineKeys._
+import com.typesafe.sbt.jse.SbtJsTask.executeJs
+import scala.concurrent.duration._
 
 val conf = ConfigFactory.parseFile(new File("conf/application.conf"))
 
@@ -8,7 +11,7 @@ organization := "uk.gov.justice.digital"
 
 version := conf.getString("app.version")
 
-lazy val root = (project in file(".")).enablePlugins(PlayJava, SbtWeb)
+lazy val root = (project in file(".")).enablePlugins(PlayJava, SbtWeb, SbtJsEngine)
 
 JsEngineKeys.engineType := JsEngineKeys.EngineType.Node
 
@@ -61,3 +64,29 @@ assemblyMergeStrategy in assembly := {
 }
 
 assemblyJarName in assembly := "ndelius2-" + version.value + ".jar"
+
+val browserifyTask = taskKey[Seq[File]]("Run browserify")
+val browserifyOutputDir = settingKey[File]("Browserify output directory")
+browserifyOutputDir := target.value / "web" / "browserify"
+
+browserifyTask := {
+  println("Running browserify")
+  ( npmNodeModules in Assets ).value
+  val inputFile = baseDirectory.value / "app/assets/javascripts/index.js"
+  val outputFile = browserifyOutputDir.value / "bundle.js"
+  browserifyOutputDir.value.mkdirs
+  val modules =  (baseDirectory.value / "node_modules").getAbsolutePath
+  executeJs(state.value,
+    engineType.value,
+    None,
+    Seq(modules),
+    baseDirectory.value / "browserify.js",
+    Seq(inputFile.getPath, outputFile.getPath),
+    30.seconds)
+  ()
+
+  List(outputFile)
+}
+
+sourceGenerators in Assets +=  browserifyTask.taskValue
+resourceDirectories in Assets += browserifyOutputDir.value
