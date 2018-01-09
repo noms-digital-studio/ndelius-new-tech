@@ -3,17 +3,17 @@ function requestSearch(searchTerm){
         type: 'REQUEST_SEARCH',
         searchTerm
     }
-};
+}
 
 function searchResults(results){
     return {
         type: 'SEARCH_RESULTS',
         results
     }
-};
+}
 
 const performSearch = _.debounce((dispatch, searchTerm) => {
-    $.getJSON('spellcheck/' + searchTerm, data => {
+    $.getJSON('searchOffender/' + searchTerm, data => {
         dispatch(searchResults(data))
     });
 }, 500);
