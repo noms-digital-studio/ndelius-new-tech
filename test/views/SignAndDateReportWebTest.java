@@ -3,6 +3,7 @@ package views;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
+import interfaces.Search;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +34,8 @@ public class SignAndDateReportWebTest extends WithBrowser {
     private StartPage startPage;
     @Mock
     private Supplier<String> mockOriginalReportData;
+    @Mock
+    private Search search;
 
     @Before
     public void before() {
@@ -99,7 +102,8 @@ public class SignAndDateReportWebTest extends WithBrowser {
             overrides(
                 bind(PdfGenerator.class).toInstance(new SimplePdfGeneratorMock()),
                 bind(DocumentStore.class).toInstance(new DocumentStoreMock()),
-                bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock())
+                bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock()),
+                bind(Search.class).toInstance(search)
             )
             .build();
     }

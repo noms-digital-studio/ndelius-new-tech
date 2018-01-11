@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
+import interfaces.Search;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +43,8 @@ public class SourcesOfInformationWebTest extends WithBrowser {
     private DocumentStore alfrescoDocumentStore;
     @Captor
     private ArgumentCaptor<String> metaDataCaptor;
+    @Mock
+    private Search search;
 
     private SourcesOfInformationPage sourcesOfInformationPage;
     private StartPage startPage;
@@ -184,7 +187,8 @@ public class SourcesOfInformationWebTest extends WithBrowser {
                 overrides(
                         bind(PdfGenerator.class).toInstance(new SimplePdfGeneratorMock()),
                         bind(DocumentStore.class).toInstance(alfrescoDocumentStore),
-                        bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock())
+                        bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock()),
+                        bind(Search.class).toInstance(search)
                 )
                 .build();
     }
