@@ -4,9 +4,11 @@ import injection.MongoClientProvider;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
+import interfaces.Search;
 import services.AlfrescoStore;
 import services.MongoDbStore;
 import services.RestPdfGenerator;
+import services.search.ElasticSearch;
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -26,6 +28,7 @@ public class Module extends AbstractModule {
         bind(PdfGenerator.class).to(RestPdfGenerator.class);
         bind(DocumentStore.class).to(AlfrescoStore.class);
         bind(AnalyticsStore.class).to(MongoDbStore.class);
+        bind(Search.class).to(ElasticSearch.class);
 
         bind(MongoClient.class).toProvider(MongoClientProvider.class).asEagerSingleton();
     }
