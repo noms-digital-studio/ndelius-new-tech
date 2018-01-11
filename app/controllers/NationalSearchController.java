@@ -1,5 +1,6 @@
 package controllers;
 
+import helpers.JsonHelper;
 import interfaces.Search;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -7,8 +8,6 @@ import play.mvc.Result;
 import javax.inject.Inject;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-
-import static helpers.JsonHelper.okJson;
 
 public class NationalSearchController extends Controller {
 
@@ -30,7 +29,7 @@ public class NationalSearchController extends Controller {
             return CompletableFuture.supplyAsync(() -> ok("[]").as("application/json"));
         }
 
-        return CompletableFuture.supplyAsync(() -> okJson(elasticSearch.search(searchTerm)));
+        return elasticSearch.search(searchTerm).thenApply(JsonHelper::okJson);
     }
 
 }
