@@ -10,7 +10,7 @@ const searchResults = (state = {searchTerm: '', results: []}, action) => {
             return {searchTerm: action.searchTerm, results: state.results};
         case SEARCH_RESULTS:
             if (state.searchTerm === action.searchTerm) {
-                return {searchTerm: state.searchTerm, results: mapResults(action.results)};
+                return {searchTerm: state.searchTerm, results: mapResults(action.results, state.searchTerm)};
             }
             return state
         case CLEAR_RESULTS:
@@ -22,7 +22,7 @@ const searchResults = (state = {searchTerm: '', results: []}, action) => {
 
 export default searchResults
 
-function mapResults(results = []) {
+function mapResults(results = [], searchTerm) {
     return results.map(offenderDetails => {
         return {
             offenderId: offenderDetails['OFFENDER_ID'],
@@ -39,8 +39,8 @@ function mapResults(results = []) {
                     firstName: alias['FIRST_NAME'],
                     surname: alias['SURNAME']
                 }
-            }),
-            previousSurname: offenderDetails['PREVIOUS_SURNAME'],
+            }).filter(item => anyMatch(item, searchTerm)),
+            previousSurname: whenMatched(offenderDetails['PREVIOUS_SURNAME'], searchTerm),
             addresses: offenderDetails['ADDRESSES'].map((address) => {
                 return {
                     addressNumber: address['ADDRESS_NUMBER'].toString(),
@@ -50,7 +50,25 @@ function mapResults(results = []) {
                     county: address['COUNTY'],
                     postcode: address['POSTCODE']
                 }
-            })
+            }).filter(item => anyMatch(item, searchTerm))
         }
     });
+}
+
+function anyMatch(item, searchTerm) {
+    return Object.getOwnPropertyNames(item)
+        .map(property => item[property])
+        .map(text => matches(text, searchTerm))
+        .reduce((accumulator, currentValue) => accumulator || currentValue, false)
+}
+
+function whenMatched(text, searchTerm) {
+    return matches(text, searchTerm) ? text : null;
+}
+
+function matches(text, searchTerm) {
+    return searchTerm.split(' ')
+        .filter(searchWord => searchWord) // remove empty terms
+        .map(searchWord => RegExp(searchWord, "i").test(text))
+        .reduce((accumulator, currentValue) => accumulator || currentValue, false)
 }
