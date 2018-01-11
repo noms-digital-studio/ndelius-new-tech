@@ -3,7 +3,7 @@ import markableText from '../components/markableText.jsx'
 
 const mapStateToProps = (state) => {
     return {
-        searchTerm: state.searchTerm
+        searchTerm: state.search.searchTerm
     }
 };
 
