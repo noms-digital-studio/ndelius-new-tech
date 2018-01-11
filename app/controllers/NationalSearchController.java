@@ -5,6 +5,8 @@ import play.mvc.Controller;
 import play.mvc.Result;
 
 import javax.inject.Inject;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 
 import static helpers.JsonHelper.okJson;
 
@@ -23,12 +25,12 @@ public class NationalSearchController extends Controller {
         return ok(template.render());
     }
 
-    public Result searchOffender(String searchTerm) {
+    public CompletionStage<Result> searchOffender(String searchTerm) {
         if ("blank".equals(searchTerm.toLowerCase())) {
-            return ok("[]").as("application/json");
+            return CompletableFuture.supplyAsync(() -> ok("[]").as("application/json"));
         }
 
-        return okJson(elasticSearch.search(searchTerm));
+        return CompletableFuture.supplyAsync(() -> okJson(elasticSearch.search(searchTerm)));
     }
 
 }
