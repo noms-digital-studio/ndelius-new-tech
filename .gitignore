@@ -1,7 +1,8 @@
 .idea/
 target/
+node_modules/
 logs/
 node_modules/
 application.log
 app.log.directory_IS_UNDEFINEDapp.log.name_IS_UNDEFINED
-
+**/.DS_Store
