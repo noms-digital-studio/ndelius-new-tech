@@ -14,6 +14,7 @@ version := conf.getString("app.version")
 lazy val root = (project in file(".")).enablePlugins(PlayJava, SbtWeb, SbtJsEngine)
 
 JsEngineKeys.engineType := JsEngineKeys.EngineType.Node
+MochaKeys.requires += "setup.js"
 
 scalaVersion := "2.12.2"
 
