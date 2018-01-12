@@ -67,7 +67,7 @@ function whenMatched(text, searchTerm) {
 }
 
 function matches(text, searchTerm) {
-    return searchTerm.split(' ')
+    return text && searchTerm.split(' ')
         .filter(searchWord => searchWord) // remove empty terms
         .map(searchWord => RegExp(searchWord, "i").test(text))
         .reduce((accumulator, currentValue) => accumulator || currentValue, false)
