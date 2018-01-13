@@ -4,11 +4,9 @@ import helpers.Encryption;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
-import interfaces.Search;
 import lombok.val;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
@@ -29,9 +27,6 @@ import static play.test.Helpers.route;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HttpHeadersTest extends WithApplication {
-
-    @Mock
-    private Search search;
 
     @Test
     public void shouldTurnOff_IE_XSSFilter() {
@@ -66,8 +61,7 @@ public class HttpHeadersTest extends WithApplication {
             overrides(
                 bind(PdfGenerator.class).toInstance(new SimplePdfGeneratorMock()),
                 bind(DocumentStore.class).toInstance(new SimpleDocumentStoreMock()),
-                bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock()),
-                bind(Search.class).toInstance(search)
+                bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock())
             )
             .build();
     }

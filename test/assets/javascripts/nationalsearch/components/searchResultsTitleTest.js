@@ -31,11 +31,5 @@ describe('SearchResultsTitle component', () => {
     })
 })
 
-function noResults() {
-    return []
-}
-
-function twoResults() {
-    return [{}, {}]
-}
-
+const noResults = () => []
+const twoResults = () => [{}, {}]

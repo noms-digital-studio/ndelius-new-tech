@@ -1,10 +1,14 @@
 import com.google.inject.AbstractModule;
 import com.mongodb.rx.client.MongoClient;
 import injection.MongoClientProvider;
+import injection.RestClientBuilderProvider;
+import injection.RestHighLevelClientProvider;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
 import interfaces.Search;
+import org.elasticsearch.client.RestClientBuilder;
+import org.elasticsearch.client.RestHighLevelClient;
 import services.AlfrescoStore;
 import services.MongoDbStore;
 import services.RestPdfGenerator;
@@ -29,6 +33,9 @@ public class Module extends AbstractModule {
         bind(DocumentStore.class).to(AlfrescoStore.class);
         bind(AnalyticsStore.class).to(MongoDbStore.class);
         bind(Search.class).to(ElasticSearch.class);
+
+        bind(RestClientBuilder.class).toProvider(RestClientBuilderProvider.class);
+        bind(RestHighLevelClient.class).toProvider(RestHighLevelClientProvider.class);
 
         bind(MongoClient.class).toProvider(MongoClientProvider.class).asEagerSingleton();
     }

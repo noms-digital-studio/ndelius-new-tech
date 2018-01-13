@@ -1,45 +1,53 @@
 package services.search;
 
 import data.offendersearch.OffenderSearchResult;
+import helpers.FutureListener;
+import helpers.JsonHelper;
 import interfaces.Search;
 import lombok.val;
-import play.Environment;
-import play.Logger;
-import play.libs.Json;
-import scala.io.Source;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 import javax.inject.Inject;
-import java.io.IOException;
+import java.util.Arrays;
+import java.util.concurrent.CompletionStage;
 
 import static java.util.stream.Collectors.toList;
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 
 public class ElasticSearch implements Search {
 
-    private final Environment environment;
+    private final RestHighLevelClient elasticSearchClient;
 
     @Inject
-    public ElasticSearch(Environment environment) {
-        this.environment = environment;
+    public ElasticSearch(RestHighLevelClient elasticSearchClient) {
+        this.elasticSearchClient = elasticSearchClient;
     }
 
     @Override
-    public OffenderSearchResult search(String searchTerm) {
-        try {
-            val offenderSearchResults = Source.fromInputStream(environment.resourceAsStream("offender-search-results.json"), "UTF-8").mkString();
-            val elasticSearchResults = Json.mapper().readValue(offenderSearchResults, ElasticSearchResults.class);
+    public CompletionStage<OffenderSearchResult> search(String searchTerm) {
+
+        val searchSource = new SearchSourceBuilder().query(multiMatchQuery(searchTerm, "surname", "firstName", "gender"));
+
+        val searchRequest = new SearchRequest("offender").source(searchSource);
+
+        val listener = new FutureListener<SearchResponse>();
+        elasticSearchClient.searchAsync(searchRequest, listener);
+
+        return listener.stage().thenApply(response -> {
 
             val offenderSummaries =
-                elasticSearchResults.getHits().stream()
-                    .map(ElasticSearchResult::toOffenderSummary)
-                    .collect(toList());
+                Arrays.stream(response.getHits().getHits())
+                    .map(offenderSearchHit -> JsonHelper.readValue(offenderSearchHit.getSourceAsString(),
+                                                                   ElasticSearchResult.class).toOffenderSummary()
+                    ).collect(toList());
 
             val offenderSearchResult = new OffenderSearchResult();
             offenderSearchResult.setOffenders(offenderSummaries);
             return offenderSearchResult;
-        } catch (IOException e) {
-            Logger.error("Failed to read offender search results", e);
-            throw new RuntimeException(e);
-        }
+        });
     }
 
 }
