@@ -1,16 +1,16 @@
 package data.offendersearch;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
-import static java.util.Collections.emptyList;
-
 @Data
+@Builder
 public class OffenderSearchResult {
 
-    private List<JsonNode> offenders = emptyList();
-    private List<String> suggestions = emptyList();
+    private List<JsonNode> offenders;
+    private List<String> suggestions;
     private long total;
 }
