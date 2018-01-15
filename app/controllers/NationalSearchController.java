@@ -24,12 +24,12 @@ public class NationalSearchController extends Controller {
         return ok(template.render());
     }
 
-    public CompletionStage<Result> searchOffender(String searchTerm) {
+    public CompletionStage<Result> searchOffender(String searchTerm, int pageSize, int pageNumber) {
         if ("blank".equals(searchTerm.toLowerCase())) {
             return CompletableFuture.supplyAsync(() -> ok("[]").as("application/json"));
         }
 
-        return elasticSearch.search(searchTerm).thenApply(JsonHelper::okJson);
+        return elasticSearch.search(searchTerm, pageSize, pageNumber).thenApply(JsonHelper::okJson);
     }
 
 }

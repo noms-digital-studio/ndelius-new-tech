@@ -11,4 +11,5 @@ public class OffenderSearchResult {
 
     private List<OffenderSummary> offenders = emptyList();
     private List<String> suggestions = emptyList();
+    private long total;
 }
