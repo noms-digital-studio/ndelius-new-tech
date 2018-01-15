@@ -9,7 +9,7 @@ const searchResults = (state = {searchTerm: '', results: []}, action) => {
         case REQUEST_SEARCH:
             return {searchTerm: action.searchTerm, results: state.results};
         case SEARCH_RESULTS:
-            if (state.searchTerm === action.searchTerm) {
+            if (state.searchTerm.includes(action.searchTerm)) {
                 return {searchTerm: state.searchTerm, results: mapResults(action.results.offenders, state.searchTerm)};
             }
             return state
@@ -25,30 +25,16 @@ export default searchResults
 function mapResults(results = [], searchTerm) {
     return results.map(offenderDetails => {
         return {
-            offenderId: offenderDetails.offenderId,
-            firstName: offenderDetails.firstName,
-            surname: offenderDetails.surname,
-            crn: offenderDetails.crn,
-            dateOfBirth: offenderDetails.dateOfBirth,
-            risk: offenderDetails.risk,
-            currentOffender: offenderDetails.currentOffender,
-            gender: offenderDetails.gender,
-            age: offenderDetails.age,
+            ...offenderDetails,
             aliases: offenderDetails.aliases.map((alias) => {
                 return {
-                    firstName: alias.firstName,
-                    surname: alias.surname
+                    ...alias
                 }
             }).filter(item => anyMatch(item, searchTerm)),
             previousSurname: whenMatched(offenderDetails.previousSurname, searchTerm),
             addresses: offenderDetails.addresses.map((address) => {
                 return {
-                    addressNumber: address.addressNumber,
-                    buildingName: address.buildingName,
-                    streetName: address.streetName,
-                    town: address.town,
-                    county: address.county,
-                    postcode: address.postcode
+                    ...address
                 }
             }).filter(item => anyMatch(item, searchTerm))
         }
