@@ -8,13 +8,13 @@ import {
 const navigate = (state = {shouldClose: false}, action) => {
     switch (action.type) {
         case ADD_CONTACT:
-            return {shouldClose: true, nextPage: 'addContact', parameters: {offenderId: action.offenderId}};
+            return {shouldClose: true, action: 'addContact', data: action.offenderId};
         case LEGACY_SEARCH:
-            return {shouldClose: true, nextPage: 'legacySearch'};
+            return {shouldClose: true, action: 'toggleSearch'};
         case SHOW_OFFENDER_DETAILS:
-            return {shouldClose: true, nextPage: 'showOffenderDetails', parameters: {offenderId: action.offenderId}};
+            return {shouldClose: true, action: 'viewOffender', data: action.offenderId};
         case ADD_NEW_OFFENDER:
-            return {shouldClose: true, nextPage: 'addNewOffender'};
+            return {shouldClose: true, action: 'addOffender'};
         default:
             return state
     }

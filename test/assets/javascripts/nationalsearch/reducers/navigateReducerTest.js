@@ -19,11 +19,11 @@ describe("navigateReducer", () => {
         it('shouldClose is true', () => {
             expect(state.shouldClose).to.equal(true)
         });
-        it('nextPage is addContact', () => {
-            expect(state.nextPage).to.equal('addContact')
+        it('action is addContact', () => {
+            expect(state.action).to.equal('addContact')
         });
-        it('parameters contain offenderId', () => {
-            expect(state.parameters.offenderId).to.equal('123')
+        it('data is set to offenderId', () => {
+            expect(state.data).to.equal('123')
         });
     })
     describe("when SHOW_OFFENDER_DETAILS action received", () => {
@@ -36,11 +36,11 @@ describe("navigateReducer", () => {
         it('shouldClose is true', () => {
             expect(state.shouldClose).to.equal(true)
         });
-        it('nextPage is showOffenderDetails', () => {
-            expect(state.nextPage).to.equal('showOffenderDetails')
+        it('action is viewOffender', () => {
+            expect(state.action).to.equal('viewOffender')
         });
-        it('parameters contain offenderId', () => {
-            expect(state.parameters.offenderId).to.equal('123')
+        it('data is set to offenderId', () => {
+            expect(state.data).to.equal('123')
         });
     })
     describe("when LEGACY_SEARCH action received", () => {
@@ -53,11 +53,11 @@ describe("navigateReducer", () => {
         it('shouldClose is true', () => {
             expect(state.shouldClose).to.equal(true)
         });
-        it('nextPage is legacySearch', () => {
-            expect(state.nextPage).to.equal('legacySearch')
+        it('action is toggleSearch', () => {
+            expect(state.action).to.equal('toggleSearch')
         });
-        it('parameters are empty', () => {
-            expect(state.parameters).to.be.undefined
+        it('data is empty', () => {
+            expect(state.data).to.be.undefined
         });
     })
     describe("when ADD_NEW_OFFENDER action received", () => {
@@ -70,11 +70,11 @@ describe("navigateReducer", () => {
         it('shouldClose is true', () => {
             expect(state.shouldClose).to.equal(true)
         });
-        it('nextPage is addNewOffender', () => {
-            expect(state.nextPage).to.equal('addNewOffender')
+        it('action is addOffender', () => {
+            expect(state.action).to.equal('addOffender')
         });
-        it('parameters are empty', () => {
-            expect(state.parameters).to.be.undefined
+        it('data is empty', () => {
+            expect(state.data).to.be.undefined
         });
     })
 
