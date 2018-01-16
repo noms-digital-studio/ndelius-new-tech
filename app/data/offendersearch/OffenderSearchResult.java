@@ -11,6 +11,6 @@ import java.util.List;
 public class OffenderSearchResult {
 
     private List<JsonNode> offenders;
-    private List<String> suggestions;
+    private JsonNode suggestions;
     private long total;
 }
