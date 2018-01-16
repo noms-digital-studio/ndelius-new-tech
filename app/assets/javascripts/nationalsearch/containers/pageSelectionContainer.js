@@ -1,15 +1,20 @@
 import { connect } from 'react-redux'
-import { search } from '../actions/search'
+import { search, PAGE_SIZE } from '../actions/search'
 import pageSelection from '../components/pageSelection.jsx'
 
 const mapStateToProps = (state) => {
-    return {}
+    return {
+        searchTerm: state.search.searchTerm,
+        pageSize: PAGE_SIZE,
+        total: state.search.total,
+        pageNumber: state.search.pageNumber
+    }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        search: (searchTerm, pageNumber) => {
-            search(searchTerm, pageNumber)
+        gotoPage: (searchTerm, pageNumber) => {
+            search(dispatch, searchTerm, pageNumber)
         }
     }
 };

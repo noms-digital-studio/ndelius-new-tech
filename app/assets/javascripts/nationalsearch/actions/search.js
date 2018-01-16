@@ -2,40 +2,35 @@ export const REQUEST_SEARCH = 'REQUEST_SEARCH'
 export const SEARCH_RESULTS = 'SEARCH_RESULTS'
 export const CLEAR_RESULTS = 'CLEAR_RESULTS'
 
-function requestSearch(searchTerm){
-    return {
+export const PAGE_SIZE = 10;
+
+const requestSearch = (searchTerm) => ({
         type: REQUEST_SEARCH,
         searchTerm
-    }
-}
+    })
 
-function searchResults(searchTerm, results){
-    return {
+const searchResults = (searchTerm, results, pageNumber) => ({
         type: SEARCH_RESULTS,
         searchTerm,
-        results
-    }
-}
+        results,
+        pageNumber
+    })
 
-function clearResults(){
-    return {
-        type: CLEAR_RESULTS
-    }
-}
+const clearResults = () => ({type: CLEAR_RESULTS})
 
-const performSearch = _.debounce((dispatch, searchTerm) => {
-    $.getJSON('searchOffender/' + searchTerm, data => {
-        dispatch(searchResults(searchTerm, data))
+const performSearch = _.debounce((dispatch, searchTerm, pageNumber) => {
+    $.getJSON(`searchOffender/${searchTerm}?pageSize=${PAGE_SIZE}&pageNumber=${pageNumber}`, data => {
+        dispatch(searchResults(searchTerm, data, pageNumber))
     });
 }, 500);
 
 
 
-export function search(dispatch, searchTerm) {
+export function search(dispatch, searchTerm, pageNumber = 1) {
     if (searchTerm === '') {
         dispatch(clearResults())
     } else {
         dispatch(requestSearch(searchTerm));
-        performSearch(dispatch, searchTerm);
+        performSearch(dispatch, searchTerm, pageNumber);
     }
 }
