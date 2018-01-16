@@ -7,7 +7,7 @@ describe('LegacySearchLink component', () => {
     context('link clicked', () => {
         it('legacySearch callback function called', () => {
             const legacySearch = stub()
-            const link = shallow(<LegacySearchLink legacySearch={legacySearch}/>)
+            const link = shallow(<LegacySearchLink legacySearch={legacySearch}>click here</LegacySearchLink>)
 
             link.find('a').simulate('click');
 
