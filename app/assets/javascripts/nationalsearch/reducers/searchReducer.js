@@ -1,16 +1,22 @@
-import {
-    REQUEST_SEARCH,
-    SEARCH_RESULTS,
-    CLEAR_RESULTS
-} from '../actions/search'
+import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS} from '../actions/search'
 
-const searchResults = (state = {searchTerm: '', results: []}, action) => {
+const searchResults = (state = {searchTerm: '', results: [], total: 0, pageNumber: 1}, action) => {
     switch (action.type) {
         case REQUEST_SEARCH:
-            return {searchTerm: action.searchTerm, results: state.results};
+            return {
+                searchTerm: action.searchTerm,
+                results: state.results,
+                total: state.total,
+                pageNumber: state.pageNumber
+            };
         case SEARCH_RESULTS:
             if (state.searchTerm.includes(action.searchTerm)) {
-                return {searchTerm: state.searchTerm, results: mapResults(action.results.offenders, state.searchTerm)};
+                return {
+                    searchTerm: state.searchTerm,
+                    pageNumber: action.pageNumber,
+                    total: action.results.total,
+                    results: mapResults(action.results.offenders, state.searchTerm)
+                };
             }
             return state
         case CLEAR_RESULTS:

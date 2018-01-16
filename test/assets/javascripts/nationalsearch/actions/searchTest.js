@@ -23,14 +23,28 @@ describe('search action', () => {
         context('with a search term', () => {
             beforeEach(() => {
                 global.$.getJSON.yields({offenders: []})
+                search(dispatch, 'Mr Bean')
             })
             it ('dispatches REQUEST_SEARCH with searchTerm', () => {
-                search(dispatch, 'Mr Bean')
                 expect(dispatch).to.be.calledWith({type: 'REQUEST_SEARCH', searchTerm: 'Mr Bean'})
             })
             it ('dispatches SEARCH_RESULTS with searchTerm and results', () => {
-                search(dispatch, 'Mr Bean')
-                expect(dispatch).to.be.calledWith({type: 'SEARCH_RESULTS', results: {offenders: []}, searchTerm: 'Mr Bean'})
+                expect(dispatch).to.be.calledWith({type: 'SEARCH_RESULTS', results: {offenders: []}, searchTerm: 'Mr Bean', pageNumber: 1})
+            })
+        })
+        context('with a search term and page number', () => {
+            beforeEach(() => {
+                global.$.getJSON.yields({offenders: []})
+                search(dispatch, 'Mr Bean', 3)
+            })
+            it ('dispatches REQUEST_SEARCH with searchTerm', () => {
+                expect(dispatch).to.be.calledWith({type: 'REQUEST_SEARCH', searchTerm: 'Mr Bean'})
+            })
+            it ('dispatches SEARCH_RESULTS with searchTerm and results', () => {
+                expect(dispatch).to.be.calledWith({type: 'SEARCH_RESULTS', results: {offenders: []}, searchTerm: 'Mr Bean', pageNumber: 3})
+            })
+            it('calls ajax with pagesNumber, searchTerm and pageSize', () => {
+                expect(global.$.getJSON).to.be.calledWith('searchOffender/Mr Bean?pageSize=10&pageNumber=3')
             })
         })
     })

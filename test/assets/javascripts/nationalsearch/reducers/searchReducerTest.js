@@ -17,11 +17,17 @@ describe("searchReducer", () => {
         it('results will be empty', () => {
             expect(state.results).to.be.empty
         });
+        it('total will be 0', () => {
+            expect(state.total).to.equal(0)
+        });
+        it('pageNumber will be 1', () => {
+            expect(state.pageNumber).to.equal(1)
+        });
     })
     describe("when REQUEST_SEARCH action received", () => {
 
         beforeEach(() => {
-            state = search({searchTerm: 'Mr Bean', results: someResults()}, {
+            state = search({searchTerm: 'Mr Bean', results: someResults(), total: 28, pageNumber: 3}, {
                 type: REQUEST_SEARCH,
                 searchTerm: 'John Smith'
             })
@@ -33,13 +39,19 @@ describe("searchReducer", () => {
         it('results is kept at existing value', () => {
             expect(state.results).to.eql(someResults())
         });
+        it('total is kept at existing value', () => {
+            expect(state.total).to.equal(28)
+        });
+        it('pageNumber is kept at existing value', () => {
+            expect(state.pageNumber).to.equal(3)
+        });
     })
     describe("when SEARCH_RESULTS action received", () => {
 
         context('when searchTerm matches from request action', () => {
             beforeEach(() => {
                 state = search(
-                    {searchTerm: 'Mr Bean', results: someResults()},
+                    {searchTerm: 'Mr Bean', results: someResults(), total: 28, pageNumber: 3},
                     {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: emptyResults()})
             })
             it('results are replaced with new results', () => {
@@ -49,7 +61,7 @@ describe("searchReducer", () => {
         context('when searchTerm partial matches from request action', () => {
             beforeEach(() => {
                 state = search(
-                    {searchTerm: 'Mr Bean Bobby', results: someResults()},
+                    {searchTerm: 'Mr Bean Bobby', results: someResults(), total: 28, pageNumber: 3},
                     {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: emptyResults()})
             })
             it('results are replaced with new results', () => {
@@ -59,28 +71,40 @@ describe("searchReducer", () => {
         context('when searchTerm does not match from request action', () => {
             beforeEach(() => {
                 state = search(
-                    {searchTerm: 'Mr Fancy', results: someResults()},
+                    {searchTerm: 'Mr Fancy', results: someResults(), total: 28, pageNumber: 3},
                     {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: emptyResults()})
             })
             it('existing results are kept and new results discarded', () => {
                 expect(state.results).to.eql(someResults())
             });
+            it('total is kept at existing value', () => {
+                expect(state.total).to.equal(28)
+            });
+            it('pageNumber is kept at existing value', () => {
+                expect(state.pageNumber).to.equal(3)
+            });
         })
         context('when current searchTerm is blank but results received from previous request', () => {
             beforeEach(() => {
                 state = search(
-                    {searchTerm: '', results: emptyResults()},
+                    {searchTerm: '', results: emptyResults(), total: 0, pageNumber: 1},
                     {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: someResults()})
             })
             it('existing empty results are kept and new results discarded', () => {
                 expect(state.results).to.eql(emptyResults())
             });
+            it('total is kept at existing value', () => {
+                expect(state.total).to.equal(0)
+            });
+            it('pageNumber is kept at existing value', () => {
+                expect(state.pageNumber).to.equal(1)
+            });
         })
         describe('search results copying', () => {
             beforeEach(() => {
                 state = search(
-                    {searchTerm: 'Mr Bean', results: emptyResults()},
-                    {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: someResults({
+                    {searchTerm: 'Mr Bean', results: emptyResults(), total: 0, pageNumber: 1},
+                    {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', pageNumber: 3, results: someResults({
                             offenders: [
                                 {
                                     offenderId: '99',
@@ -95,8 +119,15 @@ describe("searchReducer", () => {
                                     addresses: [],
                                     aliases: []
                                 }
-                            ]
+                            ],
+                            total: 4
                         })})
+            })
+            it('pageNumber is copied', () => {
+                expect(state.pageNumber).to.equal(3)
+            })
+            it('total is copied', () => {
+                expect(state.total).to.equal(4)
             })
             it('core attributes copied', () => {
                 expect(state.results[0].offenderId).to.equal('99')
@@ -114,7 +145,7 @@ describe("searchReducer", () => {
             context("searchTerm has no matches in address", () => {
                 beforeEach(() => {
                     state = search(
-                        {searchTerm: 'Mr Bean', results: someResults()},
+                        {searchTerm: 'Mr Bean', results: someResults(), total: 0, pageNumber: 1},
                         {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: someSingleResultWithAddresses([
                                 {
                                     addressNumber: '1',
@@ -145,7 +176,7 @@ describe("searchReducer", () => {
             context("searchTerm has some matches in address", () => {
                 beforeEach(() => {
                     state = search(
-                        {searchTerm: 'Mr Bean sheffield', results: someResults()},
+                        {searchTerm: 'Mr Bean sheffield', results: someResults(), total: 0, pageNumber: 1},
                         {type: SEARCH_RESULTS, searchTerm: 'Mr Bean sheffield', results: someSingleResultWithAddresses([
                                 {
                                     buildingName: 'Sloppy Buildings',
@@ -188,7 +219,7 @@ describe("searchReducer", () => {
             context("searchTerm has no matches in alias", () => {
                 beforeEach(() => {
                     state = search(
-                        {searchTerm: 'Trevor', results: someResults()},
+                        {searchTerm: 'Trevor', results: someResults(), total: 0, pageNumber: 1},
                         {type: SEARCH_RESULTS, searchTerm: 'Trevor', results: someSingleResultWithAliases([
                                 {
                                     firstName: 'Bean',
@@ -212,7 +243,7 @@ describe("searchReducer", () => {
             context("searchTerm has some matches in alias", () => {
                 beforeEach(() => {
                     state = search(
-                        {searchTerm: 'bean', results: someResults()},
+                        {searchTerm: 'bean', results: someResults(), total: 0, pageNumber: 1},
                         {type: SEARCH_RESULTS, searchTerm: 'bean', results: someSingleResultWithAliases([
                                 {
                                     firstName: 'Bean',
@@ -242,7 +273,7 @@ describe("searchReducer", () => {
             context("searchTerm has no matches in previous surname", () => {
                 beforeEach(() => {
                     state = search(
-                        {searchTerm: 'trevor', results: someResults()},
+                        {searchTerm: 'trevor', results: someResults(), total: 0, pageNumber: 1},
                         {type: SEARCH_RESULTS, searchTerm: 'trevor', results: someSingleResultWithPreviousSurname('Bobby')})
                 })
 
@@ -253,7 +284,7 @@ describe("searchReducer", () => {
             context("previous surname not present in results", () => {
                 beforeEach(() => {
                     state = search(
-                        {searchTerm: 'trevor', results: someResults()},
+                        {searchTerm: 'trevor', results: someResults(), total: 0, pageNumber: 1},
                         {type: SEARCH_RESULTS, searchTerm: 'trevor', results: someSingleResultWithPreviousSurname()})
                 })
 
@@ -264,7 +295,7 @@ describe("searchReducer", () => {
             context("searchTerm has some matches in previous surname", () => {
                 beforeEach(() => {
                     state = search(
-                        {searchTerm: 'trevor', results: someResults()},
+                        {searchTerm: 'trevor', results: someResults(), total: 0, pageNumber: 1},
                         {type: SEARCH_RESULTS, searchTerm: 'trevor', results: someSingleResultWithPreviousSurname('Trevor')})
                 })
 
