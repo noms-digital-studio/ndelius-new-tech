@@ -17,6 +17,9 @@ describe("searchReducer", () => {
         it('results will be empty', () => {
             expect(state.results).to.be.empty
         });
+        it('suggestions will be empty', () => {
+            expect(state.suggestions).to.be.empty
+        });
         it('total will be 0', () => {
             expect(state.total).to.equal(0)
         });
@@ -27,7 +30,7 @@ describe("searchReducer", () => {
     describe("when REQUEST_SEARCH action received", () => {
 
         beforeEach(() => {
-            state = search({searchTerm: 'Mr Bean', results: someResults(), total: 28, pageNumber: 3}, {
+            state = search({searchTerm: 'Mr Bean', results: someResults(), suggestions: someSuggestions(), total: 28, pageNumber: 3}, {
                 type: REQUEST_SEARCH,
                 searchTerm: 'John Smith'
             })
@@ -38,6 +41,9 @@ describe("searchReducer", () => {
         });
         it('results is kept at existing value', () => {
             expect(state.results).to.eql(someResults())
+        });
+        it('suggestions is kept at existing value', () => {
+            expect(state.suggestions).to.eql(someSuggestions())
         });
         it('total is kept at existing value', () => {
             expect(state.total).to.equal(28)
@@ -55,7 +61,7 @@ describe("searchReducer", () => {
                     {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: emptyResults()})
             })
             it('results are replaced with new results', () => {
-                expect(state.results).to.eql(emptyResults())
+                expect(state.results).to.eql([])
             });
         })
         context('when searchTerm partial matches from request action', () => {
@@ -65,7 +71,7 @@ describe("searchReducer", () => {
                     {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: emptyResults()})
             })
             it('results are replaced with new results', () => {
-                expect(state.results).to.eql(emptyResults())
+                expect(state.results).to.eql([])
             });
         })
         context('when searchTerm does not match from request action', () => {
@@ -304,11 +310,238 @@ describe("searchReducer", () => {
                 });
             })
         })
+        describe("suggestions merging", () => {
+            context("no suggest node at all", () => {
+                beforeEach(() => {
+                    state = search(
+                        {searchTerm: 'trevor', results: someResults(), total: 0, pageNumber: 1},
+                        {type: SEARCH_RESULTS, searchTerm: 'trevor', results: someResultsWithSuggestions({suggestions: {}})})
+                })
+                it('suggestions are cleared', () => {
+                    expect(state.suggestions).to.be.empty
+                });
+            })
+            context("no suggest terms at all", () => {
+                beforeEach(() => {
+                    state = search(
+                        {searchTerm: 'trevor', results: someResults(), total: 0, pageNumber: 1},
+                        {type: SEARCH_RESULTS, searchTerm: 'trevor', results: someResultsWithSuggestions({suggestions: {suggest: {}}})})
+                })
+                it('suggestions are cleared', () => {
+                    expect(state.suggestions).to.be.empty
+                });
+            })
+            context("no suggests have any suggestions", () => {
+                beforeEach(() => {
+                    state = search(
+                        {searchTerm: 'trevor', results: someResults(), total: 0, pageNumber: 1},
+                        {type: SEARCH_RESULTS, searchTerm: 'trevor', results: someResultsWithSuggestions(
+                            {
+                                suggestions: {
+                                    suggest: {
+                                        firstName: [
+                                            {
+                                                text: "smyth",
+                                                offset: 0,
+                                                length: 5,
+                                                options: []
+                                            },
+                                            {
+                                                text: "gery",
+                                                offset: 6,
+                                                length: 4,
+                                                options: []
+                                            }
+                                        ],
+                                        surname: [
+                                            {
+                                                text: "smyth",
+                                                offset: 0,
+                                                length: 5,
+                                                options: []
+                                            },
+                                            {
+                                                text: "gery",
+                                                offset: 6,
+                                                length: 4,
+                                                options: []
+                                            }
+                                        ]
+                                    }
+
+                                }
+                            })})
+                })
+                it('suggestions are cleared', () => {
+                    expect(state.suggestions).to.be.empty
+                });
+            })
+            context('one search term word has suggestions', () => {
+                beforeEach(() => {
+                    state = search(
+                        {searchTerm: 'trevor', results: someResults(), total: 0, pageNumber: 1},
+                        {type: SEARCH_RESULTS, searchTerm: 'trevor', results: someResultsWithSuggestions(
+                            {
+                                suggestions: {
+                                    suggest: {
+                                        firstName: [
+                                            {
+                                                text: "smyth",
+                                                offset: 0,
+                                                length: 5,
+                                                options: []
+                                            },
+                                            {
+                                                text: "gery",
+                                                offset: 6,
+                                                length: 4,
+                                                options: []
+                                            }
+                                        ],
+                                        surname: [
+                                            {
+                                                text: "smyth",
+                                                offset: 0,
+                                                length: 5,
+                                                options: [
+                                                    {
+                                                        "text": "smith",
+                                                        "score": 0.8,
+                                                        "freq": 10
+                                                    },
+                                                    {
+                                                        "text": "smithy",
+                                                        "score": 0.7,
+                                                        "freq": 10
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                text: "gery",
+                                                offset: 6,
+                                                length: 4,
+                                                options: []
+                                            }
+                                        ]
+                                    }
+
+                                }
+                            })})
+                })
+                it('suggestions are set search term word with score', () => {
+                    expect(state.suggestions).to.have.length(1)
+                    expect(state.suggestions).to.shallowDeepEqual(
+                       [ {
+                            text: "smyth",
+                            options: [
+                                {
+                                    "text": "smith",
+                                    "score": 0.8
+                                },
+                                {
+                                    "text": "smithy",
+                                    "score": 0.7
+                                }
+                            ]
+
+                        }]
+                    )
+                });
+            })
+            context('many search term words have suggestions', () => {
+                beforeEach(() => {
+                    state = search(
+                        {searchTerm: 'trevor', results: someResults(), total: 0, pageNumber: 1},
+                        {type: SEARCH_RESULTS, searchTerm: 'trevor', results: someResultsWithSuggestions(
+                            {
+                                suggestions: {
+                                    suggest: {
+                                        firstName: [
+                                            {
+                                                text: "smyth",
+                                                offset: 0,
+                                                length: 5,
+                                                options: []
+                                            },
+                                            {
+                                                text: "gery",
+                                                offset: 6,
+                                                length: 4,
+                                                options: [
+                                                    {
+                                                        "text": "gary",
+                                                        "score": 0.8,
+                                                        "freq": 10
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        surname: [
+                                            {
+                                                text: "smyth",
+                                                offset: 0,
+                                                length: 5,
+                                                options: [
+                                                    {
+                                                        "text": "smith",
+                                                        "score": 0.8,
+                                                        "freq": 10
+                                                    },
+                                                    {
+                                                        "text": "smithy",
+                                                        "score": 0.7,
+                                                        "freq": 10
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                text: "gery",
+                                                offset: 6,
+                                                length: 4,
+                                                options: []
+                                            }
+                                        ]
+                                    }
+
+                                }
+                            })})
+                })
+                it('suggestions are set search term word with score', () => {
+                    expect(state.suggestions).to.have.length(2)
+                    expect(state.suggestions).to.shallowDeepEqual(
+                        [
+                            {
+                                text: "gery",
+                                options: [
+                                    {
+                                        "text": "gary",
+                                        "score": 0.8
+                                    }
+                                ]
+                            },
+                            {
+                                text: "smyth",
+                                options: [
+                                    {
+                                        "text": "smith",
+                                        "score": 0.8
+                                    },
+                                    {
+                                        "text": "smithy",
+                                        "score": 0.7
+                                    }
+                                ]
+                            }
+                        ]
+                    )
+                });
+            })
+        })
     })
     describe("when CLEAR_RESULTS action received", () => {
 
         beforeEach(() => {
-            state = search({searchTerm: 'Mr Bean', results: [{aResult: {}}]}, {type: CLEAR_RESULTS})
+            state = search({searchTerm: 'Mr Bean', results: [{aResult: {}}], suggestions: someSuggestions(), total: 28, pageNumber: 3}, {type: CLEAR_RESULTS})
         })
 
         it('searchTerm will be blank', () => {
@@ -316,6 +549,15 @@ describe("searchReducer", () => {
         });
         it('results will be empty', () => {
             expect(state.results).to.be.empty
+        });
+        it('suggestions are cleared', () => {
+            expect(state.suggestions).to.be.empty
+        });
+        it('total is cleared', () => {
+            expect(state.total).to.equal(0)
+        });
+        it('pageNumber is reset', () => {
+            expect(state.pageNumber).to.equal(1)
         });
     })
 
@@ -329,12 +571,95 @@ function someResults(results = {}) {
             surname: 'Smith',
             addresses: [],
             aliases: []
-        }]
+        }],
+        suggestions: {
+            suggest: {
+                firstName: [
+                    {
+                        text: "smyth",
+                        offset: 0,
+                        length: 5,
+                        options: []
+                    },
+                    {
+                        text: "gery",
+                        offset: 6,
+                        length: 4,
+                        options: [
+                            {
+                                text: "gary",
+                                score: 0.75,
+                                freq: 1
+                            }
+                        ]
+                    }
+                ],
+                surname: [
+                    {
+                        text: "smyth",
+                        offset: 0,
+                        length: 5,
+                        options: [
+                            {
+                                text: "smith",
+                                score: 0.8,
+                                freq: 10
+                            }
+                        ]
+                    },
+                    {
+                        text: "gery",
+                        offset: 6,
+                        length: 4,
+                        options: []
+                    }
+                ]
+            }
+        },
+        total: 1
     }, results);
 }
 
+function someResultsWithSuggestions({suggestions} = {}) {
+    return Object.assign(someResults(), {suggestions})
+}
 function emptyResults() {
-    return someResults().offenders = [];
+    return {
+        offenders: [],
+        total: 0,
+        suggestions: {
+            suggest: {
+                firstName: [
+                    {
+                        text: "smyth",
+                        offset: 0,
+                        length: 5,
+                        options: []
+                    },
+                    {
+                        text: "gery",
+                        offset: 6,
+                        length: 4,
+                        options: []
+                    }
+                ],
+                surname: [
+                    {
+                        text: "smyth",
+                        offset: 0,
+                        length: 5,
+                        options: []
+                    },
+                    {
+                        text: "gery",
+                        offset: 6,
+                        length: 4,
+                        options: []
+                    }
+                ]
+            }
+        }
+    }
 }
 
 function someSingleResultWithAddresses(addresses) {
@@ -362,3 +687,18 @@ function someSingleResultWithPreviousSurname(previousSurname) {
     return results;
 }
 
+const someSuggestions = () =>
+    [
+        {
+            smyth: [
+                {text: "smith", score: 0.8},
+                {text: "smithy", score: 0.7},
+            ]
+        },
+        {
+            jihnny: [
+                {text: "johny", score: 0.8},
+                {text: "john", score: 0.6},
+            ]
+        }
+    ]

@@ -12,7 +12,7 @@ _ = {
 }
 
 global._ = _
-require('chai').use(require('sinon-chai'));
+require('chai').use(require('sinon-chai')).use(require('chai-shallow-deep-equal'));
 
 global.parent = {}
 global.top = {}
