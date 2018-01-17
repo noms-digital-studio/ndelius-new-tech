@@ -8,10 +8,11 @@ let Adapter = require('enzyme-adapter-react-14');
 enzyme.configure({ adapter: new Adapter() });
 
 _ = {
-    debounce: () => {}
+    debounce: (func) => func
 }
 
-require('chai').use(require('sinon-chai'));
+global._ = _
+require('chai').use(require('sinon-chai')).use(require('chai-shallow-deep-equal'));
 
 global.parent = {}
 global.top = {}

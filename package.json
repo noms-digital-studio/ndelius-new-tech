@@ -10,6 +10,7 @@
     "babelify": "^8.0.0",
     "browserify": "^15.0.0",
     "chai": "^4.1.2",
+    "chai-shallow-deep-equal": "^1.4.6",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-14": "^1.0.5",
     "react-addons-test-utils": "^0.14.8",
