@@ -69,3 +69,9 @@ curl -XPUT 'http://localhost:9200/offender/document/4500020000?pretty' -H 'Conte
 
 ```
 
+Bulk insert
+```
+curl -H "Content-Type: application/json" -XPOST 'localhost:9200/offender/_bulk?pretty&refresh' --data-binary "@es-test-data.txt"
+
+```
+
