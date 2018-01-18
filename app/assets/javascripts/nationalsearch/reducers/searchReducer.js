@@ -1,7 +1,7 @@
 import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS} from '../actions/search'
 import {flatMap} from '../../helpers/streams'
 
-const searchResults = (state = {searchTerm: '', results: [], suggestions: [], total: 0, pageNumber: 1}, action) => {
+const searchResults = (state = {searchTerm: '', resultsReceived: false, results: [], suggestions: [], total: 0, pageNumber: 1}, action) => {
     switch (action.type) {
         case REQUEST_SEARCH:
             return {
@@ -9,7 +9,8 @@ const searchResults = (state = {searchTerm: '', results: [], suggestions: [], to
                 results: state.results,
                 total: state.total,
                 pageNumber: state.pageNumber,
-                suggestions: state.suggestions
+                suggestions: state.suggestions,
+                resultsReceived: state.resultsReceived
             };
         case SEARCH_RESULTS:
             if (state.searchTerm.indexOf(action.searchTerm) > -1) {
@@ -18,12 +19,20 @@ const searchResults = (state = {searchTerm: '', results: [], suggestions: [], to
                     pageNumber: action.pageNumber,
                     total: action.results.total,
                     results: mapResults(action.results.offenders, state.searchTerm),
-                    suggestions: mapSuggestions(action.results.suggestions)
+                    suggestions: mapSuggestions(action.results.suggestions),
+                    resultsReceived: true
                 };
             }
             return state
         case CLEAR_RESULTS:
-            return {searchTerm: '', results: [], suggestions: [], total: 0, pageNumber: 1};
+            return {
+                searchTerm: '',
+                results: [],
+                suggestions: [],
+                total: 0,
+                pageNumber: 1,
+                resultsReceived: false
+            };
         default:
             return state
     }

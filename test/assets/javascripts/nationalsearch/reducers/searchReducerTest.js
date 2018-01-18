@@ -26,11 +26,14 @@ describe("searchReducer", () => {
         it('pageNumber will be 1', () => {
             expect(state.pageNumber).to.equal(1)
         });
+        it('resultsReceived will be false', () => {
+            expect(state.resultsReceived).to.equal(false)
+        });
     })
     describe("when REQUEST_SEARCH action received", () => {
 
         beforeEach(() => {
-            state = search({searchTerm: 'Mr Bean', results: someResults(), suggestions: someSuggestions(), total: 28, pageNumber: 3}, {
+            state = search({searchTerm: 'Mr Bean', results: someResults(), resultsReceived: true, suggestions: someSuggestions(), total: 28, pageNumber: 3}, {
                 type: REQUEST_SEARCH,
                 searchTerm: 'John Smith'
             })
@@ -51,17 +54,23 @@ describe("searchReducer", () => {
         it('pageNumber is kept at existing value', () => {
             expect(state.pageNumber).to.equal(3)
         });
+        it('resultsReceived is kept at existing value', () => {
+            expect(state.resultsReceived).to.equal(true)
+        });
     })
     describe("when SEARCH_RESULTS action received", () => {
 
         context('when searchTerm matches from request action', () => {
             beforeEach(() => {
                 state = search(
-                    {searchTerm: 'Mr Bean', results: someResults(), total: 28, pageNumber: 3},
+                    {searchTerm: 'Mr Bean', results: someResults(), resultsReceived: false, total: 28, pageNumber: 3},
                     {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: emptyResults()})
             })
             it('results are replaced with new results', () => {
                 expect(state.results).to.eql([])
+            });
+            it('resultsReceived is set to true',  () => {
+                expect(state.resultsReceived).to.equal(true)
             });
         })
         context('when searchTerm partial matches from request action', () => {
@@ -73,11 +82,14 @@ describe("searchReducer", () => {
             it('results are replaced with new results', () => {
                 expect(state.results).to.eql([])
             });
+            it('resultsReceived is set to true',  () => {
+                expect(state.resultsReceived).to.equal(true)
+            });
         })
         context('when searchTerm does not match from request action', () => {
             beforeEach(() => {
                 state = search(
-                    {searchTerm: 'Mr Fancy', results: someResults(), total: 28, pageNumber: 3},
+                    {searchTerm: 'Mr Fancy', results: someResults(), resultsReceived: false, total: 28, pageNumber: 3},
                     {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: emptyResults()})
             })
             it('existing results are kept and new results discarded', () => {
@@ -88,6 +100,9 @@ describe("searchReducer", () => {
             });
             it('pageNumber is kept at existing value', () => {
                 expect(state.pageNumber).to.equal(3)
+            });
+            it('resultsReceived is kept at existing value', () => {
+                expect(state.resultsReceived).to.equal(false)
             });
         })
         context('when current searchTerm is blank but results received from previous request', () => {
@@ -541,7 +556,7 @@ describe("searchReducer", () => {
     describe("when CLEAR_RESULTS action received", () => {
 
         beforeEach(() => {
-            state = search({searchTerm: 'Mr Bean', results: [{aResult: {}}], suggestions: someSuggestions(), total: 28, pageNumber: 3}, {type: CLEAR_RESULTS})
+            state = search({searchTerm: 'Mr Bean', resultsReceived: true, results: [{aResult: {}}], suggestions: someSuggestions(), total: 28, pageNumber: 3}, {type: CLEAR_RESULTS})
         })
 
         it('searchTerm will be blank', () => {
@@ -558,6 +573,9 @@ describe("searchReducer", () => {
         });
         it('pageNumber is reset', () => {
             expect(state.pageNumber).to.equal(1)
+        });
+        it('resultsReceived is set to false',  () => {
+            expect(state.resultsReceived).to.equal(false)
         });
     })
 
