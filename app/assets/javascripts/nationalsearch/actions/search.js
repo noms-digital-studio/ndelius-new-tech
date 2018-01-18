@@ -19,7 +19,8 @@ const searchResults = (searchTerm, results, pageNumber) => ({
 const clearResults = () => ({type: CLEAR_RESULTS})
 
 const performSearch = _.debounce((dispatch, searchTerm, pageNumber) => {
-    $.getJSON(`searchOffender/${searchTerm}?pageSize=${PAGE_SIZE}&pageNumber=${pageNumber}`, data => {
+    const encodedSearchTerm = encodeURIComponent(searchTerm)
+    $.getJSON(`searchOffender/${encodedSearchTerm}?pageSize=${PAGE_SIZE}&pageNumber=${pageNumber}`, data => {
         dispatch(searchResults(searchTerm, data, pageNumber))
     });
 }, 500);
