@@ -36,8 +36,7 @@ libraryDependencies ++= Seq(
   "org.projectlombok" % "lombok" % "1.16.16" % "provided",
   "org.assertj" % "assertj-core" % "3.8.0" % "test",
   "org.mockito" % "mockito-all" % "1.10.19" % "test",
-  "com.github.tomakehurst" % "wiremock" % "2.12.0" % "test",
-  "org.apache.opennlp" % "opennlp-tools" % "1.8.2"
+  "com.github.tomakehurst" % "wiremock" % "2.12.0" % "test"
 )
 
 excludeDependencies ++= Seq(
