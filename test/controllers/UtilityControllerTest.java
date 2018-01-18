@@ -17,6 +17,7 @@ import play.inject.guice.GuiceApplicationBuilder;
 import play.libs.Json;
 import play.mvc.Result;
 import play.test.WithApplication;
+import utils.AnalyticsStoreMock;
 import utils.SimpleAnalyticsStoreMock;
 
 import java.io.IOException;
@@ -42,16 +43,16 @@ public class UtilityControllerTest extends WithApplication {
     public  WireMockRule wireMock = new WireMockRule(8080);
 
     @Mock
-    private Supplier<Boolean> isMongoDbUp;
+    private AnalyticsStore analyticsStore;
 
     @Mock
-    Search search;
+    private Search search;
 
     @Before
     public void setup() {
         stubPdfGeneratorWithStatus("OK");
         stubDocumentStoreToReturn(ok());
-        when(isMongoDbUp.get()).thenReturn(true);
+        when(analyticsStore.isUp()).thenReturn(CompletableFuture.supplyAsync(() -> true));
         when(search.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> true));
     }
 
@@ -139,7 +140,7 @@ public class UtilityControllerTest extends WithApplication {
     @SuppressWarnings("unchecked")
     @Test
     public void healthEndpointIndicatesOkWhenAnalyticsStoreIsUnhealthy() throws IOException {
-        when(isMongoDbUp.get()).thenReturn(false);
+        when(analyticsStore.isUp()).thenReturn(CompletableFuture.supplyAsync(() -> false));
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
 
         val result = route(app, request);
@@ -198,17 +199,10 @@ public class UtilityControllerTest extends WithApplication {
     protected Application provideApplication() {
         return new GuiceApplicationBuilder()
             .overrides(
-                bind(AnalyticsStore.class).toInstance(new AnalyticsStoreMock()),
+                bind(AnalyticsStore.class).toInstance(analyticsStore),
                 bind(Search.class).toInstance(search)
             )
             .build();
-    }
-
-    class AnalyticsStoreMock extends SimpleAnalyticsStoreMock {
-        @Override
-        public CompletableFuture<Boolean> isUp() {
-            return CompletableFuture.supplyAsync(isMongoDbUp);
-        }
     }
 
 }
