@@ -4,8 +4,13 @@ const offender = (offender = {}) =>
         firstName: 'John',
         surname: 'Smith',
         dateOfBirth: '19-07-1965',
-        crn: 'D123X',
-        currentOffender: true,
+        otherIds: {
+            crn: 'D123X'
+        },
+        currentDisposal: "1",
+        offenderProfile: {
+            riskColour: 'red'
+        },
         gender: 'Male',
         aliases: [],
         addresses: [],

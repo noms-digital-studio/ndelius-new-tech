@@ -44,13 +44,13 @@ function mapResults(results = [], searchTerm) {
     return results.map(offenderDetails => {
         return {
             ...offenderDetails,
-            aliases: offenderDetails.aliases.map((alias) => {
+            aliases: offenderDetails.offenderAliases.map((alias) => {
                 return {
                     ...alias
                 }
             }).filter(item => anyMatch(item, searchTerm)),
             previousSurname: whenMatched(offenderDetails.previousSurname, searchTerm),
-            addresses: offenderDetails.addresses.map((address) => {
+            addresses: offenderDetails.contactDetails.addresses.map((address) => {
                 return {
                     ...address
                 }

@@ -137,8 +137,10 @@ describe("searchReducer", () => {
                                     currentOffender: false,
                                     gender: 'Female',
                                     age: 23,
-                                    addresses: [],
-                                    aliases: []
+                                    contactDetails: {
+                                        addresses: []
+                                    },
+                                    offenderAliases: []
                                 }
                             ],
                             total: 4
@@ -587,8 +589,10 @@ function someResults(results = {}) {
             offenderId: '123',
             firstName: 'John',
             surname: 'Smith',
-            addresses: [],
-            aliases: []
+            contactDetails: {
+                addresses: [],
+            },
+            offenderAliases: []
         }],
         suggestions: {
             suggest: {
@@ -683,14 +687,14 @@ function emptyResults() {
 function someSingleResultWithAddresses(addresses) {
     const results = someResults();
     results.offenders = [results.offenders[0]];
-    results.offenders[0].addresses = addresses;
+    results.offenders[0].contactDetails.addresses = addresses;
     return results;
 }
 
 function someSingleResultWithAliases(aliases) {
     const results = someResults();
     results.offenders = [results.offenders[0]];
-    results.offenders[0].aliases = aliases;
+    results.offenders[0].offenderAliases = aliases;
     return results;
 }
 
