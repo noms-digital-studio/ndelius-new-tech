@@ -3,17 +3,17 @@ import {expect} from 'chai';
 import { shallow } from 'enzyme';
 
 describe('SearchResultsTitle component', () => {
-    context('no results have been searched for', () => {
+    context('no results have received yet', () => {
         it('no text rendered', () => {
-            const title = shallow(<SearchResultsTitle total={0} pageNumber={1} pageSize={10} searchTerm={''}/>)
+            const title = shallow(<SearchResultsTitle total={0} pageNumber={1} pageSize={10} resultsReceived={false}/>)
             expect(title.text()).to.equal('')
         })
     })
-    context('results have been searched for but none found', () => {
+    context('results have been received for but none found', () => {
         let title
 
         beforeEach(() => {
-           title = shallow(<SearchResultsTitle total={0} pageNumber={1} pageSize={10} searchTerm={'charlie'}/>)
+           title = shallow(<SearchResultsTitle total={0} pageNumber={1} pageSize={10} resultsReceived={true}/>)
         })
         it('h2 rendered', () => {
             expect(title.find('h2')).to.have.length(1)
@@ -28,7 +28,7 @@ describe('SearchResultsTitle component', () => {
             let title
 
             beforeEach(() => {
-                title = shallow(<SearchResultsTitle total={2} pageNumber={1} pageSize={10} searchTerm={'charlie'}/>)
+                title = shallow(<SearchResultsTitle total={2} pageNumber={1} pageSize={10} resultsReceived={true}/>)
             })
             it('h2 rendered', () => {
                 expect(title.find('h2')).to.have.length(1)
@@ -42,7 +42,7 @@ describe('SearchResultsTitle component', () => {
         let title
         context('on first page', () => {
             beforeEach(() => {
-                title = shallow(<SearchResultsTitle total={21} pageNumber={1} pageSize={10} searchTerm={'charlie'}/>)
+                title = shallow(<SearchResultsTitle total={21} pageNumber={1} pageSize={10} resultsReceived={true}/>)
             })
             it('total shown with results range ( 1 to 10) for this page shown', () => {
                 expect(title.text()).to.equal('21 results found, showing 1 to 10')
@@ -50,7 +50,7 @@ describe('SearchResultsTitle component', () => {
         })
         context('on second page', () => {
             beforeEach(() => {
-                title = shallow(<SearchResultsTitle total={21} pageNumber={2} pageSize={10} searchTerm={'charlie'}/>)
+                title = shallow(<SearchResultsTitle total={21} pageNumber={2} pageSize={10} resultsReceived={true}/>)
             })
             it('total shown with results range (11 to 20) for this page shown', () => {
                 expect(title.text()).to.equal('21 results found, showing 11 to 20')
@@ -58,7 +58,7 @@ describe('SearchResultsTitle component', () => {
         })
         context('on third page', () => {
             beforeEach(() => {
-                title = shallow(<SearchResultsTitle total={21} pageNumber={3} pageSize={10} searchTerm={'charlie'}/>)
+                title = shallow(<SearchResultsTitle total={21} pageNumber={3} pageSize={10} resultsReceived={true}/>)
             })
             it('total shown with reminder results range (21 to 21) for this page shown', () => {
                 expect(title.text()).to.equal('21 results found, showing 21 to 21')
