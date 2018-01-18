@@ -44,7 +44,7 @@ describe('search action', () => {
                 expect(dispatch).to.be.calledWith({type: 'SEARCH_RESULTS', results: {offenders: []}, searchTerm: 'Mr Bean', pageNumber: 3})
             })
             it('calls ajax with pagesNumber, searchTerm and pageSize', () => {
-                expect(global.$.getJSON).to.be.calledWith('searchOffender/Mr Bean?pageSize=10&pageNumber=3')
+                expect(global.$.getJSON).to.be.calledWith('searchOffender/Mr%20Bean?pageSize=10&pageNumber=3')
             })
         })
     })
