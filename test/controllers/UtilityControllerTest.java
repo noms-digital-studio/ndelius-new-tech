@@ -52,6 +52,7 @@ public class UtilityControllerTest extends WithApplication {
         stubPdfGeneratorWithStatus("OK");
         stubDocumentStoreToReturn(ok());
         when(isMongoDbUp.get()).thenReturn(true);
+        when(search.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> true));
     }
 
     @Test
@@ -151,8 +152,6 @@ public class UtilityControllerTest extends WithApplication {
     @SuppressWarnings("unchecked")
     @Test
     public void healthEndpointIndicatesOkWhenElasticSearchIsHealthy() throws IOException {
-        when(search.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> true));
-
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
 
         val result = route(app, request);
