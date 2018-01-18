@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import frameNavigation from '../components/frameNavigation.jsx'
+import frameNavigation from '../components/frameNavigation'
 
 const mapStateToProps = state => {
     return {

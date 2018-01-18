@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { legacySearch } from '../actions/navigate'
-import legacySearchLink from '../components/legacySearchLink.jsx'
+import legacySearchLink from '../components/legacySearchLink'
 
 const mapStateToProps = () => {
     return {}

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import {showOffenderDetails} from '../actions/navigate'
-import offenderSummaryTitle from '../components/offenderSummaryTitle.jsx'
+import offenderSummaryTitle from '../components/offenderSummaryTitle'
 
 const mapStateToProps = () => {
     return {}

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { addNewOffender } from '../actions/navigate'
-import addNewOffenderLink from '../components/addNewOffenderLink.jsx'
+import addNewOffenderLink from '../components/addNewOffenderLink'
 
 const mapStateToProps = () => {
     return {}

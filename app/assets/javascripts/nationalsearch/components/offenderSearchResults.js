@@ -1,4 +1,4 @@
-import OffenderSearchSummary from './offenderSearchSummary.jsx';
+import OffenderSearchSummary from './offenderSearchSummary';
 import SearchResultsTitle from '../containers/searchResultsTitleContainer';
 import PageSelection from '../containers/pageSelectionContainer';
 

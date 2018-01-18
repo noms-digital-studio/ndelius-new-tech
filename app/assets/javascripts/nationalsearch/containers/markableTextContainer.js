@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import markableText from '../components/markableText.jsx'
+import markableText from '../components/markableText'
 
 const mapStateToProps = (state) => {
     return {

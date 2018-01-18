@@ -3,7 +3,7 @@ import OffenderSearch from '../containers/offenderSearchContainer';
 import FrameNavigation from '../containers/frameNavigationContainer';
 import AddNewOffenderLink from '../containers/addNewOffenderLinkContainer';
 import Suggestions from '../containers/suggestionsContainer';
-import GovUkPhaseBanner from './govukPhaseBanner.jsx';
+import GovUkPhaseBanner from './govukPhaseBanner';
 
 export default () => (
     <div>

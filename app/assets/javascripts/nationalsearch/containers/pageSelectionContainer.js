@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { search, PAGE_SIZE } from '../actions/search'
-import pageSelection from '../components/pageSelection.jsx'
+import pageSelection from '../components/pageSelection'
 
 const mapStateToProps = (state) => {
     return {

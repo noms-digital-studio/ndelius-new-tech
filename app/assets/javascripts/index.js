@@ -1,1 +1,1 @@
-import './nationalsearch/nationalSearch.jsx';
+import './nationalsearch/nationalSearch';

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import suggestions from '../components/suggestions.jsx'
+import suggestions from '../components/suggestions'
 import {search} from '../actions/search'
 
 const mapStateToProps = state => {

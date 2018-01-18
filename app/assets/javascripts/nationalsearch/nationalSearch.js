@@ -1,4 +1,4 @@
-import OffenderSearchPage from './components/offenderSearchPage.jsx';
+import OffenderSearchPage from './components/offenderSearchPage';
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import reducer from './reducers'

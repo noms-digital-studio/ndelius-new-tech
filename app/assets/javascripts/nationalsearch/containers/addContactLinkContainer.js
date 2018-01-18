@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { addContact } from '../actions/navigate'
-import addContactLink from '../components/addContactLink.jsx'
+import addContactLink from '../components/addContactLink'
 
 const mapStateToProps = (state) => {
     return {}
