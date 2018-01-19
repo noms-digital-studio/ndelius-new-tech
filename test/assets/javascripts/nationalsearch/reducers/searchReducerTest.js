@@ -583,8 +583,8 @@ describe("searchReducer", () => {
 
 })
 
-function someResults(results = {}) {
-    return Object.assign({
+const someResults = (results = {}) => (
+    Object.assign({
         offenders: [{
             offenderId: '123',
             firstName: 'John',
@@ -639,14 +639,10 @@ function someResults(results = {}) {
             }
         },
         total: 1
-    }, results);
-}
+    }, results))
 
-function someResultsWithSuggestions({suggestions} = {}) {
-    return Object.assign(someResults(), {suggestions})
-}
-function emptyResults() {
-    return {
+const someResultsWithSuggestions = ({suggestions} = {}) => Object.assign(someResults(), {suggestions})
+const emptyResults = () => ({
         offenders: [],
         total: 0,
         suggestions: {
@@ -681,24 +677,23 @@ function emptyResults() {
                 ]
             }
         }
-    }
-}
+    })
 
-function someSingleResultWithAddresses(addresses) {
+const someSingleResultWithAddresses = addresses => {
     const results = someResults();
     results.offenders = [results.offenders[0]];
     results.offenders[0].contactDetails.addresses = addresses;
     return results;
 }
 
-function someSingleResultWithAliases(aliases) {
+const someSingleResultWithAliases = aliases => {
     const results = someResults();
     results.offenders = [results.offenders[0]];
     results.offenders[0].offenderAliases = aliases;
     return results;
 }
 
-function someSingleResultWithPreviousSurname(previousSurname) {
+const someSingleResultWithPreviousSurname = previousSurname => {
     const results = someResults();
     results.offenders = [results.offenders[0]];
     if (previousSurname) {

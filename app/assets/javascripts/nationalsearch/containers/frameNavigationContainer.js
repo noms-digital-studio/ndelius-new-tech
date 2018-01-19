@@ -1,19 +1,9 @@
 import { connect } from 'react-redux'
 import frameNavigation from '../components/frameNavigation'
 
-const mapStateToProps = state => {
-    return {
+export default connect(
+    state => ({
         navigate: state.navigate
-    }
-}
-
-const mapDispatchToProps = dispatch => {
-    return {}
-}
-
-const frameNavigationContainer = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(frameNavigation);
-
-export default frameNavigationContainer
+    }),
+    () => ({})
+)(frameNavigation)

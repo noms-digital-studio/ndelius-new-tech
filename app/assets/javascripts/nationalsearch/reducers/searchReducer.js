@@ -36,9 +36,9 @@ const searchResults = (state = {searchTerm: '', resultsReceived: false, results:
 
 export default searchResults
 
-function mapResults(results = [], searchTerm) {
-    return results.map(offenderDetails => {
-        return {
+const mapResults = (results = [], searchTerm) =>
+    results.map(
+        offenderDetails => ({
             ...offenderDetails,
             aliases: offenderDetails.offenderAliases.map((alias) => {
                 return {
@@ -50,12 +50,11 @@ function mapResults(results = [], searchTerm) {
                 return {
                     ...address
                 }
-            }).filter(item => anyMatch(item, searchTerm))
-        }
-    });
-}
+            }).filter(item => anyMatch(item, searchTerm))}
+        )
+    )
 
-const mapSuggestions = (suggestions) => {
+const mapSuggestions = suggestions => {
     if (suggestions && suggestions.suggest && Object.getOwnPropertyNames(suggestions.suggest).length > 0) {
         return flatMap(Object.getOwnPropertyNames(suggestions.suggest), suggestField => suggestions.suggest[suggestField])
             .filter(searchedWordsWithSuggestions => searchedWordsWithSuggestions.options.length > 0)
@@ -64,22 +63,18 @@ const mapSuggestions = (suggestions) => {
     return []
 }
 
-function anyMatch(item, searchTerm) {
-    return Object.getOwnPropertyNames(item)
+const anyMatch = (item, searchTerm) =>
+    Object.getOwnPropertyNames(item)
         .map(property => item[property])
         .map(text => matches(text, searchTerm))
         .reduce((accumulator, currentValue) => accumulator || currentValue, false)
-}
 
-function whenMatched(text, searchTerm) {
-    return matches(text, searchTerm) ? text : null;
-}
+const whenMatched = (text, searchTerm) => matches(text, searchTerm) ? text : null
 
-function matches(text, searchTerm) {
-    return text && searchTerm.split(' ')
+const matches = (text, searchTerm) =>
+    text && searchTerm.split(' ')
         .filter(searchWord => searchWord) // remove empty terms
         .map(searchWord => RegExp(searchWord, "i").test(text))
         .reduce((accumulator, currentValue) => accumulator || currentValue, false)
-}
 
 const areSearchResultsStillRelevant = (state, action) => state.searchTerm.indexOf(action.searchTerm) > -1

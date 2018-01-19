@@ -118,10 +118,10 @@ describe('PageSelection component', () => {
 
 })
 
-const allPageNumbers = (wrapper) => wrapper.find('PageLink').reduce((text, link) => text + link.prop('linkPageNumber'), '')
+const allPageNumbers = wrapper => wrapper.find('PageLink').reduce((text, link) => text + link.prop('linkPageNumber'), '')
 const findLinkForPage = (wrapper, linkPageNumber) => wrapper.find({linkPageNumber}).dive().find('a')
 const hasLinkForPage = (wrapper, linkPageNumber) => findLinkForPage(wrapper, linkPageNumber).exists()
 const clickLinkForPage = (wrapper, linkPageNumber) => findLinkForPage(wrapper, linkPageNumber).simulate('click')
-const clickNextLink = (wrapper) => wrapper.find('#next-page-link').simulate('click')
-const clickPreviousLink = (wrapper) => wrapper.find('#previous-page-link').simulate('click')
+const clickNextLink = wrapper => wrapper.find('#next-page-link').simulate('click')
+const clickPreviousLink = wrapper => wrapper.find('#previous-page-link').simulate('click')
 
