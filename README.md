@@ -53,6 +53,16 @@ curl -XPUT 'http://localhost:9200/offender?pretty' -H 'Content-Type: application
             "number_of_shards" : 6, 
             "number_of_replicas" : 1 
         }
+    },
+    "mappings": {
+      "offender": {
+        "properties": {
+          "dateOfBirth": {
+            "type":   "date",
+            "format": "yyyy-MM-dd||yyyy/MM/dd||dd-MM-yy||dd/MM/yy||dd-MM-yyyy||dd/MM/yyyy"
+          }
+        }
+      }
     }
 }
 '
