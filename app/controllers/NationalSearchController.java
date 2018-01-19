@@ -6,7 +6,6 @@ import play.mvc.Controller;
 import play.mvc.Result;
 
 import javax.inject.Inject;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 public class NationalSearchController extends Controller {
@@ -25,10 +24,6 @@ public class NationalSearchController extends Controller {
     }
 
     public CompletionStage<Result> searchOffender(String searchTerm, int pageSize, int pageNumber) {
-        if ("blank".equals(searchTerm.toLowerCase())) {
-            return CompletableFuture.supplyAsync(() -> ok("[]").as("application/json"));
-        }
-
         return elasticSearch.search(searchTerm, pageSize, pageNumber).thenApply(JsonHelper::okJson);
     }
 

@@ -5,15 +5,11 @@ const searchResults = (state = {searchTerm: '', resultsReceived: false, results:
     switch (action.type) {
         case REQUEST_SEARCH:
             return {
-                searchTerm: action.searchTerm,
-                results: state.results,
-                total: state.total,
-                pageNumber: state.pageNumber,
-                suggestions: state.suggestions,
-                resultsReceived: state.resultsReceived
+                ...state,
+                searchTerm: action.searchTerm
             };
         case SEARCH_RESULTS:
-            if (state.searchTerm.indexOf(action.searchTerm) > -1) {
+            if (areSearchResultsStillRelevant(state, action)) {
                 return {
                     searchTerm: state.searchTerm,
                     pageNumber: action.pageNumber,
@@ -85,3 +81,5 @@ function matches(text, searchTerm) {
         .map(searchWord => RegExp(searchWord, "i").test(text))
         .reduce((accumulator, currentValue) => accumulator || currentValue, false)
 }
+
+const areSearchResultsStillRelevant = (state, action) => state.searchTerm.indexOf(action.searchTerm) > -1

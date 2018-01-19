@@ -6,8 +6,6 @@ import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Http;
@@ -25,7 +23,6 @@ import static play.inject.Bindings.bind;
 import static play.test.Helpers.POST;
 import static play.test.Helpers.route;
 
-@RunWith(MockitoJUnitRunner.class)
 public class HttpHeadersTest extends WithApplication {
 
     @Test

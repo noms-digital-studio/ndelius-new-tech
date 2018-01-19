@@ -2,16 +2,16 @@ package helpers;
 
 import java.time.Clock;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 import static java.time.LocalDate.now;
 import static java.time.LocalDate.parse;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 
 public class DateTimeHelper {
-    public static int calculateAge(String dateString, Clock clock) {
+    public static long calculateAge(String dateString, Clock clock) {
         LocalDate dateOfBirth = parse(dateString, ISO_LOCAL_DATE);
-        long daysOld = now(clock).toEpochDay() - dateOfBirth.toEpochDay();
-        return (int) (daysOld / 365);
+        return ChronoUnit.YEARS.between(dateOfBirth, now(clock));
     }
 
 }
