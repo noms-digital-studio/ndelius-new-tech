@@ -27,11 +27,15 @@ const performSearch = _.debounce((dispatch, searchTerm, pageNumber) => {
 
 
 
-export function search(dispatch, searchTerm, pageNumber = 1) {
-    if (searchTerm === '') {
-        dispatch(clearResults())
-    } else {
-        dispatch(requestSearch(searchTerm));
-        performSearch(dispatch, searchTerm, pageNumber);
+const search = (searchTerm, pageNumber = 1) => (
+    dispatch => {
+        if (searchTerm === '') {
+            dispatch(clearResults())
+        } else {
+            dispatch(requestSearch(searchTerm));
+            performSearch(dispatch, searchTerm, pageNumber);
+        }
     }
-}
+)
+
+export {search}

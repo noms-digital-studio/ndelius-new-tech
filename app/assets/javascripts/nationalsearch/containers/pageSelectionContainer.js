@@ -10,6 +10,6 @@ export default connect(
         pageNumber: state.search.pageNumber
     }),
     dispatch => ({
-        gotoPage: (searchTerm, pageNumber) => search(dispatch, searchTerm, pageNumber)
+        gotoPage: (searchTerm, pageNumber) => dispatch(search(searchTerm, pageNumber))
     })
 )(pageSelection)

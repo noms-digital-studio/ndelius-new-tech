@@ -16,14 +16,14 @@ describe('search action', () => {
     describe('on search', () => {
         context('when blank search term', () => {
             it ('sends a CLEAR_RESULTS', () => {
-                search(dispatch, '')
+                search('')(dispatch)
                 expect(dispatch).to.be.calledWith({type: 'CLEAR_RESULTS'})
             })
         })
         context('with a search term', () => {
             beforeEach(() => {
                 global.$.getJSON.yields({offenders: []})
-                search(dispatch, 'Mr Bean')
+                search('Mr Bean')(dispatch)
             })
             it ('dispatches REQUEST_SEARCH with searchTerm', () => {
                 expect(dispatch).to.be.calledWith({type: 'REQUEST_SEARCH', searchTerm: 'Mr Bean'})
@@ -35,7 +35,7 @@ describe('search action', () => {
         context('with a search term and page number', () => {
             beforeEach(() => {
                 global.$.getJSON.yields({offenders: []})
-                search(dispatch, 'Mr Bean', 3)
+                search('Mr Bean', 3)(dispatch)
             })
             it ('dispatches REQUEST_SEARCH with searchTerm', () => {
                 expect(dispatch).to.be.calledWith({type: 'REQUEST_SEARCH', searchTerm: 'Mr Bean'})
