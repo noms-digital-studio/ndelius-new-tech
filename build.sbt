@@ -1,6 +1,9 @@
 import com.typesafe.config.ConfigFactory
 import com.typesafe.sbt.jse.SbtJsEngine.autoImport.JsEngineKeys._
 import com.typesafe.sbt.jse.SbtJsTask.executeJs
+import com.typesafe.sbt.web.incremental
+import com.typesafe.sbt.web.incremental.{OpInputHash, OpInputHasher, OpResult, OpSuccess}
+
 import scala.concurrent.duration._
 
 val conf = ConfigFactory.parseFile(new File("conf/application.conf"))
@@ -69,22 +72,36 @@ val browserifyOutputDir = settingKey[File]("Browserify output directory")
 browserifyOutputDir := target.value / "web" / "browserify"
 
 browserifyTask := {
-  println("Running browserify")
-  ( npmNodeModules in Assets ).value
-  val inputFile = baseDirectory.value / "app/assets/javascripts/index.js"
-  val outputFile = browserifyOutputDir.value / "bundle.js"
-  browserifyOutputDir.value.mkdirs
-  val modules =  (baseDirectory.value / "node_modules").getAbsolutePath
-  executeJs(state.value,
-    engineType.value,
-    None,
-    Seq(modules),
-    baseDirectory.value / "browserify.js",
-    Seq(inputFile.getPath, outputFile.getPath),
-    30.seconds)
-  ()
+  val sourceDir = (sourceDirectory in Assets).value / "javascripts"
 
-  List(outputFile)
+  implicit val fileHasherIncludingOptions: OpInputHasher[File] =
+    OpInputHasher[File](f => OpInputHash.hashString(f.getCanonicalPath))
+  val sources = (sourceDir ** ((includeFilter in browserifyTask in Assets).value -- DirectoryFilter)).get
+  val outputFile = browserifyOutputDir.value / "bundle.js"
+
+  val results = incremental.syncIncremental((streams in Assets).value.cacheDirectory / "run", sources) {
+    modifiedSources: Seq[File] =>
+      if (modifiedSources.nonEmpty) {
+        ( npmNodeModules in Assets ).value
+        val inputFile = baseDirectory.value / "app/assets/javascripts/index.js"
+        browserifyOutputDir.value.mkdirs
+        val modules =  (baseDirectory.value / "node_modules").getAbsolutePath
+        executeJs(state.value,
+          engineType.value,
+          None,
+          Seq(modules),
+          baseDirectory.value / "browserify.js",
+          Seq(inputFile.getPath, outputFile.getPath),
+          30.seconds)
+        ()
+      }
+
+      val opResults: Map[File, OpResult] =
+        modifiedSources.map(file => (file, OpSuccess(Set(file), Set(outputFile)))).toMap
+      (opResults, List(outputFile))
+  }(fileHasherIncludingOptions)
+
+  results._2
 }
 
 sourceGenerators in Assets +=  browserifyTask.taskValue
