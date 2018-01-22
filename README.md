@@ -55,7 +55,7 @@ curl -XPUT 'http://localhost:9200/offender?pretty' -H 'Content-Type: application
         }
     },
     "mappings": {
-      "offender": {
+      "document": {
         "properties": {
           "dateOfBirth": {
             "type":   "date",

@@ -165,6 +165,19 @@ describe("searchReducer", () => {
             });
         })
         describe("address filtering", () => {
+            context('no contact details', () => {
+                beforeEach(() => {
+                    const results = someResults()
+                    delete results.offenders[0].contactDetails
+                    state = search(
+                        {searchTerm: 'Mr Bean', results: someResults(), total: 0, pageNumber: 1},
+                        {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: results})
+                })
+
+                it('addresses are empty', () => {
+                    expect(state.results[0].addresses).to.have.lengthOf(0)
+                });
+            })
             context("searchTerm has no matches in address", () => {
                 beforeEach(() => {
                     state = search(
@@ -239,6 +252,20 @@ describe("searchReducer", () => {
             })
         })
         describe("alias filtering", () => {
+            context('no aliases', () => {
+                beforeEach(() => {
+                    const results = someResults()
+                    delete results.offenders[0].aliases
+                    state = search(
+                        {searchTerm: 'Mr Bean', results: someResults(), total: 0, pageNumber: 1},
+                        {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: results})
+                })
+
+                it('aliases are empty', () => {
+                    expect(state.results[0].aliases).to.have.lengthOf(0)
+                });
+            })
+
             context("searchTerm has no matches in alias", () => {
                 beforeEach(() => {
                     state = search(

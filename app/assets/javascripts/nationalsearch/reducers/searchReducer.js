@@ -40,19 +40,23 @@ const mapResults = (results = [], searchTerm) =>
     results.map(
         offenderDetails => ({
             ...offenderDetails,
-            aliases: offenderDetails.offenderAliases.map((alias) => {
+            aliases: offenderAliases(offenderDetails).map((alias) => {
                 return {
                     ...alias
                 }
             }).filter(item => anyMatch(item, searchTerm)),
             previousSurname: whenMatched(offenderDetails.previousSurname, searchTerm),
-            addresses: offenderDetails.contactDetails.addresses.map((address) => {
+            addresses: offenderAddresses(offenderDetails).map((address) => {
                 return {
                     ...address
                 }
             }).filter(item => anyMatch(item, searchTerm))}
         )
     )
+
+const offenderAliases = (offenderDetails) => offenderDetails.offenderAliases || []
+const offenderAddresses = (offenderDetails) => offenderContactDetails(offenderDetails).addresses || []
+const offenderContactDetails = (offenderDetails) => offenderDetails.contactDetails || {}
 
 const mapSuggestions = suggestions => {
     if (suggestions && suggestions.suggest && Object.getOwnPropertyNames(suggestions.suggest).length > 0) {
