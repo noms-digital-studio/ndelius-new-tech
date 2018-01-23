@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import interfaces.AnalyticsStore;
-import interfaces.Search;
+import interfaces.OffenderSearch;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Rule;
@@ -17,13 +17,10 @@ import play.inject.guice.GuiceApplicationBuilder;
 import play.libs.Json;
 import play.mvc.Result;
 import play.test.WithApplication;
-import utils.AnalyticsStoreMock;
-import utils.SimpleAnalyticsStoreMock;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static java.lang.String.format;
@@ -46,14 +43,14 @@ public class UtilityControllerTest extends WithApplication {
     private AnalyticsStore analyticsStore;
 
     @Mock
-    private Search search;
+    private OffenderSearch offenderSearch;
 
     @Before
     public void setup() {
         stubPdfGeneratorWithStatus("OK");
         stubDocumentStoreToReturn(ok());
         when(analyticsStore.isUp()).thenReturn(CompletableFuture.supplyAsync(() -> true));
-        when(search.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> true));
+        when(offenderSearch.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> true));
     }
 
     @Test
@@ -158,21 +155,21 @@ public class UtilityControllerTest extends WithApplication {
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("elastic-search", "OK"));
+        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("elastic-offenderSearch", "OK"));
         assertThat(convertToJson(result).get("status")).isEqualTo("OK");
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void healthEndpointIndicatesFailedWhenElasticSearchIsUnhealthy() throws IOException {
-        when(search.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> false));
+        when(offenderSearch.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> false));
 
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
 
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("elastic-search", "FAILED"));
+        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("elastic-offenderSearch", "FAILED"));
         assertThat(convertToJson(result).get("status")).isEqualTo("FAILED");
     }
 
@@ -200,7 +197,7 @@ public class UtilityControllerTest extends WithApplication {
         return new GuiceApplicationBuilder()
             .overrides(
                 bind(AnalyticsStore.class).toInstance(analyticsStore),
-                bind(Search.class).toInstance(search)
+                bind(OffenderSearch.class).toInstance(offenderSearch)
             )
             .build();
     }

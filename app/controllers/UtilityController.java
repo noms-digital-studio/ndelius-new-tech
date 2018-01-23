@@ -5,8 +5,8 @@ import com.typesafe.config.Config;
 import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
+import interfaces.OffenderSearch;
 import interfaces.PdfGenerator;
-import interfaces.Search;
 import lombok.val;
 import org.joda.time.DateTime;
 import play.mvc.Controller;
@@ -30,7 +30,7 @@ public class UtilityController extends Controller {
     private final PdfGenerator pdfGenerator;
     private final DocumentStore documentStore;
     private final AnalyticsStore analyticsStore;
-    private final Search search;
+    private final OffenderSearch offenderSearch;
 
     private final boolean standaloneOperation;
 
@@ -38,21 +38,21 @@ public class UtilityController extends Controller {
     public UtilityController(Config configuration, PdfGenerator pdfGenerator,
                              DocumentStore documentStore,
                              AnalyticsStore analyticsStore,
-                             Search search) {
+                             OffenderSearch offenderSearch) {
 
         version = configuration.getString("app.version");
         standaloneOperation = configuration.getBoolean("standalone.operation");
         this.pdfGenerator = pdfGenerator;
         this.documentStore = documentStore;
         this.analyticsStore = analyticsStore;
-        this.search = search;
+        this.offenderSearch = offenderSearch;
     }
 
     public CompletionStage<Result> healthcheck() {
         val pdfGeneratorHealthFuture = pdfGenerator.isHealthy().toCompletableFuture();
         val documentGeneratorHealthFuture = documentStore.isHealthy().toCompletableFuture();
         val analyticsStoreHealthFuture = analyticsStore.isUp();
-        val searchHealthFuture = search.isHealthy().toCompletableFuture();
+        val searchHealthFuture = offenderSearch.isHealthy().toCompletableFuture();
 
         val allHealthFutures =
             CompletableFuture.allOf(pdfGeneratorHealthFuture,
@@ -83,7 +83,7 @@ public class UtilityController extends Controller {
                     "pdf-generator", pdfGeneratorStatus ? "OK" : "FAILED",
                     "document-store", documentStoreStatus ? "OK" : "FAILED",
                     "analytics-store", analyticsStoreStatus ? "OK" : "FAILED",
-                    "elastic-search", searchStatus ? "OK" : "FAILED"))
+                    "elastic-offenderSearch", searchStatus ? "OK" : "FAILED"))
                 .build());
     }
 
