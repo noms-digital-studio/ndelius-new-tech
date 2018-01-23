@@ -75,7 +75,7 @@ public class UtilityController extends Controller {
                                getDocumentStoreStatus(documentStoreStatus) &&
                                searchStatus ? "OK" : "FAILED")
                 .put("dateTime", DateTime.now().toString())
-                .put("version", version)
+                .put("version", version())
                 .put("runtime", runtimeInfo())
                 .put("fileSystems", fileSystemDetails())
                 .put("localHost", localhost())
