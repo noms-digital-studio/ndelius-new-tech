@@ -1,5 +1,6 @@
 import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS} from '../actions/search'
 import {flatMap} from '../../helpers/streams'
+import {matches} from '../../helpers/searchMatcher'
 
 const searchResults = (state = {searchTerm: '', resultsReceived: false, results: [], suggestions: [], total: 0, pageNumber: 1}, action) => {
     switch (action.type) {
@@ -74,11 +75,5 @@ const anyMatch = (item, searchTerm) =>
         .reduce((accumulator, currentValue) => accumulator || currentValue, false)
 
 const whenMatched = (text, searchTerm) => matches(text, searchTerm) ? text : null
-
-const matches = (text, searchTerm) =>
-    text && searchTerm.split(' ')
-        .filter(searchWord => searchWord) // remove empty terms
-        .map(searchWord => RegExp(searchWord, "i").test(text))
-        .reduce((accumulator, currentValue) => accumulator || currentValue, false)
 
 const areSearchResultsStillRelevant = (state, action) => state.searchTerm.indexOf(action.searchTerm) > -1

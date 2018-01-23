@@ -7,19 +7,19 @@ describe('OffenderSearchResults component', () => {
     context('with no results', () => {
         it('no summaries rendered', () => {
             const results = shallow(<OffenderSearchResults results={noResults()}/>)
-            expect(results.find('OffenderSearchSummary')).to.have.length(0)
+            expect(results.find('Connect(OffenderSearchSummary)')).to.have.length(0)
         })
     })
     context('with one result', () => {
         it('one summary rendered', () => {
             const results = shallow(<OffenderSearchResults results={oneResult()}/>)
-            expect(results.find('OffenderSearchSummary')).to.have.length(1)
+            expect(results.find('Connect(OffenderSearchSummary)')).to.have.length(1)
         })
     })
     context('with many results', () => {
         it('many summaries rendered', () => {
             const results = shallow(<OffenderSearchResults results={twoResults()} />)
-            expect(results.find('OffenderSearchSummary')).to.have.length(2)
+            expect(results.find('Connect(OffenderSearchSummary)')).to.have.length(2)
         })
     })
 })
