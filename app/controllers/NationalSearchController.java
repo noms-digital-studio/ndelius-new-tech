@@ -3,6 +3,7 @@ package controllers;
 import com.typesafe.config.Config;
 import helpers.Encryption;
 import helpers.JsonHelper;
+import interfaces.OffenderApiLogon;
 import interfaces.OffenderSearch;
 import lombok.val;
 import play.Logger;
@@ -15,6 +16,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
 public class NationalSearchController extends Controller {
@@ -23,15 +25,18 @@ public class NationalSearchController extends Controller {
     private final OffenderSearch offenderSearch;
     private final Duration userTokenValidDuration;
     private final String paramsSecretKey;
+    private final OffenderApiLogon offenderApiLogon;
 
 
     @Inject
     public NationalSearchController(
             Config configuration,
             views.html.nationalSearch template,
-            OffenderSearch offenderSearch) {
+            OffenderSearch offenderSearch,
+            OffenderApiLogon offenderApiLogon) {
         this.template = template;
         this.offenderSearch = offenderSearch;
+        this.offenderApiLogon = offenderApiLogon;
         paramsSecretKey = configuration.getString("params.secret.key");
         userTokenValidDuration = configuration.getDuration("params.user.token.valid.duration");
     }
@@ -53,6 +58,8 @@ public class NationalSearchController extends Controller {
             return unauthorized();
         }
 
+        val bearer = offenderApiLogon.logon(username);
+        session("bearer", bearer);
         return ok(template.render());
     }
 

@@ -3,13 +3,11 @@ import com.mongodb.rx.client.MongoClient;
 import injection.MongoClientProvider;
 import injection.RestClientBuilderProvider;
 import injection.RestHighLevelClientProvider;
-import interfaces.AnalyticsStore;
-import interfaces.DocumentStore;
-import interfaces.PdfGenerator;
-import interfaces.OffenderSearch;
+import interfaces.*;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import services.AlfrescoStore;
+import services.DeliusOffenderApi;
 import services.MongoDbStore;
 import services.RestPdfGenerator;
 import services.search.ElasticOffenderSearch;
@@ -33,6 +31,7 @@ public class Module extends AbstractModule {
         bind(DocumentStore.class).to(AlfrescoStore.class);
         bind(AnalyticsStore.class).to(MongoDbStore.class);
         bind(OffenderSearch.class).to(ElasticOffenderSearch.class);
+        bind(OffenderApiLogon.class).to(DeliusOffenderApi.class);
 
         bind(RestClientBuilder.class).toProvider(RestClientBuilderProvider.class);
         bind(RestHighLevelClient.class).toProvider(RestHighLevelClientProvider.class);
