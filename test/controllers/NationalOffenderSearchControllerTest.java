@@ -16,7 +16,6 @@ import play.mvc.Http;
 import play.test.WithApplication;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -32,6 +31,7 @@ import static play.test.Helpers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NationalOffenderSearchControllerTest extends WithApplication {
+    public static final int FIFTY_NINE_MINUTES = 1000 * 60 * 59;
     private String userTokenValidDuration = "1h";
     private String secretKey;
 
@@ -57,13 +57,6 @@ public class NationalOffenderSearchControllerTest extends WithApplication {
     }
 
     @Test
-    public void removeThisTest() throws UnsupportedEncodingException {
-        // http://ndl-dnt-300:9000/nationalSearch?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=0RDkaUIYRF5PyKB2hUt1iA%3D%3D
-        System.out.println(Encryption.decrypt(URLDecoder.decode("lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D", "UTF-8"), "ThisIsASecretKey"));
-        System.out.println(Encryption.decrypt(URLDecoder.decode("0RDkaUIYRF5PyKB2hUt1iA%3D%3D", "UTF-8"), "ThisIsASecretKey"));
-    }
-
-    @Test
     public void badUserTokenReturns400Response() {
         val request = new Http.RequestBuilder().method(GET).uri("/nationalSearch?user=bananas&t=0RDkaUIYRF5PyKB2hUt1iA%3D%3D");
         val result = route(app, request);
@@ -83,6 +76,17 @@ public class NationalOffenderSearchControllerTest extends WithApplication {
     public void validUserAndTimeTokenReturns200Response() throws UnsupportedEncodingException {
         val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", secretKey), "UTF-8");
         val encryptedTime = URLEncoder.encode(Encryption.encrypt(String.valueOf(System.currentTimeMillis()), secretKey), "UTF-8");
+
+        val request = new Http.RequestBuilder().method(GET).uri(String.format("/nationalSearch?user=%s&t=%s", encryptedUser, encryptedTime));
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+    }
+
+    @Test
+    public void timeTokenIsALittleBitInTheFutureDueToMachineTimeDriftReturns200Response() throws UnsupportedEncodingException {
+        val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", secretKey), "UTF-8");
+        val encryptedTime = URLEncoder.encode(Encryption.encrypt(String.valueOf(System.currentTimeMillis()+ FIFTY_NINE_MINUTES), secretKey), "UTF-8");
 
         val request = new Http.RequestBuilder().method(GET).uri(String.format("/nationalSearch?user=%s&t=%s", encryptedUser, encryptedTime));
         val result = route(app, request);
