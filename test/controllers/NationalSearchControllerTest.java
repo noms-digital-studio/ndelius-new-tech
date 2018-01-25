@@ -2,8 +2,11 @@ package controllers;
 
 import data.offendersearch.OffenderSearchResult;
 import helpers.Encryption;
+import helpers.FutureListener;
+import interfaces.OffenderApiLogon;
 import interfaces.OffenderSearch;
 import lombok.val;
+import org.elasticsearch.search.SearchHits;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,41 +14,70 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
+import play.Logger;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Http;
 import play.test.WithApplication;
+import services.search.ElasticOffenderSearch;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.concurrent.CompletableFuture;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
+import static java.util.concurrent.CompletableFuture.supplyAsync;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class NationalOffenderSearchControllerTest extends WithApplication {
-    public static final int FIFTY_NINE_MINUTES = 1000 * 60 * 59;
+public class NationalSearchControllerTest extends WithApplication {
+    private static final int FIFTY_NINE_MINUTES = 1000 * 60 * 59;
     private String userTokenValidDuration = "1h";
     private String secretKey;
 
     @Mock
     private OffenderSearch elasticOffenderSearch;
 
+    @Mock
+    private OffenderApiLogon offenderApiLogon;
+
     @Before
     public void setUp() {
+        when(offenderApiLogon.logon(any())).thenReturn(CompletableFuture.completedFuture("bearerToken"));
         secretKey = "ThisIsASecretKey";
     }
+
     @After
     public void tearDown() {
         userTokenValidDuration = "1h";
     }
+
+    @Test
+    public void indexPageSessionContainsBearerTokenWhenLogonSucceeds() throws UnsupportedEncodingException {
+        val result = route(app, buildIndexPageRequest());
+
+        assertThat(result.status()).isEqualTo(OK);
+        assertThat(result.session().get("offenderApiBearerToken")).isEqualTo("bearerToken");
+    }
+
+    @Test
+    public void returnsServerErrorWhenLogonFails() throws UnsupportedEncodingException {
+        when(offenderApiLogon.logon(any())).thenReturn(supplyAsync(() -> { throw new RuntimeException("boom"); }));
+
+        val result = route(app, buildIndexPageRequest());
+
+        assertThat(result.status()).isEqualTo(INTERNAL_SERVER_ERROR);
+    }
+
     @Test
     public void searchTermReturnsResults() {
         when(elasticOffenderSearch.search(any(), anyInt(), anyInt())).thenReturn(completedFuture(OffenderSearchResult.builder().build()));
@@ -85,10 +117,7 @@ public class NationalOffenderSearchControllerTest extends WithApplication {
 
     @Test
     public void timeTokenIsALittleBitInTheFutureDueToMachineTimeDriftReturns200Response() throws UnsupportedEncodingException {
-        val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", secretKey), "UTF-8");
-        val encryptedTime = URLEncoder.encode(Encryption.encrypt(String.valueOf(System.currentTimeMillis()+ FIFTY_NINE_MINUTES), secretKey), "UTF-8");
-
-        val request = new Http.RequestBuilder().method(GET).uri(String.format("/nationalSearch?user=%s&t=%s", encryptedUser, encryptedTime));
+        Http.RequestBuilder request = buildIndexPageRequest();
         val result = route(app, request);
 
         assertEquals(OK, result.status());
@@ -122,12 +151,20 @@ public class NationalOffenderSearchControllerTest extends WithApplication {
         assertEquals(OK, result.status());
     }
 
+    private Http.RequestBuilder buildIndexPageRequest() throws UnsupportedEncodingException {
+        val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", secretKey), "UTF-8");
+        val encryptedTime = URLEncoder.encode(Encryption.encrypt(String.valueOf(System.currentTimeMillis()+ FIFTY_NINE_MINUTES), secretKey), "UTF-8");
+
+        return new Http.RequestBuilder().method(GET).uri(String.format("/nationalSearch?user=%s&t=%s", encryptedUser, encryptedTime));
+    }
+
     @Override
     protected Application provideApplication() {
 
         return new GuiceApplicationBuilder().
             overrides(
-                bind(OffenderSearch.class).toInstance(elasticOffenderSearch)
+                bind(OffenderSearch.class).toInstance(elasticOffenderSearch),
+                bind(OffenderApiLogon.class).toInstance(offenderApiLogon)
             )
             .configure("params.user.token.valid.duration", userTokenValidDuration)
             .build();
