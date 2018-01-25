@@ -1,8 +1,11 @@
 package controllers;
 
 import data.offendersearch.OffenderSearchResult;
+import helpers.Encryption;
 import interfaces.OffenderSearch;
 import lombok.val;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -11,6 +14,12 @@ import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Http;
 import play.test.WithApplication;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.junit.Assert.assertEquals;
@@ -23,10 +32,20 @@ import static play.test.Helpers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NationalOffenderSearchControllerTest extends WithApplication {
+    private String userTokenValidDuration = "1h";
+    private String secretKey;
 
     @Mock
     private OffenderSearch elasticOffenderSearch;
 
+    @Before
+    public void setUp() {
+        secretKey = "ThisIsASecretKey";
+    }
+    @After
+    public void tearDown() {
+        userTokenValidDuration = "1h";
+    }
     @Test
     public void searchTermReturnsResults() {
         when(elasticOffenderSearch.search(any(), anyInt(), anyInt())).thenReturn(completedFuture(OffenderSearchResult.builder().build()));
@@ -37,6 +56,68 @@ public class NationalOffenderSearchControllerTest extends WithApplication {
         assertEquals("{\"offenders\":null,\"suggestions\":null,\"total\":0}", contentAsString(result));
     }
 
+    @Test
+    public void removeThisTest() throws UnsupportedEncodingException {
+        // http://ndl-dnt-300:9000/nationalSearch?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=0RDkaUIYRF5PyKB2hUt1iA%3D%3D
+        System.out.println(Encryption.decrypt(URLDecoder.decode("lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D", "UTF-8"), "ThisIsASecretKey"));
+        System.out.println(Encryption.decrypt(URLDecoder.decode("0RDkaUIYRF5PyKB2hUt1iA%3D%3D", "UTF-8"), "ThisIsASecretKey"));
+    }
+
+    @Test
+    public void badUserTokenReturns400Response() {
+        val request = new Http.RequestBuilder().method(GET).uri("/nationalSearch?user=bananas&t=0RDkaUIYRF5PyKB2hUt1iA%3D%3D");
+        val result = route(app, request);
+
+        assertEquals(BAD_REQUEST, result.status());
+    }
+
+    @Test
+    public void badTimeTokenReturns400Response() {
+        val request = new Http.RequestBuilder().method(GET).uri("/nationalSearch?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=sausage");
+        val result = route(app, request);
+
+        assertEquals(BAD_REQUEST, result.status());
+    }
+
+    @Test
+    public void validUserAndTimeTokenReturns200Response() throws UnsupportedEncodingException {
+        val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", secretKey), "UTF-8");
+        val encryptedTime = URLEncoder.encode(Encryption.encrypt(String.valueOf(System.currentTimeMillis()), secretKey), "UTF-8");
+
+        val request = new Http.RequestBuilder().method(GET).uri(String.format("/nationalSearch?user=%s&t=%s", encryptedUser, encryptedTime));
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+    }
+
+    @Test
+    public void validUserAndOldTimeTokenReturns401Response() throws UnsupportedEncodingException {
+        val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", secretKey), "UTF-8");
+        val overAnHourAgo = String.valueOf(LocalDateTime.now().minusMinutes(61).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        val encryptedTime = URLEncoder.encode(Encryption.encrypt(overAnHourAgo, secretKey), "UTF-8");
+
+        val request = new Http.RequestBuilder().method(GET).uri(String.format("/nationalSearch?user=%s&t=%s", encryptedUser, encryptedTime));
+        val result = route(app, request);
+
+        assertEquals(UNAUTHORIZED, result.status());
+    }
+
+    @Test
+    public void timeTokenValidDurationIsDeterminedByConfig() throws UnsupportedEncodingException {
+        userTokenValidDuration = "101d";
+        stopPlay();
+        startPlay();
+
+        val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", secretKey), "UTF-8");
+        val overAnHourAgo = String.valueOf(LocalDateTime.now().minusDays(100).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        val encryptedTime = URLEncoder.encode(Encryption.encrypt(overAnHourAgo, secretKey), "UTF-8");
+
+        val request = new Http.RequestBuilder().method(GET).uri(String.format("/nationalSearch?user=%s&t=%s", encryptedUser, encryptedTime));
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+    }
+
     @Override
     protected Application provideApplication() {
 
@@ -44,6 +125,7 @@ public class NationalOffenderSearchControllerTest extends WithApplication {
             overrides(
                 bind(OffenderSearch.class).toInstance(elasticOffenderSearch)
             )
+            .configure("params.user.token.valid.duration", userTokenValidDuration)
             .build();
     }
 
