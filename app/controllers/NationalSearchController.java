@@ -9,6 +9,7 @@ import lombok.val;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Results;
 
 import javax.inject.Inject;
 import java.time.Duration;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 public class NationalSearchController extends Controller {
@@ -41,13 +43,13 @@ public class NationalSearchController extends Controller {
         userTokenValidDuration = configuration.getDuration("params.user.token.valid.duration");
     }
 
-    public Result index(String encryptedUsername, String encryptedEpochRequestTimeMills) {
+    public CompletionStage<Result> index(String encryptedUsername, String encryptedEpochRequestTimeMills) {
         val username = Encryption.decrypt(encryptedUsername, paramsSecretKey);
         val epochRequestTime = Encryption.decrypt(encryptedEpochRequestTimeMills, paramsSecretKey);
 
         if (username == null || epochRequestTime == null) {
             Logger.error(String.format("Request did not receive user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
-            return badRequest("no 'user' or 't' supplied");
+            return CompletableFuture.supplyAsync(() -> badRequest("no 'user' or 't' supplied"));
         }
 
         if (Duration.between(toLocalDateTime(epochRequestTime), LocalDateTime.now()).compareTo(userTokenValidDuration) > 0) {
@@ -55,12 +57,17 @@ public class NationalSearchController extends Controller {
                     "Request not authorised because time currently is %s but token time %s",
                     LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME),
                     toLocalDateTime(epochRequestTime).format(DateTimeFormatter.ISO_DATE_TIME)));
-            return unauthorized();
+            return CompletableFuture.supplyAsync(Results::unauthorized);
         }
 
-        val bearer = offenderApiLogon.logon(username);
-        session("bearer", bearer);
-        return ok(template.render());
+
+        return offenderApiLogon.logon(username).thenApply((bearerToken) -> {
+            session("offenderApiBearerToken", bearerToken);
+            return ok(template.render());
+        }).exceptionally((e) -> {
+            Logger.error("Unable to logon to offender API", e);
+            return internalServerError();
+        });
     }
 
     public CompletionStage<Result> searchOffender(String searchTerm, int pageSize, int pageNumber) {

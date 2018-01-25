@@ -1,5 +1,7 @@
 package interfaces;
 
+import java.util.concurrent.CompletionStage;
+
 public interface OffenderApiLogon {
-    String logon(String username);
+    CompletionStage<String> logon(String username);
 }
