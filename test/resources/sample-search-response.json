@@ -1,0 +1,136 @@
+{
+  "offenders": [
+    {
+      "offenderId": 2500155552,
+      "firstName": "Andy",
+      "middleNames": [
+        "Stephen"
+      ],
+      "surname": "Marke",
+      "dateOfBirth": "1952-07-19",
+      "gender": "Male",
+      "otherIds": {
+        "crn": "X142620",
+        "croNumber": "739639/11X",
+        "niNumber": "NE998877A",
+        "nomsNumber": "X6398SS"
+      },
+      "contactDetails": {
+        "addresses": [
+          {
+            "from": "2018-01-22",
+            "noFixedAbode": false,
+            "addressNumber": "63",
+            "streetName": "Broomgrove Road",
+            "town": "Sheffield",
+            "county": "South Yorkshire",
+            "postcode": "S10 2NA"
+          }
+        ]
+      },
+      "offenderProfile": {
+        "offenderLanguages": {},
+        "previousConviction": {}
+      },
+      "offenderAliases": [
+        {
+          "dateOfBirth": "1955-07-19",
+          "firstName": "Another",
+          "surname": "Christmas",
+          "gender": "Male"
+        },
+        {
+          "dateOfBirth": "1999-08-05",
+          "firstName": "Andrew",
+          "surname": "Marke",
+          "gender": "Male"
+        },
+        {
+          "dateOfBirth": "1975-07-19",
+          "firstName": "Mr",
+          "surname": "Blobby",
+          "gender": "Male"
+        }
+      ],
+      "softDeleted": false,
+      "currentDisposal": "0",
+      "partitionArea": "National Data",
+      "currentRestriction": false,
+      "currentExclusion": true,
+      "age": 65
+    }
+  ],
+  "suggestions": {
+    "suggest": {
+      "firstName": [
+        {
+          "text": "marke",
+          "offset": 0,
+          "length": 5,
+          "options": [
+            {
+              "text": "marie",
+              "score": 0.8,
+              "freq": 73
+            },
+            {
+              "text": "mark",
+              "score": 0.75,
+              "freq": 107
+            },
+            {
+              "text": "marcel",
+              "score": 0.6,
+              "freq": 22
+            },
+            {
+              "text": "merge",
+              "score": 0.6,
+              "freq": 2
+            },
+            {
+              "text": "margje",
+              "score": 0.6,
+              "freq": 1
+            }
+          ]
+        }
+      ],
+      "surname": [
+        {
+          "text": "marke",
+          "offset": 0,
+          "length": 5,
+          "options": [
+            {
+              "text": "marek",
+              "score": 0.8,
+              "freq": 16
+            },
+            {
+              "text": "marsh",
+              "score": 0.6,
+              "freq": 7
+            },
+            {
+              "text": "mayne",
+              "score": 0.6,
+              "freq": 1
+            },
+            {
+              "text": "mack",
+              "score": 0.5,
+              "freq": 6
+            },
+            {
+              "text": "mike",
+              "score": 0.5,
+              "freq": 1
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "total": 1
+}
