@@ -6,7 +6,9 @@ import helpers.JsonHelper;
 import interfaces.OffenderApiLogon;
 import interfaces.OffenderSearch;
 import lombok.val;
+import org.apache.commons.lang3.ArrayUtils;
 import play.Logger;
+import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Results;
@@ -28,10 +30,12 @@ public class NationalSearchController extends Controller {
     private final Duration userTokenValidDuration;
     private final String paramsSecretKey;
     private final OffenderApiLogon offenderApiLogon;
+    private final HttpExecutionContext ec;
 
 
     @Inject
     public NationalSearchController(
+            HttpExecutionContext ec,
             Config configuration,
             views.html.nationalSearch template,
             OffenderSearch offenderSearch,
@@ -41,16 +45,18 @@ public class NationalSearchController extends Controller {
         this.offenderApiLogon = offenderApiLogon;
         paramsSecretKey = configuration.getString("params.secret.key");
         userTokenValidDuration = configuration.getDuration("params.user.token.valid.duration");
+        this.ec = ec;
     }
 
     public CompletionStage<Result> index(String encryptedUsername, String encryptedEpochRequestTimeMills) {
         val username = Encryption.decrypt(encryptedUsername, paramsSecretKey);
 
         return validate(encryptedUsername, encryptedEpochRequestTimeMills, username)
-            .orElseGet(() -> offenderApiLogon.logon(username).thenApply((bearerToken) -> {
+            .orElseGet(() -> offenderApiLogon.logon(username).thenApplyAsync(bearerToken -> {
+                Logger.info("Successful logon to API for user {}", username);
                 session("offenderApiBearerToken", bearerToken);
                 return ok(template.render());
-            }).exceptionally((e) -> {
+            }, ec.current()).exceptionally(e -> {
                 Logger.error("Unable to logon to offender API", e);
                 return internalServerError();
             }));
