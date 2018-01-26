@@ -26,7 +26,7 @@ public class Module extends AbstractModule {
         bind(PdfGenerator.class).to(RestPdfGenerator.class);
         bind(DocumentStore.class).to(AlfrescoStore.class);
         bind(OffenderSearch.class).to(ElasticOffenderSearch.class);
-        bind(OffenderApiLogon.class).toProvider(OffenderApiLogonProvider.class);
+        bind(OffenderApi.class).toProvider(OffenderApiProvider.class);
 
         bind(RestClientBuilder.class).toProvider(RestClientBuilderProvider.class);
         bind(RestHighLevelClient.class).toProvider(RestHighLevelClientProvider.class);

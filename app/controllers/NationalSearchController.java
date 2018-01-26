@@ -3,10 +3,9 @@ package controllers;
 import com.typesafe.config.Config;
 import helpers.Encryption;
 import helpers.JsonHelper;
-import interfaces.OffenderApiLogon;
+import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
 import lombok.val;
-import org.apache.commons.lang3.ArrayUtils;
 import play.Logger;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
@@ -25,11 +24,12 @@ import java.util.concurrent.CompletionStage;
 
 public class NationalSearchController extends Controller {
 
+    private static final String OFFENDER_API_BEARER_TOKEN = "offenderApiBearerToken";
     private final views.html.nationalSearch template;
     private final OffenderSearch offenderSearch;
     private final Duration userTokenValidDuration;
     private final String paramsSecretKey;
-    private final OffenderApiLogon offenderApiLogon;
+    private final OffenderApi offenderApi;
     private final HttpExecutionContext ec;
 
 
@@ -39,10 +39,10 @@ public class NationalSearchController extends Controller {
             Config configuration,
             views.html.nationalSearch template,
             OffenderSearch offenderSearch,
-            OffenderApiLogon offenderApiLogon) {
+            OffenderApi offenderApi) {
         this.template = template;
         this.offenderSearch = offenderSearch;
-        this.offenderApiLogon = offenderApiLogon;
+        this.offenderApi = offenderApi;
         paramsSecretKey = configuration.getString("params.secret.key");
         userTokenValidDuration = configuration.getDuration("params.user.token.valid.duration");
         this.ec = ec;
@@ -52,9 +52,9 @@ public class NationalSearchController extends Controller {
         val username = Encryption.decrypt(encryptedUsername, paramsSecretKey);
 
         return validate(encryptedUsername, encryptedEpochRequestTimeMills, username)
-            .orElseGet(() -> offenderApiLogon.logon(username).thenApplyAsync(bearerToken -> {
+            .orElseGet(() -> offenderApi.logon(username).thenApplyAsync(bearerToken -> {
                 Logger.info("Successful logon to API for user {}", username);
-                session("offenderApiBearerToken", bearerToken);
+                session(OFFENDER_API_BEARER_TOKEN, bearerToken);
                 return ok(template.render());
             }, ec.current()).exceptionally(e -> {
                 Logger.error("Unable to logon to offender API", e);
@@ -63,7 +63,7 @@ public class NationalSearchController extends Controller {
     }
 
     public CompletionStage<Result> searchOffender(String searchTerm, int pageSize, int pageNumber) {
-        return offenderSearch.search(searchTerm, pageSize, pageNumber).thenApply(JsonHelper::okJson);
+        return offenderSearch.search(session(OFFENDER_API_BEARER_TOKEN), searchTerm, pageSize, pageNumber).thenApply(JsonHelper::okJson);
     }
 
     private Optional<CompletionStage<Result>> validate(String encryptedUsername, String encryptedEpochRequestTimeMills, String username) {

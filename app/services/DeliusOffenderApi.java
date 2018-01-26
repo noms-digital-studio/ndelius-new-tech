@@ -1,7 +1,7 @@
 package services;
 
 import com.typesafe.config.Config;
-import interfaces.OffenderApiLogon;
+import interfaces.OffenderApi;
 import play.Logger;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
@@ -10,9 +10,11 @@ import javax.inject.Inject;
 import java.util.concurrent.CompletionStage;
 
 import static java.lang.String.format;
+import static play.mvc.Http.HeaderNames.AUTHORIZATION;
+import static play.mvc.Http.Status.FORBIDDEN;
 import static play.mvc.Http.Status.OK;
 
-public class DeliusOffenderApi implements OffenderApiLogon {
+public class DeliusOffenderApi implements OffenderApi {
 
     private final WSClient wsClient;
     private final String offenderApiBaseUrl;
@@ -29,6 +31,26 @@ public class DeliusOffenderApi implements OffenderApiLogon {
             .post(format("cn=%s,cn=Users,dc=moj,dc=com", username))
             .thenApply(this::assertOkResponse)
             .thenApply(WSResponse::getBody);
+    }
+
+    @Override
+    public CompletionStage<Boolean> canAccess(String bearerToken, int offenderId) {
+        final String url = String.format(offenderApiBaseUrl + "/offenders/offenderId/%d/userAccess", offenderId);
+        return wsClient.url(url)
+                .addHeader(AUTHORIZATION, String.format("Bearer %s", bearerToken))
+                .get()
+                .thenApply(WSResponse::getStatus)
+                .thenApply(status -> {
+                    switch(status) {
+                        case OK:
+                            return true;
+                        case FORBIDDEN:
+                            return false;
+                        default:
+                            Logger.error("Got a bad response from {} status {}", url, status);
+                            return false;
+                    }
+                });
     }
 
     private WSResponse assertOkResponse(WSResponse response) {

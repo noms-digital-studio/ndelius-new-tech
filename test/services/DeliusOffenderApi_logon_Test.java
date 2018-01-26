@@ -1,7 +1,7 @@
 package services;
 
 import com.typesafe.config.ConfigFactory;
-import interfaces.OffenderApiLogon;
+import interfaces.OffenderApi;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,9 +24,9 @@ import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class DeliusOffenderApiTest {
+public class DeliusOffenderApi_logon_Test {
 
-    private OffenderApiLogon offenderApiLogon;
+    private OffenderApi offenderApi;
 
     @Mock
     private WSClient wsClient;
@@ -39,7 +39,7 @@ public class DeliusOffenderApiTest {
 
     @Before
     public void setup() {
-        offenderApiLogon = new DeliusOffenderApi(ConfigFactory.load(), wsClient);
+        offenderApi = new DeliusOffenderApi(ConfigFactory.load(), wsClient);
         when(wsClient.url(any())).thenReturn(wsRequest);
         when(wsRequest.post(anyString())).thenReturn(CompletableFuture.completedFuture(wsResponse));
         when(wsResponse.getStatus()).thenReturn(200);
@@ -48,7 +48,7 @@ public class DeliusOffenderApiTest {
 
     @Test
     public void sendsLdapPrincipleToApi() {
-        offenderApiLogon.logon("john.smith");
+        offenderApi.logon("john.smith");
 
         Mockito.verify(wsRequest).post("cn=john.smith,cn=Users,dc=moj,dc=com");
     }
@@ -56,7 +56,7 @@ public class DeliusOffenderApiTest {
     @Test
     public void returnsBearerTokenOnSuccessfulLogon() {
         when(wsResponse.getBody()).thenReturn("bearerToken");
-        CompletionStage<String> logonResponse = offenderApiLogon.logon("john.smith");
+        CompletionStage<String> logonResponse = offenderApi.logon("john.smith");
 
         String token = logonResponse.toCompletableFuture().join();
 
@@ -67,7 +67,7 @@ public class DeliusOffenderApiTest {
     public void propagateExceptionOnFailPost() {
         when(wsRequest.post(anyString())).thenReturn(supplyAsync(() -> { throw new RuntimeException("boom"); }));
 
-        CompletionStage<String> logonResponse = offenderApiLogon.logon("john.smith");
+        CompletionStage<String> logonResponse = offenderApi.logon("john.smith");
 
         logonResponse
             .thenApply((bearer) -> {
@@ -84,7 +84,7 @@ public class DeliusOffenderApiTest {
     public void propagateExceptionOnHttpResponseError() {
         when(wsResponse.getStatus()).thenReturn(404);
 
-        CompletionStage<String> logonResponse = offenderApiLogon.logon("john.smith");
+        CompletionStage<String> logonResponse = offenderApi.logon("john.smith");
 
         logonResponse
             .thenApply((bearer) -> {

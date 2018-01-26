@@ -1,9 +1,11 @@
 package services.search;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import data.offendersearch.OffenderSearchResult;
 import helpers.FutureListener;
+import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
 import lombok.val;
 import org.elasticsearch.action.search.SearchRequest;
@@ -15,6 +17,7 @@ import play.Logger;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -30,18 +33,20 @@ import static play.libs.Json.parse;
 public class ElasticOffenderSearch implements OffenderSearch {
 
     private final RestHighLevelClient elasticSearchClient;
+    private final OffenderApi offenderApi;
 
     @Inject
-    public ElasticOffenderSearch(RestHighLevelClient elasticSearchClient) {
+    public ElasticOffenderSearch(RestHighLevelClient elasticSearchClient, OffenderApi offenderApi) {
         this.elasticSearchClient = elasticSearchClient;
+        this.offenderApi = offenderApi;
     }
 
     @Override
-    public CompletionStage<OffenderSearchResult> search(String searchTerm, int pageSize, int pageNumber) {
+    public CompletionStage<OffenderSearchResult> search(String bearerToken, String searchTerm, int pageSize, int pageNumber) {
         val listener = new FutureListener<SearchResponse>();
         elasticSearchClient.searchAsync(new SearchRequest("offender")
             .source(searchSourceFor(searchTerm, pageSize, pageNumber)), listener);
-        return listener.stage().thenApply(this::processSearchResponse);
+        return listener.stage().thenCompose(response -> processSearchResponse(bearerToken, response));
     }
 
     @Override
@@ -89,22 +94,37 @@ public class ElasticOffenderSearch implements OffenderSearch {
             .addSuggestion("firstName", termSuggestion("firstName").text(searchTerm));
     }
 
-    private OffenderSearchResult processSearchResponse(SearchResponse response) {
+    private CompletableFuture<OffenderSearchResult> processSearchResponse(String bearerToken, SearchResponse response) {
         Logger.debug(response.toString());
 
-        val offenders =
-            stream(response.getHits().getHits())
+
+        val offenderNodesCompletionStages = stream(response.getHits().getHits())
+                .parallel()
                 .map(searchHit -> {
                     JsonNode offender = parse(searchHit.getSourceAsString());
-                    return embellishNode(offender);
+                    return embellishNode(bearerToken, offender);
                 }).collect(toList());
 
-        return OffenderSearchResult.builder()
-            .offenders(offenders)
-            .total(response.getHits().getTotalHits())
-            .suggestions(suggestionsIn(response))
-            .build();
+        return CompletableFuture.allOf(
+                offenderNodesCompletionStages
+                        .stream()
+                        .map(CompletionStage::toCompletableFuture)
+                        .toArray(CompletableFuture[]::new))
+                .thenApply(ignoredVoid ->
+                        OffenderSearchResult.builder()
+                                .offenders(joinAll(offenderNodesCompletionStages))
+                                .total(response.getHits().getTotalHits())
+                                .suggestions(suggestionsIn(response))
+                                .build());
     }
+
+    private List<JsonNode> joinAll(List<CompletionStage<ObjectNode>> offenderNodes) {
+        return offenderNodes
+                .stream()
+                .map(objectNodeCompletionStage -> objectNodeCompletionStage.toCompletableFuture().join())
+                .collect(toList());
+    }
+
 
     private JsonNode suggestionsIn(SearchResponse response) {
         return Optional.ofNullable(response.getSuggest())
@@ -116,8 +136,13 @@ public class ElasticOffenderSearch implements OffenderSearch {
         return pageNumber >= 1 ? pageNumber - 1 : 0;
     }
 
-    private JsonNode embellishNode(JsonNode node) {
-        ObjectNode rootNode = (ObjectNode) node;
+    private CompletionStage<ObjectNode> embellishNode(String bearerToken, JsonNode node) {
+        return obfuscateRestrictedOffenders(
+                bearerToken,
+                appendDateOfBirth((ObjectNode)node));
+    }
+
+    private ObjectNode appendDateOfBirth(ObjectNode rootNode) {
         JsonNode dateOfBirth = rootNode.get("dateOfBirth");
 
         return Optional.ofNullable(dateOfBirth)
@@ -125,4 +150,27 @@ public class ElasticOffenderSearch implements OffenderSearch {
             .orElse(rootNode);
     }
 
+    private CompletionStage<ObjectNode> obfuscateRestrictedOffenders(String bearerToken, ObjectNode rootNode) {
+        boolean currentRestriction = Optional.ofNullable(rootNode.get("currentRestriction"))
+                .map(JsonNode::asBoolean).orElse(false);
+        boolean currentExclusion = Optional.ofNullable(rootNode.get("currentExclusion"))
+                .map(JsonNode::asBoolean).orElse(false);
+
+
+        if ((currentExclusion || currentRestriction)) {
+            return offenderApi.canAccess(bearerToken, rootNode.get("offenderId").asInt())
+                    .thenApply(canAccess -> canAccess ? rootNode : obfuscate(rootNode));
+        }
+        return CompletableFuture.completedFuture(rootNode);
+    }
+
+    private ObjectNode obfuscate(ObjectNode rootNode) {
+        val obfuscatedRootNode = JsonNodeFactory.instance.objectNode();
+        val otherIdsNode = JsonNodeFactory.instance.objectNode();
+        otherIdsNode.put("crn", rootNode.get("otherIds").get("crn").asText());
+        obfuscatedRootNode.put("accessDenied", true);
+        obfuscatedRootNode.put("offenderId", rootNode.get("offenderId").asLong());
+        obfuscatedRootNode.set("otherIds", otherIdsNode);
+        return obfuscatedRootNode;
+    }
 }

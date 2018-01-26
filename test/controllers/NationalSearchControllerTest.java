@@ -2,11 +2,9 @@ package controllers;
 
 import data.offendersearch.OffenderSearchResult;
 import helpers.Encryption;
-import helpers.FutureListener;
-import interfaces.OffenderApiLogon;
+import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
 import lombok.val;
-import org.elasticsearch.search.SearchHits;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,11 +12,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
-import play.Logger;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Http;
 import play.test.WithApplication;
-import services.search.ElasticOffenderSearch;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -32,7 +28,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
 import static play.mvc.Http.Status.OK;
@@ -48,11 +43,11 @@ public class NationalSearchControllerTest extends WithApplication {
     private OffenderSearch elasticOffenderSearch;
 
     @Mock
-    private OffenderApiLogon offenderApiLogon;
+    private OffenderApi offenderApi;
 
     @Before
     public void setUp() {
-        when(offenderApiLogon.logon(any())).thenReturn(CompletableFuture.completedFuture("bearerToken"));
+        when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture("bearerToken"));
         secretKey = "ThisIsASecretKey";
     }
 
@@ -71,7 +66,7 @@ public class NationalSearchControllerTest extends WithApplication {
 
     @Test
     public void returnsServerErrorWhenLogonFails() throws UnsupportedEncodingException {
-        when(offenderApiLogon.logon(any())).thenReturn(supplyAsync(() -> { throw new RuntimeException("boom"); }));
+        when(offenderApi.logon(any())).thenReturn(supplyAsync(() -> { throw new RuntimeException("boom"); }));
 
         val result = route(app, buildIndexPageRequest());
 
@@ -80,7 +75,7 @@ public class NationalSearchControllerTest extends WithApplication {
 
     @Test
     public void searchTermReturnsResults() {
-        when(elasticOffenderSearch.search(any(), anyInt(), anyInt())).thenReturn(completedFuture(OffenderSearchResult.builder().build()));
+        when(elasticOffenderSearch.search(any(), any(), anyInt(), anyInt())).thenReturn(completedFuture(OffenderSearchResult.builder().build()));
         val request = new Http.RequestBuilder().method(GET).uri("/searchOffender/smith");
         val result = route(app, request);
 
@@ -164,7 +159,7 @@ public class NationalSearchControllerTest extends WithApplication {
         return new GuiceApplicationBuilder().
             overrides(
                 bind(OffenderSearch.class).toInstance(elasticOffenderSearch),
-                bind(OffenderApiLogon.class).toInstance(offenderApiLogon)
+                bind(OffenderApi.class).toInstance(offenderApi)
             )
             .configure("params.user.token.valid.duration", userTokenValidDuration)
             .build();

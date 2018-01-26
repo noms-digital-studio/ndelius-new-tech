@@ -2,6 +2,8 @@ package interfaces;
 
 import java.util.concurrent.CompletionStage;
 
-public interface OffenderApiLogon {
+public interface OffenderApi {
     CompletionStage<String> logon(String username);
+
+    CompletionStage<Boolean> canAccess(String bearerToken, int offenderId);
 }
