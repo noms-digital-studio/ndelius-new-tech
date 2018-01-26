@@ -23,8 +23,8 @@ public class DeliusOffenderApi implements OffenderApiLogon {
 
     @Override
     public CompletionStage<String> logon(String username) {
-        return wsClient.url(offenderApiBaseUrl + "logon").
-            post(format("cn=%s,cn=Users,dc=moj,dc=com", username))
+        return wsClient.url(offenderApiBaseUrl + "/logon")
+            .post(format("cn=%s,cn=Users,dc=moj,dc=com", username))
             .thenApply(WSResponse::getBody);
     }
 }
