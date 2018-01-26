@@ -42,6 +42,8 @@ public class DeliusOffenderApiTest {
         offenderApiLogon = new DeliusOffenderApi(ConfigFactory.load(), wsClient);
         when(wsClient.url(any())).thenReturn(wsRequest);
         when(wsRequest.post(anyString())).thenReturn(CompletableFuture.completedFuture(wsResponse));
+        when(wsResponse.getStatus()).thenReturn(200);
+
     }
 
     @Test
@@ -74,6 +76,23 @@ public class DeliusOffenderApiTest {
             })
             .exceptionally((e) -> {
                 assertThat(e.getCause().getMessage()).isEqualTo("boom");
+                return null;
+            })
+            .toCompletableFuture().join();
+    }
+    @Test
+    public void propagateExceptionOnHttpResponseError() {
+        when(wsResponse.getStatus()).thenReturn(404);
+
+        CompletionStage<String> logonResponse = offenderApiLogon.logon("john.smith");
+
+        logonResponse
+            .thenApply((bearer) -> {
+                fail("expected an exception");
+                return null;
+            })
+            .exceptionally((e) -> {
+                assertThat(e).isInstanceOfAny(RuntimeException.class);
                 return null;
             })
             .toCompletableFuture().join();

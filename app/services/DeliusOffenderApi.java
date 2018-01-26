@@ -2,6 +2,7 @@ package services;
 
 import com.typesafe.config.Config;
 import interfaces.OffenderApiLogon;
+import play.Logger;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
 
@@ -9,6 +10,7 @@ import javax.inject.Inject;
 import java.util.concurrent.CompletionStage;
 
 import static java.lang.String.format;
+import static play.mvc.Http.Status.OK;
 
 public class DeliusOffenderApi implements OffenderApiLogon {
 
@@ -25,6 +27,15 @@ public class DeliusOffenderApi implements OffenderApiLogon {
     public CompletionStage<String> logon(String username) {
         return wsClient.url(offenderApiBaseUrl + "/logon")
             .post(format("cn=%s,cn=Users,dc=moj,dc=com", username))
+            .thenApply(this::assertOkResponse)
             .thenApply(WSResponse::getBody);
+    }
+
+    private WSResponse assertOkResponse(WSResponse response) {
+        if (response.getStatus() != OK) {
+            Logger.error("Logon API bad response " + response.getStatus());
+            throw new RuntimeException("Unable to call logon. Status = " + response.getStatus());
+        }
+        return response;
     }
 }
