@@ -45,11 +45,23 @@ public class NationalSearchController extends Controller {
 
     public CompletionStage<Result> index(String encryptedUsername, String encryptedEpochRequestTimeMills) {
         val username = Encryption.decrypt(encryptedUsername, paramsSecretKey);
+
+        return validate(encryptedUsername, encryptedEpochRequestTimeMills, username)
+            .orElseGet(() -> offenderApiLogon.logon(username).thenApply((bearerToken) -> {
+                session("offenderApiBearerToken", bearerToken);
+                return ok(template.render());
+            }).exceptionally((e) -> {
+                Logger.error("Unable to logon to offender API", e);
+                return internalServerError();
+            }));
+    }
+
+    private Optional<CompletionStage<Result>> validate(String encryptedUsername, String encryptedEpochRequestTimeMills, String username) {
         val epochRequestTime = Encryption.decrypt(encryptedEpochRequestTimeMills, paramsSecretKey);
 
         if (username == null || epochRequestTime == null) {
             Logger.error(String.format("Request did not receive user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
-            return CompletableFuture.supplyAsync(() -> badRequest("no 'user' or 't' supplied"));
+            return Optional.of(CompletableFuture.supplyAsync(() -> badRequest("no 'user' or 't' supplied")));
         }
 
         if (Duration.between(toLocalDateTime(epochRequestTime), LocalDateTime.now()).compareTo(userTokenValidDuration) > 0) {
@@ -57,17 +69,10 @@ public class NationalSearchController extends Controller {
                     "Request not authorised because time currently is %s but token time %s",
                     LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME),
                     toLocalDateTime(epochRequestTime).format(DateTimeFormatter.ISO_DATE_TIME)));
-            return CompletableFuture.supplyAsync(Results::unauthorized);
+            return Optional.of(CompletableFuture.supplyAsync(Results::unauthorized));
         }
 
-
-        return offenderApiLogon.logon(username).thenApply((bearerToken) -> {
-            session("offenderApiBearerToken", bearerToken);
-            return ok(template.render());
-        }).exceptionally((e) -> {
-            Logger.error("Unable to logon to offender API", e);
-            return internalServerError();
-        });
+        return Optional.empty();
     }
 
     public CompletionStage<Result> searchOffender(String searchTerm, int pageSize, int pageNumber) {
