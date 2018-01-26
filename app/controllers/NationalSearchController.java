@@ -56,6 +56,10 @@ public class NationalSearchController extends Controller {
             }));
     }
 
+    public CompletionStage<Result> searchOffender(String searchTerm, int pageSize, int pageNumber) {
+        return offenderSearch.search(searchTerm, pageSize, pageNumber).thenApply(JsonHelper::okJson);
+    }
+
     private Optional<CompletionStage<Result>> validate(String encryptedUsername, String encryptedEpochRequestTimeMills, String username) {
         val epochRequestTime = Encryption.decrypt(encryptedEpochRequestTimeMills, paramsSecretKey);
 
@@ -73,10 +77,6 @@ public class NationalSearchController extends Controller {
         }
 
         return Optional.empty();
-    }
-
-    public CompletionStage<Result> searchOffender(String searchTerm, int pageSize, int pageNumber) {
-        return offenderSearch.search(searchTerm, pageSize, pageNumber).thenApply(JsonHelper::okJson);
     }
 
     private LocalDateTime toLocalDateTime(String epochRequestTime) {
