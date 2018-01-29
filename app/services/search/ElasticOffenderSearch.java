@@ -158,7 +158,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
 
 
         if ((currentExclusion || currentRestriction)) {
-            return offenderApi.canAccess(bearerToken, rootNode.get("offenderId").asInt())
+            return offenderApi.canAccess(bearerToken, rootNode.get("offenderId").asLong())
                     .thenApply(canAccess -> canAccess ? rootNode : obfuscate(rootNode));
         }
         return CompletableFuture.completedFuture(rootNode);

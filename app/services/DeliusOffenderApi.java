@@ -34,7 +34,7 @@ public class DeliusOffenderApi implements OffenderApi {
     }
 
     @Override
-    public CompletionStage<Boolean> canAccess(String bearerToken, int offenderId) {
+    public CompletionStage<Boolean> canAccess(String bearerToken, long offenderId) {
         final String url = String.format(offenderApiBaseUrl + "/offenders/offenderId/%d/userAccess", offenderId);
         return wsClient.url(url)
                 .addHeader(AUTHORIZATION, String.format("Bearer %s", bearerToken))

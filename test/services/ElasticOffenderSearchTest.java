@@ -155,9 +155,9 @@ public class ElasticOffenderSearchTest {
         // when
         elasticOffenderSearch.search("bearer-token","smith", 10, 0).toCompletableFuture().join();
 
-        ArgumentCaptor<Integer> offenderIds = ArgumentCaptor.forClass(Integer.class);
+        ArgumentCaptor<Long> offenderIds = ArgumentCaptor.forClass(Long.class);
         verify(offenderApi, times(2)).canAccess(eq("bearer-token"), offenderIds.capture());
-        assertThat(offenderIds.getAllValues()).contains(11, 13);
+        assertThat(offenderIds.getAllValues()).contains(11L, 13L);
     }
 
     @Test
@@ -221,7 +221,7 @@ public class ElasticOffenderSearchTest {
         val searchResult = elasticOffenderSearch.search("bearer-token", "smith", 10, 0).toCompletableFuture().join();
         val offender = searchResult.getOffenders().get(0);
 
-        assertThat(offender.get("offenderId").asInt()).isEqualTo(13);
+        assertThat(offender.get("offenderId").asLong()).isEqualTo(13);
         assertThat(offender.get("otherIds").get("crn").asText()).isEqualTo("X3");
     }
 

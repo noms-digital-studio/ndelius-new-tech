@@ -12,7 +12,7 @@ public class FakeOffenderApi implements OffenderApi {
     }
 
     @Override
-    public CompletionStage<Boolean> canAccess(String bearerToken, int offenderId) {
+    public CompletionStage<Boolean> canAccess(String bearerToken, long offenderId) {
         return CompletableFuture.completedFuture(false);
     }
 }

@@ -48,9 +48,9 @@ public class DeliusOffenderApi_canAccess_Test {
 
     @Test
     public void setsOffenderIdInUrl() {
-        offenderApi.canAccess("ABC", 123);
+        offenderApi.canAccess("ABC", 2500155552L);
 
-        verify(wsClient).url(eq("http://delius-api/api/offenders/offenderId/123/userAccess"));
+        verify(wsClient).url(eq("http://delius-api/api/offenders/offenderId/2500155552/userAccess"));
     }
 
     @Test
