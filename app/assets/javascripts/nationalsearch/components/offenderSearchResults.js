@@ -22,7 +22,7 @@ OffenderSearchResults.propTypes = {
     results: PropTypes.array.isRequired
 };
 
-const renderSummary = (offenderSummary) => {
+const renderSummary = offenderSummary => {
     if (offenderSummary.accessDenied) {
         return <RestrictedOffenderSearchSummary offenderSummary={offenderSummary} key={offenderSummary.offenderId}/>
     }

@@ -157,7 +157,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
                 .map(JsonNode::asBoolean).orElse(false);
 
 
-        if ((currentExclusion || currentRestriction)) {
+        if (currentExclusion || currentRestriction) {
             return offenderApi.canAccess(bearerToken, rootNode.get("offenderId").asLong())
                     .thenApply(canAccess -> canAccess ? rootNode : obfuscate(rootNode));
         }

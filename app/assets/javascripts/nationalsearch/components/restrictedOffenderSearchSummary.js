@@ -18,6 +18,7 @@ const RestrictedOffenderSearchSummary = ({offenderSummary, showOffenderDetails})
 RestrictedOffenderSearchSummary.propTypes = {
     showOffenderDetails: PropTypes.func.isRequired,
     offenderSummary: PropTypes.shape({
+        offenderId: PropTypes.number.isRequired,
         otherIds: PropTypes.shape({
             crn: PropTypes.string.isRequired
         }).isRequired
