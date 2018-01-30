@@ -46,7 +46,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
         val listener = new FutureListener<SearchResponse>();
         elasticSearchClient.searchAsync(new SearchRequest("offender")
             .source(searchSourceFor(searchTerm, pageSize, pageNumber)), listener);
-        return listener.stage().thenCompose(response -> processSearchResponse(bearerToken, response));
+        return listener.stage().thenComposeAsync(response -> processSearchResponse(bearerToken, response));
     }
 
     @Override
