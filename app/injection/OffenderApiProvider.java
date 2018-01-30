@@ -22,11 +22,6 @@ public class OffenderApiProvider implements Provider<OffenderApi> {
 
     @Override
     public OffenderApi get() {
-
-        if (standAloneOperation) {
-            return injector.instanceOf(FakeOffenderApi.class);
-        }
-
-        return injector.instanceOf(DeliusOffenderApi.class);
+        return standAloneOperation ? injector.instanceOf(FakeOffenderApi.class) : injector.instanceOf(DeliusOffenderApi.class);
     }
 }

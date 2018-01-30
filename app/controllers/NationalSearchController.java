@@ -52,14 +52,16 @@ public class NationalSearchController extends Controller {
         val username = Encryption.decrypt(encryptedUsername, paramsSecretKey);
 
         return validate(encryptedUsername, encryptedEpochRequestTimeMills, username)
-            .orElseGet(() -> offenderApi.logon(username).thenApplyAsync(bearerToken -> {
-                Logger.info("Successful logon to API for user {}", username);
-                session(OFFENDER_API_BEARER_TOKEN, bearerToken);
-                return ok(template.render());
-            }, ec.current()).exceptionally(e -> {
-                Logger.error("Unable to logon to offender API", e);
-                return internalServerError();
-            }));
+            .orElseGet(() -> offenderApi.logon(username)
+                .thenApplyAsync(bearerToken -> {
+                    Logger.info("Successful logon to API for user {}", username);
+                    session(OFFENDER_API_BEARER_TOKEN, bearerToken);
+                    return ok(template.render());
+                }, ec.current())
+                .exceptionally(e -> {
+                    Logger.error("Unable to logon to offender API", e);
+                    return internalServerError();
+                }));
     }
 
     public CompletionStage<Result> searchOffender(String searchTerm, int pageSize, int pageNumber) {

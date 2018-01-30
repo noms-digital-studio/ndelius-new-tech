@@ -161,7 +161,7 @@ public class ElasticOffenderSearchTest {
     }
 
     @Test
-    public void offendersWhichCanNotBeAccessedHaveObsfucatedData() {
+    public void offendersWhichCanNotBeAccessedHaveRestrictedData() {
         when(offenderApi.canAccess("bearer-token", 11)).thenReturn(CompletableFuture.completedFuture(true));
         when(offenderApi.canAccess("bearer-token", 13)).thenReturn(CompletableFuture.completedFuture(false));
 

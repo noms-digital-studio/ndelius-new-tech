@@ -167,11 +167,11 @@ public class ElasticOffenderSearch implements OffenderSearch {
     }
 
     private ObjectNode restrictView(ObjectNode rootNode) {
-        final ObjectNode obfuscatedRootNode = JsonNodeFactory.instance.objectNode();
-        obfuscatedRootNode
+        final ObjectNode restrictedAccessRootNode = JsonNodeFactory.instance.objectNode();
+        restrictedAccessRootNode
             .put("accessDenied", true)
             .put("offenderId", rootNode.get("offenderId").asLong())
             .set("otherIds", JsonNodeFactory.instance.objectNode().put("crn", rootNode.get("otherIds").get("crn").asText()));
-        return obfuscatedRootNode;
+        return restrictedAccessRootNode;
     }
 }

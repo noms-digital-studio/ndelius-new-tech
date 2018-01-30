@@ -28,7 +28,7 @@ public class DeliusOffenderApi implements OffenderApi {
 
     @Override
     public CompletionStage<String> logon(String username) {
-        return wsClient.url(offenderApiBaseUrl + "/logon")
+        return wsClient.url(offenderApiBaseUrl + "logon")
             .post(format("cn=%s,cn=Users,dc=moj,dc=com", username))
             .thenApply(this::assertOkResponse)
             .thenApply(WSResponse::getBody);
@@ -36,7 +36,7 @@ public class DeliusOffenderApi implements OffenderApi {
 
     @Override
     public CompletionStage<Boolean> canAccess(String bearerToken, long offenderId) {
-        val url = String.format(offenderApiBaseUrl + "/offenders/offenderId/%d/userAccess", offenderId);
+        val url = String.format(offenderApiBaseUrl + "offenders/offenderId/%d/userAccess", offenderId);
         return wsClient.url(url)
                 .addHeader(AUTHORIZATION, String.format("Bearer %s", bearerToken))
                 .get()
