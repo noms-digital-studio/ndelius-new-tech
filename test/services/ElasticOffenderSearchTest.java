@@ -178,21 +178,13 @@ public class ElasticOffenderSearchTest {
         val nonRestrictedExcludedOffender = searchResult.getOffenders().get(1);
         val notAllowedAccessOffender = searchResult.getOffenders().get(2);
 
-        assertThat(getFirstName(allowedAccessOffender).isPresent()).isTrue();
-        assertThat(getSurname(allowedAccessOffender).isPresent()).isTrue();
         assertThat(accessDenied(allowedAccessOffender)).isFalse();
-
-        assertThat(getFirstName(nonRestrictedExcludedOffender).isPresent()).isTrue();
-        assertThat(getSurname(nonRestrictedExcludedOffender).isPresent()).isTrue();
         assertThat(accessDenied(nonRestrictedExcludedOffender)).isFalse();
-
-        assertThat(getFirstName(notAllowedAccessOffender).isPresent()).isFalse();
-        assertThat(getSurname(notAllowedAccessOffender).isPresent()).isFalse();
         assertThat(accessDenied(notAllowedAccessOffender)).isTrue();
     }
 
     @Test
-    public void offendersWhichAreObsfucatedContainJustPrimaryIds() {
+    public void offendersWhichAreRestrictedViewContainJustPrimaryIds() {
         when(offenderApi.canAccess("bearer-token", 13)).thenReturn(CompletableFuture.completedFuture(false));
 
         // given
@@ -209,7 +201,7 @@ public class ElasticOffenderSearchTest {
     }
 
     @Test
-    public void offendersWhichAreObsfucatedHaveOffenderIdAndCrnInTheClear() {
+    public void offendersWhichAreRestructedViewHaveOffenderIdAndCrnInTheClear() {
         when(offenderApi.canAccess("bearer-token", 13)).thenReturn(CompletableFuture.completedFuture(false));
 
         // given
@@ -225,20 +217,8 @@ public class ElasticOffenderSearchTest {
         assertThat(offender.get("otherIds").get("crn").asText()).isEqualTo("X3");
     }
 
-    private Optional<String> getFirstName(JsonNode offender) {
-        return textForNode(offender, "firstName");
-    }
-
-    private Optional<String> getSurname(JsonNode offender) {
-        return textForNode(offender, "surname");
-    }
-
     private boolean accessDenied(JsonNode offender) {
         return Optional.ofNullable(offender.get("accessDenied")).map(JsonNode::asBoolean).orElse(false);
-    }
-
-    private Optional<String> textForNode(JsonNode offender, String nodeName) {
-        return Optional.ofNullable(offender.get(nodeName)).map(JsonNode::asText);
     }
 
     private SearchHit[] getSearchHitArray() {

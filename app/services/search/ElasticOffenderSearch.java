@@ -94,31 +94,34 @@ public class ElasticOffenderSearch implements OffenderSearch {
             .addSuggestion("firstName", termSuggestion("firstName").text(searchTerm));
     }
 
-    private CompletableFuture<OffenderSearchResult> processSearchResponse(String bearerToken, SearchResponse response) {
+    private CompletionStage<OffenderSearchResult> processSearchResponse(String bearerToken, SearchResponse response) {
         Logger.debug(response.toString());
 
 
         val offenderNodesCompletionStages = stream(response.getHits().getHits())
-                .parallel()
                 .map(searchHit -> {
                     JsonNode offender = parse(searchHit.getSourceAsString());
                     return embellishNode(bearerToken, offender);
                 }).collect(toList());
 
         return CompletableFuture.allOf(
-                offenderNodesCompletionStages
-                        .stream()
-                        .map(CompletionStage::toCompletableFuture)
-                        .toArray(CompletableFuture[]::new))
+                toCompletableFutureArray(offenderNodesCompletionStages))
                 .thenApply(ignoredVoid ->
                         OffenderSearchResult.builder()
-                                .offenders(joinAll(offenderNodesCompletionStages))
+                                .offenders(offendersFromCompletionStages(offenderNodesCompletionStages))
                                 .total(response.getHits().getTotalHits())
                                 .suggestions(suggestionsIn(response))
                                 .build());
     }
 
-    private List<JsonNode> joinAll(List<CompletionStage<ObjectNode>> offenderNodes) {
+    private CompletableFuture[] toCompletableFutureArray(List<CompletionStage<ObjectNode>> offenderNodesCompletionStages) {
+        return offenderNodesCompletionStages
+                .stream()
+                .map(CompletionStage::toCompletableFuture)
+                .toArray(CompletableFuture[]::new);
+    }
+
+    private List<JsonNode> offendersFromCompletionStages(List<CompletionStage<ObjectNode>> offenderNodes) {
         return offenderNodes
                 .stream()
                 .map(objectNodeCompletionStage -> objectNodeCompletionStage.toCompletableFuture().join())
@@ -137,7 +140,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
     }
 
     private CompletionStage<ObjectNode> embellishNode(String bearerToken, JsonNode node) {
-        return obfuscateRestrictedOffenders(
+        return restrictViewOfOffenderIfNecessary(
                 bearerToken,
                 appendDateOfBirth((ObjectNode)node));
     }
@@ -150,27 +153,25 @@ public class ElasticOffenderSearch implements OffenderSearch {
             .orElse(rootNode);
     }
 
-    private CompletionStage<ObjectNode> obfuscateRestrictedOffenders(String bearerToken, ObjectNode rootNode) {
-        boolean currentRestriction = Optional.ofNullable(rootNode.get("currentRestriction"))
-                .map(JsonNode::asBoolean).orElse(false);
-        boolean currentExclusion = Optional.ofNullable(rootNode.get("currentExclusion"))
-                .map(JsonNode::asBoolean).orElse(false);
-
-
-        if (currentExclusion || currentRestriction) {
+    private CompletionStage<ObjectNode> restrictViewOfOffenderIfNecessary(String bearerToken, ObjectNode rootNode) {
+        if (toBoolean(rootNode, "currentExclusion") || toBoolean(rootNode, "currentRestriction")) {
             return offenderApi.canAccess(bearerToken, rootNode.get("offenderId").asLong())
-                    .thenApply(canAccess -> canAccess ? rootNode : obfuscate(rootNode));
+                    .thenApply(canAccess -> canAccess ? rootNode : restrictView(rootNode));
         }
         return CompletableFuture.completedFuture(rootNode);
     }
 
-    private ObjectNode obfuscate(ObjectNode rootNode) {
-        val obfuscatedRootNode = JsonNodeFactory.instance.objectNode();
-        val otherIdsNode = JsonNodeFactory.instance.objectNode();
-        otherIdsNode.put("crn", rootNode.get("otherIds").get("crn").asText());
-        obfuscatedRootNode.put("accessDenied", true);
-        obfuscatedRootNode.put("offenderId", rootNode.get("offenderId").asLong());
-        obfuscatedRootNode.set("otherIds", otherIdsNode);
+    private Boolean toBoolean(ObjectNode rootNode, String nodeName) {
+        return Optional.ofNullable(rootNode.get(nodeName))
+                .map(JsonNode::asBoolean).orElse(false);
+    }
+
+    private ObjectNode restrictView(ObjectNode rootNode) {
+        final ObjectNode obfuscatedRootNode = JsonNodeFactory.instance.objectNode();
+        obfuscatedRootNode
+            .put("accessDenied", true)
+            .put("offenderId", rootNode.get("offenderId").asLong())
+            .set("otherIds", JsonNodeFactory.instance.objectNode().put("crn", rootNode.get("otherIds").get("crn").asText()));
         return obfuscatedRootNode;
     }
 }

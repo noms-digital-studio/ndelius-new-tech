@@ -87,5 +87,16 @@ public class DeliusOffenderApi_canAccess_Test {
         assertThat(canAccess).isFalse();
     }
 
+    @Test
+    public void treatAnyExceptionsAsCannotAccess() {
+        val error = new CompletableFuture<WSResponse>();
+        error.completeExceptionally(new RuntimeException("Boom"));
+        when(wsRequest.get()).thenReturn(error);
+
+        val canAccess = offenderApi.canAccess("ABC", 123).toCompletableFuture().join();
+
+        assertThat(canAccess).isFalse();
+    }
+
 
 }

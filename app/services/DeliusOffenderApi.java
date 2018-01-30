@@ -2,6 +2,7 @@ package services;
 
 import com.typesafe.config.Config;
 import interfaces.OffenderApi;
+import lombok.val;
 import play.Logger;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
@@ -35,22 +36,25 @@ public class DeliusOffenderApi implements OffenderApi {
 
     @Override
     public CompletionStage<Boolean> canAccess(String bearerToken, long offenderId) {
-        final String url = String.format(offenderApiBaseUrl + "/offenders/offenderId/%d/userAccess", offenderId);
+        val url = String.format(offenderApiBaseUrl + "/offenders/offenderId/%d/userAccess", offenderId);
         return wsClient.url(url)
                 .addHeader(AUTHORIZATION, String.format("Bearer %s", bearerToken))
                 .get()
                 .thenApply(WSResponse::getStatus)
                 .thenApply(status -> {
                     switch(status) {
-                        case OK:
-                            return true;
-                        case FORBIDDEN:
-                            return false;
+                        case OK: return true;
+                        case FORBIDDEN: return false;
                         default:
                             Logger.error("Got a bad response from {} status {}", url, status);
                             return false;
                     }
+                })
+                .exceptionally(e -> {
+                    Logger.error("Got an error from {}", url, e);
+                    return false;
                 });
+
     }
 
     private WSResponse assertOkResponse(WSResponse response) {
