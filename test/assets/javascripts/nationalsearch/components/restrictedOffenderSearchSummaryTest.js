@@ -19,6 +19,14 @@ describe('RestrictedOffenderSearchSummary component', () => {
 
             expect(summary.find({text: 'X12343'})).to.have.length(1)
         })
+        it('should render add contact link', () => {
+            const summary = shallow(<RestrictedOffenderSearchSummary
+                                        offenderSummary={offender()}
+                                        showOffenderDetails={()=>{}}/>)
+
+
+            expect(summary.find('Connect(AddContactLink)')).to.have.length(1)
+        })
     })
     context('link clicked', () => {
         it('showOffenderDetails callback function called with offenderId', () => {

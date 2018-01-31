@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import MT from '../containers/markableTextContainer'
+import AddContactLink from '../containers/addContactLinkContainer'
 
 const RestrictedOffenderSearchSummary = ({offenderSummary, showOffenderDetails}) => (
     <li>
@@ -11,6 +12,7 @@ const RestrictedOffenderSearchSummary = ({offenderSummary, showOffenderDetails})
                 <span className='bold'>CRN:&nbsp;</span>
                 <span className='bold margin-right'><MT text={offenderSummary.otherIds.crn}/></span>
             </p>
+            <p><AddContactLink offenderId={offenderSummary.offenderId}/></p>
         </div>
     </li>
 )
