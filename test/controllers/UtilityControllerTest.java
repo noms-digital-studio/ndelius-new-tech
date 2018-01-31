@@ -112,7 +112,7 @@ public class UtilityControllerTest extends WithApplication {
     @SuppressWarnings("unchecked")
     @Test
     public void healthEndpointIndicatesFailedWhenDocumentStoreIsUnhealthy() throws IOException {
-        stubDocumentStoreToReturn(serviceUnavailable());
+        stubDocumentStoreToReturn(serverError());
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
 
         val result = route(app, request);
@@ -188,7 +188,7 @@ public class UtilityControllerTest extends WithApplication {
 
     private void stubDocumentStoreToReturn(ResponseDefinitionBuilder response) {
         wireMock.stubFor(
-            get(urlEqualTo("/alfresco/service/noms-spg/"))
+            get(urlEqualTo("/alfresco/service/noms-spg/notificationStatus"))
                 .willReturn(response));
     }
 
