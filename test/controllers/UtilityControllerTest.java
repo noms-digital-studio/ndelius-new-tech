@@ -49,6 +49,7 @@ public class UtilityControllerTest extends WithApplication {
     public void setup() {
         stubPdfGeneratorWithStatus("OK");
         stubDocumentStoreToReturn(ok());
+        stubOffenderApiToReturn(ok());
         when(analyticsStore.isUp()).thenReturn(CompletableFuture.supplyAsync(() -> true));
         when(offenderSearch.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> true));
     }
@@ -155,7 +156,7 @@ public class UtilityControllerTest extends WithApplication {
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("elastic-offenderSearch", "OK"));
+        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("offender-search", "OK"));
         assertThat(convertToJson(result).get("status")).isEqualTo("OK");
     }
 
@@ -169,7 +170,33 @@ public class UtilityControllerTest extends WithApplication {
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("elastic-offenderSearch", "FAILED"));
+        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("offender-search", "FAILED"));
+        assertThat(convertToJson(result).get("status")).isEqualTo("FAILED");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void healthEndpointIndicatesOkWhenOffenderApiIsHealthy() throws IOException {
+        val request = new RequestBuilder().method(GET).uri("/healthcheck");
+
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("offender-api", "OK"));
+        assertThat(convertToJson(result).get("status")).isEqualTo("OK");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void healthEndpointIndicatesFailedWhenOffenderApiIsUnhealthy() throws IOException {
+        stubOffenderApiToReturn(serverError());
+
+        val request = new RequestBuilder().method(GET).uri("/healthcheck");
+
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("offender-api", "FAILED"));
         assertThat(convertToJson(result).get("status")).isEqualTo("FAILED");
     }
 
@@ -189,6 +216,12 @@ public class UtilityControllerTest extends WithApplication {
     private void stubDocumentStoreToReturn(ResponseDefinitionBuilder response) {
         wireMock.stubFor(
             get(urlEqualTo("/alfresco/service/noms-spg/notificationStatus"))
+                .willReturn(response));
+    }
+
+    private void stubOffenderApiToReturn(ResponseDefinitionBuilder response) {
+        wireMock.stubFor(
+            get(urlEqualTo("/api/healthcheck"))
                 .willReturn(response));
     }
 
