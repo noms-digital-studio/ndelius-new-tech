@@ -8,7 +8,6 @@ import lombok.val;
 import org.joda.time.DateTime;
 import play.mvc.Controller;
 import play.mvc.Result;
-import services.DeliusOffenderApi;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -36,7 +35,7 @@ public class UtilityController extends Controller {
                              DocumentStore documentStore,
                              AnalyticsStore analyticsStore,
                              OffenderSearch offenderSearch,
-                             DeliusOffenderApi offenderApi) {
+                             OffenderApi offenderApi) {
 
         standaloneOperation = configuration.getBoolean("standalone.operation");
         this.pdfGenerator = pdfGenerator;
