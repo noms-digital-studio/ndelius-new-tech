@@ -230,7 +230,6 @@ public class ElasticOffenderSearchTest {
         return  StreamSupport.stream(((Iterable<String>) () -> iterator).spliterator(), false).collect(toList());
     }
 
-
     @SafeVarargs
     private final SearchHit[] getSearchHitArray(Map<String, Object>... replacements) {
         return stream(replacements).map(this::toSearchHit).collect(toList()).toArray(new SearchHit[replacements.length]);
