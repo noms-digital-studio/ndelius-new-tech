@@ -22,7 +22,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import play.Environment;
 import play.Mode;
 import scala.io.Source;
-import services.search.ElasticOffenderSearch;
 
 import java.util.HashMap;
 import java.util.List;
