@@ -1,6 +1,6 @@
-import LegacySearchLink from "./legacySearchLink";
+import LegacySearchLink from "../containers/legacySearchLinkContainer";
 
-export default () => (
+const SearchFooter = () => (
     <div>
         <h3 className="heading-medium">Use this <strong className="phase-tag">ALPHA</strong> service to search for offender's:</h3>
 
@@ -11,9 +11,11 @@ export default () => (
             <li>aliases and dates of birth</li>
         </ul>
 
-        <div class="margin-top medium">&nbsp;</div>
+        <div className="margin-top medium">&nbsp;</div>
 
         <div>
             <span>You can access the <LegacySearchLink>previous</LegacySearchLink> search here.</span>
         </div>
     </div>);
+
+export default SearchFooter
