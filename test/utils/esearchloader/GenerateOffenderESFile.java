@@ -21,6 +21,7 @@ import static play.libs.Json.parse;
 
 public class GenerateOffenderESFile {
     private final static Pattern firstNumberPattern = Pattern.compile("\\d+ ");
+    private static final String CSV_RESOURCE_FILE = "/esearchloader/uk-500.csv";
     private static long EIGHTEEN_YEARS_IN_DAYS = 18 * 365;
     private static int FIFTY_YEARS_IN_DAYS = 50 * 365;
 
@@ -28,9 +29,9 @@ public class GenerateOffenderESFile {
         System.out.println("Generating source file for offender records...");
         val environment = new Environment(null, GenerateOffenderESFile.class.getClassLoader(), Mode.TEST);
         val offenderTemplate = Source.fromInputStream(environment.resourceAsStream("/esearchloader/generate-offender-search-result.json"), "UTF-8").mkString();
-        val path = new File(environment.resource("/esearchloader/uk-500.csv").getPath()).getParent();
+        val path = new File(environment.resource(CSV_RESOURCE_FILE).getPath()).getParent();
         val outputFile = new File(path, "es-test-data.txt");
-        val randomPersonData = readCsv(environment);
+        val randomPersonData = readCsv(environment, CSV_RESOURCE_FILE);
 
         try (val output = new BufferedWriter(new FileWriter(outputFile))) {
 
@@ -242,8 +243,8 @@ public class GenerateOffenderESFile {
         return titles[randomUpTo(3)];
     }
 
-    private static List<Map<String, String>> readCsv(Environment environment) {
-        return ScalaStreamSupport.stream(Source.fromInputStream(environment.resourceAsStream("/esearchloader/uk-500.csv"), "UTF-8")
+    private static List<Map<String, String>> readCsv(Environment environment, String fileName) {
+        return ScalaStreamSupport.stream(Source.fromInputStream(environment.resourceAsStream(fileName), "UTF-8")
                 .getLines())
                 .map(line -> line.split("\",\""))
                 .map(row -> Arrays.stream(row).map(item -> item.replace("\"", ""))
