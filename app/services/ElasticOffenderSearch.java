@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import data.offendersearch.OffenderSearchResult;
+import helpers.DateTimeHelper;
 import helpers.FutureListener;
 import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
@@ -22,10 +23,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.stream.Stream;
 
 import static helpers.DateTimeHelper.calculateAge;
 import static java.time.Clock.systemUTC;
 import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.CROSS_FIELDS;
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.MOST_FIELDS;
@@ -68,19 +71,27 @@ public class ElasticOffenderSearch implements OffenderSearch {
 
     private SearchSourceBuilder searchSourceFor(String searchTerm, int pageSize, int pageNumber) {
 
+        val parts = searchTerm.split(" ");
+        val termsWithoutDates = Stream.of(parts)
+                .filter(DateTimeHelper::doesNotlookLikeADate)
+                .collect(joining(" "));
+
+        val termsThatLookLikeDates =
+            Stream.of(parts)
+                .filter(DateTimeHelper::looksLikeADate)
+                .collect(toList());
+
         val boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.should().add(multiMatchQuery(searchTerm)
+        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutDates)
             .field("firstName", 10)
             .field("surname", 10)
             .field("offenderAliases.firstName", 8)
             .field("offenderAliases.surname", 8)
             .field("contactDetails.addresses.town")
-            .lenient(true)
             .operator(AND)
             .type(CROSS_FIELDS));
 
-        boolQueryBuilder.should().add(multiMatchQuery(searchTerm)
-            .field("dateOfBirth", 5)
+        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutDates)
             .field("gender")
             .field("otherIds.crn", 10)
             .field("otherIds.nomsNumber", 8)
@@ -90,15 +101,19 @@ public class ElasticOffenderSearch implements OffenderSearch {
             .field("contactDetails.addresses.streetName")
             .field("contactDetails.addresses.county")
             .field("contactDetails.addresses.postcode", 3)
-            .lenient(true)
-            .operator(OR)
             .type(MOST_FIELDS));
+
+        termsThatLookLikeDates.forEach(dateTerm ->
+            boolQueryBuilder.should().add(multiMatchQuery(dateTerm)
+                .field("dateOfBirth")
+                .lenient(true)));
 
         val searchSource = new SearchSourceBuilder()
             .query(boolQueryBuilder)
             .size(pageSize)
             .from(pageSize * aValidPageNumberFor(pageNumber))
             .suggest(suggestionsFor(searchTerm));
+
         Logger.info(searchSource.toString());
         return searchSource;
     }

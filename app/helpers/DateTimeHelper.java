@@ -3,11 +3,9 @@ package helpers;
 import lombok.val;
 
 import java.time.Clock;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 
 import static java.time.LocalDate.now;
 import static java.time.LocalDate.parse;
@@ -18,6 +16,10 @@ public class DateTimeHelper {
     public static long calculateAge(String dateString, Clock clock) {
         val dateOfBirth = parse(dateString, ISO_LOCAL_DATE);
         return ChronoUnit.YEARS.between(dateOfBirth, now(clock));
+    }
+
+    public static boolean doesNotlookLikeADate(String dateString) {
+        return !looksLikeADate(dateString);
     }
 
     public static boolean looksLikeADate(String dateString) {

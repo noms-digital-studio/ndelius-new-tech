@@ -84,7 +84,6 @@ public class ElasticOffenderSearchTest {
         assertThat(queryBuilder1.fields()).containsKeys("contactDetails.addresses.town");
 
         val queryBuilder2 = (MultiMatchQueryBuilder)query.should().get(1);
-        assertThat(queryBuilder2.fields()).containsKeys("dateOfBirth");
         assertThat(queryBuilder2.fields()).containsKeys("gender");
         assertThat(queryBuilder2.fields()).containsKeys("otherIds.crn");
         assertThat(queryBuilder2.fields()).containsKeys("otherIds.nomsNumber");
