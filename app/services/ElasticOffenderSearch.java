@@ -94,7 +94,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
 
         termsThatLookLikeDatesIn(searchTerm).forEach(dateTerm ->
             boolQueryBuilder.should().add(multiMatchQuery(dateTerm)
-                .field("dateOfBirth")
+                .field("dateOfBirth", 11)
                 .lenient(true)));
 
         val searchSource = new SearchSourceBuilder()
