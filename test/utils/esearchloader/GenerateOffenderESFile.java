@@ -247,7 +247,7 @@ public class GenerateOffenderESFile {
         return ScalaStreamSupport.stream(Source.fromInputStream(environment.resourceAsStream(fileName), "UTF-8")
                 .getLines())
                 .map(line -> line.split("\",\""))
-                .map(row -> Arrays.stream(row).map(item -> item.replace("\"", ""))
+                .map(part -> Arrays.stream(part).map(item -> item.replace("\"", ""))
                         .collect(Collectors.toList()))
                 .map(GenerateOffenderESFile::toOffenderMap)
                 .collect(Collectors.toList());
