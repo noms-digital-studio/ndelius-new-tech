@@ -70,19 +70,8 @@ public class ElasticOffenderSearch implements OffenderSearch {
     }
 
     private SearchSourceBuilder searchSourceFor(String searchTerm, int pageSize, int pageNumber) {
-
-        val parts = searchTerm.split(" ");
-        val termsWithoutDates = Stream.of(parts)
-                .filter(DateTimeHelper::doesNotlookLikeADate)
-                .collect(joining(" "));
-
-        val termsThatLookLikeDates =
-            Stream.of(parts)
-                .filter(DateTimeHelper::looksLikeADate)
-                .collect(toList());
-
         val boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutDates)
+        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutDatesIn(searchTerm))
             .field("firstName", 10)
             .field("surname", 10)
             .field("offenderAliases.firstName", 8)
@@ -91,7 +80,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
             .operator(AND)
             .type(CROSS_FIELDS));
 
-        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutDates)
+        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutDatesIn(searchTerm))
             .field("gender")
             .field("otherIds.crn", 10)
             .field("otherIds.nomsNumber", 8)
@@ -103,7 +92,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
             .field("contactDetails.addresses.postcode", 3)
             .type(MOST_FIELDS));
 
-        termsThatLookLikeDates.forEach(dateTerm ->
+        termsThatLookLikeDatesIn(searchTerm).forEach(dateTerm ->
             boolQueryBuilder.should().add(multiMatchQuery(dateTerm)
                 .field("dateOfBirth")
                 .lenient(true)));
@@ -116,6 +105,20 @@ public class ElasticOffenderSearch implements OffenderSearch {
 
         Logger.info(searchSource.toString());
         return searchSource;
+    }
+
+    private List<String> termsThatLookLikeDatesIn(String searchTerm) {
+        val parts = searchTerm.split(" ");
+        return Stream.of(parts)
+            .filter(DateTimeHelper::looksLikeADate)
+            .collect(toList());
+    }
+
+    private String termsWithoutDatesIn(String searchTerm) {
+        val parts = searchTerm.split(" ");
+        return Stream.of(parts)
+                .filter(DateTimeHelper::doesNotlookLikeADate)
+                .collect(joining(" "));
     }
 
     private SuggestBuilder suggestionsFor(String searchTerm) {

@@ -69,7 +69,7 @@ public class ElasticOffenderSearchTest {
     public void searchesOnlySubsetOfFields() {
         when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArray(), 1, 42));
 
-        elasticOffenderSearch.search("bearer-token", "smith", 10, 3);
+        elasticOffenderSearch.search("bearer-token", "smith 15-09-1970", 10, 3);
 
         verify(restHighLevelClient).searchAsync(searchRequest.capture(), any());
         assertThat(searchRequest.getValue().source().query()).isInstanceOfAny(BoolQueryBuilder.class);
