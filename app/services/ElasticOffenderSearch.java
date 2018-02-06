@@ -1,6 +1,9 @@
 package services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import data.offendersearch.OffenderSearchResult;
@@ -33,7 +36,6 @@ import static java.util.stream.Collectors.toList;
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.CROSS_FIELDS;
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.MOST_FIELDS;
 import static org.elasticsearch.index.query.Operator.AND;
-import static org.elasticsearch.index.query.Operator.OR;
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import static org.elasticsearch.search.suggest.SuggestBuilders.termSuggestion;
 import static play.libs.Json.parse;
@@ -83,13 +85,13 @@ public class ElasticOffenderSearch implements OffenderSearch {
         boolQueryBuilder.should().add(multiMatchQuery(termsWithoutDatesIn(searchTerm))
             .field("gender")
             .field("otherIds.crn", 10)
-            .field("otherIds.nomsNumber", 8)
-            .field("otherIds.niNumber", 6)
-            .field("otherIds.pncNumber", 6)
-            .field("otherIds.croNumber", 6)
+            .field("otherIds.nomsNumber", 10)
+            .field("otherIds.niNumber", 10)
+            .field("otherIds.pncNumber", 10)
+            .field("otherIds.croNumber", 10)
             .field("contactDetails.addresses.streetName")
             .field("contactDetails.addresses.county")
-            .field("contactDetails.addresses.postcode", 3)
+            .field("contactDetails.addresses.postcode", 10)
             .type(MOST_FIELDS));
 
         termsThatLookLikeDatesIn(searchTerm).forEach(dateTerm ->
@@ -99,6 +101,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
 
         val searchSource = new SearchSourceBuilder()
             .query(boolQueryBuilder)
+            .explain(Logger.isDebugEnabled())
             .size(pageSize)
             .from(pageSize * aValidPageNumberFor(pageNumber))
             .suggest(suggestionsFor(searchTerm));
@@ -128,8 +131,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
     }
 
     private CompletionStage<OffenderSearchResult> processSearchResponse(String bearerToken, SearchResponse response) {
-        Logger.debug(response.toString());
-
+        logResults(response);
 
         val offenderNodesCompletionStages = stream(response.getHits().getHits())
                 .map(searchHit -> {
@@ -145,6 +147,16 @@ public class ElasticOffenderSearch implements OffenderSearch {
                                 .total(response.getHits().getTotalHits())
                                 .suggestions(suggestionsIn(response))
                                 .build());
+    }
+
+    private void logResults(SearchResponse response) {
+        Logger.debug(() -> {
+            try {
+                return new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT).writeValueAsString(parse(response.toString()));
+            } catch (Exception e) {
+                return response.toString();
+            }
+        });
     }
 
     private CompletableFuture[] toCompletableFutureArray(List<CompletionStage<ObjectNode>> offenderNodesCompletionStages) {
