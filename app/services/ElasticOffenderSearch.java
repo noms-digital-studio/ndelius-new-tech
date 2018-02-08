@@ -74,6 +74,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
         boolQueryBuilder.should().add(multiMatchQuery(termsWithoutDatesIn(searchTerm))
             .field("firstName", 10)
             .field("surname", 10)
+            .field("middleNames", 8)
             .field("offenderAliases.firstName", 8)
             .field("offenderAliases.surname", 8)
             .field("contactDetails.addresses.town")
