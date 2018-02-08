@@ -11,6 +11,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.bytes.BytesArray;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.PrefixQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.junit.Before;
@@ -69,14 +70,14 @@ public class ElasticOffenderSearchTest {
     public void searchesOnlySubsetOfFields() {
         when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArray(), 1, 42));
 
-        elasticOffenderSearch.search("bearer-token", "smith andy 15-09-1970 1/2/1992", 10, 3);
+        elasticOffenderSearch.search("bearer-token", "15-09-1970 a smith 1/2/1992", 10, 3);
 
         verify(restHighLevelClient).searchAsync(searchRequest.capture(), any());
         assertThat(searchRequest.getValue().source().query()).isInstanceOfAny(BoolQueryBuilder.class);
 
         val query = (BoolQueryBuilder) searchRequest.getValue().source().query();
         val queryBuilder1 = (MultiMatchQueryBuilder)query.should().get(0);
-        assertThat(queryBuilder1.value()).isEqualTo("smith andy");
+        assertThat(queryBuilder1.value()).isEqualTo("a smith");
         assertThat(queryBuilder1.fields()).containsOnlyKeys(
             "firstName",
             "surname",
@@ -86,7 +87,7 @@ public class ElasticOffenderSearchTest {
             "contactDetails.addresses.town");
 
         val queryBuilder2 = (MultiMatchQueryBuilder)query.should().get(1);
-        assertThat(queryBuilder2.value()).isEqualTo("smith andy");
+        assertThat(queryBuilder2.value()).isEqualTo("a smith");
         assertThat(queryBuilder2.fields()).containsOnlyKeys(
             "gender",
             "otherIds.crn",
@@ -98,11 +99,13 @@ public class ElasticOffenderSearchTest {
             "contactDetails.addresses.county",
             "contactDetails.addresses.postcode");
 
-        val queryBuilder3 = (MultiMatchQueryBuilder)query.should().get(2);
-        assertThat(queryBuilder3.value()).isEqualTo("1970-09-15");
+        assertThat(((MultiMatchQueryBuilder)query.should().get(2)).value()).isEqualTo("1970-09-15");
 
-        val queryBuilder4 = (MultiMatchQueryBuilder)query.should().get(3);
-        assertThat(queryBuilder4.value()).isEqualTo("1992-02-01");
+        assertThat(((MultiMatchQueryBuilder)query.should().get(3)).value()).isEqualTo("1992-02-01");
+
+        assertThat(((PrefixQueryBuilder)query.should().get(4)).value()).isEqualTo("a");
+
+        assertThat(((PrefixQueryBuilder)query.should().get(5)).value()).isEqualTo("smith");
     }
 
     @Test
@@ -111,6 +114,7 @@ public class ElasticOffenderSearchTest {
         // given
         val totalHits = 1;
         when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArray(), totalHits, 42));
+
         // when
         val results = elasticOffenderSearch.search("bearer-token","smith", 10, 3);
 
