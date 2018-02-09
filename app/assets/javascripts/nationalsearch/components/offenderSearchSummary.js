@@ -110,8 +110,8 @@ const MiddleNames = ({middleNames}) => (
     <div className='no-margin bottom'>
         <span className='margin-right'>Middle Names:</span>
         {middleNames.map( (middleName, index) => (
-            <span>
-                <span key={index}><MT text={middleName}/></span>
+            <span key={index}>
+                <span><MT text={middleName}/></span>
                 <span>&nbsp;</span>
             </span>
         ))}

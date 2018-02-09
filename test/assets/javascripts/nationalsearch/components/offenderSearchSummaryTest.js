@@ -209,7 +209,7 @@ describe('OffenderSearchSummary component', () => {
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'}/>)
 
-                expect(summary.find('#MiddleNames')).to.have.length(0)
+                expect(summary.find('MiddleNames')).to.have.length(0)
             })
         })
     })
