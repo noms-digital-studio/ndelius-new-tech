@@ -70,7 +70,7 @@ public class DeliusOffenderApi implements OffenderApi {
                 return true;
             })
             .exceptionally(throwable -> {
-                Logger.warn("Got an error calling Delius Offender API health endpoint", throwable);
+                Logger.error("Got an error calling Delius Offender API health endpoint", throwable);
                 return false;
             });
 
