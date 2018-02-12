@@ -237,7 +237,7 @@ describe('Address component', () => {
         })
     })
     context('with streetName but no addressNumber', () => {
-        it('all lines rendered with address number concatenated with street name', () => {
+        it('streetName rendered on its own with no white space padding', () => {
             const address = shallow(<Address address={ {
                 "streetName": "Foo Street"
             }}/>)
@@ -250,7 +250,7 @@ describe('Address component', () => {
         })
     })
     context('with no streetName but an addressNumber', () => {
-        it('all lines rendered with address number concatenated with street name', () => {
+        it('addressNumber rendered on its own with no white space padding', () => {
             const address = shallow(<Address address={ {
                 "addressNumber": "42"
             }}/>)
