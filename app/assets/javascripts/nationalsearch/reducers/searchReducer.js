@@ -45,7 +45,7 @@ const mapResults = (results = [], searchTerm) =>
     results.map(
         offenderDetails => ({
             ...offenderDetails,
-            aliases: offenderAliases(offenderDetails).map((alias) => {
+            aliases: offenderAliasesWithUnwantedFieldsRemoved(offenderDetails).map((alias) => {
                 return {
                     ...alias
                 }
@@ -59,6 +59,11 @@ const mapResults = (results = [], searchTerm) =>
         )
     )
 
+const offenderAliasesWithUnwantedFieldsRemoved = (offenderDetails) => {
+    const aliases = offenderAliases(offenderDetails);
+    aliases.forEach(alias => removeFields(alias, ['dateOfBirth', 'gender']))
+    return aliases
+}
 const offenderAliases = (offenderDetails) => offenderDetails.offenderAliases || []
 const offenderAddresses = (offenderDetails) => offenderContactDetails(offenderDetails).addresses || []
 const offenderContactDetails = (offenderDetails) => offenderDetails.contactDetails || {}
@@ -77,6 +82,11 @@ const anyMatch = (item, searchTerm) =>
         .map(property => item[property])
         .map(text => matches(text, searchTerm))
         .reduce((accumulator, currentValue) => accumulator || currentValue, false)
+
+const removeFields = (object, fieldsToRemove) => {
+    fieldsToRemove.forEach(field => delete object[field])
+    return object
+}
 
 const whenMatched = (text, searchTerm) => matches(text, searchTerm) ? text : null
 

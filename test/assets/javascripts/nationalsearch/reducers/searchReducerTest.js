@@ -2,7 +2,7 @@ import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS} from '../actions/search'
 import search from './searchReducer'
 import {expect} from 'chai';
 
-describe("searchReducer", () => {
+describe.only("searchReducer", () => {
     let state;
 
     describe("when in default state", () => {
@@ -343,6 +343,29 @@ describe("searchReducer", () => {
                 it('all aliases attributes copied from matching alias', () => {
                     expect(state.results[0].aliases[0].firstName).to.equal('Bean')
                     expect(state.results[0].aliases[0].surname).to.equal('Bland')
+                });
+            })
+
+            context("searchTerm only has matches for fields in the alias that are not searched on", () => {
+                beforeEach(() => {
+                    state = search(
+                        {searchTerm: 'smith 1955-02-17 male', results: someResults(), total: 0, pageNumber: 1},
+                        {type: SEARCH_RESULTS, searchTerm: 'smith 1955-02-17 male', results: someSingleResultWithAliases([
+                                {
+                                    dateOfBirth: "1955-02-17",
+                                    surname: 'Jones',
+                                    gender: 'Female',
+                                },
+                                {
+                                    dateOfBirth: "1960-03-17",
+                                    surname: 'Moore',
+                                    gender:  'Male',
+                                }
+                            ])})
+                })
+
+                it('filters out all the aliases', () => {
+                    expect(state.results[0].aliases).to.have.lengthOf(0)
                 });
             })
         })
@@ -750,6 +773,7 @@ const someSingleResultWithAliases = aliases => {
     const results = someResults();
     results.offenders = [results.offenders[0]];
     results.offenders[0].offenderAliases = aliases;
+    console.log('YYYY ' + JSON.stringify(results))
     return results;
 }
 
