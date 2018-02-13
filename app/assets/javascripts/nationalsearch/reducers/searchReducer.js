@@ -51,7 +51,7 @@ const mapResults = (results = [], searchTerm) =>
                 }
             }).filter(item => anyMatch(item, searchTerm)),
             previousSurname: whenMatched(offenderDetails.previousSurname, searchTerm),
-            addresses: offenderAddresses(offenderDetails).map((address) => {
+            addresses: offenderAddressesWithUnwantedFieldsRemoved(offenderDetails).map((address) => {
                 return {
                     ...address
                 }
@@ -65,6 +65,12 @@ const offenderAliasesWithUnwantedFieldsRemoved = (offenderDetails) => {
     return aliases
 }
 const offenderAliases = (offenderDetails) => offenderDetails.offenderAliases || []
+
+const offenderAddressesWithUnwantedFieldsRemoved = (offenderDetails) => {
+    const addresses = offenderAddresses(offenderDetails);
+    addresses.forEach(address => removeFields(address, ['from']))
+    return addresses
+}
 const offenderAddresses = (offenderDetails) => offenderContactDetails(offenderDetails).addresses || []
 const offenderContactDetails = (offenderDetails) => offenderDetails.contactDetails || {}
 
