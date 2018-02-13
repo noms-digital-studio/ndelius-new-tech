@@ -103,6 +103,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
 
         val searchSource = new SearchSourceBuilder()
             .query(boolQueryBuilder)
+            .postFilter(QueryBuilders.termQuery("softDeleted", false))
             .explain(Logger.isDebugEnabled())
             .size(pageSize)
             .from(pageSize * aValidPageNumberFor(pageNumber))
