@@ -84,7 +84,7 @@ public class MongoDbStore implements AnalyticsStore {
                         "$group", new Document(ImmutableMap.of(
                                 "_id", "$pageNumber",
                                 "total", new Document(ImmutableMap.of(
-                                        "$sum", 1
+                                        "$sum", 1l
                                 ))
                         ))
                 )),
