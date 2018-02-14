@@ -79,21 +79,34 @@ public class MongoDbStore implements AnalyticsStore {
 
         val result = new CompletableFuture<Map<Integer, Long>>();
 
-        val group = ImmutableList.of(
-                new Document(ImmutableMap.of(
-                        "$group", new Document(ImmutableMap.of(
-                                "_id", "$pageNumber",
-                                "total", new Document(ImmutableMap.of(
-                                        "$sum", 1l
-                                ))
-                        ))
-                )),
-                new Document(ImmutableMap.of(
-                        "$sort", new Document(ImmutableMap.of(
-                                "_id", 1
-                        ))
+        Document match = new Document(
+            ImmutableMap.of(
+                "$match", new Document(
+                    ImmutableMap.of(
+                        "type", new Document(
+                            "$exists", false
+                        )
                 ))
-        );
+            ));
+
+        Document sum = new Document(
+            ImmutableMap.of(
+                "$group", new Document(
+                    ImmutableMap.of(
+                        "_id", "$pageNumber",
+                        "total", new Document(
+                            ImmutableMap.of("$sum", 1l)
+                        )
+                    ))
+            ));
+
+        Document sort = new Document(ImmutableMap.of(
+            "$sort", new Document(ImmutableMap.of(
+                "_id", 1
+            ))
+        ));
+
+        val group = ImmutableList.of(match, sum, sort);
 
         events.aggregate(group).
                 toObservable().
