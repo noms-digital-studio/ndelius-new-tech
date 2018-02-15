@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types'
 
 const AnalyticsCount = ({description, count, fetching}) => (
-    <div>
-        <p>{description}</p>
-        {fetching && <p>?</p>}
-        {!fetching && <p>{count}</p>}
+    <div style={{float: 'left', margin: '10px', backgroundColor: '#f8f8f8', padding: '10px', minWidth: '120px', minHeight: '100px'}}>
+        <p style={{fontSize: '16px', textAlign: 'center', margin: '10px'}}>{description}</p>
+        {fetching && <p style={{textAlign: 'center', margin: '10px'}}>?</p>}
+        {!fetching && <p style={{fontSize: '56px', textAlign: 'center', margin: '10px'}}>{count}</p>}
     </div>
 );
 

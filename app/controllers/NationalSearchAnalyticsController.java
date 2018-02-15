@@ -5,10 +5,8 @@ import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.analytics;
 
 import javax.inject.Inject;
-import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
@@ -29,7 +27,7 @@ public class NationalSearchAnalyticsController extends Controller {
         return ok(template.render());
     }
 
-    public CompletionStage<Result> visitCounts() {
+    public CompletionStage<Result> visitCounts(String duration) {
         return CompletableFuture.completedFuture(ImmutableMap.of("uniqueUserVisits", 28, "allVisits", 33)).thenApply(JsonHelper::okJson);
     }
 }
