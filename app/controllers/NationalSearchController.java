@@ -1,11 +1,14 @@
 package controllers;
 
+import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import helpers.Encryption;
 import helpers.JsonHelper;
+import interfaces.AnalyticsStore;
 import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
 import lombok.val;
+import org.joda.time.DateTime;
 import play.Logger;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
@@ -18,7 +21,9 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
@@ -27,11 +32,13 @@ import static helpers.JwtHelper.principal;
 public class NationalSearchController extends Controller {
 
     private static final String OFFENDER_API_BEARER_TOKEN = "offenderApiBearerToken";
+    private static final String SEARCH_ANALYTICS_GROUP_ID = "searchAnalyticsGroupId";
     private final views.html.nationalSearch template;
     private final OffenderSearch offenderSearch;
     private final Duration userTokenValidDuration;
     private final String paramsSecretKey;
     private final OffenderApi offenderApi;
+    private final AnalyticsStore analyticsStore;
     private final HttpExecutionContext ec;
 
 
@@ -41,13 +48,15 @@ public class NationalSearchController extends Controller {
             Config configuration,
             views.html.nationalSearch template,
             OffenderSearch offenderSearch,
-            OffenderApi offenderApi) {
+            OffenderApi offenderApi,
+            AnalyticsStore analyticsStore) {
         this.template = template;
         this.offenderSearch = offenderSearch;
         this.offenderApi = offenderApi;
         paramsSecretKey = configuration.getString("params.secret.key");
         userTokenValidDuration = configuration.getDuration("params.user.token.valid.duration");
         this.ec = ec;
+        this.analyticsStore = analyticsStore;
     }
 
     public CompletionStage<Result> index(String encryptedUsername, String encryptedEpochRequestTimeMills) {
@@ -59,6 +68,8 @@ public class NationalSearchController extends Controller {
                 .thenApplyAsync(bearerToken -> {
                     Logger.info("AUDIT:{}: Successful logon for user {}", principal(bearerToken), username);
                     session(OFFENDER_API_BEARER_TOKEN, bearerToken);
+                    session(SEARCH_ANALYTICS_GROUP_ID, UUID.randomUUID().toString());
+                    analyticsStore.recordEvent(combine(analyticsContext(), "type", "search-index"));
                     return ok(template.render());
                 }, ec.current())
                 .exceptionally(e -> {
@@ -103,4 +114,20 @@ public class NationalSearchController extends Controller {
         return Instant.ofEpochMilli(Long.valueOf(epochRequestTime)).atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
+    private Map<String, Object> analyticsContext() {
+        return combine(
+                ImmutableMap.of(
+                        "correlationId", session(SEARCH_ANALYTICS_GROUP_ID),
+                        "username", principal(session(OFFENDER_API_BEARER_TOKEN)),
+                        "sessionId", Optional.ofNullable(session("id")).orElseGet(() -> UUID.randomUUID().toString())
+
+                ),
+                "dateTime",
+                DateTime.now().toDate()
+        );
+    }
+
+    private Map<String, Object> combine(Map<String, Object> map, String key, Object value) {
+        return ImmutableMap.<String, Object>builder().putAll(map).put(key, value).build();
+    }
 }

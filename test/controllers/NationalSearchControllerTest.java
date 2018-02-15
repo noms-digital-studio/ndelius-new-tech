@@ -2,6 +2,7 @@ package controllers;
 
 import data.offendersearch.OffenderSearchResult;
 import helpers.Encryption;
+import interfaces.AnalyticsStore;
 import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
 import lombok.val;
@@ -9,26 +10,30 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Http;
-import play.mvc.Result;
 import play.test.WithApplication;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
 import static play.mvc.Http.Status.OK;
@@ -45,6 +50,12 @@ public class NationalSearchControllerTest extends WithApplication {
 
     @Mock
     private OffenderApi offenderApi;
+
+    @Mock
+    private AnalyticsStore analyticsStore;
+
+    @Captor
+    private ArgumentCaptor<Map<String, Object>> analyticsEventCaptor;
 
     @Before
     public void setUp() {
@@ -63,6 +74,18 @@ public class NationalSearchControllerTest extends WithApplication {
 
         assertThat(result.status()).isEqualTo(OK);
         assertThat(result.session().get("offenderApiBearerToken")).isEqualTo("bearerToken");
+    }
+
+    @Test
+    public void analyticsSearchIndexEventRecordedWhenLogonSucceeds() throws UnsupportedEncodingException {
+        when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture(awtTokenForFakeUser()));
+        route(app, buildIndexPageRequest());
+
+        verify(analyticsStore).recordEvent(analyticsEventCaptor.capture());
+
+        assertThat(analyticsEventCaptor.getValue()).containsKeys("correlationId", "sessionId", "type", "username", "dateTime");
+        assertThat(analyticsEventCaptor.getValue()).contains(entry("username", "cn=fake.user,cn=Users,dc=moj,dc=com"));
+        assertThat(analyticsEventCaptor.getValue()).contains(entry("type", "search-index"));
     }
 
     @Test
@@ -162,16 +185,25 @@ public class NationalSearchControllerTest extends WithApplication {
         return new Http.RequestBuilder().method(GET).uri(String.format("/nationalSearch?user=%s&t=%s", encryptedUser, encryptedTime));
     }
 
+    private String awtTokenForFakeUser() {
+        return "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjbj1mYWtlLnVzZXIsY249VXNlcnMsZGM9bW9qLGRjPWNvbSIsInVpZCI6ImZha2UudXNlciIsImV4cCI6MTUxNzYzMTkzOX0=.FsI0VbLbqLRUGo7GXDEr0hHLvDRJjMQWcuEJCCaevXY1KAyJ_05I8V6wE6UqH7gB1Nq2Y4tY7-GgZN824dEOqQ";
+    }
+
+    private static Map.Entry<String, Object> entry(String key, String value) {
+        return new SimpleImmutableEntry<>(key, value);
+    }
+
+
     @Override
     protected Application provideApplication() {
 
         return new GuiceApplicationBuilder().
             overrides(
                 bind(OffenderSearch.class).toInstance(elasticOffenderSearch),
-                bind(OffenderApi.class).toInstance(offenderApi)
+                bind(OffenderApi.class).toInstance(offenderApi),
+                bind(AnalyticsStore.class).toInstance(analyticsStore)
             )
             .configure("params.user.token.valid.duration", userTokenValidDuration)
             .build();
     }
-
 }

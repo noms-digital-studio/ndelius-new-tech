@@ -26,6 +26,7 @@ public class InMemoryAnalyticsStore implements AnalyticsStore {
     @Override
     public CompletableFuture<Map<Integer, Long>> pageVisits() {
         Map<Integer, Long> pageVisits = events.getAll().stream()
+            .filter(event -> event.containsKey("pageNumber"))
             .collect(groupingBy(event -> (int) event.get("pageNumber"),
                                 counting()));
 
