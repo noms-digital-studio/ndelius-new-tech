@@ -2,7 +2,6 @@ package services;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.mongodb.client.model.Filters;
 import com.mongodb.rx.client.MongoClient;
 import com.mongodb.rx.client.MongoCollection;
 import com.mongodb.rx.client.MongoDatabase;
@@ -10,16 +9,23 @@ import com.typesafe.config.Config;
 import interfaces.AnalyticsStore;
 import lombok.val;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.joda.time.DateTime;
 import play.Logger;
 
 import javax.inject.Inject;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static com.mongodb.client.model.Filters.and;
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.gte;
 
 public class MongoDbStore implements AnalyticsStore {
 
@@ -122,10 +128,10 @@ public class MongoDbStore implements AnalyticsStore {
     }
 
     @Override
-    public CompletableFuture<Long> pageVisits(String eventType) {
+    public CompletableFuture<Long> pageVisits(String eventType, LocalDateTime from) {
         val result = new CompletableFuture<Long>();
 
-        events.count(Filters.eq("type", eventType)).
+        events.count(and(eq("type", eventType), filterByDate(from))).
                 doOnError(result::completeExceptionally).
                 subscribe(result::complete);
 
@@ -133,11 +139,11 @@ public class MongoDbStore implements AnalyticsStore {
     }
 
     @Override
-    public CompletableFuture<Long> uniquePageVisits(String eventType) {
+    public CompletableFuture<Long> uniquePageVisits(String eventType, LocalDateTime from) {
         val result = new CompletableFuture<Long>();
 
         events.distinct("username", String.class).
-                filter(Filters.eq("type", eventType)).
+                filter(and(eq("type", eventType), filterByDate(from))).
                 toObservable().
                 toList().
                 doOnError(result::completeExceptionally).
@@ -158,4 +164,9 @@ public class MongoDbStore implements AnalyticsStore {
 
         return result;
     }
+
+    private Bson filterByDate(LocalDateTime from) {
+        return gte("dateTime", Date.from(from.atZone(ZoneId.systemDefault()).toInstant()));
+    }
+
 }

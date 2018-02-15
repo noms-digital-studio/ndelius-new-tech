@@ -1,5 +1,6 @@
 package interfaces;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -12,9 +13,9 @@ public interface AnalyticsStore {
 
     CompletableFuture<Map<Integer, Long>> pageVisits();
 
-    CompletableFuture<Long> pageVisits(String eventType);
+    CompletableFuture<Long> pageVisits(String eventType, LocalDateTime from);
 
-    CompletableFuture<Long> uniquePageVisits(String eventType);
+    CompletableFuture<Long> uniquePageVisits(String eventType, LocalDateTime from);
 
     CompletableFuture<Boolean> isUp();
 }

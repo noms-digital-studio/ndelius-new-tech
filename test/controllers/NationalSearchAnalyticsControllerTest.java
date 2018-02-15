@@ -15,6 +15,8 @@ import play.test.WithApplication;
 import java.util.concurrent.CompletableFuture;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
 import static play.mvc.Http.Status.OK;
@@ -28,9 +30,9 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
 
     @Test
     public void returnsOkResponseWithCountsAsJson() {
-        when(analyticsStore.pageVisits("search-index")).thenReturn(CompletableFuture.completedFuture(100l));
-        when(analyticsStore.uniquePageVisits("search-index")).thenReturn(CompletableFuture.completedFuture(10l));
-        val request = new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/visitCounts?duration=1d");
+        when(analyticsStore.pageVisits(eq("search-index"), any())).thenReturn(CompletableFuture.completedFuture(100l));
+        when(analyticsStore.uniquePageVisits(eq("search-index"), any())).thenReturn(CompletableFuture.completedFuture(10l));
+        val request = new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/visitCounts");
         val result = route(app, request);
 
         assertEquals(OK, result.status());

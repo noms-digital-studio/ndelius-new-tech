@@ -2,6 +2,7 @@ package utils;
 
 import interfaces.AnalyticsStore;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -19,10 +20,10 @@ public interface AnalyticsStoreMock extends AnalyticsStore {
         return null;
     }
 
-    default CompletableFuture<Long> pageVisits(String eventType) {
+    default CompletableFuture<Long> pageVisits(String eventType, LocalDateTime from) {
         return null;
     }
-    default CompletableFuture<Long> uniquePageVisits(String eventType) {
+    default CompletableFuture<Long> uniquePageVisits(String eventType, LocalDateTime from) {
         return null;
     }
 }
