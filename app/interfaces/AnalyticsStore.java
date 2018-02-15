@@ -12,5 +12,9 @@ public interface AnalyticsStore {
 
     CompletableFuture<Map<Integer, Long>> pageVisits();
 
+    CompletableFuture<Long> pageVisits(String eventType);
+
+    CompletableFuture<Long> uniquePageVisits(String eventType);
+
     CompletableFuture<Boolean> isUp();
 }

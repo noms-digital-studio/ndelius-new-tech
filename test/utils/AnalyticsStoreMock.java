@@ -18,4 +18,11 @@ public interface AnalyticsStoreMock extends AnalyticsStore {
     default CompletableFuture<Map<Integer, Long>> pageVisits() {
         return null;
     }
+
+    default CompletableFuture<Long> pageVisits(String eventType) {
+        return null;
+    }
+    default CompletableFuture<Long> uniquePageVisits(String eventType) {
+        return null;
+    }
 }

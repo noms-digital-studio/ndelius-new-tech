@@ -2,6 +2,7 @@ package services;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.mongodb.client.model.Filters;
 import com.mongodb.rx.client.MongoClient;
 import com.mongodb.rx.client.MongoCollection;
 import com.mongodb.rx.client.MongoDatabase;
@@ -116,6 +117,31 @@ public class MongoDbStore implements AnalyticsStore {
                 ).
                 doOnError(result::completeExceptionally).
                 subscribe(result::complete);
+
+        return result;
+    }
+
+    @Override
+    public CompletableFuture<Long> pageVisits(String eventType) {
+        val result = new CompletableFuture<Long>();
+
+        events.count(Filters.eq("type", eventType)).
+                doOnError(result::completeExceptionally).
+                subscribe(result::complete);
+
+        return result;
+    }
+
+    @Override
+    public CompletableFuture<Long> uniquePageVisits(String eventType) {
+        val result = new CompletableFuture<Long>();
+
+        events.distinct("username", String.class).
+                filter(Filters.eq("type", eventType)).
+                toObservable().
+                toList().
+                doOnError(result::completeExceptionally).
+                subscribe((usernameList) -> result.complete((long) usernameList.size()));
 
         return result;
     }

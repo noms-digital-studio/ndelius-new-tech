@@ -3,11 +3,11 @@ package controllers;
 import com.google.common.collect.ImmutableMap;
 import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
+import lombok.val;
 import play.mvc.Controller;
 import play.mvc.Result;
 
 import javax.inject.Inject;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 public class NationalSearchAnalyticsController extends Controller {
@@ -28,6 +28,11 @@ public class NationalSearchAnalyticsController extends Controller {
     }
 
     public CompletionStage<Result> visitCounts(String duration) {
-        return CompletableFuture.completedFuture(ImmutableMap.of("uniqueUserVisits", 28, "allVisits", 33)).thenApply(JsonHelper::okJson);
+        val pageVisitsStage = analyticsStore.pageVisits("search-index");
+        val uniquePageVisitsStage = analyticsStore.uniquePageVisits("search-index");
+        return pageVisitsStage.thenCombine(
+                uniquePageVisitsStage,
+                (allVisits, uniqueUserVisits) -> ImmutableMap.of("uniqueUserVisits", uniqueUserVisits, "allVisits", allVisits))
+                .thenApply(JsonHelper::okJson);
     }
 }
