@@ -17,6 +17,9 @@ class AnalyticsPage extends Component {
     componentWillReceiveProps(nextProps) {
         fetch(nextProps)
     }
+    onClickRefresh() {
+        fetch(this.props)
+    }
 
     render() {
         return (
@@ -32,10 +35,12 @@ class AnalyticsPage extends Component {
                     </div>
                     <div className="column-one-third">
                         <NavigationPanel/>
+                        <input className="button margin-top" type="button" value="Refresh" onClick={() => this.onClickRefresh()}/>
                     </div>
                 </div>
             </div>)
     }
+
 }
 
 const fetch = props => {

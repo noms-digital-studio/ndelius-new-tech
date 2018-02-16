@@ -15,7 +15,7 @@ describe('AnalyticsPage component', () => {
     })
 
     context('on props received', () => {
-        it('fetch counts is dispatched', () => {
+        it('fetch counts is dispatched for mount and props change', () => {
             const fetchVisitCounts = stub()
             const page = shallow(<AnalyticsPage fetchVisitCounts={fetchVisitCounts}  currentTimeRange={THIS_YEAR}/>)
 
@@ -24,6 +24,18 @@ describe('AnalyticsPage component', () => {
             expect(fetchVisitCounts).to.be.calledTwice
         })
     })
+
+    context('refresh button clicked', () => {
+        it('fetch counts is dispatched for mount and click', () => {
+            const fetchVisitCounts = stub()
+            const page = shallow(<AnalyticsPage fetchVisitCounts={fetchVisitCounts} currentTimeRange={THIS_YEAR}/>)
+
+            page.find({type: 'button'}).simulate('click')
+
+            expect(fetchVisitCounts).to.be.calledTwice
+        })
+    })
+
 
     describe('rendering', () => {
         let page
