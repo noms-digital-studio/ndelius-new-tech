@@ -2,14 +2,26 @@ import AnalyticsPage  from './analyticsPage'
 import {expect} from 'chai';
 import {shallow} from 'enzyme';
 import {stub} from 'sinon';
+import {THIS_YEAR, THIS_WEEK} from '../actions/analytics'
 
 describe('AnalyticsPage component', () => {
     context('on mount', () => {
         it('fetch counts is dispatched', () => {
             const fetchVisitCounts = stub()
-            shallow(<AnalyticsPage fetchVisitCounts={fetchVisitCounts}/>)
+            shallow(<AnalyticsPage fetchVisitCounts={fetchVisitCounts} currentTimeRange={THIS_YEAR}/>)
 
-            expect(fetchVisitCounts).to.be.called
+            expect(fetchVisitCounts).to.be.calledOnce
+        })
+    })
+
+    context('on props received', () => {
+        it('fetch counts is dispatched', () => {
+            const fetchVisitCounts = stub()
+            const page = shallow(<AnalyticsPage fetchVisitCounts={fetchVisitCounts}  currentTimeRange={THIS_YEAR}/>)
+
+            page.setProps({currentTimeRange: THIS_WEEK})
+
+            expect(fetchVisitCounts).to.be.calledTwice
         })
     })
 

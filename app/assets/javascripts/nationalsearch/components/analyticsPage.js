@@ -11,13 +11,10 @@ class AnalyticsPage extends Component {
         super(props);
     }
     componentWillMount() {
-        const {fetchVisitCounts, currentTimeRange} = this.props;
-        fetchVisitCounts(currentTimeRange)
+        fetch(this.props)
     }
-
     componentWillReceiveProps(nextProps) {
-        const {fetchVisitCounts, currentTimeRange} = nextProps;
-        fetchVisitCounts(currentTimeRange)
+        fetch(nextProps)
     }
 
     render() {
@@ -38,6 +35,12 @@ class AnalyticsPage extends Component {
             </div>)
     }
 }
+
+const fetch = props => {
+    const {fetchVisitCounts, currentTimeRange} = props;
+    fetchVisitCounts(currentTimeRange)
+}
+
 
 const NavigationPanel = () => (
             <nav className="js-stick-at-top-when-scrolling">
