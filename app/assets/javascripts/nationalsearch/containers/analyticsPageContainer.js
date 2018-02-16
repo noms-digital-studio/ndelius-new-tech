@@ -3,8 +3,10 @@ import { fetchVisitCounts } from '../actions/analytics'
 import analyticsPage from '../components/analyticsPage'
 
 export default connect(
-    () => ({}),
+    state => ({
+        currentTimeRange: state.analytics.timeRange
+    }),
     dispatch => ({
-        fetchVisitCounts: () => dispatch(fetchVisitCounts())
+        fetchVisitCounts: (timeRange) => dispatch(fetchVisitCounts(timeRange))
     }),
 )(analyticsPage)

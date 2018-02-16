@@ -4,14 +4,20 @@ import AllVisitsCounts from '../containers/allVisitsCountContainer';
 import TimeRangeLink from '../containers/analyticsTimeRangeLinkContainer';
 import GovUkPhaseBanner from './govukPhaseBanner';
 import {LAST_HOUR, TODAY, THIS_WEEK, LAST_SEVEN_DAYS, LAST_THIRTY_DAYS, THIS_YEAR, ALL} from '../actions/analytics'
+import PropTypes from 'prop-types'
 
 class AnalyticsPage extends Component {
     constructor(props) {
         super(props);
     }
     componentWillMount() {
-        const {fetchVisitCounts} = this.props;
-        fetchVisitCounts()
+        const {fetchVisitCounts, currentTimeRange} = this.props;
+        fetchVisitCounts(currentTimeRange)
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const {fetchVisitCounts, currentTimeRange} = nextProps;
+        fetchVisitCounts(currentTimeRange)
     }
 
     render() {
@@ -46,5 +52,11 @@ const NavigationPanel = () => (
                 <TimeRangeLink timeRange={ALL}>All time</TimeRangeLink><br/>
             </nav>
         )
+
+AnalyticsPage.propTypes = {
+    fetchVisitCounts: PropTypes.func.isRequired,
+    currentTimeRange: PropTypes.string.isRequired
+}
+
 
 export default AnalyticsPage;

@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
+import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+
 public class NationalSearchAnalyticsController extends Controller {
 
     private final AnalyticsStore analyticsStore;
@@ -39,6 +41,8 @@ public class NationalSearchAnalyticsController extends Controller {
     }
 
     private LocalDateTime fromDateTime(String from) {
-        return Optional.ofNullable(from).map(LocalDateTime::parse).orElse(LocalDateTime.now().minusYears(10));
+        return Optional.ofNullable(from).
+                map(text -> LocalDateTime.parse(text, ISO_OFFSET_DATE_TIME)).
+                orElse(LocalDateTime.of(2017, 1, 1, 0, 0));
     }
 }
