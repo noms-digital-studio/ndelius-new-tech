@@ -83,6 +83,7 @@ public class NationalSearchController extends Controller {
         return Optional.ofNullable(session(OFFENDER_API_BEARER_TOKEN))
                 .map(bearerToken -> {
                     Logger.info("AUDIT:{}: Search performed with term '{}'", principal(bearerToken), searchTerm);
+                    analyticsStore.recordEvent(combine(analyticsContext(), "type", "search-request"));
                     return offenderSearch.search(bearerToken, searchTerm, pageSize, pageNumber).thenApply(JsonHelper::okJson);
                 })
                 .orElseGet(() -> CompletableFuture.supplyAsync(() -> {

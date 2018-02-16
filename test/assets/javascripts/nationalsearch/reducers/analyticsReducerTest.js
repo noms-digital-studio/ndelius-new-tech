@@ -12,6 +12,7 @@ describe("analylticsReducer", () => {
         it('counts are all set to zero', () => {
             expect(state.uniqueUserVisits).to.equal(0)
             expect(state.allVisits).to.equal(0)
+            expect(state.allSearches).to.equal(0)
         });
         it('fetching is false', () => {
             expect(state.fetching).to.equal(false)
@@ -28,7 +29,7 @@ describe("analylticsReducer", () => {
     })
     describe("when VISIT_COUNTS action received", () => {
         beforeEach(() => {
-            state = analytics({fetching: true}, {type: VISIT_COUNTS, uniqueUserVisits: 12, allVisits: 17})
+            state = analytics({fetching: true}, {type: VISIT_COUNTS, uniqueUserVisits: 12, allVisits: 17, allSearches: 24})
         })
 
         it('fetching is false', () => {
@@ -39,6 +40,9 @@ describe("analylticsReducer", () => {
         });
         it('allVisits is set', () => {
             expect(state.allVisits).to.equal(17)
+        });
+        it('allSearches is set', () => {
+            expect(state.allSearches).to.equal(24)
         });
     })
     describe("when TIME_RANGE action received", () => {

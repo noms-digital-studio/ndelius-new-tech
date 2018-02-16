@@ -10,6 +10,7 @@ import play.mvc.Result;
 import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
@@ -32,12 +33,16 @@ public class NationalSearchAnalyticsController extends Controller {
     }
 
     public CompletionStage<Result> visitCounts(String from) {
-        val pageVisitsStage = analyticsStore.pageVisits("search-index", fromDateTime(from));
-        val uniquePageVisitsStage = analyticsStore.uniquePageVisits("search-index", fromDateTime(from));
-        return pageVisitsStage.thenCombine(
-                uniquePageVisitsStage,
-                (allVisits, uniqueUserVisits) -> ImmutableMap.of("uniqueUserVisits", uniqueUserVisits, "allVisits", allVisits))
-                .thenApply(JsonHelper::okJson);
+        val allVisits = analyticsStore.pageVisits("search-index", fromDateTime(from));
+        val allSearches = analyticsStore.pageVisits("search-request", fromDateTime(from));
+        val uniqueUserVisits = analyticsStore.uniquePageVisits("search-index", fromDateTime(from));
+
+        return CompletableFuture.allOf(allVisits, allSearches, uniqueUserVisits).
+                thenApply(ignoredVoid -> ImmutableMap.of(
+                        "uniqueUserVisits", uniqueUserVisits.join(),
+                        "allVisits", allVisits.join(),
+                        "allSearches", allSearches.join())).
+                thenApply(JsonHelper::okJson);
     }
 
     private LocalDateTime fromDateTime(String from) {

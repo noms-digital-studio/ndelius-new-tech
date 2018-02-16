@@ -60,6 +60,7 @@ public class NationalSearchControllerTest extends WithApplication {
     @Before
     public void setUp() {
         when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture("bearerToken"));
+        when(elasticOffenderSearch.search(any(), any(), anyInt(), anyInt())).thenReturn(completedFuture(OffenderSearchResult.builder().build()));
         secretKey = "ThisIsASecretKey";
     }
 
@@ -99,12 +100,29 @@ public class NationalSearchControllerTest extends WithApplication {
 
     @Test
     public void searchTermReturnsResults() {
-        when(elasticOffenderSearch.search(any(), any(), anyInt(), anyInt())).thenReturn(completedFuture(OffenderSearchResult.builder().build()));
-        val request = new Http.RequestBuilder().session("offenderApiBearerToken", "bearer-token").method(GET).uri("/searchOffender/smith");
+        val request = new Http.RequestBuilder().
+                session("offenderApiBearerToken", awtTokenForFakeUser()).
+                session("searchAnalyticsGroupId", "999-aaa-888").
+                method(GET).uri("/searchOffender/smith");
         val result = route(app, request);
 
         assertEquals(OK, result.status());
         assertEquals("{\"offenders\":null,\"suggestions\":null,\"total\":0}", contentAsString(result));
+    }
+
+    @Test
+    public void analyticsSearchRequestEventRecordedWhenSearchCalled() {
+        val request = new Http.RequestBuilder().
+                session("offenderApiBearerToken", awtTokenForFakeUser()).
+                session("searchAnalyticsGroupId", "999-aaa-888").
+                method(GET).uri("/searchOffender/smith");
+        route(app, request);
+
+        verify(analyticsStore).recordEvent(analyticsEventCaptor.capture());
+
+        assertThat(analyticsEventCaptor.getValue()).contains(entry("username", "cn=fake.user,cn=Users,dc=moj,dc=com"));
+        assertThat(analyticsEventCaptor.getValue()).contains(entry("type", "search-request"));
+        assertThat(analyticsEventCaptor.getValue()).contains(entry("correlationId", "999-aaa-888"));
     }
 
     @Test

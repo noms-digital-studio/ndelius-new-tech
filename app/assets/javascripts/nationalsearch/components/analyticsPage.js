@@ -1,6 +1,7 @@
 import {Component} from 'react'
 import UniqueVisitsCounts from '../containers/uniqueVisitsCountContainer';
 import AllVisitsCounts from '../containers/allVisitsCountContainer';
+import AllSearchesCounts from '../containers/allSearchesCountContainer';
 import TimeRangeLink from '../containers/analyticsTimeRangeLinkContainer';
 import GovUkPhaseBanner from './govukPhaseBanner';
 import {LAST_HOUR, TODAY, THIS_WEEK, LAST_SEVEN_DAYS, LAST_THIRTY_DAYS, THIS_YEAR, ALL} from '../actions/analytics'
@@ -27,6 +28,7 @@ class AnalyticsPage extends Component {
                     <div className="column-two-thirds">
                         <UniqueVisitsCounts description='Unique visits'/>
                         <AllVisitsCounts description='All visits'/>
+                        <AllSearchesCounts description='All searches'/>
                     </div>
                     <div className="column-one-third">
                         <NavigationPanel/>

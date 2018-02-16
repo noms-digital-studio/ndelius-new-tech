@@ -28,7 +28,7 @@ describe('AnalyticsPage component', () => {
     describe('rendering', () => {
         let page
         beforeEach(() => {
-            page = shallow(<AnalyticsPage fetchVisitCounts={stub()}/>)
+            page = shallow(<AnalyticsPage fetchVisitCounts={stub()} currentTimeRange={THIS_YEAR}/>)
         })
 
         it('displays unique visitor count', () => {
@@ -36,6 +36,9 @@ describe('AnalyticsPage component', () => {
         })
         it('displays all visitor count', () => {
             expect(page.find({description: 'All visits'}).exists()).to.be.true
+        })
+        it('displays all searches count', () => {
+            expect(page.find({description: 'All searches'}).exists()).to.be.true
         })
     })
 })

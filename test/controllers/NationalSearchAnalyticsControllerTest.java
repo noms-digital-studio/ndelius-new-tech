@@ -38,6 +38,7 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
     @Before
     public void setup() {
         when(analyticsStore.pageVisits(eq("search-index"), any())).thenReturn(CompletableFuture.completedFuture(100L));
+        when(analyticsStore.pageVisits(eq("search-request"), any())).thenReturn(CompletableFuture.completedFuture(1000L));
         when(analyticsStore.uniquePageVisits(eq("search-index"), any())).thenReturn(CompletableFuture.completedFuture(10L));
     }
     @Test
@@ -67,7 +68,7 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertEquals("{\"uniqueUserVisits\":10,\"allVisits\":100}", contentAsString(result));
+        assertEquals("{\"uniqueUserVisits\":10,\"allVisits\":100,\"allSearches\":1000}", contentAsString(result));
     }
 
     @Override
