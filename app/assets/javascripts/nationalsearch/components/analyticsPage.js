@@ -1,7 +1,9 @@
 import {Component} from 'react'
 import UniqueVisitsCounts from '../containers/uniqueVisitsCountContainer';
 import AllVisitsCounts from '../containers/allVisitsCountContainer';
+import TimeRangeLink from '../containers/analyticsTimeRangeLinkContainer';
 import GovUkPhaseBanner from './govukPhaseBanner';
+import {LAST_HOUR, TODAY, THIS_WEEK, LAST_SEVEN_DAYS, LAST_THIRTY_DAYS, THIS_YEAR, ALL} from '../actions/analytics'
 
 class AnalyticsPage extends Component {
     constructor(props) {
@@ -35,13 +37,13 @@ const NavigationPanel = () => (
             <nav className="js-stick-at-top-when-scrolling">
                 <div className="nav-header"/>
                 <h3 className="heading-medium no-margin-top no-margin-bottom">Analytics for</h3>
-                <a href="#" className="nav-item">Last hour</a><br/>
-                <a href="#" className="nav-item">Today</a><br/>
-                <a href="#" className="nav-item">This week</a><br/>
-                <a href="#" className="nav-item">Last 7 days</a><br/>
-                <a href="#" className="nav-item">Last 30 days</a><br/>
-                <a href="#" className="nav-item">All year</a><br/>
-                <a href="#" className="nav-item">All time</a>
+                <TimeRangeLink timeRange={LAST_HOUR}>Last hour</TimeRangeLink><br/>
+                <TimeRangeLink timeRange={TODAY}>Today</TimeRangeLink><br/>
+                <TimeRangeLink timeRange={THIS_WEEK}>This week</TimeRangeLink><br/>
+                <TimeRangeLink timeRange={LAST_SEVEN_DAYS}>Last 7 days</TimeRangeLink><br/>
+                <TimeRangeLink timeRange={LAST_THIRTY_DAYS}>Last 30 days</TimeRangeLink><br/>
+                <TimeRangeLink timeRange={THIS_YEAR}>This year</TimeRangeLink><br/>
+                <TimeRangeLink timeRange={ALL}>All time</TimeRangeLink><br/>
             </nav>
         )
 

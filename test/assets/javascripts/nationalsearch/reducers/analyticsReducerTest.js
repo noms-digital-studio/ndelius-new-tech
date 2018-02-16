@@ -1,4 +1,4 @@
-import {FETCHING_VISIT_COUNTS, VISIT_COUNTS} from '../actions/analytics'
+import {FETCHING_VISIT_COUNTS, VISIT_COUNTS, TIME_RANGE} from '../actions/analytics'
 import analytics  from './analylticsReducer'
 import {expect} from 'chai';
 
@@ -39,6 +39,15 @@ describe("analylticsReducer", () => {
         });
         it('allVisits is set', () => {
             expect(state.allVisits).to.equal(17)
+        });
+    })
+    describe("when TIME_RANGE action received", () => {
+        beforeEach(() => {
+            state = analytics({fetching: false, timeRange: 'LAST_THIRTY_DAYS'}, {type: TIME_RANGE, timeRange: 'LAST_SEVEN_DAYS'})
+        })
+
+        it('updates timeRange', () => {
+            expect(state.timeRange).to.equal('LAST_SEVEN_DAYS')
         });
     })
 })
