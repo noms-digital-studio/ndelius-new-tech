@@ -24,7 +24,6 @@ class AnalyticsPage extends Component {
     render() {
         return (
             <div>
-                <noscript>You need to enable JavaScript to run this app.</noscript>
                 <GovUkPhaseBanner basicVersion={true}/>
                 <h1 className="heading-xlarge no-margin-bottom">National Search Analytics</h1>
                 <div className="grid-row margin-top">
