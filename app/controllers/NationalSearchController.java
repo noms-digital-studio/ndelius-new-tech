@@ -92,6 +92,12 @@ public class NationalSearchController extends Controller {
                 }));
     }
 
+    public CompletionStage<Result>  recordSearchOutcome() {
+        analyticsStore.recordEvent(combine(analyticsContext(), JsonHelper.jsonToObjectMap(request().body().asText())));
+        return CompletableFuture.supplyAsync(Results::created);
+    }
+
+
     private Optional<CompletionStage<Result>> validate(String encryptedUsername, String encryptedEpochRequestTimeMills, String username) {
         val epochRequestTime = Encryption.decrypt(encryptedEpochRequestTimeMills, paramsSecretKey);
 
@@ -130,5 +136,8 @@ public class NationalSearchController extends Controller {
 
     private Map<String, Object> combine(Map<String, Object> map, String key, Object value) {
         return ImmutableMap.<String, Object>builder().putAll(map).put(key, value).build();
+    }
+    private Map<String, Object> combine(Map<String, Object> map, Map<String, Object> other) {
+        return ImmutableMap.<String, Object>builder().putAll(map).putAll(other).build();
     }
 }

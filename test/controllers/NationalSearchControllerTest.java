@@ -1,7 +1,9 @@
 package controllers;
 
+import com.google.common.collect.ImmutableMap;
 import data.offendersearch.OffenderSearchResult;
 import helpers.Encryption;
+import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
 import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
@@ -27,6 +29,7 @@ import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import static helpers.JwtHelperTest.FAKE_USER_BEARKER_TOKEN;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -79,7 +82,7 @@ public class NationalSearchControllerTest extends WithApplication {
 
     @Test
     public void analyticsSearchIndexEventRecordedWhenLogonSucceeds() throws UnsupportedEncodingException {
-        when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture(awtTokenForFakeUser()));
+        when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture(FAKE_USER_BEARKER_TOKEN));
         route(app, buildIndexPageRequest());
 
         verify(analyticsStore).recordEvent(analyticsEventCaptor.capture());
@@ -101,7 +104,7 @@ public class NationalSearchControllerTest extends WithApplication {
     @Test
     public void searchTermReturnsResults() {
         val request = new Http.RequestBuilder().
-                session("offenderApiBearerToken", awtTokenForFakeUser()).
+                session("offenderApiBearerToken", FAKE_USER_BEARKER_TOKEN).
                 session("searchAnalyticsGroupId", "999-aaa-888").
                 method(GET).uri("/searchOffender/smith");
         val result = route(app, request);
@@ -113,7 +116,7 @@ public class NationalSearchControllerTest extends WithApplication {
     @Test
     public void analyticsSearchRequestEventRecordedWhenSearchCalled() {
         val request = new Http.RequestBuilder().
-                session("offenderApiBearerToken", awtTokenForFakeUser()).
+                session("offenderApiBearerToken", FAKE_USER_BEARKER_TOKEN).
                 session("searchAnalyticsGroupId", "999-aaa-888").
                 method(GET).uri("/searchOffender/smith");
         route(app, request);
@@ -196,6 +199,31 @@ public class NationalSearchControllerTest extends WithApplication {
         assertEquals(OK, result.status());
     }
 
+    @Test
+    public void recordsSearchOutcomeEventWithData() {
+        val request = new Http.
+                RequestBuilder().
+                method(PUT).
+                session("offenderApiBearerToken", FAKE_USER_BEARKER_TOKEN).
+                session("searchAnalyticsGroupId", "999-aaa-888").
+                header("Content-Type", "application/json").
+                uri("/nationalSearch/recordSearchOutcome").
+                bodyText(JsonHelper.stringify(ImmutableMap.of("type", "search-offender-details", "selectedIndex", 23)));
+        val result = route(app, request);
+
+        assertEquals(CREATED, result.status());
+
+        verify(analyticsStore).recordEvent(analyticsEventCaptor.capture());
+
+        assertThat(analyticsEventCaptor.getValue()).containsKeys("correlationId", "sessionId", "type", "username", "dateTime", "selectedIndex");
+        assertThat(analyticsEventCaptor.getValue()).contains(entry("username", "cn=fake.user,cn=Users,dc=moj,dc=com"));
+        assertThat(analyticsEventCaptor.getValue()).contains(entry("type", "search-offender-details"));
+        assertThat(analyticsEventCaptor.getValue()).contains(entry("selectedIndex", 23));
+        assertThat(analyticsEventCaptor.getValue()).contains(entry("correlationId", "999-aaa-888"));
+    }
+
+
+
     private Http.RequestBuilder buildIndexPageRequest() throws UnsupportedEncodingException {
         val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", secretKey), "UTF-8");
         val encryptedTime = URLEncoder.encode(Encryption.encrypt(String.valueOf(System.currentTimeMillis()+ FIFTY_NINE_MINUTES), secretKey), "UTF-8");
@@ -203,11 +231,7 @@ public class NationalSearchControllerTest extends WithApplication {
         return new Http.RequestBuilder().method(GET).uri(String.format("/nationalSearch?user=%s&t=%s", encryptedUser, encryptedTime));
     }
 
-    private String awtTokenForFakeUser() {
-        return "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjbj1mYWtlLnVzZXIsY249VXNlcnMsZGM9bW9qLGRjPWNvbSIsInVpZCI6ImZha2UudXNlciIsImV4cCI6MTUxNzYzMTkzOX0=.FsI0VbLbqLRUGo7GXDEr0hHLvDRJjMQWcuEJCCaevXY1KAyJ_05I8V6wE6UqH7gB1Nq2Y4tY7-GgZN824dEOqQ";
-    }
-
-    private static Map.Entry<String, Object> entry(String key, String value) {
+    private static Map.Entry<String, Object> entry(String key, Object value) {
         return new SimpleImmutableEntry<>(key, value);
     }
 
