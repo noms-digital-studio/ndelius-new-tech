@@ -16,7 +16,7 @@ export const visitCounts = data => ({type: VISIT_COUNTS, ...data})
 export const changeTimeRange = timeRange => ({type: TIME_RANGE, timeRange})
 export const fetchingVisitCounts = () => ({type: FETCHING_VISIT_COUNTS})
 
-const fetchVisitCounts = (timeRange) => (
+const fetchVisitCounts = timeRange => (
     dispatch => {
         dispatch(fetchingVisitCounts())
         $.getJSON(`/nationalSearch/analytics/visitCounts${timeRangeToDateParameters(timeRange)}`, data => {
