@@ -114,9 +114,13 @@ public class ElasticOffenderSearchTest {
         assertThat(termQueryBuilder.fieldName()).isEqualTo("softDeleted");
         assertThat(termQueryBuilder.value()).isEqualTo(false);
 
-        val sortBuilder = (FieldSortBuilder) searchRequest.getValue().source().sorts().get(0);
-        assertThat(sortBuilder.getFieldName()).isEqualTo("currentDisposal");
-        assertThat(sortBuilder.order()).isEqualTo(SortOrder.DESC);
+        val currentDisposalSort = (FieldSortBuilder) searchRequest.getValue().source().sorts().get(0);
+        assertThat(currentDisposalSort.getFieldName()).isEqualTo("currentDisposal");
+        assertThat(currentDisposalSort.order()).isEqualTo(SortOrder.DESC);
+
+        val scoreSort = (FieldSortBuilder) searchRequest.getValue().source().sorts().get(1);
+        assertThat(scoreSort.getFieldName()).isEqualTo("_score");
+        assertThat(scoreSort.order()).isEqualTo(SortOrder.DESC);
     }
 
     @Test

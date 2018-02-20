@@ -106,6 +106,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
             .query(boolQueryBuilder)
             .postFilter(termQuery("softDeleted", false))
             .sort(fieldSort("currentDisposal").order(SortOrder.DESC))
+            .sort(fieldSort("_score").order(SortOrder.DESC))
             .explain(Logger.isDebugEnabled())
             .size(pageSize)
             .from(pageSize * aValidPageNumberFor(pageNumber))
