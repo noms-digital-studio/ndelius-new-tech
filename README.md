@@ -63,6 +63,7 @@ curl -XPUT 'http://localhost:9200/offender?pretty' -H 'Content-Type: application
     "mappings": {
       "document": {
         "properties": {
+          "currentDisposal": {"type": "keyword"},
           "dateOfBirth": {
             "type":   "date",
             "format": "yyyy-MM-dd||yyyy/MM/dd||dd-MM-yy||dd/MM/yy||dd-MM-yyyy||dd/MM/yyyy"

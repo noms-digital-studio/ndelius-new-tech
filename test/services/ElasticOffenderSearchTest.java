@@ -15,6 +15,8 @@ import org.elasticsearch.index.query.PrefixQueryBuilder;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -120,9 +122,17 @@ public class ElasticOffenderSearchTest {
 
         assertThat(((PrefixQueryBuilder)query.should().get(5)).value()).isEqualTo("smith");
 
-        TermQueryBuilder termQueryBuilder = (TermQueryBuilder) searchRequest.getValue().source().postFilter();
+        val termQueryBuilder = (TermQueryBuilder) searchRequest.getValue().source().postFilter();
         assertThat(termQueryBuilder.fieldName()).isEqualTo("softDeleted");
         assertThat(termQueryBuilder.value()).isEqualTo(false);
+
+        val currentDisposalSort = (FieldSortBuilder) searchRequest.getValue().source().sorts().get(0);
+        assertThat(currentDisposalSort.getFieldName()).isEqualTo("currentDisposal");
+        assertThat(currentDisposalSort.order()).isEqualTo(SortOrder.DESC);
+
+        val scoreSort = (FieldSortBuilder) searchRequest.getValue().source().sorts().get(1);
+        assertThat(scoreSort.getFieldName()).isEqualTo("_score");
+        assertThat(scoreSort.order()).isEqualTo(SortOrder.DESC);
     }
 
     @Test
