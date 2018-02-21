@@ -1,5 +1,6 @@
 package interfaces;
 
+import java.util.Map;
 import java.util.concurrent.CompletionStage;
 
 public interface OffenderApi {
@@ -8,4 +9,6 @@ public interface OffenderApi {
     CompletionStage<Boolean> canAccess(String bearerToken, long offenderId);
 
     CompletionStage<Boolean> isHealthy();
+
+    CompletionStage<Object> searchDb(Map<String, String> params);
 }

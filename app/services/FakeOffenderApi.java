@@ -1,7 +1,9 @@
 package services;
 
+import helpers.JsonHelper;
 import interfaces.OffenderApi;
 
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
@@ -20,5 +22,10 @@ public class FakeOffenderApi implements OffenderApi {
     @Override
     public CompletionStage<Boolean> isHealthy() {
         return CompletableFuture.completedFuture(Boolean.TRUE);
+    }
+
+    @Override
+    public CompletionStage<Object> searchDb(Map<String, String> params) {
+        return CompletableFuture.completedFuture(JsonHelper.jsonToMap("{\"foo\": \"bar\"}"));
     }
 }

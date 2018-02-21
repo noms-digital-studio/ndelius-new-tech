@@ -1,6 +1,7 @@
 package services;
 
 import com.typesafe.config.Config;
+import helpers.JsonHelper;
 import interfaces.OffenderApi;
 import lombok.val;
 import play.Logger;
@@ -8,6 +9,7 @@ import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
 
 import javax.inject.Inject;
+import java.util.Map;
 import java.util.concurrent.CompletionStage;
 
 import static java.lang.String.format;
@@ -74,6 +76,40 @@ public class DeliusOffenderApi implements OffenderApi {
                 return false;
             });
 
+    }
+
+    @Override
+    public CompletionStage<Object> searchDb(Map<String, String> params) {
+        return wsClient.url(offenderApiBaseUrl + "logon")
+            .post(format("NationalUser"))
+            .thenApply(this::assertOkResponse)
+            .thenApply(WSResponse::getBody)
+            .thenCompose(bearerToken -> getUser(params, bearerToken));
+    }
+
+    private CompletionStage<Object> getUser(Map<String, String> params, String bearerToken) {
+        String url = offenderApiBaseUrl + "users" + queryParamsFrom(params);
+        return wsClient.url(url)
+            .addHeader(AUTHORIZATION, String.format("Bearer %s", bearerToken))
+            .get()
+            .thenApply(wsResponse -> {
+                if (wsResponse.getStatus() != 200) {
+                    Logger.warn("Bad response calling Delius Offender API {}. Status {}", url, wsResponse.getStatus());
+                    return JsonHelper.jsonToMap("{\"error\": \"" + wsResponse.getStatus() + "\"}");
+                }
+                return wsResponse.asJson();
+            })
+            .exceptionally(throwable -> {
+                Logger.error("Got an error calling Delius Offender API health endpoint", throwable);
+                return JsonHelper.jsonToMap("{\"error\": \"" + throwable.getMessage() + "\"}");
+            });
+    }
+
+    String queryParamsFrom(Map<String, String> params) {
+        StringBuilder stringBuilder = new StringBuilder().append("?");
+        params.forEach((key, value) -> stringBuilder.append(String.format("%s=%s&", key, params.get(key))));
+        String paramString = stringBuilder.substring(0, stringBuilder.length() - 1).toString();
+        return paramString;
     }
 
     private WSResponse assertOkResponse(WSResponse response) {

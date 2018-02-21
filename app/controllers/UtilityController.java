@@ -14,8 +14,10 @@ import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.lang.Runtime.getRuntime;
@@ -65,6 +67,14 @@ public class UtilityController extends Controller {
                                               analyticsStoreHealthFuture.join(),
                                               offenderSearchHealthFuture.join(),
                                               offenderApiFuture.join()));
+    }
+
+    public CompletionStage<Result> searchDb() {
+        val params = request().queryString().entrySet().stream()
+            .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue()[0]));
+
+        return offenderApi.searchDb(params)
+                .thenApply(JsonHelper::okJson);
     }
 
     private Result buildResult(Boolean pdfGeneratorStatus, Boolean documentStoreStatus,
