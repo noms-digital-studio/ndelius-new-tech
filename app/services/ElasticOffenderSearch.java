@@ -99,9 +99,9 @@ public class ElasticOffenderSearch implements OffenderSearch {
                 .field("dateOfBirth", 11)
                 .lenient(true)));
 
-            Stream.of(termsWithoutDatesIn(searchTerm).split(" "))
-                .filter(term -> !term.isEmpty())
-                .forEach(term -> boolQueryBuilder.should().add(prefixQuery("firstName", term.toLowerCase()).boost(11)));
+        Stream.of(termsWithoutDatesIn(searchTerm).split(" "))
+            .filter(term -> !term.isEmpty())
+            .forEach(term -> boolQueryBuilder.should().add(prefixQuery("firstName", term.toLowerCase()).boost(11)));
 
         val searchSource = new SearchSourceBuilder()
             .query(boolQueryBuilder)
