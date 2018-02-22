@@ -211,22 +211,31 @@ public class MongoDbStore implements AnalyticsStore {
                         "lastType", _last("$type")
                 ));
         val firstAndLastMatchingEventType = _match(_and(_eq("firstType", firstEventType), _eq("lastType", secondEventType)));
-        val duration = _project(ImmutableMap.of(
-                "duration",
+        val durationInMills = _project(ImmutableMap.of(
+                "durationInMills",
                 _subtract("$lastDateTime", "$firstDateTime")
                 )
         );
-        val round = _project(ImmutableMap.of(
-                "durationAsMinutes",
-                _divide("$duration", 1000 * groupBySeconds))
+        val duration = _project(ImmutableMap.of(
+                "duration",
+                _divide("$durationInMills", 1000 * groupBySeconds))
         );
-        val floored = _project(ImmutableMap.of(
-                "durationAsMinutesRounded",
-                _ceil("$durationAsMinutes"))
+        val roundedDuration = _project(ImmutableMap.of(
+                "roundedDuration",
+                _ceil("$duration"))
         );
-        val sum = _group(_by("_id", "$durationAsMinutesRounded", "total", _sum()));
+        val sum = _group(_by("_id", "$roundedDuration", "total", _sum()));
 
-        val durationBetween = ImmutableList.of(hasCorrelationId, dateFilter, eventTypeFilter, firstAndLastDates, firstAndLastMatchingEventType, duration, round, floored, sum);
+        val durationBetween = ImmutableList.of(
+                hasCorrelationId,
+                dateFilter,
+                eventTypeFilter,
+                firstAndLastDates,
+                firstAndLastMatchingEventType,
+                durationInMills,
+                duration,
+                roundedDuration,
+                sum);
 
         events.aggregate(durationBetween).
                 toObservable().
