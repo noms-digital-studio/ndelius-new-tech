@@ -1,5 +1,7 @@
 package interfaces;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.util.Map;
 import java.util.concurrent.CompletionStage;
 
@@ -10,5 +12,7 @@ public interface OffenderApi {
 
     CompletionStage<Boolean> isHealthy();
 
-    CompletionStage<Object> searchDb(Map<String, String> params);
+    CompletionStage<JsonNode> searchDb(Map<String, String> queryParams);
+
+    CompletionStage<JsonNode> searchLdap(Map<String, String> queryParams);
 }

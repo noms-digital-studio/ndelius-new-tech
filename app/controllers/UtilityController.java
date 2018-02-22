@@ -70,11 +70,18 @@ public class UtilityController extends Controller {
     }
 
     public CompletionStage<Result> searchDb() {
-        val params = request().queryString().entrySet().stream()
-            .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue()[0]));
-
-        return offenderApi.searchDb(params)
+        return offenderApi.searchDb(getQueryParams())
                 .thenApply(JsonHelper::okJson);
+    }
+
+    public CompletionStage<Result> searchLdap() {
+        return offenderApi.searchLdap(getQueryParams())
+                .thenApply(JsonHelper::okJson);
+    }
+
+    private Map<String, String> getQueryParams() {
+        return request().queryString().entrySet().stream()
+            .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue()[0]));
     }
 
     private Result buildResult(Boolean pdfGeneratorStatus, Boolean documentStoreStatus,
