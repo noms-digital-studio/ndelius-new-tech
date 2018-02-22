@@ -8,7 +8,7 @@ class AnalyticsPieChart extends Component {
     render() {
         const {description} = this.props
         return (
-            <div style={{float: 'left', margin: '10px', backgroundColor: '#f8f8f8', padding: '10px', minWidth: '440px', minHeight: '300px'}}>
+            <div style={{float: 'left', margin: '10px', backgroundColor: '#f8f8f8', padding: '10px', minWidth: '440px', minHeight: '400px'}}>
                 <p style={{fontSize: '16px', textAlign: 'center', margin: '10px'}}>{description}</p>
 
                 <canvas ref={(canvas) => { this.canvas = canvas; }}/>
@@ -16,7 +16,11 @@ class AnalyticsPieChart extends Component {
         )
     }
     componentDidUpdate() {
-        new Chart(this.canvas.getContext('2d'), chartOptions(this.props));
+        if (this.chart) {
+            this.chart.destroy()
+        }
+
+        this.chart = new Chart(this.canvas.getContext('2d'), chartOptions(this.props));
     }
 }
 

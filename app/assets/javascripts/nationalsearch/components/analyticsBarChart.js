@@ -16,7 +16,10 @@ class AnalyticsBarChart extends Component {
         )
     }
     componentDidUpdate() {
-        new Chart(this.canvas.getContext('2d'), chartOptions(this.props));
+        if (this.chart) {
+            this.chart.destroy()
+        }
+        this.chart = new Chart(this.canvas.getContext('2d'), chartOptions(this.props));
     }
 }
 
