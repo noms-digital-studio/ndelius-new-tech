@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import {Component} from 'react'
 
-class AnalyticsPieChart extends Component {
+class AnalyticsLineChart extends Component {
     constructor(props) {
         super(props);
     }
@@ -22,58 +22,50 @@ class AnalyticsPieChart extends Component {
 
 
 export const chartOptions = props => {
-    const {label, numberToCountData} = props
+    const {label, numberToCountData, xAxesLabel} = props
     const defaultLabelMapper = data => Object.getOwnPropertyNames(data)
     const labelMapper = props.labelMapper || defaultLabelMapper
 
     return {
-        type: 'pie',
+        type: 'line',
         data: {
             labels: labelMapper(numberToCountData),
             datasets: [{
                 label,
                 data: Object.getOwnPropertyNames(numberToCountData).map(property => numberToCountData[property]),
-                backgroundColor: [
-                    '#2e358b',
-                    '#912b88',
-                    '#d53880',
-                    '#f47738',
-                    '#b58840',
-                    '#ffbf47',
-                    '#85994b',
-                    '#28a197',
-                    '#2b8cc4',
-                    '#9799c4',
-                    '#faccdf',
-                    '#d9888c',
-                    '#ef9998',
-                    '#fabb96',
-                    '#dac39c',
-                    '#ffdf94',
-                    '#c2cca3',
-                    '#7fb299',
-                    '#95d0cb',
-                    '#96c6e2'
-                ],
-                borderWidth: 1
+                backgroundColor: '#2b8cc4',
+                borderWidth: 1,
+                fill: false
             }]
         },
         options: {
-            responsive: false
-
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: xAxesLabel
+                    }
+                }]
+            }
         }
     }
 
 }
 
 
-AnalyticsPieChart.propTypes = {
+AnalyticsLineChart.propTypes = {
     description: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
+    xAxesLabel: PropTypes.string.isRequired,
     fetching: PropTypes.bool.isRequired,
     numberToCountData: PropTypes.object.isRequired,
     labelMapper: PropTypes.func
 };
 
 
-export default AnalyticsPieChart;
+export default AnalyticsLineChart;
