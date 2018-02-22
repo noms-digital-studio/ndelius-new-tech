@@ -225,6 +225,7 @@ public class MongoDbStore implements AnalyticsStore {
                 _ceil("$duration"))
         );
         val sum = _group(_by("_id", "$roundedDuration", "total", _sum()));
+        val sort = _sort("_id", 1);
 
         val durationBetween = ImmutableList.of(
                 hasCorrelationId,
@@ -235,7 +236,8 @@ public class MongoDbStore implements AnalyticsStore {
                 durationInMills,
                 duration,
                 roundedDuration,
-                sum);
+                sum,
+                sort);
 
         events.aggregate(durationBetween).
                 toObservable().
