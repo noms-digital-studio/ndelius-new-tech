@@ -159,7 +159,7 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
 
     @Test
     public void returnsSearchCount() {
-        when(analyticsStore.countGrouping(eq("search-result"), eq("total"), any(), eq(10L))).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of(
+        when(analyticsStore.countGrouping(eq("search-results"), eq("total"), any(), eq(10L))).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of(
                 10, 10L,
                 20, 5L,
                 30, 1L
