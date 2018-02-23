@@ -12,7 +12,7 @@ public interface OffenderApi {
 
     CompletionStage<Boolean> isHealthy();
 
-    CompletionStage<JsonNode> searchDb(Map<String, String> queryParams);
+    CompletionStage<Map<String, Object>> searchDb(Map<String, String> queryParams);
 
-    CompletionStage<JsonNode> searchLdap(Map<String, String> queryParams);
+    CompletionStage<Map<String, Object>> searchLdap(Map<String, String> queryParams);
 }

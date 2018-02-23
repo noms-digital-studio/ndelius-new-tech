@@ -1,18 +1,17 @@
 package services;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
+import helpers.JsonHelper;
 import interfaces.OffenderApi;
 import lombok.val;
 import play.Logger;
-import play.libs.Json;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
-
 import javax.inject.Inject;
 import java.util.Map;
 import java.util.concurrent.CompletionStage;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static play.mvc.Http.HeaderNames.AUTHORIZATION;
@@ -77,60 +76,52 @@ public class DeliusOffenderApi implements OffenderApi {
                 Logger.error("Got an error calling Delius Offender API health endpoint", throwable);
                 return false;
             });
-
     }
 
     @Override
-    public CompletionStage<JsonNode> searchDb(Map<String, String> queryParams) {
-        return wsClient.url(offenderApiBaseUrl + "logon")
-            .post("NationalUser")
-            .thenApply(this::assertOkResponse)
-            .thenApply(WSResponse::getBody)
-            .thenCompose(bearerToken -> getUser(queryParams, bearerToken));
+    public CompletionStage<Map<String, Object>> searchDb(Map<String, String> queryParams) {
+
+        return logonAndCallOffenderApi("users", queryParams);
     }
 
     @Override
-    public CompletionStage<JsonNode> searchLdap(Map<String, String> queryParams) {
+    public CompletionStage<Map<String, Object>> searchLdap(Map<String, String> queryParams) {
+
+        return logonAndCallOffenderApi("ldap", queryParams);
+    }
+
+    private CompletionStage<Map<String, Object>> logonAndCallOffenderApi(String action, Map<String, String> params) {
+
+        val url = offenderApiBaseUrl + action + "?" + queryParamsFrom(params);
 
         return wsClient.url(offenderApiBaseUrl + "logon")
-            .post("NationalUser")
-            .thenApply(this::assertOkResponse)
-            .thenApply(WSResponse::getBody)
-            .thenCompose(bearerToken -> getLdap(queryParams, bearerToken));
+                .post("NationalUser")
+                .thenApply(this::assertOkResponse)
+                .thenApply(WSResponse::getBody)
+                .thenCompose(bearerToken -> callOffenderApi(bearerToken, url));
     }
 
-    private CompletionStage<JsonNode> getUser(Map<String, String> params, String bearerToken) {
-        String url = offenderApiBaseUrl + "users" + queryParamsFrom(params);
-        return callOffenderApi(bearerToken, url);
-    }
+    private CompletionStage<Map<String, Object>> callOffenderApi(String bearerToken, String url) {
 
-    private CompletionStage<JsonNode> getLdap(Map<String, String> params, String bearerToken) {
-        String url = offenderApiBaseUrl + "ldap" + queryParamsFrom(params);
-        return callOffenderApi(bearerToken, url);
-    }
-
-    private CompletionStage<JsonNode> callOffenderApi(String bearerToken, String url) {
         return wsClient.url(url)
             .addHeader(AUTHORIZATION, String.format("Bearer %s", bearerToken))
             .get()
             .thenApply(wsResponse -> {
                 if (wsResponse.getStatus() != OK) {
-                    Logger.warn("Bad response calling Delius Offender API {}. Status {}", url, wsResponse.getStatus());
-                    return Json.toJson(ImmutableMap.of("error", wsResponse.getStatus()));
+                    throw new RuntimeException(String.format("Bad response calling Delius Offender API %s. Status %d", url, wsResponse.getStatus()));
                 }
-                return wsResponse.asJson();
+                return JsonHelper.jsonToObjectMap(wsResponse.asJson());
             })
             .exceptionally(throwable -> {
                 Logger.error("Got an error calling Delius Offender API", throwable);
-                return Json.toJson(ImmutableMap.of("error", throwable.getMessage()));
+                return ImmutableMap.of("error", throwable.getMessage());
             });
     }
 
     String queryParamsFrom(Map<String, String> params) {
-        StringBuilder stringBuilder = new StringBuilder().append("?");
-        params.forEach((key, value) -> stringBuilder.append(String.format("%s=%s&", key, params.get(key))));
-        String paramString = stringBuilder.substring(0, stringBuilder.length() - 1).toString();
-        return paramString;
+
+        return "?" + String.join("&", params.entrySet().stream().
+                map(entry -> String.format("%s=%s", entry.getKey(), entry.getValue())).collect(Collectors.toList()));
     }
 
     private WSResponse assertOkResponse(WSResponse response) {
