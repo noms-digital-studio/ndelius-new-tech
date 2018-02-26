@@ -54,18 +54,19 @@ public class OffenderController extends Controller {
                                                             // Without the above would need to find associate Offender and call API canAccess again 
         return Optional.ofNullable(reference.get("noms")).
                 filter(nomisId -> validUser && validTick && !Strings.isNullOrEmpty(nomisId)).
-                map(nomisId -> prisonerApi.getImage(nomisId).thenApplyAsync(bytes -> ok(bytes).as("image/png"), ec.current())). //@TODO: check is png
+                map(nomisId -> prisonerApi.getImage(nomisId).thenApplyAsync(bytes -> ok(bytes).as("image/jpeg"), ec.current())).
                 orElseGet(() -> {
 
                     Logger.warn("Invalid OneTimeNomisRef: {}", oneTimeNomisRef);
                     return CompletableFuture.completedFuture(unauthorized());
+
+                }).
+                exceptionally(throwable -> {
+
+                    Logger.error("Failed to get Nomis Image", throwable);
+                    return internalServerError();
                 });
     }
 }
 
-//@TODO: - in client - image.src='offender/oneTimeNomisRef/{ url-encoded one-time--ref }/image'
-//@todo: use this in a JSON node of Nomis ids that exist in response from search - and alter front end to use
-// need to set env vars, maybe NationlUser too
-// -  to do - Decoing above here, Encoding in JSON elastic search response if a nomis id extts, use in Javascript src img, and defailt images too
-// Then use in frtont en anf get some defaule female/male images
 // Just need config in preProd and possibly the local dns of dnt-001/2 etc.

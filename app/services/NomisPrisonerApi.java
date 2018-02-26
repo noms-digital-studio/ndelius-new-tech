@@ -1,5 +1,6 @@
 package services;
 
+import com.google.common.base.Strings;
 import com.typesafe.config.Config;
 import helpers.JsonHelper;
 import interfaces.PrisonerApi;
@@ -21,8 +22,6 @@ public class NomisPrisonerApi implements PrisonerApi {
     private final String apiBaseUrl;
     private final WSClient wsClient;
     private final PrisonerApiToken apiToken;
-
-    private final Base64.Decoder base64Decoder = Base64.getDecoder();
 
     @Inject
     public NomisPrisonerApi(Config configuration, WSClient wsClient, PrisonerApiToken apiToken) {
@@ -52,7 +51,17 @@ public class NomisPrisonerApi implements PrisonerApi {
                 thenApply(reportNonOKResponse).
                 thenApply(WSResponse::asJson).
                 thenApply(JsonHelper::jsonToMap).
-                thenApply(result -> result.get("image")).
-                thenApply(base64Decoder::decode);
+                thenApply(result -> result != null ? result.get("image") : null).
+                thenApply(base64 -> {
+
+                    if (Strings.isNullOrEmpty(base64)) {
+
+                        Logger.warn("Empty Image Base64 text for Nomis Id: {}", nomisId);
+                        return null;
+                    }
+                    else {
+                        return  Base64.getDecoder().decode(base64);
+                    }
+                });
     }
 }

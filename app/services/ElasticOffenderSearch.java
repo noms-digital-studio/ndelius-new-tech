@@ -232,6 +232,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
                 );
                 put(
                         source -> Optional.ofNullable(source.get("otherIds")).flatMap(otherIds -> Optional.ofNullable(otherIds.get("nomsNumber"))),
+//                        source -> Optional.of(JsonNodeFactory.instance.textNode("A3597AE")),
                         (result, nomsNumber) -> result.put("oneTimeNomisRef", oneTimeNomisRef(bearerToken, nomsNumber.asText()))
                 );
             }
