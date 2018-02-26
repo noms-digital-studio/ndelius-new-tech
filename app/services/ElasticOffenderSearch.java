@@ -218,7 +218,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
     private CompletionStage<ObjectNode> embellishNode(String bearerToken, String searchTerm, JsonNode node, Map<String, HighlightField> highlightFields) {
         return restrictViewOfOffenderIfNecessary(
                 bearerToken,
-                appendHighlightFields(appendOffendersAgeAndOneTimeNomisRef((ObjectNode)node), searchTerm, highlightFields)
+                appendHighlightFields(appendOffendersAgeAndOneTimeNomisRef(bearerToken, (ObjectNode)node), searchTerm, highlightFields)
         );
     }
 
