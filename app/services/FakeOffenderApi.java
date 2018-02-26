@@ -1,10 +1,15 @@
 package services;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
 import interfaces.OffenderApi;
+import play.libs.Json;
+
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+
+import static play.libs.Json.toJson;
 
 public class FakeOffenderApi implements OffenderApi {
     @Override
@@ -24,12 +29,12 @@ public class FakeOffenderApi implements OffenderApi {
     }
 
     @Override
-    public CompletionStage<Map<String, Object>> searchDb(Map<String, String> queryParams) {
-        return CompletableFuture.completedFuture(ImmutableMap.of("db", "example"));
+    public CompletionStage<JsonNode> searchDb(Map<String, String> queryParams) {
+        return CompletableFuture.completedFuture(toJson(ImmutableMap.of("db", "example")));
     }
 
     @Override
-    public CompletionStage<Map<String, Object>> searchLdap(Map<String, String> queryParams) {
-        return CompletableFuture.completedFuture(ImmutableMap.of("ldap", "example"));
+    public CompletionStage<JsonNode> searchLdap(Map<String, String> queryParams) {
+        return CompletableFuture.completedFuture(Json.toJson(ImmutableMap.of("ldap", "example")));
     }
 }

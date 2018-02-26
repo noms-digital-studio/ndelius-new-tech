@@ -1,13 +1,15 @@
 package services;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
-import helpers.JsonHelper;
 import interfaces.OffenderApi;
 import lombok.val;
 import play.Logger;
+import play.libs.Json;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
+
 import javax.inject.Inject;
 import java.util.Map;
 import java.util.concurrent.CompletionStage;
@@ -79,21 +81,20 @@ public class DeliusOffenderApi implements OffenderApi {
     }
 
     @Override
-    public CompletionStage<Map<String, Object>> searchDb(Map<String, String> queryParams) {
+    public CompletionStage<JsonNode> searchDb(Map<String, String> queryParams) {
 
         return logonAndCallOffenderApi("users", queryParams);
     }
 
     @Override
-    public CompletionStage<Map<String, Object>> searchLdap(Map<String, String> queryParams) {
+    public CompletionStage<JsonNode> searchLdap(Map<String, String> queryParams) {
 
         return logonAndCallOffenderApi("ldap", queryParams);
     }
 
-    private CompletionStage<Map<String, Object>> logonAndCallOffenderApi(String action, Map<String, String> params) {
+    private CompletionStage<JsonNode> logonAndCallOffenderApi(String action, Map<String, String> params) {
 
-        val url = offenderApiBaseUrl + action + "?" + queryParamsFrom(params);
-
+        val url = offenderApiBaseUrl + action + queryParamsFrom(params);
         return wsClient.url(offenderApiBaseUrl + "logon")
                 .post("NationalUser")
                 .thenApply(this::assertOkResponse)
@@ -101,7 +102,7 @@ public class DeliusOffenderApi implements OffenderApi {
                 .thenCompose(bearerToken -> callOffenderApi(bearerToken, url));
     }
 
-    private CompletionStage<Map<String, Object>> callOffenderApi(String bearerToken, String url) {
+    private CompletionStage<JsonNode> callOffenderApi(String bearerToken, String url) {
 
         return wsClient.url(url)
             .addHeader(AUTHORIZATION, String.format("Bearer %s", bearerToken))
@@ -110,11 +111,11 @@ public class DeliusOffenderApi implements OffenderApi {
                 if (wsResponse.getStatus() != OK) {
                     throw new RuntimeException(String.format("Bad response calling Delius Offender API %s. Status %d", url, wsResponse.getStatus()));
                 }
-                return JsonHelper.jsonToObjectMap(wsResponse.asJson());
+                return wsResponse.asJson();
             })
             .exceptionally(throwable -> {
                 Logger.error("Got an error calling Delius Offender API", throwable);
-                return ImmutableMap.of("error", throwable.getMessage());
+                return Json.toJson(ImmutableMap.of("error", throwable.getMessage()));
             });
     }
 
