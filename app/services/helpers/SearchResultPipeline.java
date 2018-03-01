@@ -66,7 +66,8 @@ public interface SearchResultPipeline {
                             if (termsThatLookLikeDates(searchTerm).stream().anyMatch(date -> date.equals(dateOfBirth))) {
 
                                 val highlightList = Json.toJson(ImmutableList.of(dateOfBirth));
-                                result = (ObjectNode) ((ObjectNode) result.get("highlight")).set("dateOfBirth", highlightList);
+
+                                ((ObjectNode) result.get("highlight")).set("dateOfBirth", highlightList);
                             }
 
                             return result.put("age", calculateAge(dateOfBirth, systemUTC()));
