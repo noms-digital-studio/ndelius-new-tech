@@ -13,15 +13,14 @@ import lombok.val;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.search.suggest.Suggest;
 import play.Logger;
 import play.libs.Json;
 import services.helpers.SearchResultPipeline;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
@@ -101,7 +100,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
 
                         "offenders", completeResults,
                         "total", response.getHits().getTotalHits(),
-                        "suggestions", response.getSuggest()
+                        "suggestions", Optional.ofNullable(response.getSuggest()).orElse(new Suggest(new ArrayList<>()))
                 );
             });
         };
