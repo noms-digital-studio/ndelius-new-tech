@@ -19,7 +19,6 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -160,7 +159,6 @@ public class ElasticOffenderSearchTest {
     }
 
     @Test
-    @Ignore
     public void returnsSearchResultsGroupingMatchingNamesAndCurrentOffendersAtTheTop() {
         // given
         val totalHits = 4;

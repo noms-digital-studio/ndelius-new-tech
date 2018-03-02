@@ -68,7 +68,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
             logResults(response);
 
             final CompletableFuture[] processingResults = stream(response.getHits().getHits()).
-                   // sorted(searchHitGrouper).
+                    sorted(searchHitGrouper).
                     map(searchHit -> {
 
                         val pipeline = SearchResultPipeline.create(
