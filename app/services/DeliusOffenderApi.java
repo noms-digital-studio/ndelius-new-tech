@@ -23,18 +23,21 @@ import static play.mvc.Http.Status.OK;
 public class DeliusOffenderApi implements OffenderApi {
 
     private final WSClient wsClient;
+    private final String usernameLdapRoot;
     private final String offenderApiBaseUrl;
 
     @Inject
     public DeliusOffenderApi(Config configuration, WSClient wsClient) {
         this.wsClient = wsClient;
+
+        usernameLdapRoot = configuration.getString("username.ldap.root");
         offenderApiBaseUrl = configuration.getString("offender.api.url");
     }
 
     @Override
     public CompletionStage<String> logon(String username) {
         return wsClient.url(offenderApiBaseUrl + "logon")
-            .post(format("cn=%s,cn=Users,dc=moj,dc=com", username))
+            .post(format("cn=%s,cn=Users,%s", username, usernameLdapRoot))
             .thenApply(this::assertOkResponse)
             .thenApply(WSResponse::getBody);
     }
