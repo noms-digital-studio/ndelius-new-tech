@@ -56,30 +56,10 @@ public class AlfrescoStoreTest {
 
         wireMock.stubFor(
             post(urlEqualTo("/alfresco/service/noms-spg/uploadnew"))
-                .withRequestBody(containing("crn123"))
-                .withRequestBody(containing("johny userman"))
-                .withRequestBody(containing("COURTREPORT"))
-                .withRequestBody(containing("12345"))
-                .withRequestBody(containing("DOCUMENT"))
-                .withRequestBody(containing("user data"))
-                .withRequestBody(containing("filename.pdf"))
-                .willReturn(
-                    okForContentType("application/json",  response)));
+                .willReturn(okForContentType("application/json",  response)));
 
         wireMock.stubFor(
-            post(urlEqualTo("/documentLink"))
-                .withRequestBody(equalToJson(
-                    toJson(ImmutableMap.builder()
-                            .put("alfrescoId", "309db0bf-f8bb-4ac0-b325-5dbc368e2636")
-                            .put("alfrescoUser", "johny userman")
-                            .put("entityId", "12345")
-                            .put("documentName", "filename.pdf")
-                            .put("probationAreaCode", "alfrescoUser")
-                            .put("crn", "crn123")
-                            .put("tableName", "COURT_REPORT")
-                        .build()
-                        ).toString()))
-                    .willReturn(created()));
+            post(urlEqualTo("/documentLink")).willReturn(created()));
 
         val document = Byte.parseByte("1");
         Byte[] documentBytes = { document };
@@ -88,6 +68,28 @@ public class AlfrescoStoreTest {
                          .toCompletableFuture().join();
         val entry = new AbstractMap.SimpleEntry<String, String>("ID", "309db0bf-f8bb-4ac0-b325-5dbc368e2636");
         assertThat(result).containsExactly(entry);
+
+        verify(postRequestedFor(urlEqualTo("/alfresco/service/noms-spg/uploadnew"))
+            .withRequestBody(containing("crn123"))
+            .withRequestBody(containing("johny userman"))
+            .withRequestBody(containing("COURTREPORT"))
+            .withRequestBody(containing("12345"))
+            .withRequestBody(containing("DOCUMENT"))
+            .withRequestBody(containing("user data"))
+            .withRequestBody(containing("filename.pdf"))
+        );
+
+        verify(postRequestedFor(urlEqualTo("/documentLink"))
+            .withRequestBody(equalToJson(toJson(ImmutableMap.builder()
+                .put("alfrescoId", "309db0bf-f8bb-4ac0-b325-5dbc368e2636")
+                .put("alfrescoUser", "johny userman")
+                .put("entityId", "12345")
+                .put("documentName", "filename.pdf")
+                .put("probationAreaCode", "alfrescoUser")
+                .put("crn", "crn123")
+                .put("tableName", "COURT_REPORT")
+                .build()
+            ).toString())));
     }
 
     @Test
@@ -96,14 +98,11 @@ public class AlfrescoStoreTest {
 
         wireMock.stubFor(
             post(urlEqualTo("/alfresco/service/noms-spg/uploadandrelease/309db0bf-f8bb-4ac0-b325-5dbc368e2636"))
-                .withRequestBody(containing("johny userman"))
-                .withRequestBody(containing("filename.pdf"))
                 .willReturn(
                     okForContentType("application/json",  response)));
 
         wireMock.stubFor(
             post(urlEqualTo("/alfresco/service/noms-spg/updatemetadata/309db0bf-f8bb-4ac0-b325-5dbc368e2636"))
-                .withRequestBody(containing("user data"))
                 .willReturn(
                     okForContentType("application/json",  response)));
 
@@ -115,6 +114,14 @@ public class AlfrescoStoreTest {
                          .toCompletableFuture().join();
         val entry = new AbstractMap.SimpleEntry<String, String>("ID", "309db0bf-f8bb-4ac0-b325-5dbc368e2636");
         assertThat(result).containsExactly(entry);
+
+        verify(postRequestedFor(urlEqualTo("/alfresco/service/noms-spg/uploadandrelease/309db0bf-f8bb-4ac0-b325-5dbc368e2636"))
+            .withRequestBody(containing("johny userman"))
+            .withRequestBody(containing("filename.pdf")));
+
+        verify(postRequestedFor(urlEqualTo("/alfresco/service/noms-spg/updatemetadata/309db0bf-f8bb-4ac0-b325-5dbc368e2636"))
+            .withRequestBody(containing("user data")));
+
     }
 
 }
