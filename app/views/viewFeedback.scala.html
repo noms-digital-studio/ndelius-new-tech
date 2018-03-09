@@ -1,10 +1,20 @@
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
+@import java.text.SimpleDateFormat
 @this(webJarsUtil: WebJarsUtil)
 
 @(feedbacks: List[Map[String, Object]], usernameExpression: String)
 
-@import java.text.SimpleDateFormat; var df=new SimpleDateFormat("dd/MM/yyyy hh:mm")
+@df = @{new SimpleDateFormat("dd/MM/yyyy hh:mm")}
+
+@display(feedback: Map[String, Object]) = {
+  <tr>
+    <td>@df.format(feedback.get("dateTime").asInstanceOf[Date])</td>
+    <td>@usernameExpression.r.findFirstMatchIn(feedback.get("username").toString).map(m => m.group(1)).getOrElse(feedback.get("username"))</td>
+    <td>@feedback.get("feedback").asInstanceOf[Map[String, String]].get("rating")</td>
+    <td width="40%">@feedback.get("feedback").asInstanceOf[Map[String, String]].get("feedback")</td>
+  </tr>
+}
 
 <!DOCTYPE html>
 <!--[if lt IE 9]><html class="lte-ie8" lang="en"><![endif]-->
@@ -35,14 +45,6 @@
       </div>
 
       <h1 class="heading-xlarge">National Search Feedback</h1>
-      @display(feedback: Map[String, Object]) = {
-        <tr>
-          <td>@df.format(feedback.get("dateTime").asInstanceOf[Date])</td>
-          <td>@usernameExpression.r.findFirstMatchIn(feedback.get("username").asInstanceOf[String]).map(m => m.group(1)).getOrElse(feedback.get("username"))</td>
-          <td>@feedback.get("feedback").asInstanceOf[Map[String, String]].get("rating")</td>
-          <td width="40%">@feedback.get("feedback").asInstanceOf[Map[String, String]].get("feedback")</td>
-        </tr>
-      }
 
       <table>
           <caption class="heading-small">Latest feedback</caption>

@@ -3,6 +3,7 @@ package controllers;
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import interfaces.AnalyticsStore;
+import lombok.val;
 import play.Logger;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
@@ -34,25 +35,25 @@ public class FeedbackController extends Controller {
     }
 
     public CompletionStage<Result> viewFeedback() {
-        final Supplier<CompletionStage<Result>> renderedPage = () ->
-                analyticsStore.feedback()
-                        .thenApplyAsync(feedback -> ok(viewFeedbackTemplate.render(
-                                feedback, String.format(configuration.getString("ldap.string.format"), "(.*)"))), ec.current());
-
-
         return request().header("Authorization")
-                .map((String authHeader) ->
+                .map(authHeader ->
                         invalidCredentials(getTokenFromHeader(authHeader))
                             .map(result -> (CompletionStage<Result>) CompletableFuture.completedFuture(result))
-                            .orElseGet(renderedPage))
+                            .orElseGet(this::renderPage))
                 .orElseGet(() -> CompletableFuture.completedFuture(unauthorized().withHeader(WWW_AUTHENTICATE, "Basic realm=Feedback")));
     }
 
+    private CompletionStage<Result> renderPage() {
+        return analyticsStore.feedback()
+                .thenApplyAsync(feedback -> ok(viewFeedbackTemplate.render(
+                        feedback, String.format(configuration.getString("ldap.string.format"), "(.*)"))), ec.current());
+    }
+
     private Map<String, String> getTokenFromHeader(String authHeader) {
-        String encoded_credentials = authHeader.substring(6);
-        byte[] decoded_credentials = Base64.getDecoder().decode(encoded_credentials);
+        val encoded_credentials = authHeader.substring(6);
+        val decoded_credentials = Base64.getDecoder().decode(encoded_credentials);
         try {
-            String[] credentials = new String(decoded_credentials, "UTF-8").split(":");
+            val credentials = new String(decoded_credentials, "UTF-8").split(":");
             return ImmutableMap.of("username", credentials[0], "password", credentials[1]);
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException((e));
