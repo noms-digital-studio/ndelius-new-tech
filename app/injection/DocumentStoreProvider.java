@@ -11,18 +11,18 @@ import javax.inject.Provider;
 
 public class DocumentStoreProvider implements Provider<DocumentStore> {
 
-    private final boolean storeStandAloneOperation;
+    private final String storeProvider;
     private Injector injector;
 
     @Inject
     public DocumentStoreProvider(Config configuration, Injector injector) {
-        this.storeStandAloneOperation = configuration.getBoolean("store.standalone.operation");
+        this.storeProvider = configuration.getString("store.provider");
         this.injector = injector;
     }
 
     @Override
     public DocumentStore get() {
-        return storeStandAloneOperation ?
+        return "mongo".equals(storeProvider) ?
             injector.instanceOf(MongoDocumentStore.class) : injector.instanceOf(AlfrescoStore.class);
     }
 
