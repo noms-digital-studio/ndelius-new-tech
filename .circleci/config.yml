@@ -57,6 +57,8 @@ jobs:
           - image: openjdk:8
         working_directory: ~/ndelius-new-tech
         steps:
+        - attach_workspace:
+            at: /workspace
         - checkout
         - run:
             name: Install AWS EB Tools
