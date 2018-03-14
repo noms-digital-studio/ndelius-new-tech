@@ -28,7 +28,7 @@ jobs:
                   apt-get install -y nodejs
                   export _JAVA_OPTIONS="-Xms512m -Xmx1024m"
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
-                  sbt "set test in assembly := {}" assembly
+                  sbt assembly
             - save_cache:
                 key: v1-ndelius-new-tech-{{ checksum "build.sbt" }}
                 paths:
@@ -85,4 +85,4 @@ workflows:
                     - build
                 filters:
                     branches:
-                      only: 117_AWSDeploy
+                      only: master

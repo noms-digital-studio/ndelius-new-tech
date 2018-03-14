@@ -1,5 +1,5 @@
 branch-defaults:
-  117_AWSDeploy:
+  master:
     environment: delius-new-tech
 environment-defaults:
   delius-new-tech:
