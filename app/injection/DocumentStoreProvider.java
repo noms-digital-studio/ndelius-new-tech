@@ -4,7 +4,7 @@ import com.typesafe.config.Config;
 import interfaces.DocumentStore;
 import play.inject.Injector;
 import services.AlfrescoStore;
-import services.fakes.MongoDocumentStore;
+import services.stubs.MongoDocumentStore;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
