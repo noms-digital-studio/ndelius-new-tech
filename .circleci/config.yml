@@ -28,7 +28,7 @@ jobs:
                   apt-get install -y nodejs
                   export _JAVA_OPTIONS="-Xms512m -Xmx1024m"
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
-                  sbt "set test in assembly := {}" assembly
+                  sbt assembly
             - save_cache:
                 key: v1-ndelius-new-tech-{{ checksum "build.sbt" }}
                 paths:
@@ -67,7 +67,7 @@ jobs:
             name: Deploy to Elastic Beanstalk
             command: |
                 export PATH=$PATH:~/.local/bin/
-                eb deploy --label "$(< /workspace/version.txt)"
+                eb deploy --label $(cat /workspace/version.txt)
 
 workflows:
     version: 2
@@ -79,4 +79,4 @@ workflows:
                     - build
                 filters:
                     branches:
-                      only: 117_VersionNumberForAutoDeploy
+                      only: master
