@@ -5,7 +5,7 @@ jobs:
     build:
         working_directory: ~/ndelius-new-tech
         docker:
-            - image: openjdk:8
+            - image: circleci/openjdk:8-node-browsers
         steps:
             - checkout
             - restore_cache:
