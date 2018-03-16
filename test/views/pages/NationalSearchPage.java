@@ -21,7 +21,7 @@ public class NationalSearchPage extends FluentPage {
         return $(name("searchTerms")).present();
     }
 
-    public void submitSearch(String searchTerm) {
+    public void fillSearchTerm(String searchTerm) {
         $(name("searchTerms")).fill().with(searchTerm);
     }
 
