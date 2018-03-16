@@ -53,7 +53,7 @@ import static play.test.Helpers.HTMLUNIT;
 import static scala.io.Source.fromInputStream;
 
 @RunWith(MockitoJUnitRunner.class)
-public class NationalOffenderSearchWebTest extends WithBrowser {
+public class NationalOffenderSearchWebTest extends WithChromeBrowser {
     private NationalSearchPage nationalSearchPage;
     @Mock
     private RestHighLevelClient restHighLevelClient;
@@ -103,14 +103,6 @@ public class NationalOffenderSearchWebTest extends WithBrowser {
                 bind(DeliusOffenderApi.class).toInstance(deliusOffenderApi)
             ).configure("params.user.token.valid.duration", "100000d")
             .build();
-    }
-    @Override
-    protected TestBrowser provideBrowser(int port) {
-        System.setProperty("webdriver.chrome.driver", prepareChromeDriver());
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
-        options.addArguments("--disable-gpu");
-        return Helpers.testBrowser(new ChromeDriver(options), port);
     }
 
     private SearchHit[] getSearchHitArray() {
@@ -169,43 +161,6 @@ public class NationalOffenderSearchWebTest extends WithBrowser {
         }
 
         return replacementMap;
-    }
-
-    private static boolean isMac() {
-        String OS = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
-        return ((OS.contains("mac")) || (OS.contains("darwin")));
-    }
-
-    private static String prepareChromeDriver()  {
-        final URL driverPath = new Environment(Mode.TEST).resource(String.format("webdriver/%s/chromedriver", isMac() ? "mac64" : "linux64"));
-        fixExecutablePermissions(driverPath);
-        return driverPath.getPath();
-    }
-
-    private static void fixExecutablePermissions(URL driverPath) {
-        //fix permission when running inside linux since executable permission is being lost
-        //when copying resource to target directory
-
-        //using PosixFilePermission to set file permissions 777
-        Set<PosixFilePermission> perms = new HashSet<>();
-        //add owners permission
-        perms.add(PosixFilePermission.OWNER_READ);
-        perms.add(PosixFilePermission.OWNER_WRITE);
-        perms.add(PosixFilePermission.OWNER_EXECUTE);
-        //add group permissions
-        perms.add(PosixFilePermission.GROUP_READ);
-        perms.add(PosixFilePermission.GROUP_WRITE);
-        perms.add(PosixFilePermission.GROUP_EXECUTE);
-        //add others permissions
-        perms.add(PosixFilePermission.OTHERS_READ);
-        perms.add(PosixFilePermission.OTHERS_WRITE);
-        perms.add(PosixFilePermission.OTHERS_EXECUTE);
-
-        try {
-            Files.setPosixFilePermissions(Paths.get(driverPath.getPath()), perms);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }
