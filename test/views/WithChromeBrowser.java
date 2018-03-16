@@ -1,7 +1,5 @@
 package views;
 
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import play.Environment;
@@ -19,7 +17,6 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-@RunWith(MockitoJUnitRunner.class)
 public class WithChromeBrowser extends WithBrowser {
     @Override
     protected TestBrowser provideBrowser(int port) {
