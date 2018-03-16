@@ -59,31 +59,40 @@ public class OffenderESDataFactory {
     }
 
     private static Map<String, Object> withDefaults(Map<String, Object> replacementMap) {
+        val replacementsBuilder = ImmutableMap.<String, Object>builder().putAll(replacementMap);
         if (!replacementMap.containsKey("dateOfBirth")) {
-            return ImmutableMap.<String, Object>builder().putAll(replacementMap)
-                    .put("dateOfBirth", "1978-01-16")
-                    .build();
+            replacementsBuilder.put("dateOfBirth", "1978-01-16");
         }
 
         if (!replacementMap.containsKey("firstName")) {
-            return ImmutableMap.<String, Object>builder().putAll(replacementMap)
-                    .put("firstName", "firstName")
-                    .build();
+            replacementsBuilder.put("firstName", "firstName");
         }
 
         if (!replacementMap.containsKey("surname")) {
-            return ImmutableMap.<String, Object>builder().putAll(replacementMap)
-                    .put("surname", "surname")
-                    .build();
+            replacementsBuilder.put("surname", "surname");
         }
 
         if (!replacementMap.containsKey("currentDisposal")) {
-            return ImmutableMap.<String, Object>builder().putAll(replacementMap)
-                    .put("currentDisposal", "0")
-                    .build();
+            replacementsBuilder.put("currentDisposal", "0");
         }
 
-        return replacementMap;
+        if (!replacementMap.containsKey("offenderId")) {
+            replacementsBuilder.put("offenderId", 123);
+        }
+
+        if (!replacementMap.containsKey("crn")) {
+            replacementsBuilder.put("crn", "X1224");
+        }
+
+        if (!replacementMap.containsKey("currentRestriction")) {
+            replacementsBuilder.put("currentRestriction", false);
+        }
+
+        if (!replacementMap.containsKey("currentExclusion")) {
+            replacementsBuilder.put("currentExclusion", false);
+        }
+
+        return replacementsBuilder.build();
     }
 
 }
