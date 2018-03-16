@@ -8,10 +8,6 @@ jobs:
             - image: circleci/openjdk:8-node-browsers
         steps:
             - checkout
-            - restore_cache:
-                keys:
-                  - v1-ndelius-new-tech-{{ checksum "build.sbt" }}
-                  - v1-ndelius-new-tech-
             - run:
                 name: Install sbt into build container
                 command: |
