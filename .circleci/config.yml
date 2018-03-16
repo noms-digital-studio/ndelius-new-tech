@@ -8,6 +8,10 @@ jobs:
             - image: circleci/openjdk:8-node-browsers
         steps:
             - checkout
+            - restore_cache:
+                keys:
+                  - v2-ndelius-new-tech-{{ checksum "build.sbt" }}
+                  - v2-ndelius-new-tech-
             - run:
                 name: Run sbt build
                 command: |
@@ -15,7 +19,7 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   sbt assembly < /dev/null
             - save_cache:
-                key: v1-ndelius-new-tech-{{ checksum "build.sbt" }}
+                key: v2-ndelius-new-tech-{{ checksum "build.sbt" }}
                 paths:
                   - ~/.ivy2/cache
                   - ~/.sbt
