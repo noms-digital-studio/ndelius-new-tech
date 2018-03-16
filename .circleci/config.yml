@@ -13,7 +13,7 @@ jobs:
                 command: |
                   export _JAVA_OPTIONS="-Xms512m -Xmx1024m"
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
-                  sbt assembly
+                  sbt assembly < /dev/null
             - save_cache:
                 key: v1-ndelius-new-tech-{{ checksum "build.sbt" }}
                 paths:
