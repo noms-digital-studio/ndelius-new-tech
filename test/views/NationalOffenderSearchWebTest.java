@@ -30,9 +30,11 @@ import services.DeliusOffenderApi;
 import views.pages.NationalSearchPage;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -63,8 +65,31 @@ public class NationalOffenderSearchWebTest extends WithBrowser {
     private String BEARER = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjbj1mYWtlLnVzZXIsY249VXNlcnMsZGM9bW9qLGRjPWNvbSIsInVpZCI6ImZha2UudXNlciIsImV4cCI6MTUxNzYzMTkzOX0=.FsI0VbLbqLRUGo7GXDEr0hHLvDRJjMQWcuEJCCaevXY1KAyJ_05I8V6wE6UqH7gB1Nq2Y4tY7-GgZN824dEOqQ";
 
     @BeforeClass
-    public static void beforeAll() {
-        System.setProperty("webdriver.chrome.driver", new Environment(Mode.TEST).resource(String.format("webdriver/%s/chromedriver", isMac() ? "mac64" : "linux64")).getPath());
+    public static void beforeAll() throws IOException {
+        System.setProperty("webdriver.chrome.driver", prepareChromeDriver());
+    }
+
+    private static String prepareChromeDriver() throws IOException {
+        final URL driverPath = new Environment(Mode.TEST).resource(String.format("webdriver/%s/chromedriver", isMac() ? "mac64" : "linux64"));
+
+        //using PosixFilePermission to set file permissions 777
+        Set<PosixFilePermission> perms = new HashSet<PosixFilePermission>();
+        //add owners permission
+        perms.add(PosixFilePermission.OWNER_READ);
+        perms.add(PosixFilePermission.OWNER_WRITE);
+        perms.add(PosixFilePermission.OWNER_EXECUTE);
+        //add group permissions
+        perms.add(PosixFilePermission.GROUP_READ);
+        perms.add(PosixFilePermission.GROUP_WRITE);
+        perms.add(PosixFilePermission.GROUP_EXECUTE);
+        //add others permissions
+        perms.add(PosixFilePermission.OTHERS_READ);
+        perms.add(PosixFilePermission.OTHERS_WRITE);
+        perms.add(PosixFilePermission.OTHERS_EXECUTE);
+
+        Files.setPosixFilePermissions(Paths.get(driverPath.getPath()), perms);
+
+        return driverPath.getPath();
     }
 
     @Before
