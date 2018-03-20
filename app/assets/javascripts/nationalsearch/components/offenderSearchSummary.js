@@ -29,10 +29,10 @@ const OffenderSearchSummary = ({offenderSummary, searchTerm}) => (
                             <span aria-label="Age">{offenderSummary.age}</span>
                         </span>
                     </p>
-                    {matchesHighlightedField(offenderSummary.highlight, 'otherIds.pncNumber') &&
+                    {matchesAnyHighlightedField(offenderSummary.highlight, ['otherIds.pncNumber', 'otherIds.pncNumberLower', 'otherIds.pncNumberRhs', 'otherIds.pncNumberShort']) &&
                     <p>
                         <span id='pncNumber-label'>PNC:&nbsp;</span>
-                        <span id='pncNumber' aria-labelledby="pncNumber-label" className='margin-right'><MT text={offenderSummary.otherIds.pncNumber} highlight={offenderSummary.highlight} highlightFieldName='otherIds.pncNumber' /></span>
+                        <span id='pncNumber' aria-labelledby="pncNumber-label" className='margin-right'><MT text={offenderSummary.otherIds.pncNumber} highlight={offenderSummary.highlight} highlightFieldName={['otherIds.pncNumberLower', 'otherIds.pncNumberRhs', 'otherIds.pncNumberShort']} /></span>
                     </p>
                     }
                     {matchesHighlightedField(offenderSummary.highlight, 'otherIds.nomsNumber') &&
