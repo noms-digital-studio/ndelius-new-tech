@@ -1,6 +1,7 @@
 package services.helpers;
 
 import helpers.DateTimeHelper;
+import helpers.PncHelper;
 import lombok.val;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -13,18 +14,15 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.BEST_FIELDS;
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.CROSS_FIELDS;
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.MOST_FIELDS;
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.prefixQuery;
-import static org.elasticsearch.index.query.QueryBuilders.termQuery;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 import static org.elasticsearch.search.suggest.SuggestBuilders.termSuggestion;
 
 public class SearchQueryBuilder {
     public static SearchSourceBuilder searchSourceFor(String searchTerm, int pageSize, int pageNumber) {
         val boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutForwardSlashes(
+        boolQueryBuilder.should().add(multiMatchQuery(termsThatDontLookLikePncNumbers(
                                                         termsWithoutDates(searchTerm)))
             .field("firstName", 10)
             .field("surname", 10)
@@ -32,30 +30,31 @@ public class SearchQueryBuilder {
             .field("offenderAliases.firstName", 8)
             .field("offenderAliases.surname", 8)
             .field("contactDetails.addresses.town")
-            // CROSS_FIELDS Analyzes the query string into individual terms, then looks
-            // for each term in any of the fields, as though they were one big field
             .type(CROSS_FIELDS));
 
         boolQueryBuilder.should().add(multiMatchQuery(termsWithoutSingleLetters(
-                                                        termsWithoutForwardSlashes(
-                                                            termsWithoutDates(searchTerm))))
+                                                        termsThatDontLookLikePncNumbers(
+                                                          termsWithoutDates(searchTerm))))
             .field("gender")
             .field("otherIds.crn", 10)
             .field("otherIds.nomsNumber", 10)
             .field("otherIds.niNumber", 10)
-            .field("otherIds.croNumber", 10)
             .field("contactDetails.addresses.streetName")
             .field("contactDetails.addresses.county")
             .field("contactDetails.addresses.postcode", 10)
-            // MOST_FIELDS Finds documents which match any field and combines the _score from each field
             .type(MOST_FIELDS));
 
-        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutSingleLetters(termsWithoutDates(searchTerm.toLowerCase())))
-            .field("otherIds.pncNumberLower", 10)
-            .field("otherIds.pncNumberRhs", 10)
-            .field("otherIds.pncNumberShort", 10)
-            .analyzer("whitespace")
-            .type(BEST_FIELDS));
+        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutSingleLetters(
+                termsWithoutDates(searchTerm.toUpperCase())))
+            .field("otherIds.croNumber", 10)
+            .analyzer("whitespace"));
+
+
+        termsThatLookLikePncNumbers(searchTerm).forEach(pnc ->
+            boolQueryBuilder.should().add(multiMatchQuery(pnc)
+                .field("otherIds.pncNumberLongYear", 10)
+                .field("otherIds.pncNumberShortYear", 10)
+                .analyzer("whitespace")));
 
         termsThatLookLikeDates(searchTerm).forEach(dateTerm ->
             boolQueryBuilder.should().add(multiMatchQuery(dateTerm)
@@ -85,8 +84,17 @@ public class SearchQueryBuilder {
         return searchSource;
     }
 
-    private static String termsWithoutForwardSlashes(String searchTerm) {
-        return searchTerm.replaceAll("/", "");
+    private static String termsThatDontLookLikePncNumbers(String searchTerm) {
+        return Stream.of(searchTerm.split(" "))
+            .filter(term -> !PncHelper.canBeConvertedToAPnc(term))
+            .collect(joining(" "));
+
+    }
+    private static List<String> termsThatLookLikePncNumbers(String searchTerm) {
+        return Stream.of(searchTerm.split(" "))
+            .filter(PncHelper::canBeConvertedToAPnc)
+            .map(PncHelper::covertToCanonicalPnc)
+            .collect(toList());
     }
 
     public static List<String> termsThatLookLikeDates(String searchTerm) {
