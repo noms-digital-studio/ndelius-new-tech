@@ -73,7 +73,7 @@ describe('OffenderSearchSummary component', () => {
                         pncNumber: '1965/1234567X'
                     },
                     highlight: {
-                        "otherIds.pncNumber" : [ "1965/1234567X" ]
+                        "otherIds.pncNumberLongYear" : [ "1965/1234567X" ]
                     }
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith 1965/1234567X'}/>)

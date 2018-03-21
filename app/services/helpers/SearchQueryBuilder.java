@@ -44,11 +44,12 @@ public class SearchQueryBuilder {
             .field("contactDetails.addresses.postcode", 10)
             .type(MOST_FIELDS));
 
-        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutSingleLetters(
-                termsWithoutDates(searchTerm.toUpperCase())))
+        boolQueryBuilder.should().add(multiMatchQuery(
+            termsWithoutSingleLetters(
+                termsWithoutDates(
+                    termsThatDontLookLikePncNumbers(searchTerm.toUpperCase()))))
             .field("otherIds.croNumber", 10)
             .analyzer("whitespace"));
-
 
         termsThatLookLikePncNumbers(searchTerm).forEach(pnc ->
             boolQueryBuilder.should().add(multiMatchQuery(pnc)
@@ -61,7 +62,7 @@ public class SearchQueryBuilder {
                 .field("dateOfBirth", 11)
                 .lenient(true)));
 
-        Stream.of(termsWithoutDates(searchTerm).split(" "))
+        Stream.of(termsWithoutDates(termsThatDontLookLikePncNumbers(searchTerm)).split(" "))
             .filter(term -> !term.isEmpty())
             .forEach(term -> boolQueryBuilder.should().add(prefixQuery("firstName", term.toLowerCase()).boost(11)));
 
