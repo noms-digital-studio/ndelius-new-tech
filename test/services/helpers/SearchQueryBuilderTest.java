@@ -64,7 +64,7 @@ public class SearchQueryBuilderTest {
 
         val query = (BoolQueryBuilder) builder.query();
         val queryBuilder1 = (MultiMatchQueryBuilder)query.should().get(0);
-        assertThat(queryBuilder1.value()).isEqualTo("a smith");
+        assertThat(queryBuilder1.value()).isEqualTo("2013/0234567a 15-09-1970 smith 1/2/1992");
         assertThat(queryBuilder1.fields()).containsOnlyKeys(
             "firstName",
             "surname",
@@ -74,7 +74,7 @@ public class SearchQueryBuilderTest {
             "contactDetails.addresses.town");
 
         val queryBuilder2 = (MultiMatchQueryBuilder)query.should().get(1);
-        assertThat(queryBuilder2.value()).isEqualTo("smith");
+        assertThat(queryBuilder2.value()).isEqualTo("2013/0234567a 15-09-1970 smith 1/2/1992");
         assertThat(queryBuilder2.fields()).containsOnlyKeys(
             "gender",
             "otherIds.crn",
@@ -85,7 +85,7 @@ public class SearchQueryBuilderTest {
             "contactDetails.addresses.postcode");
 
         val queryBuilder3 = (MultiMatchQueryBuilder)query.should().get(2);
-        assertThat(queryBuilder3.value()).isEqualTo("SMITH");
+        assertThat(queryBuilder3.value()).isEqualTo("2013/0234567A 15-09-1970 SMITH 1/2/1992");
         assertThat(queryBuilder3.fields()).containsOnlyKeys(
             "otherIds.croNumber");
 

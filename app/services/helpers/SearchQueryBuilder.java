@@ -21,20 +21,20 @@ import static org.elasticsearch.search.suggest.SuggestBuilders.termSuggestion;
 
 public class SearchQueryBuilder {
     public static SearchSourceBuilder searchSourceFor(String searchTerm, int pageSize, int pageNumber) {
+
+        String termsWithoutSingleLetters = termsWithoutSingleLetters(searchTerm);
         val boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.should().add(multiMatchQuery(termsThatDontLookLikePncNumbers(
-                                                        termsWithoutDates(searchTerm)))
+        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutSingleLetters.toLowerCase())
             .field("firstName", 10)
             .field("surname", 10)
             .field("middleNames", 8)
             .field("offenderAliases.firstName", 8)
             .field("offenderAliases.surname", 8)
             .field("contactDetails.addresses.town")
-            .type(CROSS_FIELDS));
+            .type(CROSS_FIELDS)
+            .analyzer("whitespace"));
 
-        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutSingleLetters(
-                                                        termsThatDontLookLikePncNumbers(
-                                                          termsWithoutDates(searchTerm))))
+        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutSingleLetters.toLowerCase())
             .field("gender")
             .field("otherIds.crn", 10)
             .field("otherIds.nomsNumber", 10)
@@ -42,22 +42,20 @@ public class SearchQueryBuilder {
             .field("contactDetails.addresses.streetName")
             .field("contactDetails.addresses.county")
             .field("contactDetails.addresses.postcode", 10)
-            .type(MOST_FIELDS));
+            .type(MOST_FIELDS)
+            .analyzer("whitespace"));
 
-        boolQueryBuilder.should().add(multiMatchQuery(
-            termsWithoutSingleLetters(
-                termsWithoutDates(
-                    termsThatDontLookLikePncNumbers(searchTerm.toUpperCase()))))
+        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutSingleLetters.toUpperCase())
             .field("otherIds.croNumber", 10)
             .analyzer("whitespace"));
 
-        termsThatLookLikePncNumbers(searchTerm).forEach(pnc ->
+        termsThatLookLikePncNumbers(termsWithoutSingleLetters).forEach(pnc ->
             boolQueryBuilder.should().add(multiMatchQuery(pnc)
                 .field("otherIds.pncNumberLongYear", 10)
                 .field("otherIds.pncNumberShortYear", 10)
                 .analyzer("whitespace")));
 
-        termsThatLookLikeDates(searchTerm).forEach(dateTerm ->
+        termsThatLookLikeDates(termsWithoutSingleLetters).forEach(dateTerm ->
             boolQueryBuilder.should().add(multiMatchQuery(dateTerm)
                 .field("dateOfBirth", 11)
                 .lenient(true)));
@@ -79,7 +77,7 @@ public class SearchQueryBuilder {
             .explain(Logger.isDebugEnabled())
             .size(pageSize)
             .from(pageSize * aValidPageNumberFor(pageNumber))
-            .suggest(suggestionsFor(searchTerm));
+            .suggest(suggestionsFor(termsWithoutSingleLetters));
 
         Logger.debug(searchSource.toString());
         return searchSource;
