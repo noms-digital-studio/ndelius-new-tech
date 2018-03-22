@@ -1,5 +1,5 @@
 branch-defaults:
-  132_AddSMokeTestToPipeline:
+  master:
     environment: delius-new-tech
 environment-defaults:
   delius-new-tech:

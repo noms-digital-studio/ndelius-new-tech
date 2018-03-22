@@ -17,7 +17,7 @@ jobs:
                 command: |
                   export _JAVA_OPTIONS="-Xms512m -Xmx1024m"
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
-                  sbt "set test in assembly := {}" assembly < /dev/null
+                  sbt assembly < /dev/null
             - save_cache:
                 key: v2-ndelius-new-tech-{{ checksum "build.sbt" }}
                 paths:
@@ -44,7 +44,7 @@ jobs:
             - store_artifacts:
                 path: ./target/test-reports/
                 destination: reports
-    deploy:
+    deploysmoketest:
         docker:
           - image: paulodiovani/aws-eb-cli
         working_directory: ~/ndelius-new-tech
@@ -53,10 +53,10 @@ jobs:
             at: /workspace
         - checkout
         - run:
-            name: Deploy to Elastic Beanstalk
+            name: Deploy to Elastic Beanstalk Smoke Test environment
             command: |
                 export PATH=$PATH:~/.local/bin/
-                eb deploy --label $(cat /workspace/version.txt)
+                eb deploy delius-new-tech-smoke-test --label $(cat /workspace/version.txt)
     smoketest:
         docker:
             - image: circleci/openjdk:8-node-browsers
@@ -86,21 +86,34 @@ jobs:
         - store_artifacts:
             path: ./ndelius-new-tech-smoke-test/build/reports/
             destination: reports
+    deploy:
+        docker:
+          - image: paulodiovani/aws-eb-cli
+        working_directory: ~/ndelius-new-tech
+        steps:
+        - attach_workspace:
+            at: /workspace
+        - checkout
+        - run:
+            name: Deploy to Elastic Beanstalk
+            command: |
+                export PATH=$PATH:~/.local/bin/
+                eb deploy --label $(cat /workspace/version.txt)
 
 workflows:
     version: 2
-    build-deploy:
+    build-deploy-test:
         jobs:
             - build
+            - deploysmoketest:
+                requires:
+                    - build
+            - smoketest:
+                requires:
+                    - deploysmoketest
             - deploy:
                 requires:
                     - build
                 filters:
                     branches:
-                      only: 132_AddSMokeTestToPipeline
-            - smoketest:
-                requires:
-                    - deploy
-                filters:
-                    branches:
-                      only: 132_AddSMokeTestToPipeline
+                      only: master
