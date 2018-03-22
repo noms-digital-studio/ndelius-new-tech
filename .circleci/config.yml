@@ -17,7 +17,7 @@ jobs:
                 command: |
                   export _JAVA_OPTIONS="-Xms512m -Xmx1024m"
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
-                  sbt assembly < /dev/null
+                  sbt "set test in assembly := {}" assembly < /dev/null
             - save_cache:
                 key: v2-ndelius-new-tech-{{ checksum "build.sbt" }}
                 paths:
@@ -57,6 +57,19 @@ jobs:
             command: |
                 export PATH=$PATH:~/.local/bin/
                 eb deploy --label $(cat /workspace/version.txt)
+    smoketest:
+        docker:
+            - image: circleci/openjdk:8-node-browsers
+        working_directory: ~/ndelius-new-tech
+        steps:
+        - run:
+            name: Checkout smoke test
+            command: |
+                git clone git@github.com:noms-digital-studio/ndelius-new-tech-smoke-test.git
+        - run:
+            name: Build and run test
+            command: |
+                gradle test
 
 workflows:
     version: 2
@@ -68,4 +81,10 @@ workflows:
                     - build
                 filters:
                     branches:
-                      only: master
+                      only: 132_AddSMokeTestToPipeline
+            - smoketest:
+                requires:
+                    - deploy
+                filters:
+                    branches:
+                      only: 132_AddSMokeTestToPipeline
