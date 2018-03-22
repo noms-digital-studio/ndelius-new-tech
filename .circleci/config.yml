@@ -71,6 +71,12 @@ jobs:
             command: |
                 cd ndelius-new-tech-smoke-test
                 gradle test
+        - store_test_results:
+            path: ./build/test-reports/
+        - store_test_results:
+            path: ./build/geb-reports/
+        - store_test_results:
+            path: ./build/reports/
 
 workflows:
     version: 2
