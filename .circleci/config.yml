@@ -69,6 +69,7 @@ jobs:
         - run:
             name: Build and run test
             command: |
+                cd ndelius-new-tech-smoke-test
                 gradle test
 
 workflows:
