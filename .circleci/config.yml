@@ -65,7 +65,7 @@ jobs:
         - run:
             name: Checkout smoke test
             command: |
-                git clone git@github.com:noms-digital-studio/ndelius-new-tech-smoke-test.git
+                git clone https://github.com/noms-digital-studio/ndelius-new-tech-smoke-test.git
         - run:
             name: Build and run test
             command: |
