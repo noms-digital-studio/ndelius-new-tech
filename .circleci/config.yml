@@ -66,6 +66,8 @@ jobs:
             name: Checkout smoke test
             command: |
                 git clone https://github.com/noms-digital-studio/ndelius-new-tech-smoke-test.git
+                cd ndelius-new-tech-smoke-test
+                git checkout ${CIRCLE_BRANCH}
         - run:
             name: Build and run test
             command: |
@@ -97,7 +99,6 @@ jobs:
         - run:
             name: Deploy to Elastic Beanstalk
             command: |
-                export PATH=$PATH:~/.local/bin/
                 eb deploy --label $(cat /workspace/version.txt)
 
 workflows:
