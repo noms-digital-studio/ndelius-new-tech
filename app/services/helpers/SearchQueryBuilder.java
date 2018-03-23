@@ -22,9 +22,9 @@ import static org.elasticsearch.search.suggest.SuggestBuilders.termSuggestion;
 public class SearchQueryBuilder {
     public static SearchSourceBuilder searchSourceFor(String searchTerm, int pageSize, int pageNumber) {
 
-        String termsWithoutSingleLetters = termsWithoutSingleLetters(searchTerm);
+        String termsWithoutSingleLetters = termsWithoutSingleLetters(searchTerm).toLowerCase();
         val boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutSingleLetters.toLowerCase())
+        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutSingleLetters)
             .field("firstName", 10)
             .field("surname", 10)
             .field("middleNames", 8)
@@ -34,7 +34,7 @@ public class SearchQueryBuilder {
             .type(CROSS_FIELDS)
             .analyzer("whitespace"));
 
-        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutSingleLetters.toLowerCase())
+        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutSingleLetters)
             .field("gender")
             .field("otherIds.crn", 10)
             .field("otherIds.nomsNumber", 10)
@@ -45,8 +45,8 @@ public class SearchQueryBuilder {
             .type(MOST_FIELDS)
             .analyzer("whitespace"));
 
-        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutSingleLetters.toUpperCase())
-            .field("otherIds.croNumber", 10)
+        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutSingleLetters)
+            .field("otherIds.croNumberLowercase", 10)
             .analyzer("whitespace"));
 
         termsThatLookLikePncNumbers(termsWithoutSingleLetters).forEach(pnc ->
@@ -77,7 +77,7 @@ public class SearchQueryBuilder {
             .explain(Logger.isDebugEnabled())
             .size(pageSize)
             .from(pageSize * aValidPageNumberFor(pageNumber))
-            .suggest(suggestionsFor(termsWithoutSingleLetters));
+            .suggest(suggestionsFor(searchTerm));
 
         Logger.debug(searchSource.toString());
         return searchSource;
