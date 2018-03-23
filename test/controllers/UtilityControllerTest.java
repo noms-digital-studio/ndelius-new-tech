@@ -1,8 +1,8 @@
 package controllers;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
 import interfaces.OffenderSearch;
 import lombok.val;
@@ -14,11 +14,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
-import play.libs.Json;
 import play.mvc.Result;
 import play.test.WithApplication;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -55,7 +53,7 @@ public class UtilityControllerTest extends WithApplication {
     }
 
     @Test
-    public void healthEndpointIncludesCorrectSections() throws IOException {
+    public void healthEndpointIncludesCorrectSections() {
 
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
 
@@ -75,7 +73,7 @@ public class UtilityControllerTest extends WithApplication {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void healthEndpointIndicatesOkWhenPdfGeneratorIsHealthy() throws IOException {
+    public void healthEndpointIndicatesOkWhenPdfGeneratorIsHealthy() {
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
 
         val result = route(app, request);
@@ -87,7 +85,7 @@ public class UtilityControllerTest extends WithApplication {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void healthEndpointIndicatesFailedWhenPdfGeneratorIsUnhealthy() throws IOException {
+    public void healthEndpointIndicatesFailedWhenPdfGeneratorIsUnhealthy() {
         stubPdfGeneratorWithStatus("FAILED");
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
 
@@ -100,7 +98,7 @@ public class UtilityControllerTest extends WithApplication {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void healthEndpointIndicatesOkWhenDocumentStoreIsHealthy() throws IOException {
+    public void healthEndpointIndicatesOkWhenDocumentStoreIsHealthy() {
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
 
         val result = route(app, request);
@@ -112,7 +110,7 @@ public class UtilityControllerTest extends WithApplication {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void healthEndpointIndicatesFailedWhenDocumentStoreIsUnhealthy() throws IOException {
+    public void healthEndpointIndicatesFailedWhenDocumentStoreIsUnhealthy() {
         stubDocumentStoreToReturn(serverError());
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
 
@@ -125,7 +123,7 @@ public class UtilityControllerTest extends WithApplication {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void healthEndpointIndicatesOkWhenAnalyticsStoreIsHealthy() throws IOException {
+    public void healthEndpointIndicatesOkWhenAnalyticsStoreIsHealthy() {
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
 
         val result = route(app, request);
@@ -137,7 +135,7 @@ public class UtilityControllerTest extends WithApplication {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void healthEndpointIndicatesOkWhenAnalyticsStoreIsUnhealthy() throws IOException {
+    public void healthEndpointIndicatesOkWhenAnalyticsStoreIsUnhealthy() {
         when(analyticsStore.isUp()).thenReturn(CompletableFuture.supplyAsync(() -> false));
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
 
@@ -150,7 +148,7 @@ public class UtilityControllerTest extends WithApplication {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void healthEndpointIndicatesOkWhenElasticSearchIsHealthy() throws IOException {
+    public void healthEndpointIndicatesOkWhenElasticSearchIsHealthy() {
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
 
         val result = route(app, request);
@@ -162,7 +160,7 @@ public class UtilityControllerTest extends WithApplication {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void healthEndpointIndicatesFailedWhenElasticSearchIsUnhealthy() throws IOException {
+    public void healthEndpointIndicatesFailedWhenElasticSearchIsUnhealthy() {
         when(offenderSearch.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> false));
 
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
@@ -176,7 +174,7 @@ public class UtilityControllerTest extends WithApplication {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void healthEndpointIndicatesOkWhenOffenderApiIsHealthy() throws IOException {
+    public void healthEndpointIndicatesOkWhenOffenderApiIsHealthy() {
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
 
         val result = route(app, request);
@@ -188,7 +186,7 @@ public class UtilityControllerTest extends WithApplication {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void healthEndpointIndicatesFailedWhenOffenderApiIsUnhealthy() throws IOException {
+    public void healthEndpointIndicatesFailedWhenOffenderApiIsUnhealthy() {
         stubOffenderApiToReturn(serverError());
 
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
@@ -200,10 +198,9 @@ public class UtilityControllerTest extends WithApplication {
         assertThat(convertToJson(result).get("status")).isEqualTo("FAILED");
     }
 
-    private Map<String, Object> convertToJson(Result result) throws IOException {
+    private Map<String, Object> convertToJson(Result result) {
 
-        val mapper = Json.mapper();
-        return mapper.readValue(contentAsString(result),  new TypeReference<Map<String, Object>>() {});
+        return JsonHelper.jsonToObjectMap(contentAsString(result));
     }
 
     private void stubPdfGeneratorWithStatus(String status) {
