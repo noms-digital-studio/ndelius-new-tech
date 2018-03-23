@@ -46,7 +46,8 @@ public class UtilityController extends Controller {
                              DocumentStore documentStore,
                              AnalyticsStore analyticsStore,
                              OffenderSearch offenderSearch,
-                             OffenderApi offenderApi) {
+                             OffenderApi offenderApi,
+                             PrisonerApi prisonerApi) {
 
         this.offenderApi = offenderApi; // Used by searchDb and searchLdap, so stored directly for later, others are closed over below
 
@@ -56,6 +57,7 @@ public class UtilityController extends Controller {
                 put(definition("analytics-store", false), analyticsStore::isUp).
                 put(definition("offender-search", true), () -> offenderSearch.isHealthy().toCompletableFuture()).
                 put(definition("offender-api", true), () -> offenderApi.isHealthy().toCompletableFuture()).
+                put(definition("prisoner-api", true), () -> prisonerApi.isHealthy().toCompletableFuture()).
                 build();
     }
 

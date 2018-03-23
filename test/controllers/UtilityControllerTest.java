@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
 import interfaces.OffenderSearch;
+import interfaces.PrisonerApi;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Rule;
@@ -43,6 +44,9 @@ public class UtilityControllerTest extends WithApplication {
     @Mock
     private OffenderSearch offenderSearch;
 
+    @Mock
+    private PrisonerApi prisonerApi;
+
     @Before
     public void setup() {
         stubPdfGeneratorWithStatus("OK");
@@ -50,6 +54,7 @@ public class UtilityControllerTest extends WithApplication {
         stubOffenderApiToReturn(ok());
         when(analyticsStore.isUp()).thenReturn(CompletableFuture.supplyAsync(() -> true));
         when(offenderSearch.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> true));
+        when(prisonerApi.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> true));
     }
 
     @Test
@@ -174,6 +179,32 @@ public class UtilityControllerTest extends WithApplication {
 
     @SuppressWarnings("unchecked")
     @Test
+    public void healthEndpointIndicatesOkWhenPrisonerApiIsHealthy() {
+        val request = new RequestBuilder().method(GET).uri("/healthcheck");
+
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("prisoner-api", "OK"));
+        assertThat(convertToJson(result).get("status")).isEqualTo("OK");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void healthEndpointIndicatesFailedWhenPrisonerApiIsUnhealthy() {
+        when(prisonerApi.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> false));
+
+        val request = new RequestBuilder().method(GET).uri("/healthcheck");
+
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("prisoner-api", "FAILED"));
+        assertThat(convertToJson(result).get("status")).isEqualTo("FAILED");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
     public void healthEndpointIndicatesOkWhenOffenderApiIsHealthy() {
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
 
@@ -227,7 +258,8 @@ public class UtilityControllerTest extends WithApplication {
         return new GuiceApplicationBuilder()
             .overrides(
                 bind(AnalyticsStore.class).toInstance(analyticsStore),
-                bind(OffenderSearch.class).toInstance(offenderSearch)
+                bind(OffenderSearch.class).toInstance(offenderSearch),
+                bind(PrisonerApi.class).toInstance(prisonerApi)
             )
             .build();
     }
