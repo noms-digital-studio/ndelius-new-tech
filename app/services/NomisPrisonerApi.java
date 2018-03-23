@@ -69,12 +69,12 @@ public class NomisPrisonerApi implements PrisonerApi {
     @Override
     public CompletionStage<Boolean> isHealthy() {
 
-        return wsClient.url(apiBaseUrl + "offenders/A00000").
+        return wsClient.url(apiBaseUrl + "health").
                 addHeader(AUTHORIZATION, "Bearer " + apiToken.get()).
                 get().
                 thenApply(wsResponse -> {
 
-                    val healthy = wsResponse.getStatus() < 500;
+                    val healthy = wsResponse.getStatus() == OK;
 
                     if (!healthy) {
                         Logger.warn("NOMIS API Response Status: " + wsResponse.getStatus());
