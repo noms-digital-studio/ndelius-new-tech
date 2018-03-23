@@ -79,7 +79,7 @@ describe('OffenderSearchSummary component', () => {
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith 1965/1234567X'}/>)
 
                 expect(summary.find('#pncNumber')).to.have.length(1)
-                expect(summary.find('#pncNumber Connect(MarkableText)').prop('text')).to.equal('1965/1234567X')
+                expect(summary.find('#pncNumber').text()).to.equal('1965/1234567X')
             })
         })
         context('pnc present and does not match a search term', () => {
@@ -217,7 +217,7 @@ describe('OffenderSearchSummary component', () => {
                         croNumber: '123456/12A'
                     },
                     highlight: {
-                        "otherIds.croNumber" : [ "123456/12A" ]
+                        "otherIds.croNumberLowercase" : [ "123456/12A" ]
                     }
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith 123456/12A'}/>)

@@ -85,9 +85,9 @@ public class SearchQueryBuilderTest {
             "contactDetails.addresses.postcode");
 
         val queryBuilder3 = (MultiMatchQueryBuilder)query.should().get(2);
-        assertThat(queryBuilder3.value()).isEqualTo("2013/0234567A 15-09-1970 SMITH 1/2/1992");
+        assertThat(queryBuilder3.value()).isEqualTo("2013/0234567a 15-09-1970 smith 1/2/1992");
         assertThat(queryBuilder3.fields()).containsOnlyKeys(
-            "otherIds.croNumber");
+            "otherIds.croNumberLowercase");
 
         val queryBuilder4 = (MultiMatchQueryBuilder)query.should().get(3);
         assertThat(queryBuilder4.value()).isEqualTo("2013/234567a");
