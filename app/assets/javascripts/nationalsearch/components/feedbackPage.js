@@ -24,6 +24,7 @@ class FeedbackPage extends Component {
                                     <label className="form-label" for="role">What is your role?</label>
                                     <select className="form-control" id="role" name="role" onChange={event => this.handleRoleChange(event)}>
                                         <option>&nbsp;</option>
+                                        <option>Probation Officer</option>
                                         <option>Senior Probation Officer</option>
                                         <option>Case Administrator</option>
                                         <option>Offender Manager in the Community</option>
