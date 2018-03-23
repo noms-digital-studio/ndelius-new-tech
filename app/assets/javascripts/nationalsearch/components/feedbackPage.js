@@ -48,6 +48,7 @@ class FeedbackPage extends Component {
                                         <option>North East</option>
                                         <option>North West</option>
                                         <option>Wales</option>
+                                        <option>Midlands</option>
                                         <option>South West & South Central</option>
                                         <option>South East</option>
                                         <option>London</option>
