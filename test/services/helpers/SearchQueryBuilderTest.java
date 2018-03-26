@@ -28,26 +28,14 @@ public class SearchQueryBuilderTest {
     }
 
     @Test
-    public void termsWithoutDatesAreExtracted() {
-        String terms = SearchQueryBuilder.termsWithoutDates("sna 28/02/2018 foo 2017-Jun-3 bar");
+    public void termsWithoutSingleLettersAreExtracted() {
+        String terms = SearchQueryBuilder.simpleTerms("a sna 28/02/2018 b foo 2017-Jun-3 bar c");
         assertThat(terms).isEqualTo("sna foo bar");
     }
 
     @Test
-    public void termsWithoutDatesReturnsEmptyString() {
-        String terms = SearchQueryBuilder.termsWithoutDates("28/02/2018 2017-Jun-3");
-        assertThat(terms).isEqualTo("");
-    }
-
-    @Test
-    public void termsWithoutSingleLettersAreExtracted() {
-        String terms = SearchQueryBuilder.termsWithoutSingleLetters("a sna 28/02/2018 b foo 2017-Jun-3 bar c");
-        assertThat(terms).isEqualTo("sna 28/02/2018 foo 2017-Jun-3 bar");
-    }
-
-    @Test
     public void termsWithoutSingleLettersReturnsEmptyString() {
-        String terms = SearchQueryBuilder.termsWithoutSingleLetters("a b c");
+        String terms = SearchQueryBuilder.simpleTerms("a b c");
         assertThat(terms).isEqualTo("");
     }
 
@@ -64,7 +52,7 @@ public class SearchQueryBuilderTest {
 
         val query = (BoolQueryBuilder) builder.query();
         val queryBuilder1 = (MultiMatchQueryBuilder)query.should().get(0);
-        assertThat(queryBuilder1.value()).isEqualTo("2013/0234567a 15-09-1970 smith 1/2/1992");
+        assertThat(queryBuilder1.value()).isEqualTo("smith");
         assertThat(queryBuilder1.fields()).containsOnlyKeys(
             "firstName",
             "surname",
@@ -74,7 +62,7 @@ public class SearchQueryBuilderTest {
             "contactDetails.addresses.town");
 
         val queryBuilder2 = (MultiMatchQueryBuilder)query.should().get(1);
-        assertThat(queryBuilder2.value()).isEqualTo("2013/0234567a 15-09-1970 smith 1/2/1992");
+        assertThat(queryBuilder2.value()).isEqualTo("smith");
         assertThat(queryBuilder2.fields()).containsOnlyKeys(
             "gender",
             "otherIds.crn",
@@ -85,7 +73,7 @@ public class SearchQueryBuilderTest {
             "contactDetails.addresses.postcode");
 
         val queryBuilder3 = (MultiMatchQueryBuilder)query.should().get(2);
-        assertThat(queryBuilder3.value()).isEqualTo("2013/0234567a 15-09-1970 smith 1/2/1992");
+        assertThat(queryBuilder3.value()).isEqualTo("2013/0234567a 15-09-1970 a smith 1/2/1992");
         assertThat(queryBuilder3.fields()).containsOnlyKeys(
             "otherIds.croNumberLowercase");
 

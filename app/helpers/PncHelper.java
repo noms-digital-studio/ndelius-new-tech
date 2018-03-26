@@ -7,9 +7,9 @@ public class PncHelper {
     }
 
     public static String covertToCanonicalPnc(String pncNumber) {
-        String s = pncNumber.substring(0, pncNumber.lastIndexOf('/') + 1) +
+        String pnc = pncNumber.substring(0, pncNumber.lastIndexOf('/') + 1) +
             Integer.parseInt(pncNumber.substring(pncNumber.lastIndexOf('/') + 1, pncNumber.length() - 1)) +
             pncNumber.substring(pncNumber.length() - 1);
-        return s.toLowerCase();
+        return pnc.toLowerCase();
     }
 }
