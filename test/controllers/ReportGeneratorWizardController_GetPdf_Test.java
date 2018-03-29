@@ -54,6 +54,9 @@ public class ReportGeneratorWizardController_GetPdf_Test extends WithApplication
         when(alfrescoDocumentStore.retrieveDocument(any(), any()))
                 .thenReturn(CompletableFuture.completedFuture(SOME_PDF_DATA));
 
+        when(alfrescoDocumentStore.getDocumentName(any(), any()))
+                .thenReturn(CompletableFuture.completedFuture("myReport.pdf"));
+
     }
 
     @Test
@@ -76,6 +79,13 @@ public class ReportGeneratorWizardController_GetPdf_Test extends WithApplication
         val result = route(app, addCSRFToken(getAGetPdfRequest()));
 
         assertThat(contentType(result)).contains("application/pdf");
+    }
+
+    @Test
+    public void documentNameUseAsFilename() {
+        val result = route(app, addCSRFToken(getAGetPdfRequest()));
+
+        assertThat(result.header(CONTENT_DISPOSITION).get()).isEqualTo("attachment;filename=myReport.pdf;");
     }
 
 

@@ -69,9 +69,11 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
         return documentStore.
                 retrieveDocument(documentId, onBehalfOfUser).
-                thenApplyAsync((bytes) -> ok(bytes).
-                                            as("application/pdf").
-                                            withHeader(CONTENT_DISPOSITION,  "attachment;filename=document.pdf;"), ec.current());
+                thenCombine(
+                        documentStore.getDocumentName(documentId, onBehalfOfUser),
+                        (bytes, filename) -> ok(bytes).
+                                                as("application/pdf").
+                                                withHeader(CONTENT_DISPOSITION, String.format("attachment;filename=%s;", filename)));
     }
 
 

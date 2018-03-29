@@ -129,6 +129,14 @@ public class AlfrescoStore implements DocumentStore {
     }
 
     @Override
+    public CompletionStage<String> getDocumentName(String documentId, String onBehalfOfUser) {
+        return makeRequest("details/" + documentId, onBehalfOfUser).get().
+                thenApply(WSResponse::asJson).
+                thenApply(JsonHelper::jsonToMap).
+                thenApply(result -> result.get("name"));
+    }
+
+    @Override
     public CompletionStage<Integer> lockDocument(String onBehalfOfUser, String documentId) {
 
         return makeRequest("reserve/" + documentId, onBehalfOfUser).

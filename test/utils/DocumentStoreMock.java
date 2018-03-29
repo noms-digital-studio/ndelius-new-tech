@@ -34,6 +34,10 @@ public interface DocumentStoreMock extends DocumentStore {
         return CompletableFuture.supplyAsync(() -> new byte[]{});
     }
 
+    default CompletionStage<String> getDocumentName(String documentId, String onBehalfOfUser) {
+        return CompletableFuture.supplyAsync(() -> "");
+    }
+
 
     default CompletionStage<Integer> lockDocument(String onBehalfOfUser, String documentId) {
 
