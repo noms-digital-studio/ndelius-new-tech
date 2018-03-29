@@ -4,7 +4,6 @@
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
 
-@import java.net.URLEncoder
 @(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String, message: String)(implicit webJarsUtil: WebJarsUtil, environment: Environment)
 
     @implicitField = @{ FieldConstructor(govukElements.f) }
@@ -24,7 +23,7 @@
             <li>
                 <div id="view-pdf">
                     <div>Review and print your draft 'Short Format Pre-sentence Report'</div>
-                    <a class="bold-medium clickable" tabindex="1" href="../report/shortFormatPreSentenceReport/get?documentId=@URLEncoder.encode(encrypter(reportForm("documentId").getValue.getOrElse("")), "UTF-8")&onBehalfOfUser=@URLEncoder.encode(encrypter(reportForm("onBehalfOfUser").getValue.getOrElse("")), "UTF-8")">View your draft PDF report</a>
+                    <a class="bold-medium clickable" tabindex="1" href="@relative(routes.ShortFormatPreSentenceReportController.getPdf(encrypter(reportForm("documentId").getValue.getOrElse("")), encrypter(reportForm("onBehalfOfUser").getValue.getOrElse(""))))">View your draft PDF report</a>
                 </div>
             </li>
             <li>
