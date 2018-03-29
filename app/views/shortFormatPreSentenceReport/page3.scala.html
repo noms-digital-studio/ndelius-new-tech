@@ -1,5 +1,6 @@
 @import data._
 @import helper._
+@import hiddenInputs._
 @import play.Environment
 @import data.viewModel.PageStatus
 @import helpers.CallHelper.relative
@@ -27,77 +28,21 @@
         @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
             @CSRF.formField
 
-            @inputHidden(reportForm("visitedPages"))
-
-            @inputHidden(reportForm("onBehalfOfUser"), encrypter)
-            @inputHidden(reportForm("entityId"), encrypter)
-            @inputHidden(reportForm("documentId"), encrypter)
-
-            @inputHidden(reportForm("name"), encrypter)
-            @inputHidden(reportForm("dateOfBirth"), encrypter)
-            @inputHidden(reportForm("age"), encrypter)
-            @inputHidden(reportForm("address"), encrypter)
-            @inputHidden(reportForm("crn"), encrypter)
-            @inputHidden(reportForm("pnc"), encrypter)
-
-            @inputHidden(reportForm("pncSupplied"))
-            @inputHidden(reportForm("addressSupplied"))
+            @commonFields(reportForm, encrypter)
+            @page2Fields(reportForm, encrypter)
+            @page4Fields(reportForm, encrypter)
+            @page5Fields(reportForm, encrypter)
+            @page6Fields(reportForm, encrypter)
+            @page7Fields(reportForm, encrypter)
+            @page8Fields(reportForm, encrypter)
+            @page9Fields(reportForm, encrypter)
+            @page11Fields(reportForm, encrypter)
 
             @inputText(reportForm("court"), '_label -> "Court", 'required -> "true", '_error -> "Enter the name of the sentencing court")
 
             @select(reportForm("localJusticeArea"), options(justiceAreas.toList), '_label -> "Local justice area", '_default -> "Please select")
 
             @inputText(reportForm("dateOfHearing"), '_label -> "Date of hearing", '_help -> "For example: 28/06/2017", 'class -> "date-picker", 'required -> "true", '_error -> "Enter the date of the hearing")
-
-            @inputHidden(reportForm("interviewInformationSource"))
-            @inputHidden(reportForm("serviceRecordsInformationSource"))
-            @inputHidden(reportForm("cpsSummaryInformationSource"))
-            @inputHidden(reportForm("oasysAssessmentsInformationSource"))
-            @inputHidden(reportForm("previousConvictionsInformationSource"))
-            @inputHidden(reportForm("victimStatementInformationSource"))
-            @inputHidden(reportForm("childrenServicesInformationSource"))
-            @inputHidden(reportForm("policeInformationSource"))
-            @inputHidden(reportForm("sentencingGuidelinesInformationSource"))
-            @inputHidden(reportForm("otherInformationSource"))
-            @inputHidden(reportForm("otherInformationDetails"))
-
-            @inputHidden(reportForm("mainOffence"))
-            @inputHidden(reportForm("otherOffences"))
-            @inputHidden(reportForm("offenceSummary"))
-
-            @inputHidden(reportForm("offenceAnalysis"))
-            @inputHidden(reportForm("patternOfOffending"))
-
-            @inputHidden(reportForm("issueAccommodation"))
-            @inputHidden(reportForm("issueEmployment"))
-            @inputHidden(reportForm("issueFinance"))
-            @inputHidden(reportForm("issueRelationships"))
-            @inputHidden(reportForm("issueSubstanceMisuse"))
-            @inputHidden(reportForm("issueHealth"))
-            @inputHidden(reportForm("issueBehaviour"))
-            @inputHidden(reportForm("issueOther"))
-            @inputHidden(reportForm("issueAccommodationDetails"))
-            @inputHidden(reportForm("issueEmploymentDetails"))
-            @inputHidden(reportForm("issueFinanceDetails"))
-            @inputHidden(reportForm("issueRelationshipsDetails"))
-            @inputHidden(reportForm("issueSubstanceMisuseDetails"))
-            @inputHidden(reportForm("issueHealthDetails"))
-            @inputHidden(reportForm("issueBehaviourDetails"))
-            @inputHidden(reportForm("issueOtherDetails"))
-
-            @inputHidden(reportForm("likelihoodOfReOffending"))
-            @inputHidden(reportForm("riskOfSeriousHarm"))
-            @inputHidden(reportForm("previousSupervisionResponse"))
-            @inputHidden(reportForm("additionalPreviousSupervision"))
-
-            @inputHidden(reportForm("proposal"))
-
-            @inputHidden(reportForm("reportAuthor"))
-            @inputHidden(reportForm("office"))
-            @inputHidden(reportForm("reportDate"))
-            @inputHidden(reportForm("courtOfficePhoneNumber"))
-            @inputHidden(reportForm("counterSignature"))
-            @inputHidden(reportForm("startDate"), encrypter)
 
             @pageNumber(3)
         }
