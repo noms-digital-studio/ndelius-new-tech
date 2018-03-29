@@ -1,7 +1,6 @@
 package controllers;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import controllers.base.EncryptedFormFactory;
 import controllers.base.ReportGeneratorWizardController;
@@ -9,6 +8,7 @@ import data.ShortFormatPreSentenceReportData;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.webjars.play.WebJarsUtil;
 import play.Environment;
@@ -98,8 +98,8 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
     @Override
     protected Content renderCancelledView() {
-
-        return views.html.shortFormatPreSentenceReport.cancelled.render("Draft stored", webJarsUtil);
+        val boundForm = wizardForm.bindFromRequest();
+        return views.html.shortFormatPreSentenceReport.cancelled.render(boundForm, viewEncrypter, "Draft stored", webJarsUtil, environment);
     }
 
     @Override

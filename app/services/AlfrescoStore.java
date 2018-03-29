@@ -123,6 +123,12 @@ public class AlfrescoStore implements DocumentStore {
     }
 
     @Override
+    public CompletionStage<byte[]> retrieveDocument(String documentId, String onBehalfOfUser) {
+        return makeRequest("fetch/" + documentId, onBehalfOfUser).get().
+                thenApply(WSResponse::asByteArray);
+    }
+
+    @Override
     public CompletionStage<Integer> lockDocument(String onBehalfOfUser, String documentId) {
 
         return makeRequest("reserve/" + documentId, onBehalfOfUser).

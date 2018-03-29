@@ -23,6 +23,7 @@ GET     /offender/oneTimeNomisRef/:reference/image  controllers.OffenderControll
 GET     /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSentenceReportController.wizardGet
 POST    /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSentenceReportController.wizardPost
 POST    /report/shortFormatPreSentenceReport/save   controllers.ShortFormatPreSentenceReportController.reportPost
+GET     /report/shortFormatPreSentenceReport/get        controllers.ShortFormatPreSentenceReportController.getPdf(documentId: String, onBehalfOfUser: String)
 
 POST    /report/shortFormatPreSentenceReport/feedback   controllers.ShortFormatPreSentenceReportController.feedbackPost
 
