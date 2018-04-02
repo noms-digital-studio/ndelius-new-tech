@@ -10,12 +10,9 @@ export default connect(
     dispatch => ({
         reloadRecentSearch: () => localforage.getItem("nationalSearch").then(data => {
 
-            if (data && data.when) {
+            if (data && data.when && ((Date.now() - data.when) / 1000 / 60 < window.recentSearchMinutes)) {
 
-                if ((Date.now() - data.when) / 1000 / 60 < 10) { // Less than 10 minutes old
-
-                    dispatch(search(data.what, data.page));
-                }
+                dispatch(search(data.what, data.page));
             }
         })
     })
