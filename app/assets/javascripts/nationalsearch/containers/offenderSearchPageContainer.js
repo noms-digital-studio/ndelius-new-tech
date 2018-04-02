@@ -1,9 +1,22 @@
 import { connect } from 'react-redux'
 import offenderSearchPage from '../components/offenderSearchPage'
+import {search} from "../actions/search";
+import localforage from "localforage";
 
 export default connect(
     state => ({
         firstTimeIn: state.search.firstTimeIn
     }),
-    () => ({})
+    dispatch => ({
+        reloadRecentSearch: () => localforage.getItem("nationalSearch").then(data => {
+
+            if (data && data.when) {
+
+                if ((Date.now() - data.when) / 1000 / 60 < 10) { // Less than 10 minutes old
+
+                    dispatch(search(data.what, data.page));
+                }
+            }
+        })
+    })
 )(offenderSearchPage)
