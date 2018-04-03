@@ -104,7 +104,10 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
     @Override
     protected Content renderCancelledView() {
 
-        return cancelledTemplate.render(wizardForm.bindFromRequest(), viewEncrypter, "Draft stored");
+        val boundForm = wizardForm.bindFromRequest();
+        val reviewPage = boundForm.value().map(form -> form.totalPages() - 1).orElse(1);
+
+        return cancelledTemplate.render(boundForm, viewEncrypter, "Draft stored", reviewPage);
     }
 
     @Override
