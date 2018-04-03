@@ -41,6 +41,10 @@
         </ul>
     </div>
 
+    <p class="margin-top large">
+        <a href="javascript:void(0);" class="feedback-link">What did you think of this service?</a><span>&nbsp;(takes 30 seconds)</span>
+    </p>
+
         @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
             @CSRF.formField
 

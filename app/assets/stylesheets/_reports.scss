@@ -35,12 +35,21 @@
 
   #view-pdf {
     background-image: url("../images/file-pdf.svg");
+    @include ie-lte(8) {
+      background-image: url("../images/file-pdf.png");
+    }
   }
   #edit-pdf {
     background-image: url("../images/edit.svg");
+    @include ie-lte(8) {
+      background-image: url("../images/edit.png");
+    }
   }
   #document-list {
     background-image: url("../images/list-alt.svg");
+    @include ie-lte(8) {
+      background-image: url("../images/list-alt.png");
+    }
   }
   li {
     margin-bottom: $gutter * 2;
