@@ -115,11 +115,14 @@ public class AlfrescoStore implements DocumentStore {
 
     @Override
     public CompletionStage<String> retrieveOriginalData(String documentId, String onBehalfOfUser) {
+        return getDocumentMetaData(documentId, onBehalfOfUser).
+                thenApply(result -> result.get("userData"));
+    }
 
+    private CompletionStage<Map<String, String>> getDocumentMetaData(String documentId, String onBehalfOfUser) {
         return makeRequest("details/" + documentId, onBehalfOfUser).get().
                 thenApply(WSResponse::asJson).
-                thenApply(JsonHelper::jsonToMap).
-                thenApply(result -> result.get("userData"));
+                thenApply(JsonHelper::jsonToMap);
     }
 
     @Override
@@ -130,9 +133,7 @@ public class AlfrescoStore implements DocumentStore {
 
     @Override
     public CompletionStage<String> getDocumentName(String documentId, String onBehalfOfUser) {
-        return makeRequest("details/" + documentId, onBehalfOfUser).get().
-                thenApply(WSResponse::asJson).
-                thenApply(JsonHelper::jsonToMap).
+        return getDocumentMetaData(documentId, onBehalfOfUser).
                 thenApply(result -> result.get("name"));
     }
 
