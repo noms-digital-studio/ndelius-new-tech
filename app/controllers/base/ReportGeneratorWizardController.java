@@ -67,8 +67,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
         val onBehalfOfUser = decrypter.apply(onBehalfOfUserEncrypted);
         val documentId = decrypter.apply(documentIdEncrypted);
 
-        return documentStore.
-                retrieveDocument(documentId, onBehalfOfUser).
+        return documentStore.retrieveDocument(documentId, onBehalfOfUser).
                 thenCombine(
                         documentStore.getDocumentName(documentId, onBehalfOfUser),
                         (bytes, filename) -> ok(bytes).
