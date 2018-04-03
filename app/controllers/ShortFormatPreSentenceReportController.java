@@ -14,6 +14,7 @@ import org.webjars.play.WebJarsUtil;
 import play.Environment;
 import play.libs.concurrent.HttpExecutionContext;
 import play.twirl.api.Content;
+import views.html.shortFormatPreSentenceReport.cancelled;
 
 import javax.inject.Inject;
 import java.util.Map;
@@ -22,6 +23,8 @@ import java.util.function.Consumer;
 
 public class ShortFormatPreSentenceReportController extends ReportGeneratorWizardController<ShortFormatPreSentenceReportData>
 {
+
+    private final views.html.shortFormatPreSentenceReport.cancelled cancelledTemplate;
     @Inject
     public ShortFormatPreSentenceReportController(HttpExecutionContext ec,
                                                   WebJarsUtil webJarsUtil,
@@ -30,9 +33,11 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                                                   AnalyticsStore analyticsStore,
                                                   EncryptedFormFactory formFactory,
                                                   PdfGenerator pdfGenerator,
-                                                  DocumentStore documentStore) {
+                                                  DocumentStore documentStore,
+                                                  cancelled cancelledTemplate) {
 
         super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore);
+        this.cancelledTemplate = cancelledTemplate;
     }
 
     @Override
@@ -98,8 +103,8 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
     @Override
     protected Content renderCancelledView() {
-        val boundForm = wizardForm.bindFromRequest();
-        return views.html.shortFormatPreSentenceReport.cancelled.render(boundForm, viewEncrypter, "Draft stored", webJarsUtil, environment);
+
+        return cancelledTemplate.render(wizardForm.bindFromRequest(), viewEncrypter, "Draft stored");
     }
 
     @Override

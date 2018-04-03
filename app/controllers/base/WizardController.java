@@ -40,9 +40,9 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     private final AnalyticsStore analyticsStore;
     private final List<String> encryptedFields;
+    private final Environment environment;
 
     protected final Function1<String, String> viewEncrypter;
-    protected final Environment environment;
     protected final Form<T> wizardForm;
     protected final WebJarsUtil webJarsUtil;
     protected final Function<String, String> encrypter;
