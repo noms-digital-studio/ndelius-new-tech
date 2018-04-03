@@ -27,7 +27,7 @@ const performSearch = _.debounce((dispatch, searchTerm, pageNumber) => {
         when: Date.now(),
         what: searchTerm,
         page: pageNumber
-    }).then(() => { }).catch(err => console.log(err));
+    }).then(() => { }).catch(err => window.console && console.log(err));
 
     $.getJSON(`searchOffender/${encodedSearchTerm}?pageSize=${PAGE_SIZE}&pageNumber=${pageNumber}`, data => {
         dispatch(searchResults(searchTerm, data, pageNumber))

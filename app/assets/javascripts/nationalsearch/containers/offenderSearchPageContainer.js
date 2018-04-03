@@ -14,6 +14,6 @@ export default connect(
 
                 dispatch(search(data.what, data.page));
             }
-        }).catch(err => console.log(err))
+        }).catch(err => window.console && console.log(err))
     })
 )(offenderSearchPage)
