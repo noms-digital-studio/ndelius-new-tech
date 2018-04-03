@@ -49,7 +49,8 @@
             @CSRF.formField
 
             <input type="hidden" name="jumpNumber" id="jumpNumber"/>
-            <input type="hidden" name="pageNumber" id="pageNumber" value="0"/>
+            @inputHidden(reportForm("pageNumber"))
+
             @inputHidden(reportForm("visitedPages"))
 
             @inputHidden(reportForm("onBehalfOfUser"), encrypter)
