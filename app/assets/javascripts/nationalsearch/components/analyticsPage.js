@@ -19,7 +19,7 @@ class AnalyticsPage extends Component {
     }
     componentWillMount() {
         fetch(this.props)
-        const interval = setInterval(() => fetch(this.props), 30000)
+        const interval = setInterval(() => fetch(this.props), 3000)
         if (interval.unref) {interval.unref()}
     }
     componentWillReceiveProps(nextProps) {
@@ -55,7 +55,7 @@ class AnalyticsPage extends Component {
     }
 }
 
-const fetch = (props) => {
+const fetch = props => {
     const {fetchVisitCounts, currentTimeRange} = props;
     fetchVisitCounts(currentTimeRange)
 }
