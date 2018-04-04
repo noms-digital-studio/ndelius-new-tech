@@ -16,15 +16,16 @@ import PropTypes from 'prop-types'
 class AnalyticsPage extends Component {
     constructor(props) {
         super(props);
+        this.state = {timer: null};
     }
     componentWillMount() {
-        fetch(this.props)
+        this.fetch(this.props)
     }
     componentWillReceiveProps(nextProps) {
-        fetch(nextProps)
+        this.fetch(nextProps)
     }
     onClickRefresh() {
-        fetch(this.props)
+        this.fetch(this.props)
     }
 
     render() {
@@ -52,11 +53,15 @@ class AnalyticsPage extends Component {
             </div>)
     }
 
-}
+    fetch(props) {
+        const {fetchVisitCounts, currentTimeRange} = props;
+        fetchVisitCounts(currentTimeRange)
+        if (this.state.timer) {
+            clearTimeout(this.state.timer)
+        }
+        this.setState({timer: setTimeout(() => this.fetch(this.props), 30000)})
+    }
 
-const fetch = props => {
-    const {fetchVisitCounts, currentTimeRange} = props;
-    fetchVisitCounts(currentTimeRange)
 }
 
 
