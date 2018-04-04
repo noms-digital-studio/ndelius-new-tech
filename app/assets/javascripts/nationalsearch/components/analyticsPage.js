@@ -16,16 +16,17 @@ import PropTypes from 'prop-types'
 class AnalyticsPage extends Component {
     constructor(props) {
         super(props);
-        this.state = {timer: null};
     }
     componentWillMount() {
-        this.fetch(this.props)
+        fetch(this.props)
+        const interval = setInterval(() => fetch(this.props), 30000)
+        if (interval.unref) {interval.unref()}
     }
     componentWillReceiveProps(nextProps) {
-        this.fetch(nextProps)
+        fetch(nextProps)
     }
     onClickRefresh() {
-        this.fetch(this.props)
+        fetch(this.props)
     }
 
     render() {
@@ -52,18 +53,12 @@ class AnalyticsPage extends Component {
                 </div>
             </div>)
     }
-
-    fetch(props) {
-        const {fetchVisitCounts, currentTimeRange} = props;
-        fetchVisitCounts(currentTimeRange)
-        if (this.state.timer) {
-            clearTimeout(this.state.timer)
-        }
-        this.setState({timer: setTimeout(() => this.fetch(this.props), 30000)})
-    }
-
 }
 
+const fetch = (props) => {
+    const {fetchVisitCounts, currentTimeRange} = props;
+    fetchVisitCounts(currentTimeRange)
+}
 
 const NavigationPanel = () => (
             <nav className="js-stick-at-top-when-scrolling">
