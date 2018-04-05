@@ -57,12 +57,9 @@
                 @commonFields(reportForm, encrypter)
                 @page2Fields(reportForm, encrypter)
                 @page3Fields(reportForm, encrypter)
-                @page4Fields(reportForm, encrypter)
-                @page5Fields(reportForm, encrypter)
-                @page6Fields(reportForm, encrypter)
-                @page8Fields(reportForm, encrypter)
-                @page9Fields(reportForm, encrypter)
-                @page11Fields(reportForm, encrypter)
+                @page4Fields(reportForm)
+                @page5Fields(reportForm)
+                @page6Fields(reportForm)
 
                 <div class="form-group@if(reportForm.hasErrors) { form-group-error}">
                 @checkboxDetailsField(reportForm, "issueAccommodation", "Accommodation", "Provide a brief assessment for accommodation", Some("Select underlying issues from the options below"))
@@ -74,6 +71,10 @@
                 @checkboxDetailsField(reportForm, "issueBehaviour", "Thinking & behaviour", "Provide a brief assessment for behaviour", Some(""))
                 @checkboxDetailsField(reportForm, "issueOther", "Other (Please specify below)", "Provide a brief assessment of other issues", Some(""))
                 </div>
+
+                @page8Fields(reportForm)
+                @page9Fields(reportForm)
+                @page11Fields(reportForm, encrypter)
 
                 @pageNumber(7)
             }

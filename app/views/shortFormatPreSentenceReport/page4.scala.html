@@ -32,12 +32,6 @@
                     @commonFields(reportForm, encrypter)
                     @page2Fields(reportForm, encrypter)
                     @page3Fields(reportForm, encrypter)
-                    @page5Fields(reportForm, encrypter)
-                    @page6Fields(reportForm, encrypter)
-                    @page7Fields(reportForm, encrypter)
-                    @page8Fields(reportForm, encrypter)
-                    @page9Fields(reportForm, encrypter)
-                    @page11Fields(reportForm, encrypter)
 
                     @checkbox(reportForm("interviewInformationSource"), '_label -> "Interview")
                     @checkbox(reportForm("serviceRecordsInformationSource"), '_label -> "Service records")
@@ -55,6 +49,13 @@
                     </div>
 
                     <div class="margin-top large"></div>
+
+                    @page5Fields(reportForm)
+                    @page6Fields(reportForm)
+                    @page7Fields(reportForm)
+                    @page8Fields(reportForm)
+                    @page9Fields(reportForm)
+                    @page11Fields(reportForm, encrypter)
 
                     @pageNumber(4)
                 }

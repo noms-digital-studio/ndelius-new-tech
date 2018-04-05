@@ -26,14 +26,6 @@
             @CSRF.formField
 
             @commonFields(reportForm, encrypter)
-            @page3Fields(reportForm, encrypter)
-            @page4Fields(reportForm, encrypter)
-            @page5Fields(reportForm, encrypter)
-            @page6Fields(reportForm, encrypter)
-            @page7Fields(reportForm, encrypter)
-            @page8Fields(reportForm, encrypter)
-            @page9Fields(reportForm, encrypter)
-            @page11Fields(reportForm, encrypter)
 
             @readOnlyField(reportForm("name"), "Full name", encrypter)
             @readOnlyField(reportForm("dateOfBirth"), "Date of birth", encrypter)
@@ -52,6 +44,15 @@
             @if(!Boolean.parseBoolean(reportForm("pncSupplied").getValue.orElse("false"))) {
                 @inputText(reportForm("pnc"), '_label -> "PNC ID (if available)", 'class -> "half-width")
             }
+
+            @page3Fields(reportForm, encrypter)
+            @page4Fields(reportForm)
+            @page5Fields(reportForm)
+            @page6Fields(reportForm)
+            @page7Fields(reportForm)
+            @page8Fields(reportForm)
+            @page9Fields(reportForm)
+            @page11Fields(reportForm, encrypter)
 
             @pageNumber(2)
         }

@@ -42,13 +42,8 @@
             @commonFields(reportForm, encrypter)
             @page2Fields(reportForm, encrypter)
             @page3Fields(reportForm, encrypter)
-            @page4Fields(reportForm, encrypter)
-            @page5Fields(reportForm, encrypter)
-            @page7Fields(reportForm, encrypter)
-            @page8Fields(reportForm, encrypter)
-            @page9Fields(reportForm, encrypter)
-            @page11Fields(reportForm, encrypter)
-
+            @page4Fields(reportForm)
+            @page5Fields(reportForm)
 
             @textarea(reportForm("offenceAnalysis"), '_label -> "Offence analysis", '_hint -> analysisHint, 'class -> "wide", 'required -> "true", '_error -> "You must enter your analysis of the offence", Symbol("data-limit") -> "4000")
 
@@ -57,6 +52,11 @@
             @textarea(reportForm("patternOfOffending"), '_label -> "Patterns of offending behaviour (if applicable)", '_help -> "Detail any gaps in offending and relapse, look for triggers that initiate the behaviours", 'class -> "wide", Symbol("data-limit") -> "1000")
 
             <div class="margin-top large"></div>
+
+            @page7Fields(reportForm)
+            @page8Fields(reportForm)
+            @page9Fields(reportForm)
+            @page11Fields(reportForm, encrypter)
 
             @pageNumber(6)
         }

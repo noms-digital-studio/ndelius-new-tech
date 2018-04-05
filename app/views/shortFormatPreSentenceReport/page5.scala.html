@@ -33,12 +33,7 @@
             @commonFields(reportForm, encrypter)
             @page2Fields(reportForm, encrypter)
             @page3Fields(reportForm, encrypter)
-            @page4Fields(reportForm, encrypter)
-            @page6Fields(reportForm, encrypter)
-            @page7Fields(reportForm, encrypter)
-            @page8Fields(reportForm, encrypter)
-            @page9Fields(reportForm, encrypter)
-            @page11Fields(reportForm, encrypter)
+            @page4Fields(reportForm)
 
             @textarea(reportForm("mainOffence"), '_label -> "Main offence and dates", 'class -> "wide", 'required -> "true", '_error -> "Enter the main offence and dates")
 
@@ -49,6 +44,12 @@
             <hr />
 
             @textarea(reportForm("offenceSummary"), '_label -> "Brief summary of the offence", '_hint -> summaryHint, 'class -> "wide", 'required -> "true", '_error -> "You must enter a brief summary of the offence")
+
+            @page6Fields(reportForm)
+            @page7Fields(reportForm)
+            @page8Fields(reportForm)
+            @page9Fields(reportForm)
+            @page11Fields(reportForm, encrypter)
 
             @pageNumber(5)
         }
