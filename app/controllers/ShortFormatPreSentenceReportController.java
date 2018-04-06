@@ -14,7 +14,6 @@ import org.webjars.play.WebJarsUtil;
 import play.Environment;
 import play.libs.concurrent.HttpExecutionContext;
 import play.twirl.api.Content;
-import views.html.shortFormatPreSentenceReport.cancelled;
 
 import javax.inject.Inject;
 import java.util.Map;
@@ -34,7 +33,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                                                   EncryptedFormFactory formFactory,
                                                   PdfGenerator pdfGenerator,
                                                   DocumentStore documentStore,
-                                                  cancelled cancelledTemplate) {
+                                                  views.html.shortFormatPreSentenceReport.cancelled cancelledTemplate) {
 
         super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore);
         this.cancelledTemplate = cancelledTemplate;
