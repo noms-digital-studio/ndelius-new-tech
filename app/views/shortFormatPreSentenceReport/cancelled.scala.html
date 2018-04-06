@@ -51,7 +51,7 @@
             @CSRF.formField
 
             <input type="hidden" name="jumpNumber" id="jumpNumber"/>
-            @inputHidden(reportForm("pageNumber"))
+            <input type="hidden" name="pageNumber" id="pageNumber" value="@reviewPage"/>
 
             @inputHidden(reportForm("visitedPages"))
 
