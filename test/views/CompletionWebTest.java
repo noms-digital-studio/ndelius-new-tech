@@ -15,20 +15,17 @@ import utils.SimpleDocumentStoreMock;
 import utils.SimplePdfGeneratorMock;
 import views.pages.CheckYourReportPage;
 import views.pages.CompletionPage;
-import views.pages.DraftSavedConfirmationPage;
 
 import static play.inject.Bindings.bind;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompletionWebTest extends WithBrowser {
     private CompletionPage completionPage;
-    private DraftSavedConfirmationPage draftSavedConfirmationPage;
     private CheckYourReportPage checkYourReportPage;
 
     @Before
     public void before() {
         completionPage = new CompletionPage(browser);
-        draftSavedConfirmationPage = new DraftSavedConfirmationPage(browser);
         checkYourReportPage = new CheckYourReportPage(browser);
     }
 
@@ -41,7 +38,7 @@ public class CompletionWebTest extends WithBrowser {
     public void editReportAfterSavingReportDisplaysCheckYourReportPage() {
         completionPage.navigateHere();
 
-        draftSavedConfirmationPage.updateReport();
+        completionPage.updateReport();
 
         checkYourReportPage.isAt();
     }

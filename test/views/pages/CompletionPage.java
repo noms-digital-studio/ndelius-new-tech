@@ -2,6 +2,7 @@ package views.pages;
 
 import org.fluentlenium.core.FluentControl;
 import org.fluentlenium.core.FluentPage;
+import org.openqa.selenium.By;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,5 +22,9 @@ public class CompletionPage extends FluentPage {
     public CompletionPage navigateHere() {
         signAndDateReportPage.navigateHere().gotoNext();
         return this;
+    }
+
+    public void updateReport() {
+        $(By.cssSelector("#edit-pdf a")).click();
     }
 }
