@@ -14,17 +14,17 @@ import org.webjars.play.WebJarsUtil;
 import play.Environment;
 import play.libs.concurrent.HttpExecutionContext;
 import play.twirl.api.Content;
-import views.html.shortFormatPreSentenceReport.cancelled;
 
 import javax.inject.Inject;
 import java.util.Map;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
 
-public class ShortFormatPreSentenceReportController extends ReportGeneratorWizardController<ShortFormatPreSentenceReportData>
-{
+public class ShortFormatPreSentenceReportController extends ReportGeneratorWizardController<ShortFormatPreSentenceReportData> {
 
     private final views.html.shortFormatPreSentenceReport.cancelled cancelledTemplate;
+    private final views.html.shortFormatPreSentenceReport.completed completedTemplate;
+
     @Inject
     public ShortFormatPreSentenceReportController(HttpExecutionContext ec,
                                                   WebJarsUtil webJarsUtil,
@@ -34,10 +34,12 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                                                   EncryptedFormFactory formFactory,
                                                   PdfGenerator pdfGenerator,
                                                   DocumentStore documentStore,
-                                                  cancelled cancelledTemplate) {
+                                                  views.html.shortFormatPreSentenceReport.cancelled cancelledTemplate,
+                                                  views.html.shortFormatPreSentenceReport.completed completedTemplate) {
 
         super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore);
         this.cancelledTemplate = cancelledTemplate;
+        this.completedTemplate = completedTemplate;
     }
 
     @Override
@@ -113,10 +115,10 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
     @Override
     protected Content renderCompletedView(Byte[] bytes) {
 
-        return views.html.shortFormatPreSentenceReport.completed.render(
-                String.format("PDF Created - %d bytes", bytes.length),
-                webJarsUtil
-        );
+        val boundForm = wizardForm.bindFromRequest();
+        val reviewPage = boundForm.value().map(form -> form.totalPages() - 1).orElse(1);
+
+        return completedTemplate.render(boundForm, viewEncrypter, "Report saved", reviewPage);
     }
 
     @Override

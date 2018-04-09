@@ -13,18 +13,23 @@ import play.test.WithBrowser;
 import utils.SimpleAnalyticsStoreMock;
 import utils.SimpleDocumentStoreMock;
 import utils.SimplePdfGeneratorMock;
+import views.pages.CheckYourReportPage;
 import views.pages.CompletionPage;
+import views.pages.DraftSavedConfirmationPage;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static play.inject.Bindings.bind;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompletionWebTest extends WithBrowser {
     private CompletionPage completionPage;
+    private DraftSavedConfirmationPage draftSavedConfirmationPage;
+    private CheckYourReportPage checkYourReportPage;
 
     @Before
     public void before() {
         completionPage = new CompletionPage(browser);
+        draftSavedConfirmationPage = new DraftSavedConfirmationPage(browser);
+        checkYourReportPage = new CheckYourReportPage(browser);
     }
 
     @Test
@@ -33,10 +38,14 @@ public class CompletionWebTest extends WithBrowser {
     }
 
     @Test
-    public void completionPageHasNoContentOtherThanParentPostMessage() {
-        assertThat(completionPage.navigateHere().getAllText()).isEmpty();
-        assertThat(completionPage.navigateHere().getAllContent()).contains("parent.postMessage");
+    public void editReportAfterSavingReportDisplaysCheckYourReportPage() {
+        completionPage.navigateHere();
+
+        draftSavedConfirmationPage.updateReport();
+
+        checkYourReportPage.isAt();
     }
+
     @Override
     protected Application provideApplication() {
         return new GuiceApplicationBuilder().

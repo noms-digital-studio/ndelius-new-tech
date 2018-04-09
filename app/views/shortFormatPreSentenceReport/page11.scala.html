@@ -10,9 +10,9 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Sign and date your report - Short Format Pre Sentence Report") {
+@main("Sign your report - Short Format Pre Sentence Report") {
 
-    <h1 class="heading-xlarge">Sign and date your report</h1>
+    <h1 class="heading-xlarge">Sign your report</h1>
 
     <div class="grid-row">
         <div class="column-one-third">
@@ -42,7 +42,7 @@
             @readOnlyField(reportForm("startDate"), "Start date", encrypter)
             @inputText(reportForm("reportDate"), '_label -> "Completion date", '_help -> "For example: 28/06/2017", 'class -> "date-picker", 'required -> "true")
 
-            @pageNumber(11, Some("Submit and view your document list"))
+            @pageNumber(11, Some("Submit and upload your report"))
         }
 
         </div>
