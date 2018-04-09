@@ -12,6 +12,7 @@ import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.webjars.play.WebJarsUtil;
 import play.Environment;
+import play.data.Form;
 import play.libs.concurrent.HttpExecutionContext;
 import play.twirl.api.Content;
 
@@ -107,18 +108,20 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
     protected Content renderCancelledView() {
 
         val boundForm = wizardForm.bindFromRequest();
-        val reviewPage = boundForm.value().map(form -> form.totalPages() - 1).orElse(1);
 
-        return cancelledTemplate.render(boundForm, viewEncrypter, "Draft stored", reviewPage);
+        return cancelledTemplate.render(boundForm, viewEncrypter, "Draft stored", reviewPageNumberFor(boundForm));
     }
 
     @Override
     protected Content renderCompletedView(Byte[] bytes) {
 
         val boundForm = wizardForm.bindFromRequest();
-        val reviewPage = boundForm.value().map(form -> form.totalPages() - 1).orElse(1);
 
-        return completedTemplate.render(boundForm, viewEncrypter, "Report saved", reviewPage);
+        return completedTemplate.render(boundForm, viewEncrypter, "Report saved", reviewPageNumberFor(boundForm));
+    }
+
+    private Integer reviewPageNumberFor(Form<ShortFormatPreSentenceReportData> boundForm) {
+        return boundForm.value().map(form -> form.totalPages() - 1).orElse(1);
     }
 
     @Override
