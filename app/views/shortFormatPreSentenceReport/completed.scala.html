@@ -17,7 +17,7 @@
 
         <h1 class="heading-large">Report saved</h1>
 
-        <p class="font-medium">Your report has been saved and uploaded successfully to Delius</p>
+        <p class="font-medium">Your report has been saved and uploaded to Delius</p>
 
     </div>
     <div class="highlight-border margin-top medium">
@@ -26,7 +26,7 @@
             <li>
                 <div id="view-pdf">
                     <div>Review and print your 'Short Format Pre-sentence Report'</div>
-                    <a class="bold-medium clickable" tabindex="1" href="@relative(routes.ShortFormatPreSentenceReportController.getPdf(encrypter(reportForm("documentId").getValue.getOrElse("")), encrypter(reportForm("onBehalfOfUser").getValue.getOrElse(""))))">View your draft PDF report</a>
+                    <a class="bold-medium clickable" tabindex="1" href="@relative(routes.ShortFormatPreSentenceReportController.getPdf(encrypter(reportForm("documentId").getValue.getOrElse("")), encrypter(reportForm("onBehalfOfUser").getValue.getOrElse(""))))">View your completed PDF report</a>
                 </div>
             </li>
             <li>
