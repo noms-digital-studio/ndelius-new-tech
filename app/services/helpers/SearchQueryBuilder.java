@@ -9,8 +9,10 @@ import org.elasticsearch.search.suggest.SuggestBuilder;
 import play.Logger;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
+import static helpers.DateTimeHelper.canBeConvertedToADate;
 import static helpers.DateTimeHelper.covertToCanonicalDate;
 import static helpers.FluentHelper.not;
 import static java.util.stream.Collectors.joining;
@@ -91,15 +93,16 @@ public class SearchQueryBuilder {
 
     public static List<String> termsThatLookLikeDates(String searchTerm) {
         return Stream.of(searchTerm.split(" "))
-            .filter(DateTimeHelper::canBeConvertedToADate)
-            .map(term -> covertToCanonicalDate(term).get())
+            .map(DateTimeHelper::covertToCanonicalDate)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
             .collect(toList());
     }
 
     static String simpleTerms(String searchTerm) {
         return Stream.of(searchTerm.split(" "))
             .filter(term -> term.length() > 1)
-            .filter(not(term -> covertToCanonicalDate(term).isPresent()))
+            .filter(not(DateTimeHelper::canBeConvertedToADate))
             .filter(not(term -> term.contains("/")))
             .map(String::toLowerCase)
             .collect(joining(" "));
@@ -107,7 +110,7 @@ public class SearchQueryBuilder {
 
     static String simpleTermsIncludingSingleLetters(String searchTerm) {
         return Stream.of(searchTerm.split(" "))
-            .filter(not(term -> covertToCanonicalDate(term).isPresent()))
+            .filter(not(DateTimeHelper::canBeConvertedToADate))
             .filter(not(term -> term.contains("/")))
             .map(String::toLowerCase)
             .collect(joining(" "));
