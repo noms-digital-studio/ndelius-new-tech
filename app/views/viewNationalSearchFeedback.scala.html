@@ -10,7 +10,20 @@
 @display(feedback: Map[String, Object]) = {
   <tr>
     <td>@df.format(feedback.get("dateTime").asInstanceOf[Date])</td>
-    <td>@usernameExpression.r.findFirstMatchIn(feedback.get("username").toString).map(m => m.group(1)).getOrElse(feedback.get("username"))</td>
+    @if(feedback.get("feedback").asInstanceOf[Map[String, String]].get("email") == null) {
+      <td>
+      @usernameExpression.r.findFirstMatchIn(feedback.get("username").toString).map(m => m.group(1)).getOrElse(feedback.get("username"))
+      </td>
+
+    } else {
+      <td>
+        <a href="@{
+          "mailto:" + feedback.get("feedback").asInstanceOf[Map[String, String]].get("email")
+        }">
+        @usernameExpression.r.findFirstMatchIn(feedback.get("username").toString).map(m => m.group(1)).getOrElse(feedback.get("username"))
+        </a>
+      </td>
+    }
     <td>@feedback.get("feedback").asInstanceOf[Map[String, String]].get("role")</td>
     <td>@feedback.get("feedback").asInstanceOf[Map[String, String]].get("provider")</td>
     <td>@feedback.get("feedback").asInstanceOf[Map[String, String]].get("region")</td>
