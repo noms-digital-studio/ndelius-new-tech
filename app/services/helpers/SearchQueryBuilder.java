@@ -12,12 +12,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static helpers.DateTimeHelper.canBeConvertedToADate;
-import static helpers.DateTimeHelper.covertToCanonicalDate;
 import static helpers.FluentHelper.not;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.CROSS_FIELDS;
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.MOST_FIELDS;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 import static org.elasticsearch.search.suggest.SuggestBuilders.termSuggestion;
@@ -56,7 +53,7 @@ public class SearchQueryBuilder {
 
         termsThatLookLikeDates(searchTerm).forEach(dateTerm ->
             boolQueryBuilder.should().add(multiMatchQuery(dateTerm)
-                .field("dateOfBirth", 20)
+                .field("dateOfBirth", 50)
                 .lenient(true)));
 
         Stream.of(simpleTermsIncludingSingleLetters(searchTerm).split(" "))
