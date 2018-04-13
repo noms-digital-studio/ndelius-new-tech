@@ -70,7 +70,7 @@ class FeedbackPage extends Component {
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label-bold" htmlFor="email">Email</label>
-                                    <p>We'll use this to respond to you directly.</p>
+                                    <p>We&apos;ll use this to respond to you directly.</p>
                                     <input className="form-control" id="email" type='email'
                                            onChange={event => this.handleEmailChange(event)}/>
                                 </div>
