@@ -2,6 +2,7 @@ package services.helpers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.ImmutableList;
 import lombok.val;
 
 import java.util.LinkedHashMap;
@@ -26,7 +27,10 @@ public class OffenderSorter {
 
     private static String nameClassifier(ObjectNode node) {
 
-        return (nodeField(node, "firstName") + nodeField(node, "surname")).toLowerCase();
+        return ImmutableList.of("firsName", "surname", "dateOfBirth").
+                stream().
+                map(field -> nodeField(node, field)).
+                reduce("", (x, y) -> x + y);
     }
 
     private static List<ObjectNode> currentDisposalSorter(List<ObjectNode> nodes) {
@@ -37,6 +41,6 @@ public class OffenderSorter {
 
     private static String nodeField(ObjectNode node, String field) {
 
-        return Optional.ofNullable(node.get(field)).map(JsonNode::asText).orElse("");
+        return Optional.ofNullable(node.get(field)).map(JsonNode::asText).orElse("").toLowerCase();
     }
 }
