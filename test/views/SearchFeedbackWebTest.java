@@ -43,12 +43,9 @@ public class SearchFeedbackWebTest extends WithBrowser {
         searchFeedbackPage.navigateHere().isAt();
 
         assertThat(searchFeedbackPage.getSubmittedDate()).isNotEmpty();
-        assertThat(searchFeedbackPage.getUsername()).isEqualTo("fake.user");
-        assertThat(searchFeedbackPage.getEmailAddress()).isEqualTo("mailto:foo@bar.com");
-        assertThat(searchFeedbackPage.getRole()).isEqualTo("Probation Officer");
-        assertThat(searchFeedbackPage.getRegion()).isEqualTo("North East");
+        assertThat(searchFeedbackPage.getUsernameAndEmail()).isEqualTo("fake.user\nfoo@bar.com");
+        assertThat(searchFeedbackPage.getRoleProviderRegion()).isEqualTo("Probation Officer\nNPS\nNorth East");
         assertThat(searchFeedbackPage.getRating()).isEqualTo("Satisfied");
-        assertThat(searchFeedbackPage.getProvider()).isEqualTo("NPS");
         assertThat(searchFeedbackPage.getAdditionalComments()).isEqualTo("Some text");
     }
 

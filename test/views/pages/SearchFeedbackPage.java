@@ -26,33 +26,21 @@ public class SearchFeedbackPage extends FluentPage {
         return $(xpath("//tbody//tr//td[1]")).text();
     }
 
-    public String getUsername() {
+    public String getUsernameAndEmail() {
         return $(xpath("//tbody//tr//td[2]")).text();
     }
 
-    public String getRole() {
+    public String getRoleProviderRegion() {
         return $(xpath("//tbody//tr//td[3]")).text();
     }
 
-    public String getProvider() {
-        return $(xpath("//tbody//tr//td[4]")).text();
-    }
-
-    public String getRegion() {
-        return $(xpath("//tbody//tr//td[5]")).text();
-    }
-
     public String getRating() {
-        return $(xpath("//tbody//tr//td[6]")).text();
+        return $(xpath("//tbody//tr//td[4]")).text();
 
     }
 
     public String getAdditionalComments() {
-        return $(xpath("//tbody//tr//td[7]")).text();
-    }
-
-    public String getEmailAddress() {
-        return $(xpath("//tbody//tr//td[2]//a")).attribute("href");
+        return $(xpath("//tbody//tr//td[5]")).text();
     }
 
 }
