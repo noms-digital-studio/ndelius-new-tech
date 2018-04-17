@@ -117,12 +117,10 @@ public class ElasticOffenderSearch implements OffenderSearch {
     private ObjectNode restrictedView(ObjectNode rootNode) {
 
         return (ObjectNode) Json.toJson(ImmutableMap.of(
-
-                "accessDenied", true,
-                "offenderId", rootNode.get("offenderId").asLong(),
-                "otherIds", ImmutableMap.of(
-                        "crn", rootNode.get("otherIds").get("crn").asText()
-                )
+            "accessDenied", true,
+            "offenderId", rootNode.get("offenderId").asLong(),
+            "otherIds", ImmutableMap.of("crn", rootNode.get("otherIds").get("crn").asText()),
+            "offenderManagers", rootNode.get("offenderManagers")
         ));
     }
 
