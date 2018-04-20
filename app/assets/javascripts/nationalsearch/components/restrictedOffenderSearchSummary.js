@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import AddContactLink from '../containers/addContactLinkContainer'
+import {provider, officer} from "../../helpers/offenderManagerHelper";
 
 const RestrictedOffenderSearchSummary = ({offenderSummary, showOffenderDetails}) => (
     <li>
@@ -36,29 +37,6 @@ const RestrictedOffenderSearchSummary = ({offenderSummary, showOffenderDetails})
         </div>
     </li>
 )
-
-const provider = offenderSummary => {
-    const activeManager = activeOffenderManager(offenderSummary)
-    if (activeManager && activeManager.probationArea) {
-        return activeManager.probationArea.description
-    }
-}
-
-const activeOffenderManager = offenderSummary => {
-    if (offenderSummary.offenderManagers) {
-        return offenderSummary
-            .offenderManagers
-            .filter(managers => managers.active === true)
-            .reduce((accumulator, currentValue) => accumulator || currentValue, null)
-    }
-}
-
-const officer = offenderSummary => {
-    const activeManager = activeOffenderManager(offenderSummary)
-    if (activeManager && activeManager.staff) {
-        return activeManager.staff.forenames + ' ' + activeManager.staff.surname
-    }
-}
 
 RestrictedOffenderSearchSummary.propTypes = {
     showOffenderDetails: PropTypes.func.isRequired,
