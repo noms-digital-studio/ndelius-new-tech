@@ -1,9 +1,12 @@
 package services;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import interfaces.OffenderApi;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.val;
 import play.Logger;
 import play.libs.Json;
@@ -11,11 +14,16 @@ import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 
+import static helpers.JsonHelper.readValue;
 import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static play.mvc.Http.HeaderNames.AUTHORIZATION;
 import static play.mvc.Http.Status.FORBIDDEN;
 import static play.mvc.Http.Status.OK;
@@ -25,6 +33,15 @@ public class DeliusOffenderApi implements OffenderApi {
     private final WSClient wsClient;
     private final String ldapStringFormat;
     private final String offenderApiBaseUrl;
+
+    @Data
+    @NoArgsConstructor
+    private static class ProbationArea {
+        private String code;
+        private String description;
+    }
+
+    private static TypeReference probationAreaListRef = new TypeReference<List<ProbationArea>>(){};
 
     @Inject
     public DeliusOffenderApi(Config configuration, WSClient wsClient) {
@@ -95,6 +112,23 @@ public class DeliusOffenderApi implements OffenderApi {
         return logonAndCallOffenderApi("ldap", queryParams);
     }
 
+    @Override
+    public CompletionStage<Map<String, String>> probationAreaDescriptions(String bearerToken, List<String> probationAreaCodes) {
+        if (probationAreaCodes.isEmpty()) {
+            return CompletableFuture.completedFuture(ImmutableMap.of());
+        }
+        val url = String.format(offenderApiBaseUrl + "probationAreas?codes=%s", probationAreaCodes.stream().collect(Collectors.joining( "," )));
+        return wsClient.url(url)
+                .addHeader(AUTHORIZATION, String.format("Bearer %s", bearerToken))
+                .get()
+                .thenApply(this::assertOkResponse)
+                .thenApply(WSResponse::getBody)
+                .thenApply(body -> {
+                    List<ProbationArea> areas = readValue(body, probationAreaListRef);
+                    return areas.stream().collect(toMap(ProbationArea::getCode, ProbationArea::getDescription));
+                });
+    }
+
     private CompletionStage<JsonNode> logonAndCallOffenderApi(String action, Map<String, String> params) {
 
         val url = offenderApiBaseUrl + action + queryParamsFrom(params);
@@ -125,7 +159,7 @@ public class DeliusOffenderApi implements OffenderApi {
     String queryParamsFrom(Map<String, String> params) {
 
         return "?" + String.join("&", params.entrySet().stream().
-                map(entry -> String.format("%s=%s", entry.getKey(), entry.getValue())).collect(Collectors.toList()));
+                map(entry -> String.format("%s=%s", entry.getKey(), entry.getValue())).collect(toList()));
     }
 
     private WSResponse assertOkResponse(WSResponse response) {

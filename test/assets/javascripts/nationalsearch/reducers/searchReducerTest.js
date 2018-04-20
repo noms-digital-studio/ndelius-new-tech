@@ -24,6 +24,9 @@ describe("searchReducer", () => {
         it('suggestions will be empty', () => {
             expect(state.suggestions).to.be.empty
         });
+        it('byProbationArea will be empty', () => {
+            expect(state.byProbationArea).to.be.empty
+        });
         it('total will be 0', () => {
             expect(state.total).to.equal(0)
         });
@@ -43,7 +46,7 @@ describe("searchReducer", () => {
     describe("when REQUEST_SEARCH action received", () => {
 
         beforeEach(() => {
-            state = search({searchTerm: 'Mr Bean', resultsSearchTerm: 'Nobby', results: someResults(), resultsReceived: true, suggestions: someSuggestions(), total: 28, pageNumber: 3, firstTimeIn: true, showWelcomeBanner: true}, {
+            state = search({searchTerm: 'Mr Bean', resultsSearchTerm: 'Nobby', results: someResults(), resultsReceived: true, suggestions: someSuggestions(), byProbationArea: someByProbationArea(), total: 28, pageNumber: 3, firstTimeIn: true, showWelcomeBanner: true}, {
                 type: REQUEST_SEARCH,
                 searchTerm: 'John Smith'
             })
@@ -60,6 +63,9 @@ describe("searchReducer", () => {
         });
         it('suggestions is kept at existing value', () => {
             expect(state.suggestions).to.eql(someSuggestions())
+        });
+        it('byProbationArea is kept at existing value', () => {
+            expect(state.byProbationArea).to.eql(someByProbationArea())
         });
         it('total is kept at existing value', () => {
             expect(state.total).to.equal(28)
@@ -161,7 +167,7 @@ describe("searchReducer", () => {
         describe('search results copying', () => {
             beforeEach(() => {
                 state = search(
-                    {searchTerm: 'Mr Bean', results: emptyResults(), total: 0, pageNumber: 1},
+                    {searchTerm: 'Mr Bean', results: emptyResults(), byProbationArea:  [], total: 0, pageNumber: 1},
                     {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', pageNumber: 3, results: someResults({
                             offenders: [
                                 {
@@ -180,11 +186,17 @@ describe("searchReducer", () => {
                                     offenderAliases: []
                                 }
                             ],
-                            total: 4
+                            total: 4,
+                            aggregations: {
+                                byProbationArea: someByProbationArea()
+                            }
                         })})
             })
             it('pageNumber is copied', () => {
                 expect(state.pageNumber).to.equal(3)
+            })
+            it('byProbationArea is copied', () => {
+                expect(state.byProbationArea).to.eql(someByProbationArea())
             })
             it('total is copied', () => {
                 expect(state.total).to.equal(4)
@@ -706,7 +718,10 @@ const someResults = (results = {}) => (
                 ]
             }
         },
-        total: 1
+        total: 1,
+        aggregations: {
+            byProbationArea: someByProbationArea()
+        }
     }, results))
 
 const someResultsWithSuggestions = ({suggestions} = {}) => Object.assign(someResults(), {suggestions})
@@ -744,8 +759,12 @@ const emptyResults = () => ({
                     }
                 ]
             }
+        },
+        aggregations: {
+            byProbationArea: []
         }
-    })
+
+})
 
 const someSingleResultWithAddresses = addresses => {
     const results = someResults();
@@ -787,3 +806,10 @@ const someSuggestions = () =>
             ]
         }
     ]
+const someByProbationArea = () =>
+    [
+        {code:"N02",count:2,description:"NPS North East"},
+        {code:"N01",count:1,description:"NPS North West"},
+        {code:"N03",count:1,description:"NPS Wales"}
+     ]
+

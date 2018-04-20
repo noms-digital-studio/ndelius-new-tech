@@ -105,9 +105,9 @@ public class SearchQueryBuilderTest {
 
         assertThat(((PrefixQueryBuilder)query.should().get(7)).value()).isEqualTo("smith");
 
-        TermQueryBuilder termQueryBuilder = (TermQueryBuilder) builder.postFilter();
+        TermQueryBuilder termQueryBuilder = (TermQueryBuilder) query.mustNot().get(0);
         assertThat(termQueryBuilder.fieldName()).isEqualTo("softDeleted");
-        assertThat(termQueryBuilder.value()).isEqualTo(false);
+        assertThat(termQueryBuilder.value()).isEqualTo(true);
 
         assertThat(builder.suggest().getSuggestions().keySet()).containsOnly("firstName", "surname");
     }

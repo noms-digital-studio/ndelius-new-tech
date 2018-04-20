@@ -150,6 +150,30 @@ textarea.form-control {
   font-weight: normal;
 }
 
+table.filter {
+  border: $grey-3 $gutter-one-quarter solid;
+  padding: $gutter;
+  max-height: $offender-image-height * 3;
+
+  thead {
+    background-color: $grey-3;
+
+    th {
+      padding-left: $gutter-one-third;
+      border-bottom: none;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: $grey-3 1px solid;
+      td {
+        margin-left: $gutter-one-third;
+        padding-bottom: $gutter-one-third;
+      }
+    }
+  }
+}
 .back-link {
   position: relative;
   padding-left: 15px;

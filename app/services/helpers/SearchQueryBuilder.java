@@ -3,6 +3,7 @@ package services.helpers;
 import helpers.DateTimeHelper;
 import lombok.val;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilder;
@@ -69,14 +70,32 @@ public class SearchQueryBuilder {
             preTags("").
             postTags("");
 
+        boolQueryBuilder.mustNot(termQuery("softDeleted", true));
+
         val searchSource = new SearchSourceBuilder()
             .query(boolQueryBuilder)
             .highlighter(highlight)
-            .postFilter(termQuery("softDeleted", false))
             .explain(Logger.isDebugEnabled())
             .size(pageSize)
             .from(pageSize * aValidPageNumberFor(pageNumber))
             .suggest(suggestionsFor(searchTerm));
+
+        val activeAreaFilter = QueryBuilders.boolQuery();
+        activeAreaFilter.must().add(termQuery("offenderManagers.active", true));
+
+        searchSource.aggregation(
+                AggregationBuilders
+                        .nested("offenderManagers", "offenderManagers")
+                        .subAggregation(AggregationBuilders
+                                .terms("active")
+                                .field("offenderManagers.active").subAggregation(
+                                    AggregationBuilders
+                                            .terms("byProbationAreaCode")
+                                            .field("offenderManagers.probationArea.code")
+                                )
+                        )
+        );
+
 
         Logger.debug(searchSource.toString());
         return searchSource;
