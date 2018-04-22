@@ -13,7 +13,7 @@ export default connect(
 
             if (data && data.when && ((Date.now() - data.when) / 1000 / 60 < window.recentSearchMinutes)) {
 
-                dispatch(search(data.what, data.page));
+                dispatch(search(data.what, data.probationAreasFilter, data.page));
             } else {
                 dispatch(noSavedSearch())
             }

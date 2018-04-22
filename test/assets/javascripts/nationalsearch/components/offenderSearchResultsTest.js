@@ -30,24 +30,6 @@ describe('OffenderSearchResults component', () => {
 
         })
     })
-    context('with no byProbationArea', () => {
-        it('no filter tables rendered', () => {
-            const results = shallow(<OffenderSearchResults results={noResults()} byProbationArea={[]}/>)
-            expect(results.find('table.filter')).to.have.length(0)
-        })
-    })
-    context('with byProbationArea', () => {
-        it('no filter table is rendered', () => {
-            const results = shallow(<OffenderSearchResults results={noResults()} byProbationArea={[{code: 'N01', description: 'Some Area', count: 67}]}/>)
-            expect(results.find('table.filter')).to.have.length(1)
-        })
-    })
-    context('with many byProbationArea', () => {
-        it('filter row is rendered for each area', () => {
-            const results = shallow(<OffenderSearchResults results={noResults()} byProbationArea={[{code: 'N01', description: 'Some Area', count: 67}, {code: 'N02', description: 'Some Other Area', count: 4}]}/>)
-            expect(results.find('table.filter tbody tr')).to.have.length(2)
-        })
-    })
 })
 
 const noResults = () => []

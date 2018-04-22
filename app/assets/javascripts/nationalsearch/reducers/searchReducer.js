@@ -1,7 +1,7 @@
-import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, PAGE_SIZE, NO_SAVED_SEARCH} from '../actions/search'
+import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, PAGE_SIZE, NO_SAVED_SEARCH, ADD_AREA_FILTER, REMOVE_AREA_FILTER} from '../actions/search'
 import {flatMap} from '../../helpers/streams'
 
-const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsReceived: false, results: [], suggestions: [], byProbationArea: [], total: 0, pageNumber: 1, firstTimeIn: true, showWelcomeBanner: false}, action) => {
+const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsReceived: false, results: [], suggestions: [], byProbationArea: [], probationAreasFilter: [], total: 0, pageNumber: 1, firstTimeIn: true, showWelcomeBanner: false}, action) => {
     switch (action.type) {
         case REQUEST_SEARCH:
             return {
@@ -11,6 +11,7 @@ const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsRe
         case SEARCH_RESULTS:
             if (areSearchResultsStillRelevant(state, action)) {
                 return {
+                    ...state,
                     searchTerm: state.searchTerm,
                     resultsSearchTerm: action.searchTerm,
                     pageNumber: action.pageNumber,
@@ -41,12 +42,42 @@ const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsRe
                 ...state,
                 showWelcomeBanner: state.firstTimeIn
             }
+        case ADD_AREA_FILTER:
+            return {
+                ...state,
+                probationAreasFilter: setIn(state.probationAreasFilter, action.probationAreaCode)
+            }
+        case REMOVE_AREA_FILTER:
+            return {
+                ...state,
+                probationAreasFilter: removeIn(state.probationAreasFilter, action.probationAreaCode)
+            }
         default:
             return state
     }
 };
 
 export default searchResults
+
+const setIn = (array, item) => {
+    if (array.indexOf(item) > -1) {
+        return array;
+    }
+    const copyOf = array.concat()
+    copyOf.push(item)
+    return copyOf;
+}
+
+const removeIn = (array, item) => {
+    const index = array.indexOf(item);
+    if (index === -1) {
+        return array;
+    }
+
+    const copyOf = array.concat()
+    copyOf.splice(index, 1);
+    return copyOf;
+}
 
 const mapResults = (results = [], searchTerm, pageNumber) =>
     results.map(

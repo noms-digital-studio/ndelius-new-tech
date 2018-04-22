@@ -102,7 +102,7 @@ public class NationalSearchController extends Controller {
                 });
     }
 
-    public CompletionStage<Result> searchOffender(String searchTerm, int pageSize, int pageNumber) {
+    public CompletionStage<Result> searchOffender(String searchTerm, String areasFilter, int pageSize, int pageNumber) {
 
         return Optional.ofNullable(session(OFFENDER_API_BEARER_TOKEN)).map(bearerToken -> {
 

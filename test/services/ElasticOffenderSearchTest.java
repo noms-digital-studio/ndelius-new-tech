@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
@@ -54,6 +55,11 @@ public class ElasticOffenderSearchTest {
             listener.onResponse(searchResponse);
             return null;
         }).when(restHighLevelClient).searchAsync(any(), any());
+        when(offenderApi.probationAreaDescriptions(Mockito.any(), Mockito.any())).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of(
+                "N01", "N01 Area",
+                "N02", "N02 Area",
+                "N03", "N03 Area"
+        )));
     }
 
     @Test
