@@ -18,6 +18,7 @@ import play.mvc.Results;
 import javax.inject.Inject;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,7 +26,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
+import static com.google.common.base.Predicates.not;
 import static helpers.JwtHelper.principal;
 
 public class NationalSearchController extends Controller {
@@ -109,9 +112,13 @@ public class NationalSearchController extends Controller {
             Logger.info("AUDIT:{}: Search performed with term '{}'", principal(bearerToken), searchTerm);
             analyticsStore.recordEvent(combine(analyticsContext(), "type", "search-request"));
 
-            return offenderSearch.search(bearerToken, searchTerm, pageSize, pageNumber).
-                    thenApplyAsync(this::recordSearchResultsAnalytics, ec.current()).
-                    thenApply(JsonHelper::okJson);
+            return offenderSearch.search(bearerToken,
+                                            Arrays.stream(areasFilter.split(",")).filter(not(String::isEmpty)).collect(Collectors.toList()),
+                                            searchTerm,
+                                            pageSize,
+                                            pageNumber).
+                                thenApplyAsync(this::recordSearchResultsAnalytics, ec.current()).
+                                thenApply(JsonHelper::okJson);
 
         }).orElseGet(() -> {
 

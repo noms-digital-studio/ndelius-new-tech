@@ -27,6 +27,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -62,11 +63,14 @@ public class NationalSearchControllerTest extends WithApplication {
     @Captor
     private ArgumentCaptor<Map<String, Object>> analyticsEventCaptor;
 
+    @Captor
+    private ArgumentCaptor<List<String>> probationAreasFilter;
+
     @Before
     public void setUp() {
 
         when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture("bearerToken"));
-        when(elasticOffenderSearch.search(any(), any(), anyInt(), anyInt())).thenReturn(completedFuture(ImmutableMap.of(
+        when(elasticOffenderSearch.search(any(), any(),  any(), anyInt(), anyInt())).thenReturn(completedFuture(ImmutableMap.of(
                 "offenders", ImmutableList.of(),
                 "suggestions", ImmutableList.of(),
                 "total", 0
@@ -268,6 +272,31 @@ public class NationalSearchControllerTest extends WithApplication {
     }
 
 
+    @Test
+    public void areaFilterIsConvertedToListForSearchService() {
+        val request = new Http.RequestBuilder().
+                session("offenderApiBearerToken", generateToken()).
+                session("searchAnalyticsGroupId", "999-aaa-888").
+                method(GET).uri("/searchOffender/smith?areasFilter=N01,N02,N03");
+        val result = route(app, request);
+
+        verify(elasticOffenderSearch).search(anyString(), probationAreasFilter.capture(), anyString(), anyInt(), anyInt());
+
+        assertThat(probationAreasFilter.getValue()).containsExactlyInAnyOrder("N01", "N02", "N03");
+    }
+
+    @Test
+    public void areaFilterDefaultIsEmptyForSearchService() {
+        val request = new Http.RequestBuilder().
+                session("offenderApiBearerToken", generateToken()).
+                session("searchAnalyticsGroupId", "999-aaa-888").
+                method(GET).uri("/searchOffender/smith");
+        val result = route(app, request);
+
+        verify(elasticOffenderSearch).search(anyString(), probationAreasFilter.capture(), anyString(), anyInt(), anyInt());
+
+        assertThat(probationAreasFilter.getValue()).isEmpty();
+    }
 
     private Http.RequestBuilder buildIndexPageRequest(int minutesDrift) throws UnsupportedEncodingException {
 

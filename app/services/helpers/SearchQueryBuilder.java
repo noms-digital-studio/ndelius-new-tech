@@ -2,6 +2,7 @@ package services.helpers;
 
 import helpers.DateTimeHelper;
 import lombok.val;
+import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -22,7 +23,7 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 import static org.elasticsearch.search.suggest.SuggestBuilders.termSuggestion;
 
 public class SearchQueryBuilder {
-    public static SearchSourceBuilder searchSourceFor(String searchTerm, int pageSize, int pageNumber) {
+    public static SearchSourceBuilder searchSourceFor(String searchTerm, List<String> probationAreasFilter, int pageSize, int pageNumber) {
 
         val simpleTerms = simpleTerms(searchTerm);
         val boolQueryBuilder = QueryBuilders.boolQuery();
@@ -96,6 +97,19 @@ public class SearchQueryBuilder {
                         )
         );
 
+        if (!probationAreasFilter.isEmpty()) {
+
+            val probationAreaFilter = QueryBuilders.boolQuery();
+
+            probationAreasFilter.stream().map(probationAreaCode -> {
+                val probationAreaCodeFilter = QueryBuilders.boolQuery();
+                probationAreaCodeFilter.must().add(termQuery("offenderManagers.probationArea.code", probationAreaCode));
+                probationAreaCodeFilter.must().add(termQuery("offenderManagers.active", true));
+                return nestedQuery("offenderManagers", probationAreaCodeFilter, ScoreMode.None).ignoreUnmapped(true);
+            }).forEach(probationAreaFilter::should);
+
+            searchSource.postFilter(probationAreaFilter);
+        }
 
         Logger.debug(searchSource.toString());
         return searchSource;

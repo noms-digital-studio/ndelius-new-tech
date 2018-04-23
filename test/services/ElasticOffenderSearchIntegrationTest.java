@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static scala.io.Source.fromInputStream;
@@ -79,7 +80,7 @@ public class ElasticOffenderSearchIntegrationTest {
                 .willReturn(
                     okForContentType("application/json",  response)));
 
-        val result = elasticOffenderSearch.search(JwtHelperTest.generateToken(), "john smith", 10, 0).toCompletableFuture().join();
+        val result = elasticOffenderSearch.search(JwtHelperTest.generateToken(), emptyList(), "john smith", 10, 0).toCompletableFuture().join();
         val byProbationAreas = byProbationAreasAggregationNodes(result);
 
         assertThat(byProbationAreas.size()).isEqualTo(3);
@@ -109,7 +110,7 @@ public class ElasticOffenderSearchIntegrationTest {
                 .willReturn(
                     okForContentType("application/json",  response)));
 
-        val result = elasticOffenderSearch.search(JwtHelperTest.generateToken(), "john smith", 10, 0).toCompletableFuture().join();
+        val result = elasticOffenderSearch.search(JwtHelperTest.generateToken(), emptyList(), "john smith", 10, 0).toCompletableFuture().join();
         val byProbationAreas = byProbationAreasAggregationNodes(result);
 
         assertThat(byProbationAreas.size()).isEqualTo(0);

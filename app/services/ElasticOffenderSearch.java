@@ -66,7 +66,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
     }
 
     @Override
-    public CompletionStage<Map<String, Object>> search(String bearerToken, String searchTerm, int pageSize, int pageNumber) {
+    public CompletionStage<Map<String, Object>> search(String bearerToken, List<String> probationAreasFilter, String searchTerm, int pageSize, int pageNumber) {
 
         final Function<List<ObjectNode>, CompletableFuture[]> restrictResults = results -> results.stream().map(resultNode -> {
 
@@ -124,7 +124,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
                                     .orElse(Json.newArray()))).build());
         };
 
-        val request = new SearchRequest("offender").source(searchSourceFor(searchTerm, pageSize, pageNumber));
+        val request = new SearchRequest("offender").source(searchSourceFor(searchTerm, probationAreasFilter, pageSize, pageNumber));
         val listener = new FutureListener<SearchResponse>();
 
         elasticSearchClient.searchAsync(request, listener);
@@ -132,7 +132,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
         return listener.stage().thenComposeAsync(processResponse);
     }
 
-    private Function<Map<String, Object>, ImmutableMap<Object, Object>> addDescription(Map<String, String> probationAreaDescriptions) {
+    private Function<Map<String, Object>, Map<Object, Object>> addDescription(Map<String, String> probationAreaDescriptions) {
         return area -> ImmutableMap
                 .builder()
                 .putAll(area)
