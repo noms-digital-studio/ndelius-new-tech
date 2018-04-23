@@ -118,7 +118,7 @@ describe('AreaFilter component', () => {
         beforeEach(() => {
             filter = shallow(<AreaFilter
                 searchTerm='Mr Bean'
-                byProbationArea={[{code: 'N01', description: 'Some Area', count: 67}, {code: 'N02', description: 'Some Other Area', count: 4}, {code: 'N03', description: 'Some Other Area', count: 4}]}
+                byProbationArea={[{code: 'N01', description: 'N01 Area', count: 67}, {code: 'N02', description: 'N02 Area', count: 4}, {code: 'N03', description: 'N03 Area', count: 4}]}
                 areaFilter={['N01', 'N03']}
                 addAreaFilter={addAreaFilter}
                 removeAreaFilter={removeAreaFilter}
@@ -129,7 +129,7 @@ describe('AreaFilter component', () => {
         describe('when filter no currently checked', () => {
             it('call addAreaFilter with code', () => {
                 filter.find({value: 'N02'}).simulate('change', {target: {value: 'N02'}});
-                expect(addAreaFilter).to.be.calledWith('N02');
+                expect(addAreaFilter).to.be.calledWith('N02', 'N02 Area');
             })
         })
         describe('when filter is currently checked', () => {

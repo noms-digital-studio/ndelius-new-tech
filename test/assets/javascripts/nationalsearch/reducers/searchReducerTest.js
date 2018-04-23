@@ -670,58 +670,58 @@ describe("searchReducer", () => {
     describe("when ADD_AREA_FILTER action received", () => {
         context('when no filter set yet', () => {
             beforeEach(() => {
-                state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: true, probationAreasFilter: []}, {type: ADD_AREA_FILTER, probationAreaCode: 'N01'})
+                state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: true, probationAreasFilter: {}}, {type: ADD_AREA_FILTER, probationAreaCode: 'N01', probationAreaDescription: 'N01 Area'})
             })
 
             it('area filter just contains new code', () => {
-                expect(state.probationAreasFilter).to.eql(['N01'])
+                expect(state.probationAreasFilter).to.eql({'N01': 'N01 Area'})
             });
         })
         context('when area code already in filter', () => {
             beforeEach(() => {
-                state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: true, probationAreasFilter: ['N01']}, {type: ADD_AREA_FILTER, probationAreaCode: 'N01'})
+                state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: true, probationAreasFilter: {'N01': 'N01 Area'}}, {type: ADD_AREA_FILTER, probationAreaCode: 'N01', probationAreaDescription: 'N01 Area'})
             })
 
             it('area filter just contains existing code', () => {
-                expect(state.probationAreasFilter).to.eql(['N01'])
+                expect(state.probationAreasFilter).to.eql({'N01': 'N01 Area'})
             });
         })
         context('when filter set with other codes', () => {
             beforeEach(() => {
-                state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: true, probationAreasFilter: ['N01']}, {type: ADD_AREA_FILTER, probationAreaCode: 'N02'})
+                state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: true, probationAreasFilter: {'N01': 'N01 Area'}}, {type: ADD_AREA_FILTER, probationAreaCode: 'N02', probationAreaDescription: 'N02 Area'})
             })
 
             it('area filter just contains existing code and new code', () => {
-                expect(state.probationAreasFilter).to.eql(['N01', 'N02'])
+                expect(state.probationAreasFilter).to.eql({'N01': 'N01 Area', 'N02': 'N02 Area'})
             });
         })
     })
     describe("when REMOVE_AREA_FILTER action received", () => {
         context('when code to remove not in filter', () => {
             beforeEach(() => {
-                state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: true, probationAreasFilter: ['N02']}, {type: REMOVE_AREA_FILTER, probationAreaCode: 'N01'})
+                state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: true, probationAreasFilter: {'N02': 'N02 Area'}}, {type: REMOVE_AREA_FILTER, probationAreaCode: 'N01'})
             })
 
             it('area filter remains unchanged', () => {
-                expect(state.probationAreasFilter).to.eql(['N02'])
+                expect(state.probationAreasFilter).to.eql({'N02': 'N02 Area'})
             });
         })
         context('when area code is only one in filter', () => {
             beforeEach(() => {
-                state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: true, probationAreasFilter: ['N01']}, {type: REMOVE_AREA_FILTER, probationAreaCode: 'N01'})
+                state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: true, probationAreasFilter: {'N01': 'N01 Area'}}, {type: REMOVE_AREA_FILTER, probationAreaCode: 'N01'})
             })
 
             it('area filter becomes empty', () => {
-                expect(state.probationAreasFilter).to.eql([])
+                expect(state.probationAreasFilter).to.eql({})
             });
         })
         context('when area code is amongst others  in filter', () => {
             beforeEach(() => {
-                state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: true, probationAreasFilter: ['N01', 'N02']}, {type: REMOVE_AREA_FILTER, probationAreaCode: 'N01'})
+                state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: true, probationAreasFilter: {'N01': 'N01 Area', 'N02': 'N02 Area'}}, {type: REMOVE_AREA_FILTER, probationAreaCode: 'N01'})
             })
 
             it('area filter has all but the one to remove', () => {
-                expect(state.probationAreasFilter).to.eql(['N02'])
+                expect(state.probationAreasFilter).to.eql({'N02': 'N02 Area'})
             });
         })
     })

@@ -1,7 +1,7 @@
 import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, PAGE_SIZE, NO_SAVED_SEARCH, ADD_AREA_FILTER, REMOVE_AREA_FILTER} from '../actions/search'
 import {flatMap} from '../../helpers/streams'
 
-const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsReceived: false, results: [], suggestions: [], byProbationArea: [], probationAreasFilter: [], total: 0, pageNumber: 1, firstTimeIn: true, showWelcomeBanner: false}, action) => {
+const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsReceived: false, results: [], suggestions: [], byProbationArea: [], probationAreasFilter: {}, total: 0, pageNumber: 1, firstTimeIn: true, showWelcomeBanner: false}, action) => {
     switch (action.type) {
         case REQUEST_SEARCH:
             return {
@@ -45,7 +45,7 @@ const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsRe
         case ADD_AREA_FILTER:
             return {
                 ...state,
-                probationAreasFilter: setIn(state.probationAreasFilter, action.probationAreaCode)
+                probationAreasFilter: setIn(state.probationAreasFilter, action.probationAreaCode, action.probationAreaDescription)
             }
         case REMOVE_AREA_FILTER:
             return {
@@ -59,23 +59,15 @@ const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsRe
 
 export default searchResults
 
-const setIn = (array, item) => {
-    if (array.indexOf(item) > -1) {
-        return array;
-    }
-    const copyOf = array.concat()
-    copyOf.push(item)
+const setIn = (object, property, value) => {
+    const copyOf = Object.assign({}, object)
+    copyOf[property] = value
     return copyOf;
 }
 
-const removeIn = (array, item) => {
-    const index = array.indexOf(item);
-    if (index === -1) {
-        return array;
-    }
-
-    const copyOf = array.concat()
-    copyOf.splice(index, 1);
+const removeIn = (object, property) => {
+    const copyOf = Object.assign({}, object)
+    delete copyOf[property]
     return copyOf;
 }
 

@@ -22,7 +22,7 @@ const searchResults = (searchTerm, results, pageNumber) => ({
     })
 
 const clearResults = () => ({type: CLEAR_RESULTS})
-const addAreaFilter = probationAreaCode => ({type: ADD_AREA_FILTER, probationAreaCode})
+const addAreaFilter = (probationAreaCode, probationAreaDescription) => ({type: ADD_AREA_FILTER, probationAreaCode, probationAreaDescription})
 const removeAreaFilter = probationAreaCode => ({type: REMOVE_AREA_FILTER, probationAreaCode})
 
 const performSearch = _.debounce((dispatch, searchTerm, probationAreasFilter, pageNumber) => {

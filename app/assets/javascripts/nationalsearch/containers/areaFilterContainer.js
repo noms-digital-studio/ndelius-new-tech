@@ -6,10 +6,10 @@ export default connect(
     state => ({
         searchTerm: state.search.searchTerm,
         byProbationArea: state.search.byProbationArea,
-        areaFilter: state.search.probationAreasFilter
+        areaFilter: Object.getOwnPropertyNames(state.search.probationAreasFilter)
     }),
     dispatch => ({
-        addAreaFilter: probationAreaCode => dispatch(addAreaFilter(probationAreaCode)),
+        addAreaFilter: (probationAreaCode, probationAreaDescription)  => dispatch(addAreaFilter(probationAreaCode, probationAreaDescription)),
         removeAreaFilter: probationAreaCode => dispatch(removeAreaFilter(probationAreaCode)),
         search: (searchTerm, probationAreasFilter) => dispatch(search(searchTerm, probationAreasFilter))
     })

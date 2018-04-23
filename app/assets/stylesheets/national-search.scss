@@ -153,7 +153,6 @@ textarea.form-control {
 table.filter {
   border: $grey-3 $gutter-one-quarter solid;
   padding: $gutter;
-  max-height: $offender-image-height * 3;
 
   thead {
     background-color: $grey-3;
@@ -165,6 +164,10 @@ table.filter {
   }
 
   tbody {
+    height:$offender-image-height * 3;
+    overflow:scroll;
+    display:block;
+
     tr {
       border-bottom: $grey-3 1px solid;
       td {

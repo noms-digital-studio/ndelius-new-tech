@@ -7,17 +7,19 @@ class AreaFilter extends Component {
     }
     componentWillReceiveProps(nextProps) {
         const {search, searchTerm} = this.props
-        if (this.props.areaFilter !== nextProps.areaFilter) {
+
+        // TODO use ImmutableJS instead
+        if (JSON.stringify(this.props.areaFilter) !== JSON.stringify(nextProps.areaFilter)) {
             search(searchTerm, nextProps.areaFilter)
         }
     }
     render() {
         const {byProbationArea, areaFilter, addAreaFilter, removeAreaFilter} = this.props
-        const toggleFilter = probationAreaCode => {
-            if (areaFilter.indexOf(probationAreaCode) > -1) {
-                removeAreaFilter(probationAreaCode)
+        const toggleFilter = (code, description) => {
+            if (areaFilter.indexOf(code) > -1) {
+                removeAreaFilter(code)
             } else {
-                addAreaFilter(probationAreaCode)
+                addAreaFilter(code, description)
             }
         }
         return (
@@ -38,7 +40,7 @@ class AreaFilter extends Component {
                             <td className='multiple-choice margin-top'>
                                 <input tabIndex={1} type='checkbox' value={probationArea.code} id={probationArea.code}
                                        checked={areaFilter.indexOf(probationArea.code) > -1}
-                                       onChange={event => toggleFilter(event.target.value)}/>
+                                       onChange={event => toggleFilter(probationArea.code, probationArea.description)}/>
                                 <label
                                     htmlFor={probationArea.code}>{probationArea.description} ({probationArea.count})</label>
                             </td>

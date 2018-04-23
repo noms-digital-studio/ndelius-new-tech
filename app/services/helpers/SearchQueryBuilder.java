@@ -23,6 +23,9 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 import static org.elasticsearch.search.suggest.SuggestBuilders.termSuggestion;
 
 public class SearchQueryBuilder {
+
+    private static final int MAX_PROVIDERS_COUNT = 1000;
+
     public static SearchSourceBuilder searchSourceFor(String searchTerm, List<String> probationAreasFilter, int pageSize, int pageNumber) {
 
         val simpleTerms = simpleTerms(searchTerm);
@@ -91,7 +94,7 @@ public class SearchQueryBuilder {
                                 .terms("active")
                                 .field("offenderManagers.active").subAggregation(
                                     AggregationBuilders
-                                            .terms("byProbationAreaCode")
+                                            .terms("byProbationAreaCode").size(MAX_PROVIDERS_COUNT)
                                             .field("offenderManagers.probationArea.code")
                                 )
                         )

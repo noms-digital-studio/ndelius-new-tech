@@ -6,7 +6,7 @@ export default connect(
     state => ({
         suggestions: state.search.suggestions,
         searchTerm: state.search.resultsSearchTerm,
-        probationAreasFilter: state.search.probationAreasFilter
+        probationAreasFilter: Object.getOwnPropertyNames(state.search.probationAreasFilter)
     }),
     dispatch => ({
         search: (searchTerm, probationAreasFilter) => dispatch(search(searchTerm, probationAreasFilter))
