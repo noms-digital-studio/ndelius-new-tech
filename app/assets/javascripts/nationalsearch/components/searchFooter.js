@@ -6,12 +6,12 @@ const SearchFooter = () => (
 
         <ul className="list-bullet margin-top medium">
             <li>name and date of birth</li>
-            <li>address and previous addresses</li>
             <li>CRN, PNC and National Insurance numbers</li>
             <li>aliases and other recorded dates of birth</li>
+            <li>address and previous addresses</li>
         </ul>
 
-        <div className="margin-top medium">
+        <div className="margin-top large">
             <span>You can still access the <LegacySearchLink tabIndex="1">previous version of search</LegacySearchLink>.</span>
         </div>
     </div>);
