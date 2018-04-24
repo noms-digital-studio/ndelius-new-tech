@@ -15,7 +15,7 @@ const OffenderSearchResults = ({results}) => (
                 <AreaFilter/>
             </div>
             <div className='column-two-thirds'>
-                <ul>
+                <ul id='live-offender-results'>
                     {results.map(offenderSummary => (
                         renderSummary(offenderSummary)
                     ))}

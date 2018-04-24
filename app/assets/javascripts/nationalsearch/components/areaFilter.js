@@ -4,6 +4,9 @@ import {Component} from 'react'
 class AreaFilter extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            expanded: true
+        }
     }
     componentWillReceiveProps(nextProps) {
         const {search, searchTerm} = this.props
@@ -13,8 +16,12 @@ class AreaFilter extends Component {
             search(searchTerm, nextProps.probationAreasFilter)
         }
     }
+    toggleExpanded() {
+        this.setState({expanded: !this.state.expanded})
+    }
     render() {
         const {byProbationArea, probationAreasFilter, addAreaFilter, removeAreaFilter} = this.props
+        const {expanded} = this.state
         const toggleFilter = (code, description) => {
             if (probationAreasFilter.indexOf(code) > -1) {
                 removeAreaFilter(code)
@@ -25,29 +32,28 @@ class AreaFilter extends Component {
         return (
             <div className='js-stick-at-top-when-scrolling'>
                 {shouldDisplayFilter(byProbationArea) &&
-                <table className='filter'>
-                    <thead>
-                    <tr>
-                        <th>
-                            <span className='bold-medium'>Provider</span><br/>
-                            <span className='font-small' id='selected'>{probationAreasFilter.length} selected</span>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {byProbationArea.map(probationArea => (
-                        <tr key={probationArea.code}>
-                            <td className='multiple-choice margin-top'>
-                                <input tabIndex={1} type='checkbox' value={probationArea.code} id={probationArea.code}
+                <div  className='filter'>
+                    <button onClick={() => this.toggleExpanded()} type="button" aria-expanded={expanded} aria-controls="filters-providers" className={expanded ? 'open' : 'closed'}>
+                        <div id='provider-select-label' className='bold-small'>
+                            Provider
+                        </div>
+                        <div id='selected' className='font-xsmall'>{probationAreasFilter.length} selected</div>
+                    </button>
+                    <div role='group'aria-labelledby='provider-select-label' id='filter-providers' className={expanded ? 'open filter-container' : 'closed filter-container'}>
+                        <div>
+                        {byProbationArea.map(probationArea => (
+                            <label key={probationArea.code} htmlFor={probationArea.code} className='font-xsmall'>
+                                <input className='filter-option' tabIndex={1} type='checkbox' value={probationArea.code} id={probationArea.code}
                                        checked={probationAreasFilter.indexOf(probationArea.code) > -1}
-                                       onChange={() => toggleFilter(probationArea.code, probationArea.description)}/>
-                                <label
-                                    htmlFor={probationArea.code}>{probationArea.description} ({probationArea.count})</label>
-                            </td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
+                                       onChange={() => toggleFilter(probationArea.code, probationArea.description)}
+                                       aria-controls='live-offender-results'
+                                />
+                                <span>{probationArea.description} ({probationArea.count})</span>
+                            </label>
+                        ))}
+                        </div>
+                    </div>
+                </div>
                 }
             </div>
         )

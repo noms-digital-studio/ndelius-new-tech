@@ -24,7 +24,7 @@ describe('AreaFilter component', () => {
                     removeAreaFilter={removeAreaFilter}
                     search={search}
                 />)
-                expect(filter.find('table.filter')).to.have.length(0)
+                expect(filter.find('.filter')).to.have.length(0)
             })
         })
         context('with byProbationArea', () => {
@@ -37,7 +37,7 @@ describe('AreaFilter component', () => {
                     removeAreaFilter={removeAreaFilter}
                     search={search}
                 />)
-                expect(filter.find('table.filter')).to.have.length(1)
+                expect(filter.find('.filter')).to.have.length(1)
             })
         })
         context('with many byProbationArea', () => {
@@ -50,7 +50,7 @@ describe('AreaFilter component', () => {
                     removeAreaFilter={removeAreaFilter}
                     search={search}
                 />)
-                expect(filter.find('table.filter tbody tr')).to.have.length(2)
+                expect(filter.find('.filter label')).to.have.length(2)
             })
         })
     })
