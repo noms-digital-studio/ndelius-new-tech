@@ -118,9 +118,6 @@ textarea.form-control {
   right: 0;
   background: black;
   padding: 30px;
-  a {
-    color: white;
-  }
   @include media(void, 845px) {
     position: relative;
     padding: 15px;
@@ -130,6 +127,16 @@ textarea.form-control {
   }
   @include media(mobile) {
     left: -20px;
+  }
+}
+
+.national-search-add {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  @include media(void, 845px) {
+    position: relative;
+    top: -10px;
   }
 }
 

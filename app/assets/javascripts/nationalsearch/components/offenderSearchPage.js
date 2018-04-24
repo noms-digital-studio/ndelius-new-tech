@@ -22,25 +22,28 @@ const OffenderSearchPage = ({firstTimeIn, showWelcomeBanner, reloadRecentSearch}
                         <div className="key-content search relative">
 
                             <div className="padding-top padding-bottom search">
-                                <div className="grid-row">
-                                    <div className="column-two-thirds">
-                                        <h1 className="heading-xlarge margin-bottom medium no-margin-top">Search for an
-                                            offender</h1>
-                                    </div>
-                                    <div className="column-one-third align-right">
-                                        <AddNewOffenderLink tabIndex="1"/>
-                                    </div>
+
+                                <h1 className="heading-xlarge margin-bottom medium no-margin-top">Search for an
+                                    offender</h1>
+
+                                <div className="national-search-add">
+                                    <AddNewOffenderLink tabIndex="1"/>
                                 </div>
 
                                 <OffenderSearch/>
-                                <Suggestions/>
+                                <div className="grid-row">
+                                    <div className="column-two-thirds">
+                                        <Suggestions/>
+                                    </div>
+                                </div>
 
                             </div>
 
                             <div className="national-search-help">
                                 <p className="no-margin">Not found what you are looking for?</p>
-                                <a className="font-medium bold clickable">Narrow down your search</a>
+                                <a className="font-medium bold clickable white">Narrow down your search</a>
                             </div>
+
                         </div>
                     </div>
                     <div className="key-content">
