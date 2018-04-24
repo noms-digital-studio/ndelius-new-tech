@@ -8,10 +8,6 @@
 $offender-image-width: 120px;
 $offender-image-height: 150px;
 
-.govuk-box-highlight.blue {
-  background: #005ea5;
-}
-
 a.white {
   color: #fff;
   text-decoration: underline;
@@ -24,10 +20,6 @@ a.clickable {
 
 .clickable {
   cursor: pointer;
-}
-
-.form-control.padded {
-  padding: 10px 20px 10px 20px;
 }
 
 .risk-icon {
@@ -99,15 +91,46 @@ textarea.form-control {
   max-width: none;
   margin-right: 0;
   margin-left: 0;
-
 }
 
 .key-content {
   @extend %site-width-container;
+  &.search {
+    min-height: 290px;
+    @include media(void, 845px) {
+      min-height: 0;
+    }
+  }
 }
 
 .govuk-box-highlight {
   margin-top: 0;
+  &.blue {
+    background: #005ea5;
+    text-align: left;
+    padding: 0;
+  }
+}
+
+.national-search-help {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: black;
+  padding: 30px;
+  a {
+    color: white;
+  }
+  @include media(void, 845px) {
+    position: relative;
+    padding: 15px;
+    display: block;
+    left: -30px;
+    width: 100vw;
+  }
+  @include media(mobile) {
+    left: -20px;
+  }
 }
 
 .phase-banner-boxed {

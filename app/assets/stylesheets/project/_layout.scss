@@ -76,6 +76,20 @@ td {
   padding: 0;
 }
 
+.padding-top {
+  padding-top: 10px;
+  &.search {
+    padding-top: 2em;
+  }
+}
+
+.padding-bottom {
+  padding-bottom: 10px;
+  &.search {
+    padding-bottom: 2em;
+  }
+}
+
 .content-fixed {
   position: fixed;
   top: 0;
@@ -136,4 +150,8 @@ dd {
 
 .no-underline {
   text-decoration: none;
+}
+
+.relative {
+  position: relative;
 }
