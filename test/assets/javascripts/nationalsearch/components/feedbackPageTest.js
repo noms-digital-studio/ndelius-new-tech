@@ -35,7 +35,7 @@ describe('FeedbackPage component', () => {
         })
 
         it('does not contains an `other role` text field if `Other` is not selected in the role drop down list', () => {
-            expect(!feedbackPage.find('#role-other').exists()).to.be.true
+            expect(feedbackPage.find('#role-other').exists()).to.be.false
         })
 
         it('contains a provider select field', () => {
