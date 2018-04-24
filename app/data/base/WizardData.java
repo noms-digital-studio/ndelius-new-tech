@@ -41,6 +41,24 @@ public class WizardData implements Validatable<List<ValidationError>> {
     private String feedback;
 
     @JsonIgnore
+    private String rating;
+
+    @JsonIgnore
+    private String email;
+
+    @JsonIgnore
+    private String role;
+
+    @JsonIgnore
+    private String roleother;
+
+    @JsonIgnore
+    private String provider;
+
+    @JsonIgnore
+    private String region;
+
+    @JsonIgnore
     private String visitedPages;
 
     @Override
