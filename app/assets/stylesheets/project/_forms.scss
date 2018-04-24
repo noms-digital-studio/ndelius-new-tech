@@ -80,3 +80,8 @@ input[type="checkbox"].right {
     @include button($grey-3);
   }
 }
+
+.form-control.search {
+  width: 100%;
+  max-width: 960px;
+}
