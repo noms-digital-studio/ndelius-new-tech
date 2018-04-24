@@ -9,14 +9,14 @@ class AreaFilter extends Component {
         const {search, searchTerm} = this.props
 
         // TODO use ImmutableJS instead
-        if (JSON.stringify(this.props.areaFilter) !== JSON.stringify(nextProps.areaFilter)) {
-            search(searchTerm, nextProps.areaFilter)
+        if (JSON.stringify(this.props.probationAreasFilter) !== JSON.stringify(nextProps.probationAreasFilter)) {
+            search(searchTerm, nextProps.probationAreasFilter)
         }
     }
     render() {
-        const {byProbationArea, areaFilter, addAreaFilter, removeAreaFilter} = this.props
+        const {byProbationArea, probationAreasFilter, addAreaFilter, removeAreaFilter} = this.props
         const toggleFilter = (code, description) => {
-            if (areaFilter.indexOf(code) > -1) {
+            if (probationAreasFilter.indexOf(code) > -1) {
                 removeAreaFilter(code)
             } else {
                 addAreaFilter(code, description)
@@ -30,7 +30,7 @@ class AreaFilter extends Component {
                     <tr>
                         <th>
                             <span className='bold-medium'>Provider</span><br/>
-                            <span className='font-small' id='selected'>{areaFilter.length} selected</span>
+                            <span className='font-small' id='selected'>{probationAreasFilter.length} selected</span>
                         </th>
                     </tr>
                     </thead>
@@ -39,8 +39,8 @@ class AreaFilter extends Component {
                         <tr key={probationArea.code}>
                             <td className='multiple-choice margin-top'>
                                 <input tabIndex={1} type='checkbox' value={probationArea.code} id={probationArea.code}
-                                       checked={areaFilter.indexOf(probationArea.code) > -1}
-                                       onChange={event => toggleFilter(probationArea.code, probationArea.description)}/>
+                                       checked={probationAreasFilter.indexOf(probationArea.code) > -1}
+                                       onChange={() => toggleFilter(probationArea.code, probationArea.description)}/>
                                 <label
                                     htmlFor={probationArea.code}>{probationArea.description} ({probationArea.count})</label>
                             </td>
@@ -61,7 +61,7 @@ AreaFilter.propTypes = {
         description: PropTypes.string.isRequired,
         count: PropTypes.number.isRequired
     })).isRequired,
-    areaFilter: PropTypes.arrayOf(PropTypes.string).isRequired,
+    probationAreasFilter: PropTypes.arrayOf(PropTypes.string).isRequired,
     addAreaFilter: PropTypes.func.isRequired,
     removeAreaFilter: PropTypes.func.isRequired,
     search: PropTypes.func.isRequired

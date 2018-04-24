@@ -19,7 +19,7 @@ describe('AreaFilter component', () => {
                 const filter = shallow(<AreaFilter
                     searchTerm='Mr Bean'
                     byProbationArea={[]}
-                    areaFilter={[]}
+                    probationAreasFilter={[]}
                     addAreaFilter={addAreaFilter}
                     removeAreaFilter={removeAreaFilter}
                     search={search}
@@ -32,7 +32,7 @@ describe('AreaFilter component', () => {
                 const filter = shallow(<AreaFilter
                     searchTerm='Mr Bean'
                     byProbationArea={[{code: 'N01', description: 'Some Area', count: 67}]}
-                    areaFilter={[]}
+                    probationAreasFilter={[]}
                     addAreaFilter={addAreaFilter}
                     removeAreaFilter={removeAreaFilter}
                     search={search}
@@ -45,7 +45,7 @@ describe('AreaFilter component', () => {
                 const filter = shallow(<AreaFilter
                     searchTerm='Mr Bean'
                     byProbationArea={[{code: 'N01', description: 'Some Area', count: 67}, {code: 'N02', description: 'Some Other Area', count: 4}]}
-                    areaFilter={[]}
+                    probationAreasFilter={[]}
                     addAreaFilter={addAreaFilter}
                     removeAreaFilter={removeAreaFilter}
                     search={search}
@@ -62,7 +62,7 @@ describe('AreaFilter component', () => {
                 filter = shallow(<AreaFilter
                     searchTerm='Mr Bean'
                     byProbationArea={[{code: 'N01', description: 'Some Area', count: 67}]}
-                    areaFilter={[]}
+                    probationAreasFilter={[]}
                     addAreaFilter={addAreaFilter}
                     removeAreaFilter={removeAreaFilter}
                     search={search}
@@ -81,7 +81,7 @@ describe('AreaFilter component', () => {
                 filter = shallow(<AreaFilter
                     searchTerm='Mr Bean'
                     byProbationArea={[{code: 'N01', description: 'Some Area', count: 67}]}
-                    areaFilter={['N01']}
+                    probationAreasFilter={['N01']}
                     addAreaFilter={addAreaFilter}
                     removeAreaFilter={removeAreaFilter}
                     search={search}
@@ -100,7 +100,7 @@ describe('AreaFilter component', () => {
                 filter = shallow(<AreaFilter
                     searchTerm='Mr Bean'
                     byProbationArea={[{code: 'N01', description: 'Some Area', count: 67}, {code: 'N02', description: 'Some Other Area', count: 4}, {code: 'N03', description: 'Some Other Area', count: 4}]}
-                    areaFilter={['N01', 'N03']}
+                    probationAreasFilter={['N01', 'N03']}
                     addAreaFilter={addAreaFilter}
                     removeAreaFilter={removeAreaFilter}
                     search={search}
@@ -119,7 +119,7 @@ describe('AreaFilter component', () => {
             filter = shallow(<AreaFilter
                 searchTerm='Mr Bean'
                 byProbationArea={[{code: 'N01', description: 'N01 Area', count: 67}, {code: 'N02', description: 'N02 Area', count: 4}, {code: 'N03', description: 'N03 Area', count: 4}]}
-                areaFilter={['N01', 'N03']}
+                probationAreasFilter={['N01', 'N03']}
                 addAreaFilter={addAreaFilter}
                 removeAreaFilter={removeAreaFilter}
                 search={search}
@@ -146,7 +146,7 @@ describe('AreaFilter component', () => {
             filter = shallow(<AreaFilter
                 searchTerm='Mr Bean'
                 byProbationArea={[{code: 'N01', description: 'Some Area', count: 67}, {code: 'N02', description: 'Some Other Area', count: 4}, {code: 'N03', description: 'Some Other Area', count: 4}]}
-                areaFilter={currentAreaFilter}
+                probationAreasFilter={currentAreaFilter}
                 addAreaFilter={addAreaFilter}
                 removeAreaFilter={removeAreaFilter}
                 search={search}
@@ -155,7 +155,7 @@ describe('AreaFilter component', () => {
         })
         context('when area filter changes', () => {
             it('calls search', () => {
-                filter.setProps({ areaFilter: ['N01'] });
+                filter.setProps({ probationAreasFilter: ['N01'] });
                 expect(search.calledOnce).to.equal(true);
                 expect(search.getCall(0).args[0]).to.equal('Mr Bean');
                 expect(search.getCall(0).args[1]).to.eql(['N01']);
@@ -163,7 +163,7 @@ describe('AreaFilter component', () => {
         })
         context('when some thing else changes', () => {
             it('calls nothing', () => {
-                filter.setProps({ areaFilter: currentAreaFilter });
+                filter.setProps({ probationAreasFilter: currentAreaFilter });
                 expect(search.calledOnce).to.equal(false);
             })
 
