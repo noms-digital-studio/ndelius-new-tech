@@ -190,12 +190,12 @@ div.filter {
   .filter-container {
     border: $grey-3 5px solid;
     background-color: $white;
-    height: 184px;
+    max-height: 50vh;
 
     @include media(mobile){
       height: auto;
+      max-height: none;
     }
-    max-height: none;
     position: relative;
     overflow-y: auto;
     overflow-x: hidden;
