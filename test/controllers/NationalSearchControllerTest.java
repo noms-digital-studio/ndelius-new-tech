@@ -3,6 +3,7 @@ package controllers;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import helpers.Encryption;
+import helpers.JwtHelperTest;
 import interfaces.AnalyticsStore;
 import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
@@ -27,6 +28,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -66,10 +68,14 @@ public class NationalSearchControllerTest extends WithApplication {
     @Captor
     private ArgumentCaptor<List<String>> probationAreasFilter;
 
+    @Captor
+    private ArgumentCaptor<List<String>> probationAreasCode;
+
     @Before
     public void setUp() {
 
-        when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture("bearerToken"));
+        when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
+        when(offenderApi.probationAreaDescriptions(any(), any())).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("N01", "N01 Area", "N02", "N02 Area")));
         when(elasticOffenderSearch.search(any(), any(),  any(), anyInt(), anyInt())).thenReturn(completedFuture(ImmutableMap.of(
                 "offenders", ImmutableList.of(),
                 "suggestions", ImmutableList.of(),
@@ -88,7 +94,25 @@ public class NationalSearchControllerTest extends WithApplication {
         val result = route(app, buildIndexPageRequest(59));
 
         assertThat(result.status()).isEqualTo(OK);
-        assertThat(result.session().get("offenderApiBearerToken")).isEqualTo("bearerToken");
+        assertThat(result.session().get("offenderApiBearerToken")).isEqualTo(JwtHelperTest.generateToken());
+    }
+
+    @Test
+    public void indexPageRetrievedProbationAreaDescriptionsFromJWTProbationAreas() throws UnsupportedEncodingException {
+        when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture(JwtHelperTest.generateTokenWithProbationAreaCodes(Arrays.asList("N02", "N03"))));
+        val result = route(app, buildIndexPageRequest(59));
+
+        verify(offenderApi).probationAreaDescriptions(any(), probationAreasCode.capture());
+        assertThat(probationAreasCode.getValue()).containsExactly("N02", "N03");
+    }
+
+    @Test
+    public void indexPageIsRenderedWithProbationAreas() throws UnsupportedEncodingException {
+        when(offenderApi.probationAreaDescriptions(any(), any())).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("N01", "N01 Area", "N02", "N02 Area")));
+        val result = route(app, buildIndexPageRequest(59));
+
+        assertThat(result.status()).isEqualTo(OK);
+        assertThat(contentAsString(result)).contains("{\"N01\":\"N01 Area\",\"N02\":\"N02 Area\"}");
     }
 
     @Test

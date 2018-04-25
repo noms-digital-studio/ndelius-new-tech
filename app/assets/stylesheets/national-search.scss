@@ -191,6 +191,10 @@ div.filter {
     border: $grey-3 5px solid;
     background-color: $white;
     height: 184px;
+
+    @include media(mobile){
+      height: auto;
+    }
     max-height: none;
     position: relative;
     overflow-y: auto;

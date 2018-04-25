@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import helpers.Encryption;
 import helpers.JsonHelper;
+import helpers.JwtHelper;
 import interfaces.AnalyticsStore;
 import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
@@ -87,9 +88,11 @@ public class NationalSearchController extends Controller {
             session(SEARCH_ANALYTICS_GROUP_ID, UUID.randomUUID().toString());
 
             analyticsStore.recordEvent(combine(analyticsContext(), "type", "search-index"));
-            return ok(template.render(recentSearchMinutes));
+            return bearerToken;
 
-        }, ec.current());
+        }, ec.current())
+                .thenCompose(bearerToken -> offenderApi.probationAreaDescriptions(bearerToken, JwtHelper.probationAreaCodes(bearerToken))
+                        .thenApply(probationAreas -> ok(template.render(recentSearchMinutes, probationAreas))));
 
         Logger.info("AUDIT:{}: About to login {}", "anonymous", username);
 
