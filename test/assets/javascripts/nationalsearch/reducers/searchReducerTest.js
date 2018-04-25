@@ -9,6 +9,7 @@ describe("searchReducer", () => {
     describe("when in default state", () => {
 
         beforeEach(() => {
+            global.window = {probationAreas: {"N03":"NPS Wales","N02":"NPS North East"}}
             state = search(undefined, {type: '"@@redux/INIT"'})
         })
 
@@ -27,8 +28,8 @@ describe("searchReducer", () => {
         it('byProbationArea will be empty', () => {
             expect(state.byProbationArea).to.be.empty
         });
-        it('probationAreasFilter will be empty', () => {
-            expect(state.probationAreasFilter).to.be.empty
+        it('probationAreasFilter will be populated from global window value', () => {
+            expect(state.probationAreasFilter).to.eql({"N03":"NPS Wales","N02":"NPS North East"})
         });
         it('total will be 0', () => {
             expect(state.total).to.equal(0)

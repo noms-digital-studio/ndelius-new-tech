@@ -20,9 +20,4 @@ OffenderSearch.propTypes = {
     probationAreasFilter: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 
-const onSubmit = (event, searchTerm, search) => {
-    search(searchTerm)
-    event.preventDefault()
-}
-
 export default OffenderSearch;

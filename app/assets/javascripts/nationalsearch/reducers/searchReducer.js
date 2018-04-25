@@ -1,7 +1,7 @@
 import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, PAGE_SIZE, NO_SAVED_SEARCH, ADD_AREA_FILTER, REMOVE_AREA_FILTER} from '../actions/search'
 import {flatMap} from '../../helpers/streams'
 
-const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsReceived: false, results: [], suggestions: [], byProbationArea: [], probationAreasFilter: {}, total: 0, pageNumber: 1, firstTimeIn: true, showWelcomeBanner: false}, action) => {
+const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsReceived: false, results: [], suggestions: [], byProbationArea: [], probationAreasFilter: defaultProbationAreasFilter(), total: 0, pageNumber: 1, firstTimeIn: true, showWelcomeBanner: false}, action) => {
     switch (action.type) {
         case REQUEST_SEARCH:
             return {
@@ -59,6 +59,9 @@ const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsRe
 
 export default searchResults
 
+const defaultProbationAreasFilter = () => {
+    return window.probationAreas || {}
+}
 const setIn = (object, property, value) => {
     const copyOf = Object.assign({}, object)
     copyOf[property] = value
