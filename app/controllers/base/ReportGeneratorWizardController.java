@@ -9,16 +9,7 @@ import helpers.ThrowableHelper;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-import java.util.function.Function;
 import lombok.val;
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.cglib.beans.BeanMap;
 import org.webjars.play.WebJarsUtil;
 import play.Environment;
@@ -28,11 +19,17 @@ import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Result;
 import play.twirl.api.Content;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.function.Function;
+
 import static helpers.FluentHelper.not;
 import static helpers.FluentHelper.value;
-import static helpers.JsonHelper.badRequestJson;
-import static helpers.JsonHelper.okJson;
-import static helpers.JsonHelper.serverUnavailableJson;
+import static helpers.JsonHelper.*;
 
 public abstract class ReportGeneratorWizardController<T extends ReportGeneratorWizardData> extends WizardController<T> {
 
