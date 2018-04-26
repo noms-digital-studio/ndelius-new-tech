@@ -1,3 +1,5 @@
+import { Link } from 'react-router'
+
 import OffenderSearchResults from '../containers/offenderSearchResultsContainer';
 import OffenderSearch from '../containers/offenderSearchContainer';
 import FrameNavigation from '../containers/frameNavigationContainer';
@@ -40,8 +42,8 @@ const OffenderSearchPage = ({firstTimeIn, showWelcomeBanner, reloadRecentSearch}
                             </div>
 
                             <div className="national-search-help">
-                                <p className="no-margin">Not found what you are looking for?</p>
-                                <a className="font-medium bold clickable white">Narrow down your search</a>
+                                <p className="no-margin">Not found who you're looking for?</p>
+                                <Link to="help" className="font-medium bold clickable white">Tips for getting better results</Link>
                             </div>
 
                         </div>

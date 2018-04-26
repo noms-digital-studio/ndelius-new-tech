@@ -17,3 +17,49 @@
     color: white !important;
   }
 }
+
+.notice.interrupt {
+  background: $light-blue-25;
+  .icon {
+    margin-left: 15px;
+  }
+  strong {
+    margin-left: 0;
+    padding: 15px 15px 15px 60px;
+  }
+}
+
+.search-hint-middle {
+  padding: 20px 50px 0 70px;
+  @include media(mobile) {
+    padding: 10px 0;
+  }
+}
+
+.search-hint {
+  position: relative;
+  border: 1px solid;
+  border-right: none;
+  background: $grey-3;
+  padding: 15px 30px 15px 15px;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    right: -26px;
+    width: 26px;
+    height: 53px;
+    background: url("../images/search-help-border.png") no-repeat;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    width: 50px;
+    height: 52px;
+    background: url("../images/icon-search-help.png") no-repeat;
+  }
+}
