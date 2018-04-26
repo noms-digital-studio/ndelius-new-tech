@@ -2,7 +2,8 @@ import OffenderSearchSummary from '../containers/offenderSearchSummaryContainer'
 import RestrictedOffenderSearchSummary from '../containers/restrictedOffenderSearchSummaryContainer'
 import SearchResultsTitle from '../containers/searchResultsTitleContainer';
 import PageSelection from '../containers/pageSelectionContainer';
-import AreaFilter from '../containers/areaFilterContainer';
+import OtherAreasFilter from '../containers/otherAreasFilterContainer';
+import MyAreasFilter from '../containers/myAreasFilterContainer';
 
 import PropTypes from "prop-types";
 
@@ -12,7 +13,8 @@ const OffenderSearchResults = ({results}) => (
 
         <div className='grid-row'>
             <div className='column-one-third'>
-                <AreaFilter/>
+                <MyAreasFilter/>
+                <OtherAreasFilter/>
             </div>
             <div className='column-two-thirds'>
                 <ul id='live-offender-results'>

@@ -27,7 +27,8 @@ public class GenerateOffenderESFile {
     private static final String CSV_RESOURCE_FILE = "/esearchloader/uk-1000000.csv";
     private static long EIGHTEEN_YEARS_IN_DAYS = 18 * 365;
     private static int FIFTY_YEARS_IN_DAYS = 50 * 365;
-    private static List<Map.Entry<String, String>> probationAreas = probationAreas();
+    private static List<Map.Entry<String, String>> nationalProbationAreas = nationalProbationAreas();
+    private static List<Map.Entry<String, String>> crcProbationAreas = crcProbationAreas();
 
     public static void main(String[] args) throws IOException {
         System.out.println("Generating source file for offender records...");
@@ -313,73 +314,47 @@ public class GenerateOffenderESFile {
     }
     
     private static Map.Entry<String, String> randomProbationArea() {
-        return probationAreas.get(randomUpTo(probationAreas.size()));
+        return randomUpTo(2) % 2 == 0 ? nationalProbationAreas.get(randomUpTo(nationalProbationAreas.size())) :
+                crcProbationAreas.get(randomUpTo(crcProbationAreas.size()));
     }
     
-    private static List<Map.Entry<String, String>> probationAreas() {
+    private static List<Map.Entry<String, String>> nationalProbationAreas() {
         val probationAreas = new LinkedHashMap<String, String>();
 
-        probationAreas.put("ACI","Altcourse (HMP)");
-
-        probationAreas.put("ARK","Arkham Asylum");
-
-        probationAreas.put("ASI","Ashfield (HMYOI)");
-
-        probationAreas.put("AGI","Askham Grange (HMP & YOI)");
-
-        probationAreas.put("ASP","Avon & Somerset");
-
-        probationAreas.put("AYI","Aylesbury (HMYOI)");
-
-        probationAreas.put("BFI","Bedford (HMP)");
-
-        probationAreas.put("BED","Bedfordshire");
-
-        probationAreas.put("BLR","Belle Reve Federal Penitentiary");
-
-        probationAreas.put("BAI","Belmarsh (HMP)");
-
-        probationAreas.put("BWI","Berwyn (HMP)");
-
-        probationAreas.put("BMI","Birmingham (HMP)");
-
-        probationAreas.put("BHI","Blantyre House (HMP)");
-
-        probationAreas.put("BSI","Brinsford (HMYOI)");
-
-        probationAreas.put("BLI","Bristol (HMP)");
-
-        probationAreas.put("BXI","Brixton (HMP)");
-
-        probationAreas.put("BZI","Bronzefield (HMP)");
-
-        probationAreas.put("BCI","Buckley Hall (HMP)");
-
-        probationAreas.put("BNI","Bullingdon (HMP)");
-
-        probationAreas.put("BRI","Bure (HMP)");
-
-        probationAreas.put("BT1","BVT CRC");
-
-        probationAreas.put("BVT","BVT NPS Division");
-
-        probationAreas.put("BTC","BVT NPS Division 2");
-
-        probationAreas.put("CBS","Cambridgeshire &Peterborough");
-
-        probationAreas.put("CFI","Cardiff (HMP)");
-
         probationAreas.put("N40","Central Projects Team");
+        probationAreas.put("N21","External - NPS London");
 
-        probationAreas.put("CWI","Channings Wood (HMP)");
+        probationAreas.put("N22","External - NPS Midlands");
 
-        probationAreas.put("CDI","Chelmsford (HMP)");
+        probationAreas.put("N23","External - NPS North East");
 
-        probationAreas.put("CHS","Cheshire");
+        probationAreas.put("N24","External - NPS North West");
 
-        probationAreas.put("CLI","Coldingley (HMP)");
+        probationAreas.put("N25","External - NPS South East & Estn");
 
-        probationAreas.put("CKI","Cookham Wood (HMP)");
+        probationAreas.put("N26","External - NPS South West & SC");
+
+        probationAreas.put("N27","External - NPS Wales");
+
+        probationAreas.put("N07","NPS London");
+
+        probationAreas.put("N04","NPS Midlands");
+
+        probationAreas.put("N02","NPS North East");
+
+        probationAreas.put("N01","NPS North West");
+
+        probationAreas.put("N06","NPS South East and Eastern");
+
+        probationAreas.put("N05","NPS South West and South Central");
+
+        probationAreas.put("N03","NPS Wales");
+
+        return new ArrayList<>(probationAreas.entrySet());
+
+    }
+    private static List<Map.Entry<String, String>> crcProbationAreas() {
+        val probationAreas = new LinkedHashMap<String, String>();
 
         probationAreas.put("C13","CPA BeNCH");
 
@@ -424,380 +399,6 @@ public class GenerateOffenderESFile {
         probationAreas.put("C12","CPA Warwickshire and West Mercia");
 
         probationAreas.put("C05","CPA West Yorkshire");
-
-        probationAreas.put("CMB","Cumbria");
-
-        probationAreas.put("DAI","Dartmoor (HMP)");
-
-        probationAreas.put("DTI","Deerbolt (HMP & YOI)");
-
-        probationAreas.put("DBS","Derbyshire");
-
-        probationAreas.put("DCP","Devon & Cornwall");
-
-        probationAreas.put("ALF","Document Management");
-
-        probationAreas.put("DNI","Doncaster (HMP)");
-
-        probationAreas.put("DRS","Dorset");
-
-        probationAreas.put("DGI","Dovegate (HMP)");
-
-        probationAreas.put("DWI","Downview (HMP)");
-
-        probationAreas.put("DHI","Drake Hall (HMP & YOI)");
-
-        probationAreas.put("N00","Dummy Trust - nDelius SPG Sender Identity");
-
-        probationAreas.put("ZMZ","Dummy Trust - Steria Monitoring");
-
-        probationAreas.put("DRH","Durham");
-
-        probationAreas.put("DMI","Durham (HMP)");
-
-        probationAreas.put("DTV","Durham and Tees Valley");
-
-        probationAreas.put("DPP","Dyfed-Powys");
-
-        probationAreas.put("ER2","Earth-2");
-
-        probationAreas.put("ESI","East Sutton Park (HMP & YOI)");
-
-        probationAreas.put("EWI","Eastwood Park (HMP)");
-
-        probationAreas.put("EYI","Elmley (HMP)");
-
-        probationAreas.put("EEI","Erlestoke (HMP)");
-
-        probationAreas.put("ESX","Essex");
-
-        probationAreas.put("EXI","Exeter (HMP)");
-
-        probationAreas.put("N21","External - NPS London");
-
-        probationAreas.put("N22","External - NPS Midlands");
-
-        probationAreas.put("N23","External - NPS North East");
-
-        probationAreas.put("N24","External - NPS North West");
-
-        probationAreas.put("N25","External - NPS South East & Estn");
-
-        probationAreas.put("N26","External - NPS South West & SC");
-
-        probationAreas.put("N27","External - NPS Wales");
-
-        probationAreas.put("FSI","Featherstone (HMP)");
-
-        probationAreas.put("FMI","Feltham (HMP & YOI)");
-
-        probationAreas.put("FOL","Folsom");
-
-        probationAreas.put("FDI","Ford (HMP)");
-
-        probationAreas.put("FBI","Forest Bank (HMP & YOI)");
-
-        probationAreas.put("ROZ","Fort Rozz");
-
-        probationAreas.put("FHI","Foston Hall (HMP &YOI)");
-
-        probationAreas.put("FKI","Frankland (HMP)");
-
-        probationAreas.put("FNI","Full Sutton (HMP)");
-
-        probationAreas.put("GHI","Garth (HMP)");
-
-        probationAreas.put("GTI","Gartree (HMP)");
-
-        probationAreas.put("GPI","Glen Parva (HMYOI & RC)");
-
-        probationAreas.put("GCS","Gloucestershire");
-
-        probationAreas.put("MCG","Greater Manchester");
-
-        probationAreas.put("GMP","Greater Manchester (Source Area)");
-
-        probationAreas.put("GNI","Grendon (HMP)");
-
-        probationAreas.put("GMI","Guys Marsh (HMP)");
-
-        probationAreas.put("GWT","Gwent");
-
-        probationAreas.put("HPS","Hampshire");
-
-        probationAreas.put("HDI","Hatfield (HMP & YOI)");
-
-        probationAreas.put("HVI","Haverigg (HMP)");
-
-        probationAreas.put("HFS","Hertfordshire");
-
-        probationAreas.put("HEI","Hewell (HMP)");
-
-        probationAreas.put("HOI","High Down (HMP)");
-
-        probationAreas.put("HPI","Highpoint (HMP)");
-
-        probationAreas.put("HII","Hindley (HMP & YOI)");
-
-        probationAreas.put("HBI","Hollesley Bay (HMP)");
-
-        probationAreas.put("HHI","Holme House (HMP)");
-
-        probationAreas.put("HLI","Hull (HMP)");
-
-        probationAreas.put("HMI","Humber (HMP)");
-
-        probationAreas.put("HBS","Humberside");
-
-        probationAreas.put("HCI","Huntercombe (HMP)");
-
-        probationAreas.put("DVI","IRC Dover ");
-
-        probationAreas.put("HRI","IRC Haslar");
-
-        probationAreas.put("MHI","IRC Morton Hall");
-
-        probationAreas.put("VEI","IRC The Verne");
-
-        probationAreas.put("ISI","Isis (HMP & YOI)");
-
-        probationAreas.put("IWI","Isle of Wight (HMP)");
-
-        probationAreas.put("KTI","Kennet (HMP)");
-
-        probationAreas.put("KNT","Kent");
-
-        probationAreas.put("KMI","Kirkham (HMP)");
-
-        probationAreas.put("KVI","Kirklevington Grange (HMP)");
-
-        probationAreas.put("LCS","Lancashire");
-
-        probationAreas.put("LFI","Lancaster Farms (HMYOI & RC)");
-
-        probationAreas.put("LEI","Leeds (HMP)");
-
-        probationAreas.put("LCI","Leicester (HMP)");
-
-        probationAreas.put("LTS","Leicestershire & Rutland");
-
-        probationAreas.put("LWI","Lewes (HMP)");
-
-        probationAreas.put("LYI","Leyhill (HMP)");
-
-        probationAreas.put("LII","Lincoln (HMP)");
-
-        probationAreas.put("LNS","Lincolnshire");
-
-        probationAreas.put("LHI","Lindholme (HMP)");
-
-        probationAreas.put("LTI","Littlehey (HMP)");
-
-        probationAreas.put("LPI","Liverpool (HMP)");
-
-        probationAreas.put("LDN","London");
-
-        probationAreas.put("LLI","Long Lartin (HMP)");
-
-        probationAreas.put("LGI","Lowdham Grange (HMP)");
-
-        probationAreas.put("LNI","Low Newton (HMP)");
-
-        probationAreas.put("MSI","Maidstone (HMP)");
-
-        probationAreas.put("MRI","Manchester (HMP)");
-
-        probationAreas.put("MRS","Merseyside");
-
-        probationAreas.put("MGO","MOGO");
-
-        probationAreas.put("MDI","Moorland (HMP & YOI)");
-
-        probationAreas.put("RIO","NEW");
-
-        probationAreas.put("NHI","New Hall (HMP & YOI)");
-
-        probationAreas.put("ZZZ","Non-NOMS Region");
-
-        probationAreas.put("NFK","Norfolk");
-
-        probationAreas.put("NSP","Norfolk and Suffolk");
-
-        probationAreas.put("NTS","Northamptonshire");
-
-        probationAreas.put("NSI","North Sea Camp (HMP)");
-
-        probationAreas.put("NLI","Northumberland (HMP)");
-
-        probationAreas.put("NBR","Northumbria");
-
-        probationAreas.put("WSN","North Wales");
-
-        probationAreas.put("NWI","Norwich (HMP & YOI)");
-
-        probationAreas.put("ALL","No Trust or Trust Unknown");
-
-        probationAreas.put("NMI","Nottingham (HMP)");
-
-        probationAreas.put("NHS","Nottinghamshire");
-
-        probationAreas.put("N07","NPS London");
-
-        probationAreas.put("N04","NPS Midlands");
-
-        probationAreas.put("N02","NPS North East");
-
-        probationAreas.put("N01","NPS North West");
-
-        probationAreas.put("N06","NPS South East and Eastern");
-
-        probationAreas.put("N05","NPS South West and South Central");
-
-        probationAreas.put("N03","NPS Wales");
-
-        probationAreas.put("OWI","Oakwood");
-
-        probationAreas.put("ONI","Onley (HMP)");
-
-        probationAreas.put("OUT","Outside/Released");
-
-        probationAreas.put("PRI","Parc (HMP & YOI)");
-
-        probationAreas.put("PVI","Pentonville (HMP)");
-
-        probationAreas.put("PBI","Peterborough");
-
-        probationAreas.put("PFI","Peterborough Female");
-
-        probationAreas.put("PDI","Portland (HMP & YOI)");
-
-        probationAreas.put("UPI","Prescoed (HMP & YOI)");
-
-        probationAreas.put("PNI","Preston (HMP)");
-
-        probationAreas.put("RNI","Ranby (HMP)");
-
-        probationAreas.put("RSI","Risley (HMP)");
-
-        probationAreas.put("RCI","Rochester (HMYOI)");
-
-        probationAreas.put("RHI","Rye Hill (HMP)");
-
-        probationAreas.put("sfi","San So");
-
-        probationAreas.put("SDI","Send (HMP)");
-
-        probationAreas.put("SWS","South Wales");
-
-        probationAreas.put("YSS","South Yorkshire");
-
-        probationAreas.put("SPG","SPG Sender Identity");
-
-        probationAreas.put("SPI","Spring Hill (HMP)");
-
-        probationAreas.put("SFI","Stafford (HMP)");
-
-        probationAreas.put("STF","Staffordshire");
-
-        probationAreas.put("SWM","Staffordshire and West Midlands");
-
-        probationAreas.put("EHI","Standford Hill (HMP)");
-
-        probationAreas.put("SC1","Star City");
-
-        probationAreas.put("SKI","Stocken (HMP)");
-
-        probationAreas.put("SHI","Stoke Heath (HMP & YOI)");
-
-        probationAreas.put("STI","Styal (HMP & YOI)");
-
-        probationAreas.put("SUI","Sudbury (HMP)");
-
-        probationAreas.put("SFK","Suffolk");
-
-        probationAreas.put("SRY","Surrey");
-
-        probationAreas.put("SSP","Surrey and Sussex ");
-
-        probationAreas.put("SSX","Sussex");
-
-        probationAreas.put("SLI","Swaleside (HMP)");
-
-        probationAreas.put("SWI","Swansea (HMP)");
-
-        probationAreas.put("SNI","Swinfen Hall (HMP & YOI)");
-
-        probationAreas.put("TES","Teeside");
-
-        probationAreas.put("TSI","Thameside");
-
-        probationAreas.put("TVP","Thames Valley");
-
-        probationAreas.put("MTI","The Mount (HMP)");
-
-        probationAreas.put("TCI","Thorn Cross (HMYOI)");
-
-        probationAreas.put("A00","Transfer Provider");
-
-        probationAreas.put("UAT","Unallocated");
-
-        probationAreas.put("UNK","Unknown");
-
-        probationAreas.put("UAL","Unlawfully at Large");
-
-        probationAreas.put("UKI","Usk (HMP)");
-
-        probationAreas.put("WDI","Wakefield (HMP)");
-
-        probationAreas.put("WPT","Wales Probation Trust");
-
-        probationAreas.put("WWI","Wandsworth (HMP)");
-
-        probationAreas.put("WII","Warren Hill (HMP & YOI)");
-
-        probationAreas.put("WWS","Warwickshire");
-
-        probationAreas.put("WLI","Wayland (HMP)");
-
-        probationAreas.put("WEI","Wealstun (HMP)");
-
-        probationAreas.put("WNI","Werrington (HMYOI)");
-
-        probationAreas.put("WMP","West Mercia");
-
-        probationAreas.put("MLW","West Midlands");
-
-        probationAreas.put("YSW","West Yorkshire");
-
-        probationAreas.put("WYI","Wetherby (HMYOI)");
-
-        probationAreas.put("WTI","Whatton (HMP)");
-
-        probationAreas.put("WRI","Whitemoor (HMP)");
-
-        probationAreas.put("WTS","Wiltshire");
-
-        probationAreas.put("WCI","Winchester (HMP)");
-
-        probationAreas.put("WHI","Woodhill (HMP)");
-
-        probationAreas.put("WSI","Wormwood Scrubs (HMP)");
-
-        probationAreas.put("WMI","Wymott (HMP)");
-
-        probationAreas.put("YSN","York and North Yorkshire");
-
-        probationAreas.put("CPT","Z_Never Used");
-
-        probationAreas.put("zz9","zz9 PROVIDER-");
-
-        probationAreas.put("XXX","ZZ BAST Public Provider 1");
-
-        probationAreas.put("ZMM","ZZ - Steria Monitoring Trust");
-
-        probationAreas.put("ZSM","ZZ - Steria Support Trust");
-
-        probationAreas.put("ZPP","ZZ - Test PPCS");
 
         return new ArrayList<>(probationAreas.entrySet());
 
