@@ -20,9 +20,7 @@ import play.mvc.Result;
 import play.twirl.api.Content;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
@@ -204,7 +202,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
         val filename = templateName() + ".pdf";
         val metaData = JsonHelper.stringify(ImmutableMap.of(
                 "templateName", templateName(),
-                "values", BeanMap.create(data)
+                "values", convertDataToMap(data)
         ));
 
         CompletionStage<Map<String, String>> result;
@@ -233,6 +231,16 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
             Logger.info("Store result: " + stored);
             return stored;
         });
+    }
+
+    private Map<String, Object> convertDataToMap(T data) {
+        BeanMap beanMap = BeanMap.create(data);
+
+        val dataValues = new HashMap<String, Object>(beanMap);
+        List<String> excludedKeys = Arrays.asList("email", "rating", "feedback", "role", "provider", "region");
+        excludedKeys.forEach(dataValues::remove);
+
+        return dataValues;
     }
 
     private CompletionStage<Map<String, String>> generateAndStoreReport(T data) {
