@@ -91,8 +91,8 @@ public class NationalSearchController extends Controller {
             return bearerToken;
 
         }, ec.current())
-                .thenCompose(bearerToken -> offenderApi.probationAreaDescriptions(bearerToken, JwtHelper.probationAreaCodes(bearerToken))
-                        .thenApply(probationAreas -> ok(template.render(recentSearchMinutes, probationAreas))));
+        .thenCompose(bearerToken -> offenderApi.probationAreaDescriptions(bearerToken, JwtHelper.probationAreaCodes(bearerToken))
+        .thenApplyAsync(probationAreas -> ok(template.render(recentSearchMinutes, probationAreas)), ec.current()));
 
         Logger.info("AUDIT:{}: About to login {}", "anonymous", username);
 
