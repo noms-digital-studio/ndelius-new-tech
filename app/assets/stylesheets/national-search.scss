@@ -96,7 +96,8 @@ textarea.form-control {
 .key-content {
   @extend %site-width-container;
   &.search {
-    min-height: 290px;
+    padding: 20px 0;
+    min-height: 155px;
     @include media(void, 845px) {
       min-height: 0;
     }
@@ -117,7 +118,7 @@ textarea.form-control {
   bottom: 0;
   right: 0;
   background: black;
-  padding: 30px;
+  padding: 10px 30px;
   @include media(void, 845px) {
     position: relative;
     padding: 15px;
@@ -132,7 +133,7 @@ textarea.form-control {
 
 .national-search-add {
   position: absolute;
-  top: 60px;
+  top: 35px;
   right: 0;
   @include media(void, 845px) {
     position: relative;

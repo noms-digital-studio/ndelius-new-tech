@@ -23,16 +23,16 @@ const OffenderSearchPage = ({firstTimeIn, showWelcomeBanner, reloadRecentSearch}
                     <div className="govuk-box-highlight blue">
                         <div className="key-content search relative">
 
-                            <div className="padding-top padding-bottom search">
+                            <div className="search">
 
-                                <h1 className="heading-xlarge margin-bottom medium no-margin-top">Search for an
-                                    offender</h1>
+                                <h1 className="heading-large margin-bottom medium no-margin-top">Search for an offender</h1>
 
                                 <div className="national-search-add">
                                     <AddNewOffenderLink tabIndex="1"/>
                                 </div>
 
                                 <OffenderSearch/>
+
                                 <div className="grid-row">
                                     <div className="column-two-thirds">
                                         <Suggestions/>
@@ -42,7 +42,6 @@ const OffenderSearchPage = ({firstTimeIn, showWelcomeBanner, reloadRecentSearch}
                             </div>
 
                             <div className="national-search-help">
-                                <p className="no-margin">Not found who you're looking for?</p>
                                 <Link to="help" className="font-medium bold clickable white">Tips for getting better results</Link>
                             </div>
 
