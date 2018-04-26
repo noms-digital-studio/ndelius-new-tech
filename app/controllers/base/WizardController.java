@@ -36,11 +36,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static helpers.FluentHelper.content;
-import static helpers.JwtHelper.principal;
 
 public abstract class WizardController<T extends WizardData> extends Controller {
-
-    private static final String OFFENDER_API_BEARER_TOKEN = "offenderApiBearerToken";
 
     private final AnalyticsStore analyticsStore;
     private final List<String> encryptedFields;
@@ -206,7 +203,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         val eventData = new HashMap<String, Object>()
         {
             {
-                put("username", principal(session(OFFENDER_API_BEARER_TOKEN)));
+                put("username", wizardData.getOnBehalfOfUser());
                 put("sessionId", session("id"));
                 put("pageNumber", wizardData.getPageNumber());
                 put("dateTime", DateTime.now().toDate());

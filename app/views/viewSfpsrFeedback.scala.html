@@ -14,9 +14,7 @@
       <tr>
         <td>@df.format(feedback.get("dateTime").asInstanceOf[Date])</td>
         <td>
-          @if(feedback.get("username") != null) {
-            <p>@usernameExpression.r.findFirstMatchIn(feedback.get("username").toString).map(m => m.group(1)).getOrElse(feedback.get("username"))</p>
-          }
+          <p>@feedback.get("username")</p>
           <p>@feedback.get("feedback").asInstanceOf[Map[String, String]].get("email")</p>
         </td>
         <td>
@@ -32,9 +30,7 @@
     <tr>
       <td>@df.format(feedback.get("dateTime").asInstanceOf[Date])</td>
       <td>
-        @if(feedback.get("username") != null) {
-          <p>@usernameExpression.r.findFirstMatchIn(feedback.get("username").toString).map(m => m.group(1)).getOrElse(feedback.get("username"))</p>
-        }
+        <p>@feedback.get("username")</p>
       </td>
       <td></td>
       <td></td>

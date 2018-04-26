@@ -30,6 +30,11 @@ import java.util.stream.Stream;
 @Validate
 public class WizardData implements Validatable<List<ValidationError>> {
 
+    @Encrypted
+    @RequiredOnPage(1)
+    @JsonIgnore
+    private String onBehalfOfUser;
+
     @Required
     @JsonIgnore
     private Integer pageNumber;
