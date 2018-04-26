@@ -5,15 +5,21 @@ const HelpPage = () => {
     return (<div>
         <div id="root">
             <main id="content">
-                <GovUkPhaseBanner/>
+                <GovUkPhaseBanner basicVersion={true} />
                 <div className="key-content">
+
+                    <p className="text-secondary font-xxsmall margin-top medium">&lt; <Link to="search">Back to New Search</Link></p>
 
                     <h1 className="heading-xlarge">Search tips</h1>
 
-                    <h2 className="heading-medium">Search by name and date of birth at the same time</h2>
+                    <ul>
+                        <li className="list-bullet">
 
-                    <p>For example, <strong>"John Smith 23/06/1986"</strong> - the results will be based on all those
-                        search terms.</p>
+                            <h2 className="heading-medium no-margin-bottom">Search by name and date of birth at the same time</h2>
+                            <p className="margin-top">For example, <strong>"John Smith 23/06/1986"</strong> - the results will be based on all those search terms.</p>
+
+                        </li>
+                    </ul>
 
                     <p className="margin-top margin-bottom large">
                         <span className="search-hint">
@@ -21,10 +27,14 @@ const HelpPage = () => {
                         </span>
                     </p>
 
-                    <h2 className="heading-medium">Search by town, postcode at the same time as name</h2>
+                    <ul>
+                        <li className="list-bullet">
 
-                    <p>For example, <strong>"John Smith S1 1AB"</strong> or <strong>"John Smith Sheffield"</strong> and
-                        so on. The search box can handle multiple search terms simultaneously.</p>
+                            <h2 className="heading-medium no-margin-bottom">Search by town, postcode at the same time as name</h2>
+                            <p className="margin-top no-margin-bottom">For example, <strong>"John Smith S1 1AB"</strong> or <strong>"John Smith Sheffield"</strong> and so on. The search box can handle multiple search terms simultaneously.</p>
+
+                        </li>
+                    </ul>
 
                     <p className="margin-top margin-bottom margin-right large pull-left no-pull-mobile">
                         <span className="search-hint">
@@ -42,10 +52,14 @@ const HelpPage = () => {
 
                     <span className="clearfix" />
 
-                    <h2 className="heading-medium">Include CRN, CRO, PNC, National Insurance and NOMS numbers in your
-                        search</h2>
+                    <ul>
+                        <li className="list-bullet">
 
-                    <p>Using unique numbers will achieve more accurate results.</p>
+                            <h2 className="heading-medium no-margin-bottom margin-top medium">Include CRN, CRO, PNC, National Insurance and NOMS numbers in your search</h2>
+                            <p className="margin-top">Using unique numbers will achieve more accurate results.</p>
+
+                        </li>
+                    </ul>
 
                     <p className="margin-top margin-bottom large">
                         <span className="search-hint">
@@ -53,7 +67,9 @@ const HelpPage = () => {
                         </span>
                     </p>
 
-                    <Link to="search">Previous<br/>New Search</Link>
+                    <p>&nbsp;</p>
+
+                    <Link to="search"><span className="font-medium">Previous</span><br/><span className="font-small">New Search</span></Link>
 
                 </div>
             </main>
