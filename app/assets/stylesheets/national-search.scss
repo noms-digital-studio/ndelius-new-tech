@@ -190,7 +190,7 @@ div.filter {
   .filter-container {
     border: $grey-3 5px solid;
     background-color: $white;
-    max-height: 33vh;
+    max-height: 20vh;
 
     @include media(mobile){
       height: auto;
