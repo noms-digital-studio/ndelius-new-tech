@@ -9,16 +9,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.val;
 import play.Logger;
+import play.cache.AsyncCacheApi;
 import play.libs.Json;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
 
 import javax.inject.Inject;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.stream.Collectors;
+import java.util.function.IntFunction;
 
 import static helpers.JsonHelper.readValue;
 import static java.lang.String.format;
@@ -33,6 +37,8 @@ public class DeliusOffenderApi implements OffenderApi {
     private final WSClient wsClient;
     private final String ldapStringFormat;
     private final String offenderApiBaseUrl;
+    private final AsyncCacheApi cache;
+    private final int cacheTime;
 
     @Data
     @NoArgsConstructor
@@ -44,18 +50,20 @@ public class DeliusOffenderApi implements OffenderApi {
     private static TypeReference probationAreaListRef = new TypeReference<List<ProbationArea>>(){};
 
     @Inject
-    public DeliusOffenderApi(Config configuration, WSClient wsClient) {
+    public DeliusOffenderApi(Config configuration, WSClient wsClient, AsyncCacheApi cache) {
         this.wsClient = wsClient;
 
         ldapStringFormat = configuration.getString("ldap.string.format");
         offenderApiBaseUrl = configuration.getString("offender.api.url");
+        cacheTime = configuration.getInt("offender.api.probationAreas.cache.time.seconds");
+        this.cache = cache;
     }
 
     @Override
     public CompletionStage<String> logon(String username) {
         return wsClient.url(offenderApiBaseUrl + "logon")
             .post(format(ldapStringFormat, username))
-            .thenApply(this::assertOkResponse)
+            .thenApply(response ->  assertOkResponse(response, "logon"))
             .thenApply(WSResponse::getBody);
     }
 
@@ -113,19 +121,41 @@ public class DeliusOffenderApi implements OffenderApi {
     }
 
     @Override
-    public CompletionStage<Map<String, String>> probationAreaDescriptions(String bearerToken, List<String> probationAreaCodes) {
-        if (probationAreaCodes.isEmpty()) {
-            return CompletableFuture.completedFuture(ImmutableMap.of());
-        }
-        val url = String.format(offenderApiBaseUrl + "probationAreas?codes=%s", probationAreaCodes.stream().collect(Collectors.joining( "," )));
+    public CompletionStage<Map<String, String>> probationAreaDescriptions(String bearerToken, List<String> codes) {
+        CompletableFuture<Entry<String, String>> futureAreas[] = codes.stream()
+                .map(probationAreaCode -> cache.getOrElseUpdate(probationAreaCode, () -> lookupDescription(bearerToken, probationAreaCode), cacheTime))
+                .map(CompletionStage::toCompletableFuture)
+                .toArray(toCompletableFutures());
+
+
+        return CompletableFuture.allOf(futureAreas)
+                .thenApply(ignoredVoid ->
+                        Arrays
+                            .stream(futureAreas)
+                            .map(CompletableFuture::join)
+                            .collect(toMap(Entry::getKey, Entry::getValue)));
+
+    }
+
+    private IntFunction<CompletableFuture<Entry<String, String>>[]> toCompletableFutures() {
+        return CompletableFuture[]::new;
+    }
+
+    private CompletionStage<Entry<String, String>> lookupDescription(String bearerToken, String probationAreaCode) {
+        val url = String.format(offenderApiBaseUrl + "probationAreas/code/%s", probationAreaCode);
+        Logger.info("calling " + url);
         return wsClient.url(url)
                 .addHeader(AUTHORIZATION, String.format("Bearer %s", bearerToken))
                 .get()
-                .thenApply(this::assertOkResponse)
+                .thenApply(response ->  assertOkResponse(response, "probationAreas"))
                 .thenApply(WSResponse::getBody)
                 .thenApply(body -> {
                     List<ProbationArea> areas = readValue(body, probationAreaListRef);
-                    return areas.stream().collect(toMap(ProbationArea::getCode, ProbationArea::getDescription));
+                    return areas
+                            .stream()
+                            .findFirst() // API should return single item in a list
+                            .map(area -> new SimpleEntry<>(probationAreaCode, area.getDescription()))
+                            .orElse(new SimpleEntry<>(probationAreaCode, probationAreaCode));
                 });
     }
 
@@ -134,7 +164,7 @@ public class DeliusOffenderApi implements OffenderApi {
         val url = offenderApiBaseUrl + action + queryParamsFrom(params);
         return wsClient.url(offenderApiBaseUrl + "logon")
                 .post("NationalUser")
-                .thenApply(this::assertOkResponse)
+                .thenApply(response ->  assertOkResponse(response, "logon"))
                 .thenApply(WSResponse::getBody)
                 .thenCompose(bearerToken -> callOffenderApi(bearerToken, url));
     }
@@ -162,10 +192,10 @@ public class DeliusOffenderApi implements OffenderApi {
                 map(entry -> String.format("%s=%s", entry.getKey(), entry.getValue())).collect(toList()));
     }
 
-    private WSResponse assertOkResponse(WSResponse response) {
+    private WSResponse assertOkResponse(WSResponse response, String description) {
         if (response.getStatus() != OK) {
-            Logger.error("Logon API bad response {}", response.getStatus());
-            throw new RuntimeException("Unable to call logon. Status = " + response.getStatus());
+            Logger.error("{} API bad response {}", description, response.getStatus());
+            throw new RuntimeException(String.format("Unable to call %s. Status = %d", description, response.getStatus()));
         }
         return response;
     }

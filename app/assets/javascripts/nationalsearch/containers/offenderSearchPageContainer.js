@@ -12,8 +12,7 @@ export default connect(
         reloadRecentSearch: () => localforage.getItem("nationalSearch").then(data => {
 
             if (data && data.when && ((Date.now() - data.when) / 1000 / 60 < window.recentSearchMinutes)) {
-
-                dispatch(search(data.what, data.probationAreasFilter, data.page));
+                dispatch(search(data.what, [], data.page));
             } else {
                 dispatch(noSavedSearch())
             }
