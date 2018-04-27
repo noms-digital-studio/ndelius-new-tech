@@ -32,8 +32,8 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
 
     @Before
     public void beforeEach() {
-        val n01 = fromInputStream(new Environment(Mode.TEST).resourceAsStream("/deliusoffender/probationAreaByCode_N01.json"), "UTF-8").mkString();
-        val n02 = fromInputStream(new Environment(Mode.TEST).resourceAsStream("/deliusoffender/probationAreaByCode_N02.json"), "UTF-8").mkString();
+        val n01 = loadResource("/deliusoffender/probationAreaByCode_N01.json");
+        val n02 = loadResource("/deliusoffender/probationAreaByCode_N02.json");
 
         wireMock.stubFor(
                 get(urlEqualTo("/probationAreas/code/N01"))
@@ -115,6 +115,11 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
     private static Map.Entry<String, String> entry(String code, String description) {
         return new AbstractMap.SimpleEntry<>(code, description);
     }
+
+    private static String loadResource(String resource) {
+        return fromInputStream(new Environment(Mode.TEST).resourceAsStream(resource), "UTF-8").mkString();
+    }
+
 
     @Override
     protected Application provideApplication() {
