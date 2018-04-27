@@ -52,9 +52,7 @@
                             "Neither satisfied or dissatisfied" -> "Neither satisfied or dissatisfied",
                             "Dissatisfied" -> "Dissatisfied",
                             "Very dissatisfied" -> "Very dissatisfied"
-                        ),
-                        Symbol("data-target") -> "rating",
-                        Symbol("data-ignore") -> "N/A"
+                        )
                     )
 
                     @textarea(reportForm("feedback"), '_label -> "If you could change anything what would it be?", 'class -> "classic wide")
@@ -73,8 +71,7 @@
                                     "Court Duty Officer" -> "Court Duty Officer",
                                     "Other" -> "Other"
                         ),
-                        '_label -> "What is you role",
-                        'class -> "form-control"
+                        '_label -> "What is you role"
                     )
 
                     <div id='roleother-section' class="panel panel-border-narrow js-hidden">
@@ -91,8 +88,7 @@
                                     "CRC" -> "CRC",
                                     "Other" -> "Other"
                         ),
-                        '_label -> "Who do you work for",
-                        'class -> "form-control"
+                        '_label -> "Who do you work for"
                     )
 
                     @select(
@@ -107,8 +103,7 @@
                                     "South East" -> "South East",
                                     "London" -> "London"
                         ),
-                        '_label -> "Which region do you work in?",
-                        'class -> "form-control"
+                        '_label -> "Which region do you work in?"
                     )
 
                    <input class="button button-start" type="submit" value="Send feedback"/>
