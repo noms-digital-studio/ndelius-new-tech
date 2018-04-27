@@ -1,5 +1,6 @@
-import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, PAGE_SIZE, NO_SAVED_SEARCH, ADD_AREA_FILTER, REMOVE_AREA_FILTER} from '../actions/search'
+import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, PAGE_SIZE, NO_SAVED_SEARCH, ADD_AREA_FILTER, REMOVE_AREA_FILTER, SAVED_SEARCH} from '../actions/search'
 import {flatMap} from '../../helpers/streams'
+import {setIn, removeIn} from '../../helpers/immutable'
 
 const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsReceived: false, results: [], suggestions: [], byProbationArea: [], probationAreasFilter: {}, myProbationAreas: myProbationAreas(),  total: 0, pageNumber: 1, firstTimeIn: true, showWelcomeBanner: false}, action) => {
     switch (action.type) {
@@ -42,6 +43,12 @@ const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsRe
                 ...state,
                 showWelcomeBanner: state.firstTimeIn
             }
+        case SAVED_SEARCH:
+            return {
+                ...state,
+                searchTerm: action.searchTerm,
+                probationAreasFilter: action.probationAreasFilter
+            };
         case ADD_AREA_FILTER:
             return {
                 ...state,
@@ -61,17 +68,6 @@ export default searchResults
 
 const myProbationAreas = () => {
     return window.probationAreas || {}
-}
-const setIn = (object, property, value) => {
-    const copyOf = Object.assign({}, object)
-    copyOf[property] = value
-    return copyOf;
-}
-
-const removeIn = (object, property) => {
-    const copyOf = Object.assign({}, object)
-    delete copyOf[property]
-    return copyOf;
 }
 
 const mapResults = (results = [], searchTerm, pageNumber) =>

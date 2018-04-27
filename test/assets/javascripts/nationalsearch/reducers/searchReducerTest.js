@@ -1,4 +1,4 @@
-import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, NO_SAVED_SEARCH, ADD_AREA_FILTER, REMOVE_AREA_FILTER} from '../actions/search'
+import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, NO_SAVED_SEARCH, ADD_AREA_FILTER, REMOVE_AREA_FILTER, SAVED_SEARCH} from '../actions/search'
 import search from './searchReducer'
 import {expect} from 'chai';
 import {offender} from '../test-helper'
@@ -670,6 +670,18 @@ describe("searchReducer", () => {
             });
 
         })
+    })
+    describe("when SAVED_SEARCH action received", () => {
+        beforeEach(() => {
+            state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: false}, {type: SAVED_SEARCH, searchTerm: 'Mr Bean', probationAreasFilter: {'N01': 'N01 Area'}})
+        })
+
+        it('area filter just contains saved filter', () => {
+            expect(state.probationAreasFilter).to.eql({'N01': 'N01 Area'})
+        });
+        it('searchTerm is set', () => {
+            expect(state.searchTerm).to.equal('Mr Bean')
+        });
     })
     describe("when ADD_AREA_FILTER action received", () => {
         context('when no filter set yet', () => {
