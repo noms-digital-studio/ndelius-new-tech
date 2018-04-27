@@ -9,6 +9,7 @@ describe("localStorageReducer", () => {
 
         beforeEach(() => {
             state = localStorageReducer(undefined, {type: '"@@redux/INIT"'})
+            global.window = {}
         })
 
         it('searchTerm will be blank', () => {

@@ -11,8 +11,7 @@ class Filter extends Component {
     componentWillReceiveProps(nextProps) {
         const {search, searchTerm, currentFilter} = this.props
 
-        // TODO use ImmutableJS instead
-        if (JSON.stringify(currentFilter) !== JSON.stringify(nextProps.currentFilter)) {
+        if (!equal(currentFilter, nextProps.currentFilter)) {
             search(searchTerm, nextProps.currentFilter)
         }
     }
@@ -77,4 +76,7 @@ Filter.propTypes = {
 };
 
 const shouldDisplayFilter = filterValues => filterValues.length > 0
+const equal = (left, right) => hasAllElements(left, right) && hasAllElements(right, left)
+const hasAllElements = (left, right) => left.filter(element => right.indexOf(element) > -1).length === left.length
+
 export default Filter;
