@@ -6,6 +6,10 @@
   @include bold-14();
 }
 
+.underline {
+  text-decoration: underline;
+}
+
 .page-status-tag {
   @include phase-tag();
   margin: 0;

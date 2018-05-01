@@ -60,5 +60,9 @@
     width: 50px;
     height: 52px;
     background: url("../images/icon-search-help.png") no-repeat;
+
+    @include ie-lte(8) {
+      display: none;
+    }
   }
 }

@@ -61,12 +61,12 @@ a.clickable {
   @include media(mobile) {
     min-height: auto;
   }
-  @include grid-column( 3/4 );
+  @include grid-column(3/4);
 
 }
 
 .offenderImageContainer {
-  @include grid-column( 1/4 );
+  @include grid-column(1/4);
   max-width: $offender-image-width + $gutter;
   padding-left: 0;
   @include media(mobile) {
@@ -118,7 +118,7 @@ textarea.form-control {
   bottom: 0;
   right: 0;
   background: black;
-  padding: 10px 30px;
+  padding: 15px 20px 20px 20px;
   @include media(void, 845px) {
     position: relative;
     padding: 15px;
@@ -148,4 +148,18 @@ textarea.form-control {
 .search-results-title {
   color: $grey-2;
   font-weight: normal;
+}
+
+.back-link {
+  position: relative;
+  padding-left: 15px;
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 2px;
+    border-style: solid;
+    border-width: 6px 8px 6px 0;
+    border-color: transparent $govuk-blue transparent transparent;
+  }
 }

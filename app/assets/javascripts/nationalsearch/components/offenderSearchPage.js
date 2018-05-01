@@ -42,7 +42,7 @@ const OffenderSearchPage = ({firstTimeIn, showWelcomeBanner, reloadRecentSearch}
                             </div>
 
                             <div className="national-search-help">
-                                <Link to="help" className="font-medium bold clickable white">Tips for getting better results</Link>
+                                <Link to="help" className="bold clickable white">Tips for getting better results</Link>
                             </div>
 
                         </div>
