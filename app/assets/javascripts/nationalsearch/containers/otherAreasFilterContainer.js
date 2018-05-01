@@ -5,7 +5,7 @@ import {addAreaFilter, removeAreaFilter, search} from '../actions/search'
 export default connect(
     state => ({
         searchTerm: state.search.searchTerm,
-        filterValues: removeMyProbationAreas(state.search.byProbationArea, state.search.myProbationAreas),
+        filterValues: removeMyProbationAreas(state.search.byProbationArea, state.search.myProbationAreas, state.search.probationAreasFilter),
         currentFilter: Object.getOwnPropertyNames(state.search.probationAreasFilter),
         name: 'all-providers',
         title: 'Other providers'
@@ -17,8 +17,21 @@ export default connect(
     })
 )(areaFilter)
 
-export const removeMyProbationAreas = (byProbationArea, myProbationAreas) => {
-    return byProbationArea.reduce((updatedByProbationArea, area) => {
+const addZeroResultsSelectedAreas = (byProbationArea, probationAreasFilter) => {
+    return  Object.getOwnPropertyNames(probationAreasFilter)
+        .filter(code => isNotInAggregation(code, byProbationArea))
+        .map(code => ({
+            code,
+            description: probationAreasFilter[code],
+            count: 0
+        })).concat(byProbationArea)
+
+}
+
+const isNotInAggregation = (code, byProbationArea) => byProbationArea.filter(area => area.code === code).length === 0
+export const removeMyProbationAreas = (byProbationArea, myProbationAreas, probationAreasFilter) => {
+
+    return addZeroResultsSelectedAreas(byProbationArea, probationAreasFilter).reduce((updatedByProbationArea, area) => {
         if (!myProbationAreas[area.code]) {
             updatedByProbationArea.push(area)
         }

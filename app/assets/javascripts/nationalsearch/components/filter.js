@@ -28,7 +28,10 @@ class Filter extends Component {
                 addToFilter(code, description)
             }
         }
-        const countSelected = () => currentFilter.filter(code =>  filterValues.filter(filter => filter.code === code).length === 1).length
+
+        const isPresentInThisFilter = code => filterValues.filter(filter => filter.code === code).length === 1
+        const countSelected = () => currentFilter.filter(code =>  isPresentInThisFilter(code)).length
+
         return (
             <div className='js-stick-at-top-when-scrolling'>
                 {shouldDisplayFilter(filterValues) &&
