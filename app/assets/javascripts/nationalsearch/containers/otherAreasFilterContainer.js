@@ -17,8 +17,8 @@ export default connect(
     })
 )(areaFilter)
 
-const addZeroResultsSelectedAreas = (byProbationArea, probationAreasFilter) => {
-    return  Object.getOwnPropertyNames(probationAreasFilter)
+const addZeroResultsSelectedAreas = (byProbationArea, probationAreasFilter) =>
+    Object.getOwnPropertyNames(probationAreasFilter)
         .filter(code => isNotInAggregation(code, byProbationArea))
         .map(code => ({
             code,
@@ -26,16 +26,9 @@ const addZeroResultsSelectedAreas = (byProbationArea, probationAreasFilter) => {
             count: 0
         })).concat(byProbationArea)
 
-}
+const isNotInAggregation = (code, byProbationArea) =>
+    byProbationArea.filter(area => area.code === code).length === 0
 
-const isNotInAggregation = (code, byProbationArea) => byProbationArea.filter(area => area.code === code).length === 0
-export const removeMyProbationAreas = (byProbationArea, myProbationAreas, probationAreasFilter) => {
-
-    return addZeroResultsSelectedAreas(byProbationArea, probationAreasFilter).reduce((updatedByProbationArea, area) => {
-        if (!myProbationAreas[area.code]) {
-            updatedByProbationArea.push(area)
-        }
-        return updatedByProbationArea
-    }, [])
-}
+export const removeMyProbationAreas = (byProbationArea, myProbationAreas, probationAreasFilter) =>
+    addZeroResultsSelectedAreas(byProbationArea, probationAreasFilter).filter(area => !myProbationAreas[area.code])
 
