@@ -122,6 +122,7 @@ public class DeliusOffenderApi implements OffenderApi {
 
     @Override
     public CompletionStage<Map<String, String>> probationAreaDescriptions(String bearerToken, List<String> codes) {
+
         CompletableFuture<Entry<String, String>> futureAreas[] = codes.stream()
                 .map(probationAreaCode -> cache.getOrElseUpdate(probationAreaCode, () -> lookupDescription(bearerToken, probationAreaCode), cacheTime))
                 .map(CompletionStage::toCompletableFuture)
@@ -150,7 +151,7 @@ public class DeliusOffenderApi implements OffenderApi {
                 .thenApply(response ->  assertOkResponse(response, "probationAreas"))
                 .thenApply(WSResponse::getBody)
                 .thenApply(body -> {
-                    List<ProbationArea> areas = readValue(body, probationAreaListRef);
+                    final List<ProbationArea> areas = readValue(body, probationAreaListRef);
                     return areas
                             .stream()
                             .findFirst() // API should return single item in a list
