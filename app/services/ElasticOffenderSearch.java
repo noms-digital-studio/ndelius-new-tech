@@ -109,19 +109,21 @@ public class ElasticOffenderSearch implements OffenderSearch {
                 );
             }).thenCombine(
 
-                offenderApi.probationAreaDescriptions(bearerToken, toProbationAreaCodeList(response)),
-                    (result, probationAreaDescriptions) -> ImmutableMap
-                            .<String, Object>builder()
-                            .putAll(result)
-                            .put("aggregations", ImmutableMap.of("byProbationArea",
-                                    Optional.ofNullable(response.getAggregations())
+                offenderApi.probationAreaDescriptions(bearerToken, toProbationAreaCodeList(response))
+                        .thenApply(probationAreaDescriptions -> ImmutableMap.of("byProbationArea",
+                            Optional.ofNullable(response.getAggregations())
                                     .map(this::extractProbationAreaCodeToCountMap)
                                     .map(probationAreas -> probationAreas
                                             .stream()
                                             .map(addDescription(probationAreaDescriptions))
                                             .collect(toList()))
                                     .map(Json::toJson)
-                                    .orElse(Json.newArray()))).build());
+                                    .orElse(Json.newArray()))),
+
+                    (result, aggregations) -> ImmutableMap
+                            .<String, Object>builder()
+                            .putAll(result)
+                            .put("aggregations", aggregations).build());
         };
 
         val request = new SearchRequest("offender").source(searchSourceFor(searchTerm, probationAreasFilter, pageSize, pageNumber));
