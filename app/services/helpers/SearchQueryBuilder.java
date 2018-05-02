@@ -26,7 +26,7 @@ public class SearchQueryBuilder {
 
     private static final int MAX_PROVIDERS_COUNT = 1000;
 
-    public static SearchSourceBuilder searchSourceFor(String searchTerm, List<String> probationAreasFilter, int pageSize, int pageNumber) {
+    public static SearchSourceBuilder searchSourceFor(String searchTerm, List<String> probationAreasCodes, int pageSize, int pageNumber) {
 
         val simpleTerms = simpleTerms(searchTerm);
         val boolQueryBuilder = QueryBuilders.boolQuery();
@@ -100,11 +100,11 @@ public class SearchQueryBuilder {
                         )
         );
 
-        if (!probationAreasFilter.isEmpty()) {
+        if (!probationAreasCodes.isEmpty()) {
 
             val probationAreaFilter = QueryBuilders.boolQuery();
 
-            probationAreasFilter.stream().map(probationAreaCode -> {
+            probationAreasCodes.stream().map(probationAreaCode -> {
                 val probationAreaCodeFilter = QueryBuilders.boolQuery();
                 probationAreaCodeFilter.must().add(termQuery("offenderManagers.probationArea.code", probationAreaCode));
                 probationAreaCodeFilter.must().add(termQuery("offenderManagers.active", true));
