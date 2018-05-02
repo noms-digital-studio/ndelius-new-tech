@@ -61,6 +61,11 @@ public class NationalSearchAnalyticsController extends Controller {
         return analyticsStore.countGroupingArray("search-offender-details", "fieldMatch", fromDateTime(from)).thenApply(JsonHelper::okJson);
     }
 
+    public CompletionStage<Result> satisfaction(String from) {
+        return analyticsStore.pageVisits("search-index", fromDateTime(from))
+            .thenApply(data -> JsonHelper.okJson(ImmutableMap.of("allVisits", data)));
+    }
+
     private LocalDateTime fromDateTime(String from) {
         return Optional.ofNullable(from).
                 map(text -> LocalDateTime.parse(text, ISO_OFFSET_DATE_TIME)).

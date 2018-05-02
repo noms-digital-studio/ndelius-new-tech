@@ -1,6 +1,9 @@
 import moment from 'moment'
 
 export const FILTER_COUNTS = 'FILTER_COUNTS'
+export const SATISFACTION_COUNTS = 'VISIT_COUNTS'
+export const FETCHING_VISIT_COUNTS = 'FETCHING_VISIT_COUNTS'
+export const FETCHING_SATISFACTION_COUNTS = 'FETCHING_VISIT_COUNTS'
 export const TIME_RANGE = 'TIME_RANGE'
 export const UNIQUE_USER_VISITS = 'UNIQUE_USER_VISITS'
 export const ALL_VISITS = 'ALL_VISITS'
@@ -26,7 +29,9 @@ export const rankGrouping = data => ({type: RANK_GROUPING, rankGrouping: {...dat
 export const eventOutcome = data => ({type: EVENT_OUTCOME, eventOutcome: {...data}})
 export const durationBetweenStartEndSearch = data => ({type: DURATION_BETWEEN_START_END_SEARCH, durationBetweenStartEndSearch: {...data}})
 export const searchFieldMatch = data => ({type: SEARCH_FIELD_MATCH, searchFieldMatch: {...data}})
+export const satisfactionCounts = data => ({type: SATISFACTION_COUNTS, ...data})
 export const changeTimeRange = timeRange => ({type: TIME_RANGE, timeRange})
+export const fetchingSatisfactionCounts = () => ({type: FETCHING_SATISFACTION_COUNTS})
 
 const fetchVisitCounts = timeRange => (
     dispatch => {
@@ -58,11 +63,22 @@ const fetchVisitCounts = timeRange => (
     }
 )
 
+const fetchSatisfactionCounts = timeRange => (
+    dispatch => {
+        dispatch(fetchingSatisfactionCounts())
+        $.getJSON(`analytics/satisfaction${timeRangeToDateParameters(timeRange)}`, data => {
+            dispatch(satisfactionCounts(data))
+        });
+
+    }
+)
+
 const timeRangeToDateParameters = timeRange => {
     const from = timeRangeToISODateTime(moment().utc(), timeRange);
 
     return from ? `?from=${from}` : ''
 }
+
 const timeRangeToISODateTime = (now, timeRange) => {
     switch (timeRange) {
         case LAST_HOUR:
@@ -85,3 +101,4 @@ const timeRangeToISODateTime = (now, timeRange) => {
 
 export {timeRangeToISODateTime}  // for testing
 export {fetchVisitCounts}
+export {fetchSatisfactionCounts}
