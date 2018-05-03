@@ -66,7 +66,7 @@ const fetchVisitCounts = timeRange => (
 const fetchSatisfactionCounts = timeRange => (
     dispatch => {
         dispatch(fetchingSatisfactionCounts())
-        $.getJSON(`analytics/satisfaction${timeRangeToDateParameters(timeRange)}`, data => {
+        $.getJSON(`analytics/satisfaction`, data => {
             dispatch(satisfactionCounts(data))
         });
 

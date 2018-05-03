@@ -17,10 +17,7 @@ import services.helpers.MongoUtils;
 import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
@@ -124,6 +121,94 @@ public class MongoDbStore implements AnalyticsStore {
                 ).
                 doOnError(result::completeExceptionally).
                 subscribe(result::complete);
+
+        return result;
+    }
+
+    @Override
+    public CompletableFuture<Map<String, Object>> weeklySatisfactionScores() {
+
+        val result = new CompletableFuture<Map<String, Object>>();
+
+        /*
+        $match:
+	     {
+		 type: { $eq: "search-feedback"}
+		 }
+         */
+        val match = _match( _eq("type", "search-feedback"));
+
+        /*
+            "$group": {
+              "_id": {
+                "week": {
+                  "$week": "$dateTime"
+                },
+                "year": {
+                  "$year": "$dateTime"
+                },
+                "rating": "$feedback.rating"
+              },
+              "count": {
+                "$sum": 1
+              }
+            }
+	     */
+        val group1 = new Document(ImmutableMap.of(
+            "$group", new Document(ImmutableMap.of(
+                "_id", new Document(ImmutableMap.of(
+                    "week", new Document(ImmutableMap.of("$hour", "$dateTime")),  // TODO change hour to week
+                    "year", new Document(ImmutableMap.of("$year", "$dateTime")),
+                    "rating", "$feedback.rating")),
+                "count", _sum()
+            ))
+        ));
+
+        /*
+            "$project": {
+              "rating": "$_id.rating",
+              "weeklyCounts": {  "yearAndWeek": { "$concat": [
+                { "$substr": [ "$_id.year", 0, 4 ] },
+                "-",
+                { "$substr": [ "$_id.week", 0, 2 ] }
+              ]}, "count": "$count" },
+
+              "_id": 0
+            }
+        */
+        val project = new Document(ImmutableMap.of(
+            "$project", new Document(ImmutableMap.of(
+                "rating", "$_id.rating",
+                "weeklyCounts", new Document(ImmutableMap.of(
+                    "yearAndWeek", new Document(ImmutableMap.of(
+                        "$concat", asList(
+                            new Document(ImmutableMap.of("$substr", asList("$_id.year", 0, 4))),
+                            "-",
+                            new Document(ImmutableMap.of("$substr", asList("$_id.week", 0, 2)))
+                        )
+                    )),
+                    "count", "$count"
+                )),
+                "_id", 0
+            ))
+        ));
+
+
+
+//        val pipeline = ImmutableList.of(match);
+        val pipeline = ImmutableList.of(match, group1, project);
+
+        events.aggregate(pipeline).
+            toObservable().
+            toList().
+            map(documents -> documents.stream()
+                .peek(document -> System.out.println("XXXX " + document))
+                .collect(
+//                    Collectors.toMap(doc -> doc.getString("_id"), doc -> doc.get("weeklyCounts")))
+                    Collectors.toMap(doc -> UUID.randomUUID().toString(), doc -> (Object)doc))
+            ).
+            doOnError(result::completeExceptionally).
+            subscribe(result::complete);
 
         return result;
     }

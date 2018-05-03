@@ -11,7 +11,7 @@ class SatisfactionPage extends Component {
     }
     componentWillMount() {
         fetch(this.props)
-        const interval = setInterval(() => fetch(this.props), 30000)
+        const interval = setInterval(() => fetch(this.props), 60000)
         if (interval.unref) {interval.unref()} // when running in mocha/node unref so test doesn't hang
     }
     componentWillReceiveProps(nextProps) {
