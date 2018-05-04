@@ -17,6 +17,7 @@ import utils.PdfGeneratorMock;
 
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
@@ -968,6 +969,11 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
     @Override
     public CompletableFuture<Boolean> isUp() {
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    @Override
+    public CompletableFuture<Map<String, Object>> weeklySatisfactionScores() {
         throw new RuntimeException("Not yet implemented");
     }
 }

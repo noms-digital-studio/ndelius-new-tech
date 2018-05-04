@@ -4,9 +4,10 @@ import satisfactionPage from '../components/satisfactionPage'
 
 export default connect(
     state => ({
-        currentTimeRange: state.analytics.timeRange
+        currentTimeRange: state.analytics.timeRange,
+        satisfactionCounts: state.analytics.satisfactionCounts
     }),
     dispatch => ({
-        fetchSatisfactionCounts: (timeRange) => dispatch(fetchSatisfactionCounts(timeRange))
+        fetchSatisfactionCounts: () => dispatch(fetchSatisfactionCounts())
     }),
 )(satisfactionPage)

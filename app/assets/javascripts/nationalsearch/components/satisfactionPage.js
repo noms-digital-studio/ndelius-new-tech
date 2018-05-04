@@ -1,23 +1,14 @@
 import {Component} from 'react'
-import AllVisitsCounts from '../containers/allVisitsCountContainer';
-import TimeRangeLink from '../containers/analyticsTimeRangeLinkContainer';
 import GovUkPhaseBanner from './govukPhaseBanner';
-import {ALL, LAST_HOUR, LAST_SEVEN_DAYS, LAST_THIRTY_DAYS, THIS_WEEK, THIS_YEAR, TODAY} from '../actions/analytics'
 import PropTypes from 'prop-types'
+import moment from 'moment'
 
 class SatisfactionPage extends Component {
     constructor(props) {
         super(props);
     }
+
     componentWillMount() {
-        fetch(this.props)
-        const interval = setInterval(() => fetch(this.props), 60000)
-        if (interval.unref) {interval.unref()} // when running in mocha/node unref so test doesn't hang
-    }
-    componentWillReceiveProps(nextProps) {
-        fetch(nextProps)
-    }
-    onClickRefresh() {
         fetch(this.props)
     }
 
@@ -27,42 +18,127 @@ class SatisfactionPage extends Component {
                 <GovUkPhaseBanner basicVersion={true}/>
                 <h1 className="heading-xlarge no-margin-bottom">National Search Satisfaction</h1>
                 <div className="grid-row margin-top">
-                    <div className="column-two-thirds">
+                    <div>
 
-                        <AllVisitsCounts description='All visits'/>
-                    </div>
-                    <div className="column-one-third">
-                        <NavigationPanel/>
-                        <input className="button margin-top" type="button" value="Refresh" onClick={() => this.onClickRefresh()}/>
+                        <canvas style={{backgroundColor: '#cccccc'}} ref={(canvas) => { this.canvas = canvas; }}/>
+
                     </div>
                 </div>
             </div>)
     }
+
+    componentDidUpdate() {
+        if (this.chart) {
+            this.chart.destroy()
+        }
+
+        this.chart = new Chart(this.canvas.getContext('2d'), chartOptions(this.props.satisfactionCounts));
+    }
+
 }
+
+const ratingData = function (satisfactionCounts, currentWeekNumber, yearNumber, ratingKey) {
+    const vsCounts = satisfactionCounts[ratingKey];
+    if (!vsCounts) return [];
+    const vsCountsMap = {};
+    vsCounts.forEach(data => {
+        vsCountsMap[data.yearAndWeek] = data.count
+    });
+    const vsData = [];
+    for (let weekNumber = 1; weekNumber <= currentWeekNumber; weekNumber++) {
+        const key = yearNumber + '-' + weekNumber;
+        if (vsCountsMap[key]) {
+            vsData.push(vsCountsMap[key])
+        } else {
+            vsData.push(0)
+        }
+
+    }
+    return vsData;
+};
+const chartOptions = (satisfactionCounts) => {
+    const yearNumber = '2018';
+    const labels = [];
+    const currentWeekNumber = moment().utc().week();
+    for (let weekNumber = 1; weekNumber <= currentWeekNumber; weekNumber++) {
+        labels.push(yearNumber + '-' + weekNumber)
+    }
+
+    return {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: 'Very Satisfied',
+                    data: ratingData(satisfactionCounts, currentWeekNumber, yearNumber, 'Very satisfied'),
+                    backgroundColor: '#00ff00',
+                    borderColor: '#00ff00',
+                    fill: false,
+                    lineTension: 0,
+                    borderWidth: 3
+                },
+                {
+                    label: 'Satisfied',
+                    data: ratingData(satisfactionCounts, currentWeekNumber, yearNumber, 'Satisfied'),
+                    backgroundColor: '#FFFF00',
+                    borderColor: '#FFFF00',
+                    fill: false,
+                    lineTension: 0,
+                    borderWidth: 3
+                },
+                {
+                    label: 'Neither',
+                    data: ratingData(satisfactionCounts, currentWeekNumber, yearNumber, 'Neither satisfied or dissatisfied'),
+                    backgroundColor: '#FFCC00',
+                    borderColor: '#FFCC00',
+                    fill: false,
+                    lineTension: 0,
+                    borderWidth: 3
+                },
+                {
+                    label: 'Dissatisfied',
+                    data: ratingData(satisfactionCounts, currentWeekNumber, yearNumber, 'Dissatisfied'),
+                    backgroundColor: '#FF7F00',
+                    borderColor: '#FF7F00',
+                    fill: false,
+                    lineTension: 0,
+                    borderWidth: 3
+                },
+                {
+                    label: 'Very Dissatisfied',
+                    data: ratingData(satisfactionCounts, currentWeekNumber, yearNumber, 'Very dissatisfied'),
+                    backgroundColor: '#FF0000',
+                    borderColor: '#FF0000',
+                    fill: false,
+                    lineTension: 0,
+                    borderWidth: 3
+                },
+
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        reverse: false
+                    }
+                }]
+            }
+
+        }
+    }
+}
+
 
 const fetch = props => {
-    const {fetchSatisfactionCounts, currentTimeRange} = props;
-    fetchSatisfactionCounts(currentTimeRange)
+    const {fetchSatisfactionCounts} = props;
+    fetchSatisfactionCounts()
 }
-
-const NavigationPanel = () => (
-            <nav className="js-stick-at-top-when-scrolling">
-                <div className="nav-header"/>
-                <h3 className="heading-medium no-margin-top no-margin-bottom">Analytics for</h3>
-                <TimeRangeLink timeRange={LAST_HOUR}>Last hour</TimeRangeLink><br/>
-                <TimeRangeLink timeRange={TODAY}>Today</TimeRangeLink><br/>
-                <TimeRangeLink timeRange={THIS_WEEK}>This week</TimeRangeLink><br/>
-                <TimeRangeLink timeRange={LAST_SEVEN_DAYS}>Last 7 days</TimeRangeLink><br/>
-                <TimeRangeLink timeRange={LAST_THIRTY_DAYS}>Last 30 days</TimeRangeLink><br/>
-                <TimeRangeLink timeRange={THIS_YEAR}>This year</TimeRangeLink><br/>
-                <TimeRangeLink timeRange={ALL}>All time</TimeRangeLink><br/>
-            </nav>
-        )
 
 SatisfactionPage.propTypes = {
     fetchSatisfactionCounts: PropTypes.func.isRequired,
     currentTimeRange: PropTypes.string.isRequired
 }
-
 
 export default SatisfactionPage;

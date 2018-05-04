@@ -2,8 +2,7 @@ import moment from 'moment'
 
 export const FILTER_COUNTS = 'FILTER_COUNTS'
 export const SATISFACTION_COUNTS = 'VISIT_COUNTS'
-export const FETCHING_VISIT_COUNTS = 'FETCHING_VISIT_COUNTS'
-export const FETCHING_SATISFACTION_COUNTS = 'FETCHING_VISIT_COUNTS'
+export const FETCHING_SATISFACTION_COUNTS = 'FETCHING_SATISFACTION_COUNTS'
 export const TIME_RANGE = 'TIME_RANGE'
 export const UNIQUE_USER_VISITS = 'UNIQUE_USER_VISITS'
 export const ALL_VISITS = 'ALL_VISITS'
@@ -63,13 +62,12 @@ const fetchVisitCounts = timeRange => (
     }
 )
 
-const fetchSatisfactionCounts = timeRange => (
+const fetchSatisfactionCounts = () => (
     dispatch => {
         dispatch(fetchingSatisfactionCounts())
         $.getJSON(`analytics/satisfaction`, data => {
             dispatch(satisfactionCounts(data))
         });
-
     }
 )
 

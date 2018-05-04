@@ -11,7 +11,8 @@ const analytics = (state = {
     searchFieldMatch: {},
     filterCounts: {},
     fetching: false,
-    timeRange: TODAY
+    timeRange: TODAY,
+    satisfactionCounts: {}
 }, action) => {
     switch (action.type) {
         case FILTER_COUNTS:
@@ -79,6 +80,12 @@ const analytics = (state = {
             return {
                 ...state,
                 fetching: true
+            };
+        case SATISFACTION_COUNTS:
+            return {
+                ...state,
+                satisfactionCounts: action.satisfactionCounts,
+                fetching: false
             };
         default:
             return state
