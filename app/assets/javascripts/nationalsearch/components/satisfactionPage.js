@@ -2,6 +2,7 @@ import {Component} from 'react'
 import GovUkPhaseBanner from './govukPhaseBanner';
 import PropTypes from 'prop-types'
 import moment from 'moment'
+import {Link} from 'react-router'
 
 class SatisfactionPage extends Component {
     constructor(props) {
@@ -12,17 +13,29 @@ class SatisfactionPage extends Component {
         fetch(this.props)
     }
 
+    onClickRefresh() {
+        fetch(this.props)
+    }
+
     render() {
         return (
             <div>
                 <GovUkPhaseBanner basicVersion={true}/>
                 <h1 className="heading-xlarge no-margin-bottom">National Search Satisfaction</h1>
                 <div className="grid-row margin-top">
-                    <div>
-
+                    <div className="column-two-thirds">
                         <canvas style={{backgroundColor: '#cccccc'}} ref={(canvas) => { this.canvas = canvas; }}/>
-
                     </div>
+                    <div className="column-one-third">
+                        <nav className="js-stick-at-top-when-scrolling">
+                            <div className="nav-header"/>
+                            <h3 className="heading-medium no-margin-top no-margin-bottom">Links for</h3>
+                            <a href="/feedback/nationalSearch">National search feedback</a><br/>
+                            <Link to ='/analytics' >National search analytics</Link>
+                        </nav>
+                        <input className="button margin-top" type="button" value="Refresh" onClick={() => this.onClickRefresh()}/>
+                    </div>
+
                 </div>
             </div>)
     }
@@ -46,7 +59,9 @@ const ratingData = function (satisfactionCounts, currentWeekNumber, yearNumber, 
     });
     const vsData = [];
     for (let weekNumber = 1; weekNumber <= currentWeekNumber; weekNumber++) {
-        const key = yearNumber + '-' + weekNumber;
+        const key = yearNumber
+                        + '-'
+                        + (weekNumber - 1); // MongoDB $week numbers start at 0 unlike moment.js which starts at 1
         if (vsCountsMap[key]) {
             vsData.push(vsCountsMap[key])
         } else {
@@ -56,6 +71,7 @@ const ratingData = function (satisfactionCounts, currentWeekNumber, yearNumber, 
     }
     return vsData;
 };
+
 const chartOptions = (satisfactionCounts) => {
     const yearNumber = '2018';
     const labels = [];
