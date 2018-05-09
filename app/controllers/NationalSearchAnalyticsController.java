@@ -1,5 +1,6 @@
 package controllers;
 
+import com.google.common.collect.ImmutableMap;
 import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
 import play.mvc.Controller;
