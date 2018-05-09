@@ -12,7 +12,6 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.joda.time.DateTime;
 import play.Logger;
-import rx.Observable;
 import services.helpers.MongoUtils;
 
 import javax.inject.Inject;
@@ -404,7 +403,7 @@ public class MongoDbStore implements AnalyticsStore {
                         document.entrySet().stream()
                                 .filter(entry -> !entry.getKey().equals("_id"))
                                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> Integer.valueOf(entry.getValue().toString())))).
-                switchIfEmpty(Observable.just(ImmutableMap.of())).
+                defaultIfEmpty(ImmutableMap.of()).
                 doOnError(result::completeExceptionally).
                 subscribe(result::complete);
 
