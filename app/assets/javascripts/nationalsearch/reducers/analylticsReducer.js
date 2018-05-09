@@ -1,5 +1,4 @@
 import {FETCHING_SATISFACTION_COUNTS, TIME_RANGE, TODAY, FILTER_COUNTS, SATISFACTION_COUNTS, UNIQUE_USER_VISITS, ALL_VISITS, ALL_SEARCHES, RANK_GROUPING, EVENT_OUTCOME, DURATION_BETWEEN_START_END_SEARCH, SEARCH_FIELD_MATCH} from '../actions/analytics'
-
 const analytics = (state = {
     uniqueUserVisits: 0,
     allVisits: 0,
@@ -12,7 +11,8 @@ const analytics = (state = {
     filterCounts: {},
     fetching: false,
     timeRange: TODAY,
-    satisfactionCounts: {}
+    satisfactionCounts: {},
+    yearNumber: '2018'
 }, action) => {
     switch (action.type) {
         case FILTER_COUNTS:
@@ -86,6 +86,12 @@ const analytics = (state = {
                 ...state,
                 satisfactionCounts: action.satisfactionCounts,
                 fetching: false
+            };
+            };
+        case CHANGE_YEAR:
+            return {
+                ...state,
+                yearNumber: action.yearNumber,
             };
         default:
             return state

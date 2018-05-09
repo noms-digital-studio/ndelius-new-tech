@@ -30,6 +30,11 @@ class SatisfactionPage extends Component {
                         <nav className="js-stick-at-top-when-scrolling">
                             <div className="nav-header"/>
                             <h3 className="heading-medium no-margin-top no-margin-bottom">Links for</h3>
+                            <a tabIndex={1} href='javascript:' style={{fontWeight: toFontWeight(this.props.yearNumber, '2018')}} className="clickable" onClick={() => this.props.changeYear('2018')}>2018</a><br/>
+                            <a tabIndex={2} href='javascript:' style={{fontWeight: toFontWeight(this.props.yearNumber, '2019')}} className="clickable" onClick={() => this.props.changeYear('2019')}>2019</a><br/>
+                            <a tabIndex={3} href='javascript:' style={{fontWeight: toFontWeight(this.props.yearNumber, '2020')}} className="clickable" onClick={() => this.props.changeYear('2020')}>2020</a><br/>
+                            <a tabIndex={4} href='javascript:' style={{fontWeight: toFontWeight(this.props.yearNumber, '2021')}} className="clickable" onClick={() => this.props.changeYear('2021')}>2021</a><br/>
+                            <a tabIndex={5} href='javascript:' style={{fontWeight: toFontWeight(this.props.yearNumber, '2022')}} className="clickable" onClick={() => this.props.changeYear('2022')}>2022</a><br/>
                             <a href="/feedback/nationalSearch">National search feedback</a><br/>
                             <Link to ='/analytics' >National search analytics</Link>
                         </nav>
@@ -45,7 +50,7 @@ class SatisfactionPage extends Component {
             this.chart.destroy()
         }
 
-        this.chart = new Chart(this.canvas.getContext('2d'), chartOptions(this.props.satisfactionCounts));
+        this.chart = new Chart(this.canvas.getContext('2d'), chartOptions(this.props.satisfactionCounts, this.props.yearNumber));
     }
 
 }
@@ -72,8 +77,7 @@ const ratingData = function (satisfactionCounts, currentWeekNumber, yearNumber, 
     return vsData;
 };
 
-const chartOptions = (satisfactionCounts) => {
-    const yearNumber = '2018';
+const chartOptions = (satisfactionCounts, yearNumber) => {
     const labels = [];
     const currentWeekNumber = moment().utc().week();
     for (let weekNumber = 1; weekNumber <= currentWeekNumber; weekNumber++) {
@@ -137,24 +141,26 @@ const chartOptions = (satisfactionCounts) => {
             scales: {
                 yAxes: [{
                     ticks: {
-                        reverse: false
+                        reverse: false,
+                        beginAtZero: true
                     }
                 }]
             }
 
         }
     }
-}
-
+};
 
 const fetch = props => {
     const {fetchSatisfactionCounts} = props;
     fetchSatisfactionCounts()
-}
+};
 
 SatisfactionPage.propTypes = {
     fetchSatisfactionCounts: PropTypes.func.isRequired,
-    currentTimeRange: PropTypes.string.isRequired
-}
+    changeYear: PropTypes.func.isRequired
+};
+
+const toFontWeight = (yearNumber, currentYearNumber) => yearNumber === currentYearNumber ? 'bold' : 'normal';
 
 export default SatisfactionPage;

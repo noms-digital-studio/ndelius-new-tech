@@ -11,6 +11,7 @@ export const RANK_GROUPING = 'RANK_GROUPING'
 export const EVENT_OUTCOME = 'EVENT_OUTCOME'
 export const DURATION_BETWEEN_START_END_SEARCH = 'DURATION_BETWEEN_START_END_SEARCH'
 export const SEARCH_FIELD_MATCH = 'SEARCH_FIELD_MATCH'
+export const CHANGE_YEAR = 'CHANGE_YEAR'
 
 export const LAST_HOUR = 'LAST_HOUR';
 export const TODAY = 'TODAY';
@@ -31,6 +32,7 @@ export const searchFieldMatch = data => ({type: SEARCH_FIELD_MATCH, searchFieldM
 export const satisfactionCounts = data => ({type: SATISFACTION_COUNTS, ...data})
 export const changeTimeRange = timeRange => ({type: TIME_RANGE, timeRange})
 export const fetchingSatisfactionCounts = () => ({type: FETCHING_SATISFACTION_COUNTS})
+export const changingYear = (yearNumber) => ({type: CHANGE_YEAR, yearNumber})
 
 const fetchVisitCounts = timeRange => (
     dispatch => {
@@ -71,6 +73,12 @@ const fetchSatisfactionCounts = () => (
     }
 )
 
+const changeYear = (year) => (
+    dispatch => {
+        dispatch(changingYear(year))
+    }
+)
+
 const timeRangeToDateParameters = timeRange => {
     const from = timeRangeToISODateTime(moment().utc(), timeRange);
 
@@ -100,3 +108,4 @@ const timeRangeToISODateTime = (now, timeRange) => {
 export {timeRangeToISODateTime}  // for testing
 export {fetchVisitCounts}
 export {fetchSatisfactionCounts}
+export {changeYear}
