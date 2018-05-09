@@ -73,17 +73,17 @@ const fetchSatisfactionCounts = () => (
     }
 )
 
-const changeYear = (year) => (
-    dispatch => {
-        dispatch(changingYear(year))
-    }
-)
-
 const timeRangeToDateParameters = timeRange => {
     const from = timeRangeToISODateTime(moment().utc(), timeRange);
 
     return from ? `?from=${from}` : ''
 }
+
+const changeYear = (year) => (
+    dispatch => {
+        dispatch(changingYear(year))
+    }
+)
 
 const timeRangeToISODateTime = (now, timeRange) => {
     switch (timeRange) {

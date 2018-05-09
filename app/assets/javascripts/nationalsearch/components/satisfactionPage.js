@@ -10,11 +10,9 @@ class SatisfactionPage extends Component {
     }
 
     componentWillMount() {
-        fetch(this.props)
-    }
-
-    onClickRefresh() {
-        fetch(this.props)
+        fetch(this.props);
+        const interval = setInterval(() => fetch(this.props), 60000);
+        if (interval.unref) {interval.unref()} // when running in mocha/node unref so test doesn't hang
     }
 
     render() {
@@ -38,7 +36,7 @@ class SatisfactionPage extends Component {
                             <a href="/feedback/nationalSearch">National search feedback</a><br/>
                             <Link to ='/analytics' >National search analytics</Link>
                         </nav>
-                        <input className="button margin-top" type="button" value="Refresh" onClick={() => this.onClickRefresh()}/>
+                        <input className="button margin-top" type="button" value="Refresh" onClick={() => fetch(this.props)}/>
                     </div>
 
                 </div>
