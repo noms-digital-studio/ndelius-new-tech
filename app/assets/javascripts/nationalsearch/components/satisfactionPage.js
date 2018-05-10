@@ -60,25 +60,25 @@ class SatisfactionPage extends Component {
 }
 
 const ratingData = function (satisfactionCounts, currentWeekNumber, yearNumber, ratingKey) {
-    const vsCounts = satisfactionCounts[ratingKey];
-    if (!vsCounts) return [];
-    const vsCountsMap = {};
-    vsCounts.forEach(data => {
-        vsCountsMap[data.yearAndWeek] = data.count
+    const countsForRating = satisfactionCounts[ratingKey];
+    if (!countsForRating) return [];
+    const countsAsMap = {};
+    countsForRating.forEach(data => {
+        countsAsMap[data.yearAndWeek] = data.count
     });
-    const vsData = [];
+    const weeklyRatingData = [];
     for (let weekNumber = 1; weekNumber <= currentWeekNumber; weekNumber++) {
         const key = yearNumber
                         + '-'
                         + (weekNumber - 1); // MongoDB $week numbers start at 0 unlike moment.js which starts at 1
-        if (vsCountsMap[key]) {
-            vsData.push(vsCountsMap[key])
+        if (countsAsMap[key]) {
+            weeklyRatingData.push(countsAsMap[key])
         } else {
-            vsData.push(0)
+            weeklyRatingData.push(0)
         }
 
     }
-    return vsData;
+    return weeklyRatingData;
 };
 
 const chartOptions = (satisfactionCounts, yearNumber) => {
