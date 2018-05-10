@@ -21,8 +21,14 @@ class SatisfactionPage extends Component {
                 <GovUkPhaseBanner basicVersion={true}/>
                 <h1 className="heading-xlarge no-margin-bottom">National Search Satisfaction</h1>
                 <div className="grid-row margin-top">
+
+
                     <div className="column-two-thirds">
-                        <canvas style={{backgroundColor: '#cccccc'}} ref={(canvas) => { this.canvas = canvas; }}/>
+                        <div style={{float: 'left', margin: '10px', backgroundColor: '#cccccc', padding: '10px', minWidth: '600px', minHeight: '300px'}}>
+                            <p id='description' style={{fontSize: '16px', textAlign: 'center', margin: '10px'}}>Weekly Satisfaction Counts</p>
+                            <canvas style={{backgroundColor: '#cccccc'}} ref={(canvas) => { this.canvas = canvas; }}/>
+                        </div>
+
                     </div>
                     <div className="column-one-third">
                         <nav className="js-stick-at-top-when-scrolling">
