@@ -1,4 +1,4 @@
-import {FETCHING_SATISFACTION_COUNTS, TIME_RANGE, TODAY, FILTER_COUNTS, SATISFACTION_COUNTS, UNIQUE_USER_VISITS, ALL_VISITS, ALL_SEARCHES, RANK_GROUPING, EVENT_OUTCOME, DURATION_BETWEEN_START_END_SEARCH, SEARCH_FIELD_MATCH, CHANGE_YEAR} from '../actions/analytics'
+import {TIME_RANGE, TODAY, FILTER_COUNTS, SATISFACTION_COUNTS, UNIQUE_USER_VISITS, ALL_VISITS, ALL_SEARCHES, RANK_GROUPING, EVENT_OUTCOME, DURATION_BETWEEN_START_END_SEARCH, SEARCH_FIELD_MATCH, CHANGE_YEAR} from '../actions/analytics'
 const analytics = (state = {
     uniqueUserVisits: 0,
     allVisits: 0,
@@ -12,7 +12,7 @@ const analytics = (state = {
     fetching: false,
     timeRange: TODAY,
     satisfactionCounts: {},
-    yearNumber: '2018'
+    yearNumber: String(new Date().getFullYear())
 }, action) => {
     switch (action.type) {
         case FILTER_COUNTS:
@@ -69,11 +69,6 @@ const analytics = (state = {
                 timeRange: action.timeRange
             }
 
-        case FETCHING_SATISFACTION_COUNTS:
-            return {
-                ...state,
-                fetching: true
-            };
         case SATISFACTION_COUNTS:
             return {
                 ...state,

@@ -2,7 +2,6 @@ import moment from 'moment'
 
 export const FILTER_COUNTS = 'FILTER_COUNTS'
 export const SATISFACTION_COUNTS = 'SATISFACTION_COUNTS'
-export const FETCHING_SATISFACTION_COUNTS = 'FETCHING_SATISFACTION_COUNTS'
 export const TIME_RANGE = 'TIME_RANGE'
 export const UNIQUE_USER_VISITS = 'UNIQUE_USER_VISITS'
 export const ALL_VISITS = 'ALL_VISITS'
@@ -31,8 +30,7 @@ export const durationBetweenStartEndSearch = data => ({type: DURATION_BETWEEN_ST
 export const searchFieldMatch = data => ({type: SEARCH_FIELD_MATCH, searchFieldMatch: {...data}})
 export const satisfactionCounts = data => ({type: SATISFACTION_COUNTS, ...data})
 export const changeTimeRange = timeRange => ({type: TIME_RANGE, timeRange})
-export const fetchingSatisfactionCounts = () => ({type: FETCHING_SATISFACTION_COUNTS})
-export const changingYear = (yearNumber) => ({type: CHANGE_YEAR, yearNumber})
+export const changingYear = yearNumber => ({type: CHANGE_YEAR, yearNumber})
 
 const fetchVisitCounts = timeRange => (
     dispatch => {
@@ -66,7 +64,6 @@ const fetchVisitCounts = timeRange => (
 
 const fetchSatisfactionCounts = () => (
     dispatch => {
-        dispatch(fetchingSatisfactionCounts())
         $.getJSON(`analytics/satisfaction`, data => {
             dispatch(satisfactionCounts(data))
         });
@@ -80,9 +77,7 @@ const timeRangeToDateParameters = timeRange => {
 }
 
 const changeYear = (year) => (
-    dispatch => {
-        dispatch(changingYear(year))
-    }
+    dispatch => dispatch(changingYear(year))
 )
 
 const timeRangeToISODateTime = (now, timeRange) => {

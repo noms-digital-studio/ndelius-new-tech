@@ -39,7 +39,7 @@ class SatisfactionPage extends Component {
                             <a tabIndex={3} href='javascript:' style={{fontWeight: toFontWeight(this.props.yearNumber, '2020')}} className="clickable" onClick={() => this.props.changeYear('2020')}>2020</a><br/>
                             <a tabIndex={4} href='javascript:' style={{fontWeight: toFontWeight(this.props.yearNumber, '2021')}} className="clickable" onClick={() => this.props.changeYear('2021')}>2021</a><br/>
                             <a tabIndex={5} href='javascript:' style={{fontWeight: toFontWeight(this.props.yearNumber, '2022')}} className="clickable" onClick={() => this.props.changeYear('2022')}>2022</a><br/>
-                            <a href="/feedback/nationalSearch">National search feedback</a><br/>
+                            <a href="../feedback/nationalSearch">National search feedback</a><br/>
                             <Link to ='/analytics' >National search analytics</Link>
                         </nav>
                         <input className="button margin-top" type="button" value="Refresh" onClick={() => fetch(this.props)}/>
@@ -67,7 +67,7 @@ const convertCountsToMap = function (countsForRating) {
     return countsAsMap;
 };
 
-const ratingData = function (countsForRating, currentWeekNumber, yearNumber) {
+export const ratingData = function (countsForRating, currentWeekNumber, yearNumber) {
     if (!countsForRating) return [];
 
     const countsAsMap = convertCountsToMap(countsForRating);
@@ -87,12 +87,17 @@ const ratingData = function (countsForRating, currentWeekNumber, yearNumber) {
     return weeklyRatingData;
 };
 
-const chartOptions = (satisfactionCounts, yearNumber) => {
+export const generateXAxisLabels = function (yearNumber, currentWeekNumber) {
     const labels = [];
-    const currentWeekNumber = moment().utc().week();
     for (let weekNumber = 1; weekNumber <= currentWeekNumber; weekNumber++) {
         labels.push(yearNumber + '-' + weekNumber)
     }
+    return labels;
+};
+
+const chartOptions = (satisfactionCounts, yearNumber) => {
+    const currentWeekNumber = moment().utc().week();
+    const labels = generateXAxisLabels(yearNumber, currentWeekNumber);
 
     return {
         type: 'line',

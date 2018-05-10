@@ -11,6 +11,6 @@ export default connect(
     }),
     dispatch => ({
         fetchSatisfactionCounts: () => dispatch(fetchSatisfactionCounts()),
-        changeYear: (yearNumber) => dispatch(changeYear(yearNumber))
+        changeYear: yearNumber => dispatch(changeYear(yearNumber))
     }),
 )(satisfactionPage)

@@ -5,8 +5,6 @@
 
 @()
 
-@df = @{new SimpleDateFormat("dd/MM/yyyy HH:mm")}
-
 <!DOCTYPE html>
 <!--[if lt IE 9]><html class="lte-ie8" lang="en"><![endif]-->
 <!--[if gt IE 8]><!--><html lang="en"><!--<![endif]-->
@@ -21,12 +19,6 @@
       <!--[if gt IE 8]><!--><link rel="stylesheet" media="screen" href='@relative(routes.Assets.versioned("stylesheets/govuk-elements-styles.css"))' /><!--<![endif]-->
     <!--[if IE 8]><link rel="stylesheet" type="text/css" media="all" href='@relative(routes.Assets.versioned("stylesheets/fonts-ie8.css"))' /><![endif]-->
     <link rel="shortcut icon" type="image/x-icon" href='@relative(routes.Assets.versioned("images/favicon.ico"))' />
-
-    <style>
-      table th, table td {
-        border-bottom: 1px solid #bfc1c3 !important;
-      }
-    </style>
 
     <script type="application/javascript">
       window.location.hash = '/satisfaction'
