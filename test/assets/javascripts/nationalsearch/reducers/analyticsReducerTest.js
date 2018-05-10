@@ -41,8 +41,8 @@ describe("analyticsReducer", () => {
         it('satisfactionCounts is set to empty object', () => {
             expect(state.satisfactionCounts).to.eql({})
         })
-        it('yearNumber starts off at 2018', () => {
-            expect(state.yearNumber).to.equal('2018')
+        it('yearNumber starts off at current year', () => {
+            expect(state.yearNumber).to.equal(String(new Date().getFullYear()))
         })
     })
     describe("when UNIQUE_USER_VISITS action received", () => {
