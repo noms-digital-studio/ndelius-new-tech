@@ -59,13 +59,21 @@ class SatisfactionPage extends Component {
 
 }
 
-const ratingData = function (satisfactionCounts, currentWeekNumber, yearNumber, ratingKey) {
-    const countsForRating = satisfactionCounts[ratingKey];
-    if (!countsForRating) return [];
+const convertCountsToMap = function (countsForRating) {
     const countsAsMap = {};
     countsForRating.forEach(data => {
         countsAsMap[data.yearAndWeek] = data.count
     });
+    return countsAsMap;
+};
+
+const ratingData = function (satisfactionCounts, currentWeekNumber, yearNumber, ratingKey) {
+    const countsForRating = satisfactionCounts[ratingKey];
+
+    if (!countsForRating) return [];
+
+    const countsAsMap = convertCountsToMap(countsForRating);
+
     const weeklyRatingData = [];
     for (let weekNumber = 1; weekNumber <= currentWeekNumber; weekNumber++) {
         const key = yearNumber
