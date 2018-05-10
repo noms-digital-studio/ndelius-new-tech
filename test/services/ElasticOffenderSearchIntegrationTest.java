@@ -98,6 +98,46 @@ public class ElasticOffenderSearchIntegrationTest {
         assertThat(byProbationAreas.get(2).get("count").asInt()).isEqualTo(1);
     }
 
+    @Test
+    public void centralTeamIsFilteredFromProbationAreaAggregationsReturnedWithResults() {
+
+        /*
+        /elasticsearchdata/multipleMatches.json has aggregation as:
+        "buckets": [
+                {
+                  "key": "N02",
+                  "doc_count": 2
+                },
+                {
+                  "key": "N01",
+                  "doc_count": 1
+                },
+                {
+                  "key": "N40",
+                  "doc_count": 1
+                }
+              ]
+         */
+        val response = fromInputStream(new Environment(Mode.TEST).resourceAsStream("/elasticsearchdata/multipleMatchesWithN40.json"), "UTF-8").mkString();
+        wireMock.stubFor(
+            get(anyUrl())
+                .willReturn(
+                    okForContentType("application/json",  response)));
+
+        val result = elasticOffenderSearch.search(JwtHelperTest.generateToken(), emptyList(), "john smith", 10, 0).toCompletableFuture().join();
+        val byProbationAreas = byProbationAreasAggregationNodes(result);
+
+        assertThat(byProbationAreas.size()).isEqualTo(2);
+
+        assertThat(byProbationAreas.get(0).get("code").asText()).isEqualTo("N02");
+        assertThat(byProbationAreas.get(0).get("description").asText()).isEqualTo("N02 Area");
+        assertThat(byProbationAreas.get(0).get("count").asInt()).isEqualTo(2);
+
+        assertThat(byProbationAreas.get(1).get("code").asText()).isEqualTo("N01");
+        assertThat(byProbationAreas.get(1).get("description").asText()).isEqualTo("N01 Area");
+        assertThat(byProbationAreas.get(1).get("count").asInt()).isEqualTo(1);
+    }
+
     private ArrayNode byProbationAreasAggregationNodes(Map<String, Object> result) {
         return (ArrayNode) ((Map)result.get("aggregations")).get("byProbationArea");
     }

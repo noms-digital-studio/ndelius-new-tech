@@ -30,6 +30,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static helpers.FluentHelper.not;
 import static helpers.JsonHelper.toBoolean;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
@@ -115,6 +116,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
                                     .map(this::extractProbationAreaCodeToCountMap)
                                     .map(probationAreas -> probationAreas
                                             .stream()
+                                            .filter(not(this::isCentralProjectsTeam))
                                             .map(addDescription(probationAreaDescriptions))
                                             .collect(toList()))
                                     .map(Json::toJson)
@@ -134,6 +136,10 @@ public class ElasticOffenderSearch implements OffenderSearch {
         elasticSearchClient.searchAsync(request, listener);
 
         return listener.stage().thenComposeAsync(processResponse);
+    }
+
+    private boolean isCentralProjectsTeam(Map<String, Object> probationArea) {
+        return probationArea.get("code").equals("N40");
     }
 
     private Function<Map<String, Object>, Map<Object, Object>> addDescription(Map<String, String> probationAreaDescriptions) {
