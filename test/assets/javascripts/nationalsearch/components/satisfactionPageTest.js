@@ -33,7 +33,7 @@ describe('SatisfactionPage component', () => {
             page = shallow(<SatisfactionPage fetchSatisfactionCounts={stub()} changeYear={stub()}/>)
         });
 
-        it('displays weekly Satisfaction Counts', () => {
+        it('displays weekly satisfaction counts', () => {
             expect(page.find('#description').text()).to.equal('Weekly Satisfaction Counts');
         });
     })

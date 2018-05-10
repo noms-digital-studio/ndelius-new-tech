@@ -198,7 +198,7 @@ describe('fetchSatisfactionCounts action', () => {
         }
     })
 
-    describe('on fetch counts', () => {
+    describe('on fetch satisfaction counts', () => {
         beforeEach(() => {
             global.$.getJSON.yields(
                 {
@@ -212,10 +212,6 @@ describe('fetchSatisfactionCounts action', () => {
                 }
             );
             fetchSatisfactionCounts()(dispatch)
-        });
-
-        it ('dispatches SATISFACTION_COUNTS', () => {
-            expect(dispatch).to.be.calledWith({type: 'FETCHING_SATISFACTION_COUNTS'})
         });
 
         it ('calls endpoint', () => {
@@ -235,7 +231,7 @@ describe('fetchSatisfactionCounts action', () => {
     })
 
     describe('change year', () => {
-        it('', () => {
+        it('dispatches CHANGE_YEAR with year number', () => {
             changeYear('2019')(dispatch);
             expect(dispatch).to.be.calledWith({ type: "CHANGE_YEAR", yearNumber: "2019" });
         })
