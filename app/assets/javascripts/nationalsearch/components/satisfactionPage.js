@@ -67,9 +67,7 @@ const convertCountsToMap = function (countsForRating) {
     return countsAsMap;
 };
 
-const ratingData = function (satisfactionCounts, currentWeekNumber, yearNumber, ratingKey) {
-    const countsForRating = satisfactionCounts[ratingKey];
-
+const ratingData = function (countsForRating, currentWeekNumber, yearNumber) {
     if (!countsForRating) return [];
 
     const countsAsMap = convertCountsToMap(countsForRating);
@@ -103,7 +101,7 @@ const chartOptions = (satisfactionCounts, yearNumber) => {
             datasets: [
                 {
                     label: 'Very Satisfied',
-                    data: ratingData(satisfactionCounts, currentWeekNumber, yearNumber, 'Very satisfied'),
+                    data: ratingData(satisfactionCounts['Very satisfied'], currentWeekNumber, yearNumber),
                     backgroundColor: '#00ff00',
                     borderColor: '#00ff00',
                     fill: false,
@@ -112,7 +110,7 @@ const chartOptions = (satisfactionCounts, yearNumber) => {
                 },
                 {
                     label: 'Satisfied',
-                    data: ratingData(satisfactionCounts, currentWeekNumber, yearNumber, 'Satisfied'),
+                    data: ratingData(satisfactionCounts['Satisfied'], currentWeekNumber, yearNumber),
                     backgroundColor: '#FFFF00',
                     borderColor: '#FFFF00',
                     fill: false,
@@ -121,7 +119,7 @@ const chartOptions = (satisfactionCounts, yearNumber) => {
                 },
                 {
                     label: 'Neither',
-                    data: ratingData(satisfactionCounts, currentWeekNumber, yearNumber, 'Neither satisfied or dissatisfied'),
+                    data: ratingData(satisfactionCounts['Neither'], currentWeekNumber, yearNumber),
                     backgroundColor: '#FFCC00',
                     borderColor: '#FFCC00',
                     fill: false,
@@ -130,7 +128,7 @@ const chartOptions = (satisfactionCounts, yearNumber) => {
                 },
                 {
                     label: 'Dissatisfied',
-                    data: ratingData(satisfactionCounts, currentWeekNumber, yearNumber, 'Dissatisfied'),
+                    data: ratingData(satisfactionCounts['Dissatisfied'], currentWeekNumber, yearNumber),
                     backgroundColor: '#FF7F00',
                     borderColor: '#FF7F00',
                     fill: false,
@@ -139,7 +137,7 @@ const chartOptions = (satisfactionCounts, yearNumber) => {
                 },
                 {
                     label: 'Very Dissatisfied',
-                    data: ratingData(satisfactionCounts, currentWeekNumber, yearNumber, 'Very dissatisfied'),
+                    data: ratingData(satisfactionCounts['Very dissatisfied'], currentWeekNumber, yearNumber),
                     backgroundColor: '#FF0000',
                     borderColor: '#FF0000',
                     fill: false,
