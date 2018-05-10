@@ -193,6 +193,19 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
         assertThat(body.get("hasNotUsedFilterCount").asLong()).isEqualTo(2);
     }
 
+    @Test
+    public void returnsWeeklySatisfactionScores() {
+        when(analyticsStore.weeklySatisfactionScores()).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of(
+            "foo", 1,
+            "bar", 2
+        )));
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/satisfaction"));
+
+        final JsonNode body = Json.parse(contentAsString(result));
+        assertThat(body.get("satisfactionCounts").get("foo").asLong()).isEqualTo(1);
+        assertThat(body.get("satisfactionCounts").get("bar").asLong()).isEqualTo(2);
+    }
 
     @Override
     protected Application provideApplication() {
