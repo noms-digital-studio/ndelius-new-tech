@@ -3,6 +3,7 @@ import GovUkPhaseBanner from './govukPhaseBanner';
 import PropTypes from 'prop-types'
 import moment from 'moment'
 import {Link} from 'react-router'
+import {range} from '../../helpers/streams'
 
 class SatisfactionPage extends Component {
     constructor(props) {
@@ -84,8 +85,6 @@ export const ratingData = function (countsForRating, currentWeekNumber, yearNumb
 export const generateXAxisLabels = function (yearNumber, currentWeekNumber) {
     return range(currentWeekNumber).map(weekNumber => yearNumber + '-' + weekNumber);
 };
-
-const range = (count) => [...Array(count)].map((v, i) => i + 1)
 
 const chartOptions = (satisfactionCounts, yearNumber) => {
     const currentWeekNumber = moment().utc().week();
