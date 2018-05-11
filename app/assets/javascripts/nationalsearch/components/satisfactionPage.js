@@ -60,11 +60,10 @@ class SatisfactionPage extends Component {
 }
 
 const convertCountsToMap = function (countsForRating) {
-    const countsAsMap = {};
-    countsForRating.forEach(data => {
-        countsAsMap[data.yearAndWeek] = data.count
-    });
-    return countsAsMap;
+    return countsForRating.reduce( (result, data) => {
+        result[data.yearAndWeek] = data.count;
+        return result;
+    }, {});
 };
 
 export const ratingData = function (countsForRating, currentWeekNumber, yearNumber) {
@@ -72,28 +71,21 @@ export const ratingData = function (countsForRating, currentWeekNumber, yearNumb
 
     const countsAsMap = convertCountsToMap(countsForRating);
 
-    const weeklyRatingData = [];
-    for (let weekNumber = 1; weekNumber <= currentWeekNumber; weekNumber++) {
-        const key = yearNumber
-                        + '-'
-                        + (weekNumber - 1); // MongoDB $week numbers start at 0 unlike moment.js which starts at 1
-        if (countsAsMap[key]) {
-            weeklyRatingData.push(countsAsMap[key])
-        } else {
-            weeklyRatingData.push(0)
-        }
-
-    }
-    return weeklyRatingData;
+    return range(currentWeekNumber)
+        .reduce( (result, weekNumber) => {
+            const key = yearNumber
+                + '-'
+                + (weekNumber - 1); // MongoDB $week numbers start at 0 unlike moment.js which starts at 1
+            result.push(countsAsMap[key] || 0);
+            return result;
+        }, []);
 };
 
 export const generateXAxisLabels = function (yearNumber, currentWeekNumber) {
-    const labels = [];
-    for (let weekNumber = 1; weekNumber <= currentWeekNumber; weekNumber++) {
-        labels.push(yearNumber + '-' + weekNumber)
-    }
-    return labels;
+    return range(currentWeekNumber).map(weekNumber => yearNumber + '-' + weekNumber);
 };
+
+const range = (count) => [...Array(count)].map((v, i) => i + 1)
 
 const chartOptions = (satisfactionCounts, yearNumber) => {
     const currentWeekNumber = moment().utc().week();
