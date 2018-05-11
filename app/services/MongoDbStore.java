@@ -524,7 +524,7 @@ public class MongoDbStore implements AnalyticsStore {
         )));
 
         val sum = _group(_by("_id", "$browser", "total", _sum()));
-        val sort = _sort("total", 1);
+        val sort = _sort("_id", 1);
 
         val countGrouping = ImmutableList.of(
                 dateFilter,
@@ -538,7 +538,6 @@ public class MongoDbStore implements AnalyticsStore {
                 toObservable().
                 toList().
                 map(documents -> documents.stream()
-                        .sorted(Comparator.comparing(doc -> doc.getString("_id")))
                         .collect(
                             toMap(doc -> doc.getString("_id"), doc -> doc.getLong("total"), firstDuplicate(), LinkedHashMap::new))
                 ).
