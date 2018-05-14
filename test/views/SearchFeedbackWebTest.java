@@ -13,7 +13,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.test.WithBrowser;
-import utils.SimpleDocumentStoreMock;
 import views.pages.SearchFeedbackPage;
 
 import java.util.Date;
@@ -73,10 +72,12 @@ public class SearchFeedbackWebTest extends WithBrowser {
         PdfGenerator pdfGenerator = mock(PdfGenerator.class);
         when(pdfGenerator.generate(any(), any())).thenReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
 
+        DocumentStore documentStore = mock(DocumentStore.class);
+
         return new GuiceApplicationBuilder().
             overrides(
                 bind(PdfGenerator.class).toInstance(pdfGenerator),
-                bind(DocumentStore.class).toInstance(new SimpleDocumentStoreMock()),
+                bind(DocumentStore.class).toInstance(documentStore),
                 bind(AnalyticsStore.class).toInstance(analyticsStore)
             ).build();
     }
