@@ -12,22 +12,24 @@ import play.inject.guice.GuiceApplicationBuilder;
 import play.test.Helpers;
 import play.test.WithApplication;
 import utils.DocumentStoreMock;
-import utils.PdfGeneratorMock;
 
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static play.api.test.CSRFTokenHelper.addCSRFToken;
 import static play.inject.Bindings.bind;
 import static play.mvc.Http.RequestBuilder;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
 
-public class ShortFormatPreSentenceReportControllerTest extends WithApplication implements PdfGeneratorMock, DocumentStoreMock {
+public class ShortFormatPreSentenceReportControllerTest extends WithApplication implements DocumentStoreMock {
 
     @Test
     public void getSampleReportOK() {
@@ -927,13 +929,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         assertEquals(OK, result.status());
     }
 
-    private boolean pdfGenerated;
-
-    @Override
-    public void setPdfGenerated(boolean flag) {
-        pdfGenerated = flag;
-    }
-
     private boolean pdfUploaded;
 
     @Override
@@ -949,11 +944,14 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     }
 
     @Override
+
     protected Application provideApplication() {
+        PdfGenerator pdfGenerator = mock(PdfGenerator.class);
+        when(pdfGenerator.generate(any(), any())).thenReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
 
         return new GuiceApplicationBuilder().
                 overrides(
-                        bind(PdfGenerator.class).toInstance(this),
+                        bind(PdfGenerator.class).toInstance(pdfGenerator),
                         bind(DocumentStore.class).toInstance(this),
                         bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class))
                 )

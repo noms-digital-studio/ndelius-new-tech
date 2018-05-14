@@ -12,15 +12,17 @@ import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Http;
 import play.test.WithApplication;
 import utils.SimpleDocumentStoreMock;
-import utils.SimplePdfGeneratorMock;
 
 import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static play.api.test.CSRFTokenHelper.addCSRFToken;
 import static play.inject.Bindings.bind;
 import static play.test.Helpers.*;
@@ -79,13 +81,14 @@ public class SentencingCourtDetailsTest extends WithApplication {
 
     @Override
     protected Application provideApplication() {
+        PdfGenerator pdfGenerator = mock(PdfGenerator.class);
+        when(pdfGenerator.generate(any(), any())).thenReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
 
         return new GuiceApplicationBuilder().
             overrides(
-                bind(PdfGenerator.class).toInstance(new SimplePdfGeneratorMock()),
+                bind(PdfGenerator.class).toInstance(pdfGenerator),
                 bind(DocumentStore.class).toInstance(new SimpleDocumentStoreMock()),
                 bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class))
-            )
-            .build();
+            ).build();
     }
 }

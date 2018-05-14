@@ -11,14 +11,16 @@ import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.test.WithBrowser;
 import utils.SimpleDocumentStoreMock;
-import utils.SimplePdfGeneratorMock;
 import views.pages.SentencingCourtDetailsPage;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
 
 public class SentencingCourtDetailsWebTest extends WithBrowser {
@@ -56,12 +58,14 @@ public class SentencingCourtDetailsWebTest extends WithBrowser {
 
     @Override
     protected Application provideApplication() {
+        PdfGenerator pdfGenerator = mock(PdfGenerator.class);
+        when(pdfGenerator.generate(any(), any())).thenReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
+
         return new GuiceApplicationBuilder().
             overrides(
-                bind(PdfGenerator.class).toInstance(new SimplePdfGeneratorMock()),
+                bind(PdfGenerator.class).toInstance(pdfGenerator),
                 bind(DocumentStore.class).toInstance(new SimpleDocumentStoreMock()),
                 bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class))
-            )
-            .build();
+            ).build();
     }
 }
