@@ -10,12 +10,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.test.WithBrowser;
-import utils.SimpleAnalyticsStoreMock;
 import utils.SimpleDocumentStoreMock;
 import utils.SimplePdfGeneratorMock;
 import views.pages.CheckYourReportPage;
 import views.pages.CompletionPage;
 
+import static org.mockito.Mockito.mock;
 import static play.inject.Bindings.bind;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -49,7 +49,7 @@ public class CompletionWebTest extends WithBrowser {
             overrides(
                 bind(PdfGenerator.class).toInstance(new SimplePdfGeneratorMock()),
                 bind(DocumentStore.class).toInstance(new SimpleDocumentStoreMock()),
-                bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock())
+                bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)    )
             )
             .build();
     }

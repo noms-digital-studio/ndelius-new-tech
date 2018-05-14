@@ -10,7 +10,6 @@ import org.junit.Test;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.test.WithBrowser;
-import utils.SimpleAnalyticsStoreMock;
 import utils.SimpleDocumentStoreMock;
 import utils.SimplePdfGeneratorMock;
 import views.pages.SentencingCourtDetailsPage;
@@ -19,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static play.inject.Bindings.bind;
 
 public class SentencingCourtDetailsWebTest extends WithBrowser {
@@ -60,7 +60,7 @@ public class SentencingCourtDetailsWebTest extends WithBrowser {
             overrides(
                 bind(PdfGenerator.class).toInstance(new SimplePdfGeneratorMock()),
                 bind(DocumentStore.class).toInstance(new SimpleDocumentStoreMock()),
-                bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock())
+                bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class))
             )
             .build();
     }

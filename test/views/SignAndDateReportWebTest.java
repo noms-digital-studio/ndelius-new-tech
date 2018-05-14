@@ -11,7 +11,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.test.WithBrowser;
-import utils.SimpleAnalyticsStoreMock;
 import utils.SimpleDocumentStoreMock;
 import utils.SimplePdfGeneratorMock;
 import views.pages.SignAndDateReportPage;
@@ -24,6 +23,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
 
@@ -100,7 +100,7 @@ public class SignAndDateReportWebTest extends WithBrowser {
             overrides(
                 bind(PdfGenerator.class).toInstance(new SimplePdfGeneratorMock()),
                 bind(DocumentStore.class).toInstance(new DocumentStoreMock()),
-                bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock())
+                bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class))
             )
             .build();
     }

@@ -12,7 +12,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.test.WithBrowser;
-import utils.SimpleAnalyticsStoreMock;
 import utils.SimplePdfGeneratorMock;
 import views.pages.CheckYourReportPage;
 import views.pages.DraftSavedConfirmationPage;
@@ -94,7 +93,7 @@ public class SaveAsDraftWebTest extends WithBrowser {
             overrides(
                 bind(PdfGenerator.class).toInstance(new SimplePdfGeneratorMock()),
                 bind(DocumentStore.class).toInstance(alfrescoDocumentStore),
-                bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock())
+                bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class))
             )
             .build();
     }
