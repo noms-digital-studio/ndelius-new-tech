@@ -20,6 +20,7 @@ import play.mvc.Result;
 import play.twirl.api.Content;
 
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -180,7 +181,11 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
         return Optional.ofNullable(params.get("documentId")).
                 map(documentId -> documentStore.retrieveOriginalData(documentId, params.get("onBehalfOfUser"))).
-                map(originalJson -> originalJson.thenApply(json -> JsonHelper.jsonToMap(Json.parse(json).get("values")))).
+                map(originalData -> originalData.thenApply(data -> {
+                    val info = JsonHelper.jsonToMap(Json.parse(data.getUserData()).get("values"));
+                    info.put("lastUpdated", data.getLastModifiedDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+                    return info;
+                })).
                 map(originalInfo -> originalInfo.thenApply(info -> {
 
                     info.put("onBehalfOfUser", params.get("onBehalfOfUser"));

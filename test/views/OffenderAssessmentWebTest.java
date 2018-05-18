@@ -20,6 +20,7 @@ import views.pages.CheckYourReportPage;
 import views.pages.OffenderAssessmentPage;
 import views.pages.StartPage;
 
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -215,7 +216,7 @@ public class OffenderAssessmentWebTest extends WithBrowser {
         stream(issueOptions).forEach(issue -> assertThat(offenderAssessmentPage.associatedDetailsFor(issue)).isEqualTo(issue + " details").describedAs(issue));
     }
 
-    private CompletionStage<String> legacyReportWith(ImmutableMap<String, Object> values) {
+    private CompletionStage<DocumentStore.OriginalData> legacyReportWith(ImmutableMap<String, Object> values) {
         val originalReport = Json.parse(getClass().getResourceAsStream("/alfrescodata/legacyOffenderAssessment.json"));
 
         val reportJson = stringify(toJson(merge(
@@ -223,7 +224,7 @@ public class OffenderAssessmentWebTest extends WithBrowser {
                 ImmutableMap.of("values", merge(
                         jsonToMap(originalReport.get("values")),
                         values)))));
-        return CompletableFuture.completedFuture(reportJson);
+        return CompletableFuture.completedFuture(new DocumentStore.OriginalData(reportJson, OffsetDateTime.now()));
     }
 
     private Map<String, Object> merge(Map<String, String> original, Map<String, Object> additions) {
