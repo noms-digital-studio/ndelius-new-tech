@@ -37,7 +37,11 @@
         @page9Fields(reportForm)
         @page11Fields(reportForm, encrypter)
 
-        @pageNumber(1, Some("Start now"), Some("popup-launcher"))
+        @pageNumber(
+            reportForm("originalPageNumber").getValue.getOrElse("1").toInt,
+            Some(reportForm("originalPageNumber").getValue.fold("Start now") { _ => "Continue now" }),
+            Some("popup-launcher"),
+            reportForm("originalPageNumber").getValue)
         <div class="new-window"><span class="font-xsmall">Launches in a separate window</span></div>
     }
     </div>

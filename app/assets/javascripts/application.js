@@ -147,7 +147,7 @@ function openPopup(url) {
         /**
          * Ensure jumpNumber is cleared if next after clicking browser back button
          */
-        $('#nextButton').click(function () {
+        $('#nextButton:not(.popup-launcher)').click(function () {
             $('#jumpNumber').val('');
         });
 
@@ -165,7 +165,7 @@ function openPopup(url) {
             if ($.data( $('form')[0]).popupLaunched) {
                 var onBehalfOfUser = encodeURIComponent($('#onBehalfOfUser').val())
                 var documentId = encodeURIComponent($('#documentId').val())
-                var url = $('form').attr('action') + '?documentId=' + documentId + '&onBehalfOfUser=' + onBehalfOfUser;
+                var url = $('form').attr('action') + '?documentId=' + documentId + '&onBehalfOfUser=' + onBehalfOfUser + '&continue=true';
                 openPopup(url)
             } else {
                 openPopup('about:blank')

@@ -124,7 +124,7 @@ public class OffenderAssessmentWebTest extends WithBrowser {
                 thenReturn(legacyReportWith(
                         ImmutableMap.of("issueDrugs", "true", "pageNumber", "7")));
 
-        startPage.navigateWithExistingReport();
+        startPage.navigateWithExistingReport().gotoNext();
 
 
         assertThat(offenderAssessmentPage.isTicked("Substance misuse")).isTrue();
@@ -136,7 +136,7 @@ public class OffenderAssessmentWebTest extends WithBrowser {
                 thenReturn(legacyReportWith(
                         ImmutableMap.of("issueAlcohol", "true", "pageNumber", "7")));
 
-        startPage.navigateWithExistingReport();
+        startPage.navigateWithExistingReport().gotoNext();
 
 
         assertThat(offenderAssessmentPage.isTicked("Substance misuse")).isTrue();
@@ -148,7 +148,7 @@ public class OffenderAssessmentWebTest extends WithBrowser {
                 thenReturn(legacyReportWith(
                         ImmutableMap.of("offenderAssessment", "some offender assessment", "pageNumber", "7")));
 
-        startPage.navigateWithExistingReport();
+        startPage.navigateWithExistingReport().gotoNext();
 
 
         assertThat(offenderAssessmentPage.isTicked("Other (Please specify below)")).isTrue();
@@ -179,7 +179,7 @@ public class OffenderAssessmentWebTest extends WithBrowser {
                                 put("issueOtherDetails", "").
                                 build()));
 
-        startPage.navigateWithExistingReport();
+        startPage.navigateWithExistingReport().gotoNext();
 
         stream(issueOptions).forEach(issue -> assertThat(offenderAssessmentPage.isTicked(issue)).isFalse().describedAs(issue));
         stream(issueOptions).forEach(issue -> assertThat(offenderAssessmentPage.associatedDetailsFor(issue)).isEqualTo("").describedAs(issue));
@@ -209,7 +209,7 @@ public class OffenderAssessmentWebTest extends WithBrowser {
                                 put("issueOtherDetails", "Other (Please specify below) details").
                                 build()));
 
-        startPage.navigateWithExistingReport();
+        startPage.navigateWithExistingReport().gotoNext();
 
         stream(issueOptions).forEach(issue -> assertThat(offenderAssessmentPage.isTicked(issue)).isTrue().describedAs(issue));
         stream(issueOptions).forEach(issue -> assertThat(offenderAssessmentPage.associatedDetailsFor(issue)).isEqualTo(issue + " details").describedAs(issue));

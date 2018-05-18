@@ -68,6 +68,7 @@ public class SignAndDateReportWebTest extends WithBrowser {
     public void startDateFieldIsPopulatedWhenEditingAnExistingReport() {
         given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> reportDataWithStartDateOf("25/12/2017")));
         startPage.navigateWithExistingReport();
+        startPage.navigateWithExistingReport().gotoNext();
         assertThat(signAndDateReportPage.getStartDate()).isEqualTo("25/12/2017");
     }
 

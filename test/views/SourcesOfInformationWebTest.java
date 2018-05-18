@@ -113,7 +113,7 @@ public class SourcesOfInformationWebTest extends WithBrowser {
                                 put("otherInformationDetails", "").
                                 build()));
 
-        startPage.navigateWithExistingReport();
+        startPage.navigateWithExistingReport().gotoNext();
 
         stream(sources).forEach(informationSource -> assertThat(sourcesOfInformationPage.isTicked(informationSource)).isFalse().describedAs(informationSource));
         assertThat(sourcesOfInformationPage.otherInformationDetails()).isEqualTo("");
@@ -138,7 +138,7 @@ public class SourcesOfInformationWebTest extends WithBrowser {
                                 put("otherInformationDetails", "Other details").
                                 build()));
 
-        startPage.navigateWithExistingReport();
+        startPage.navigateWithExistingReport().gotoNext();
 
         stream(sources).forEach(informationSource -> assertThat(sourcesOfInformationPage.isTicked(informationSource)).isTrue().describedAs(informationSource));
         assertThat(sourcesOfInformationPage.otherInformationDetails()).isEqualTo("Other details");
