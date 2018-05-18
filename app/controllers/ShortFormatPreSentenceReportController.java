@@ -20,7 +20,6 @@ import javax.inject.Inject;
 import java.util.Map;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class ShortFormatPreSentenceReportController extends ReportGeneratorWizardController<ShortFormatPreSentenceReportData> {
 
@@ -52,15 +51,15 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
     @Override
     protected CompletionStage<Map<String, String>> initialParams() {
-        val existingReport = request().queryString().keySet().contains("documentId");
-        val continueReport = request().queryString().keySet().contains("continue");
+        val queryParams = request().queryString().keySet();
+        val displayInterstitial = queryParams.contains("documentId") && !queryParams.contains("continue");
 
 
         return super.initialParams().thenApply(params -> {
 
             params.putIfAbsent("pncSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("pnc"))).toString());
             params.putIfAbsent("addressSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("address"))).toString());
-            if (existingReport && !continueReport) {
+            if (displayInterstitial) {
                 params.put("originalPageNumber", params.get("pageNumber"));
                 params.put("pageNumber", "1");
             }

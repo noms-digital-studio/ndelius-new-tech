@@ -171,8 +171,6 @@ function openPopup(url) {
                 openPopup('about:blank')
                 $('form').attr("target", "report-popup")
                 $('form').submit()
-
-                // now submitted amend form into update mode so it is not possible to overwrite changes in the new window
                 $.data( $('form')[0], "popupLaunched", true )
             }
         });
