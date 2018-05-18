@@ -3,6 +3,7 @@ package services.helpers;
 import helpers.DateTimeHelper;
 import lombok.val;
 import org.apache.lucene.search.join.ScoreMode;
+import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -36,11 +37,12 @@ public class SearchQueryBuilder {
             .field("middleNames", 8)
             .field("offenderAliases.firstName", 8)
             .field("offenderAliases.surname", 8)
-            .field("contactDetails.addresses.town")
+            .operator(Operator.AND)
             .type(CROSS_FIELDS));
 
         boolQueryBuilder.should().add(multiMatchQuery(simpleTerms)
             .field("gender")
+            .field("contactDetails.addresses.town")
             .field("otherIds.crn", 10)
             .field("otherIds.nomsNumber", 10)
             .field("otherIds.niNumber", 10)
