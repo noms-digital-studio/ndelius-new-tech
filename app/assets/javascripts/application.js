@@ -7,6 +7,10 @@ function formWithZeroJumpNumber(form) {
     });
 }
 
+function openPopup(url) {
+    window.open(url, 'report-popup', 'top=200,height=760,width=820,resizable=yes,scrollbars=yes,location=no,menubar=no,status=yes,toolbar=no');
+}
+
 (function ($) {
 
     'use strict';
@@ -156,6 +160,22 @@ function formWithZeroJumpNumber(form) {
             $('form').submit();
         });
 
+        $('.popup-launcher').click(function (e) {
+            e.preventDefault();
+            if ($.data( $('form')[0]).popupLaunched) {
+                var onBehalfOfUser = encodeURIComponent($('#onBehalfOfUser').val())
+                var documentId = encodeURIComponent($('#documentId').val())
+                var url = $('form').attr('action') + '?documentId=' + documentId + '&onBehalfOfUser=' + onBehalfOfUser;
+                openPopup(url)
+            } else {
+                openPopup('about:blank')
+                $('form').attr("target", "report-popup")
+                $('form').submit()
+
+                // now submitted amend form into update mode so it is not possible to overwrite changes in the new window
+                $.data( $('form')[0], "popupLaunched", true )
+            }
+        });
         /**
          *
          */

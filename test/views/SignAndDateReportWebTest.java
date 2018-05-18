@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
+import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,8 +54,9 @@ public class SignAndDateReportWebTest extends WithBrowser {
 
     @Test
     public void shouldBePresentedWithReadOnlyStartDateField() {
-        assertThat(signAndDateReportPage.navigateHere().hasStartDateField()).isTrue();
-        assertThat(signAndDateReportPage.navigateHere().isStartDateFieldReadonly()).isTrue();
+        val signAndDateReportPage = this.signAndDateReportPage.navigateHere();
+        assertThat(signAndDateReportPage.hasStartDateField()).isTrue();
+        assertThat(signAndDateReportPage.isStartDateFieldReadonly()).isTrue();
     }
 
     @Test

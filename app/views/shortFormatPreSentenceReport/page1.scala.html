@@ -37,9 +37,18 @@
         @page9Fields(reportForm)
         @page11Fields(reportForm, encrypter)
 
-        @pageNumber(1, Some("Start now"))
+        @pageNumber(1, Some("Start now"), Some("popup-launcher"))
+        <div class="new-window"><span class="font-xsmall">Launches in a separate window</span></div>
     }
     </div>
     </div>
+    <a class="bold-xsmall clickable back-link" tabindex="1" href="javascript:documentList()">Back to document list</a>
 
 }
+
+
+<script type="text/javascript">
+        function documentList () {
+            parent.postMessage('back', '*');
+        }
+</script>
