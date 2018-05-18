@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import lombok.val;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import static org.elasticsearch.index.query.QueryBuilders.prefixQuery;
 import static services.helpers.SearchQueryBuilder.simpleTerms;
 import static services.helpers.SearchQueryBuilder.simpleTermsIncludingSingleLetters;
 
+@Ignore
 public class SearchQueryBuilderTest {
 
     @Test
