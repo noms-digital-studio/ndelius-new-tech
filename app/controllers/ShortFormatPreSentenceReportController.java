@@ -52,16 +52,20 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
     @Override
     protected CompletionStage<Map<String, String>> initialParams() {
         val queryParams = request().queryString().keySet();
-        val displayInterstitial = queryParams.contains("documentId") && !queryParams.contains("continue");
+        val continueFromInterstitial = queryParams.contains("continue");
+        val stopAtInterstitial = queryParams.contains("documentId") && !continueFromInterstitial;
 
 
         return super.initialParams().thenApply(params -> {
 
             params.putIfAbsent("pncSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("pnc"))).toString());
             params.putIfAbsent("addressSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("address"))).toString());
-            if (displayInterstitial) {
+            if (stopAtInterstitial) {
                 params.put("originalPageNumber", params.get("pageNumber"));
                 params.put("pageNumber", "1");
+            }
+            if (continueFromInterstitial) {
+                params.put("jumpNumber", params.get("pageNumber"));
             }
             return migrateLegacyReport(params);
         });

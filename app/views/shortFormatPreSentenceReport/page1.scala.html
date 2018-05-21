@@ -44,7 +44,7 @@
 
         @pageNumber(
             reportForm("originalPageNumber").getValue.getOrElse("1").toInt,
-            Some(reportForm("originalPageNumber").getValue.fold("Start now") { _ => "Continue now" }),
+            Some(reportForm("originalPageNumber").getValue.fold("Start now")(_ => "Continue now")),
             Some("popup-launcher"),
             reportForm("originalPageNumber").getValue)
         <div class="new-window"><span class="font-xsmall">Launches in a separate window</span></div>
@@ -67,13 +67,17 @@
     val duration = Duration.between(OffsetDateTime.parse(dateTime), OffsetDateTime.now())
 
     if (duration.toMinutes < 1)
-        s"${duration.toMillis / 1000} second${plural(duration.toMillis / 1000)} ago"
+        asText(duration.toMillis / 1000, "second")
     else if (duration.toHours < 1)
-        s"${duration.toMinutes} minute${plural(duration.toMinutes)} ago"
+        asText(duration.toMinutes, "minute")
     else if (duration.toDays < 1)
-        s"${duration.toHours} hour${plural(duration.toHours)} ago"
+        asText(duration.toHours, "hour")
     else
-        s"${duration.toDays} day${plural(duration.toHours)} ago"
+        asText(duration.toDays, "day")
+}
+
+@asText(number: Long, unit: String) = @{
+    s"$number $unit${plural(number)} ago"
 }
 
 @plural(number: Long) = @{
