@@ -17,6 +17,7 @@ import play.libs.concurrent.HttpExecutionContext;
 import play.twirl.api.Content;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
@@ -61,7 +62,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
             params.putIfAbsent("pncSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("pnc"))).toString());
             params.putIfAbsent("addressSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("address"))).toString());
             if (stopAtInterstitial) {
-                params.put("originalPageNumber", currentPageButNotInterstitial(params.get("pageNumber")));
+                params.put("originalPageNumber", currentPageButNotInterstitialOrCompletion(params.get("pageNumber")));
                 params.put("pageNumber", "1");
             }
             if (continueFromInterstitial) {
@@ -71,10 +72,10 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
         });
     }
 
-    private String currentPageButNotInterstitial(String pageNumber) {
+    private String currentPageButNotInterstitialOrCompletion(String pageNumber) {
         // never allow jumping from interstitial  to interstitial, which would happen on
-        // saved report that never left the first page
-        return "1".equals(pageNumber) ? "2" : pageNumber;
+        // saved report that never left the first page or jumping to completion page ("0")
+        return Arrays.asList("1", "0").contains(pageNumber) ? "2" : pageNumber;
     }
 
     private Map<String, String> migrateLegacyReport(Map<String, String> params) {
