@@ -8,7 +8,7 @@ function formWithZeroJumpNumber(form) {
 }
 
 function openPopup(url) {
-    window.open(url, 'report-popup', 'top=200,height=760,width=820,resizable=yes,scrollbars=yes,location=no,menubar=no,status=yes,toolbar=no');
+    window.open(url, 'reportpopup', 'top=200,height=760,width=820,resizable=yes,scrollbars=yes,location=no,menubar=no,status=yes,toolbar=no');
 }
 
 (function ($) {
@@ -169,7 +169,7 @@ function openPopup(url) {
                 openPopup(url)
             } else {
                 openPopup('about:blank')
-                $('form').attr("target", "report-popup")
+                $('form').attr("target", "reportpopup")
                 $('form').submit()
                 $.data( $('form')[0], "popupLaunched", true )
             }
