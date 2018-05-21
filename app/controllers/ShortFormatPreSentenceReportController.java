@@ -120,7 +120,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
         val boundForm = wizardForm.bindFromRequest();
 
-        return cancelledTemplate.render(boundForm, viewEncrypter, "Draft stored", reviewPageNumberFor(boundForm));
+        return cancelledTemplate.render(boundForm, viewEncrypter, reviewPageNumberFor(boundForm));
     }
 
     @Override
@@ -128,7 +128,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
         val boundForm = wizardForm.bindFromRequest();
 
-        return completedTemplate.render(boundForm, viewEncrypter, "Report saved", reviewPageNumberFor(boundForm));
+        return completedTemplate.render(boundForm, viewEncrypter, reviewPageNumberFor(boundForm));
     }
 
     private Integer reviewPageNumberFor(Form<ShortFormatPreSentenceReportData> boundForm) {

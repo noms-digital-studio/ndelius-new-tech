@@ -7,7 +7,7 @@
 
 @this(implicit webJarsUtil: WebJarsUtil, environment: Environment)
 
-@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String, message: String, reviewPage: Int)
+@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String, reviewPage: Int)
 
     @implicitField = @{ FieldConstructor(govukElements.f) }
 
