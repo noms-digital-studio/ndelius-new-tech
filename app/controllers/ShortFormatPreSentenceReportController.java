@@ -61,7 +61,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
             params.putIfAbsent("pncSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("pnc"))).toString());
             params.putIfAbsent("addressSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("address"))).toString());
             if (stopAtInterstitial) {
-                params.put("originalPageNumber", params.get("pageNumber"));
+                params.put("originalPageNumber", currentPageButNotInterstitial(params.get("pageNumber")));
                 params.put("pageNumber", "1");
             }
             if (continueFromInterstitial) {
@@ -69,6 +69,12 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
             }
             return migrateLegacyReport(params);
         });
+    }
+
+    private String currentPageButNotInterstitial(String pageNumber) {
+        // never allow jumping from interstitial  to interstitial, which would happen on
+        // saved report that never left the first page
+        return "1".equals(pageNumber) ? "2" : pageNumber;
     }
 
     private Map<String, String> migrateLegacyReport(Map<String, String> params) {
