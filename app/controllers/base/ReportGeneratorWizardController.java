@@ -92,9 +92,29 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
     @Override
     protected CompletionStage<Map<String, String>> initialParams() {
+        val queryParams = request().queryString().keySet();
+        val continueFromInterstitial = queryParams.contains("continue");
+        val stopAtInterstitial = queryParams.contains("documentId") && !continueFromInterstitial;
 
-        return super.initialParams().thenCompose(params -> originalData(params).orElseGet(() -> addPageAndDocumentId(params)));
+        return super.initialParams().thenCompose(params -> originalData(params).orElseGet(() -> addPageAndDocumentId(params))).thenApply(params -> {
+            if (stopAtInterstitial) {
+                params.put("originalPageNumber", currentPageButNotInterstitialOrCompletion(params.get("pageNumber")));
+                params.put("pageNumber", "1");
+            }
+            if (continueFromInterstitial) {
+                params.put("jumpNumber", params.get("pageNumber"));
+            }
+
+            return params;
+        });
     }
+
+    private String currentPageButNotInterstitialOrCompletion(String pageNumber) {
+        // never allow jumping from interstitial  to interstitial, which would happen on
+        // saved report that never left the first page or jumping to completion page ("0")
+        return String.valueOf(Math.max(Integer.parseInt(pageNumber), 2));
+    }
+
 
     @Override
     protected Integer nextPage(T wizardData) {

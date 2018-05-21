@@ -66,19 +66,17 @@
 @asDuration(dateTime: String) = @{
     val duration = Duration.between(OffsetDateTime.parse(dateTime), OffsetDateTime.now())
 
-    if (duration.toMinutes < 1)
-        asText(duration.toMillis / 1000, "second")
-    else if (duration.toHours < 1)
-        asText(duration.toMinutes, "minute")
-    else if (duration.toDays < 1)
-        asText(duration.toHours, "hour")
-    else
-        asText(duration.toDays, "day")
-}
+    val (number, unit) = (duration.toMinutes, duration.toHours, duration.toDays) match {
 
-@asText(number: Long, unit: String) = @{
+        case (0, 0, 0) => (duration.toMillis / 1000, "second")
+        case (minutes, 0, 0) => (minutes, "minute")
+        case (_, hours, 0) => (hours, "hour")
+        case (_, _, days) => (days, "day")
+    }
+
     s"$number $unit${plural(number)} ago"
 }
+
 
 @plural(number: Long) = @{
     if (number > 1) "s" else ""

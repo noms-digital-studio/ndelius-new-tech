@@ -17,7 +17,6 @@ import play.libs.concurrent.HttpExecutionContext;
 import play.twirl.api.Content;
 
 import javax.inject.Inject;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
@@ -52,30 +51,12 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
     @Override
     protected CompletionStage<Map<String, String>> initialParams() {
-        val queryParams = request().queryString().keySet();
-        val continueFromInterstitial = queryParams.contains("continue");
-        val stopAtInterstitial = queryParams.contains("documentId") && !continueFromInterstitial;
-
-
         return super.initialParams().thenApply(params -> {
 
             params.putIfAbsent("pncSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("pnc"))).toString());
             params.putIfAbsent("addressSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("address"))).toString());
-            if (stopAtInterstitial) {
-                params.put("originalPageNumber", currentPageButNotInterstitialOrCompletion(params.get("pageNumber")));
-                params.put("pageNumber", "1");
-            }
-            if (continueFromInterstitial) {
-                params.put("jumpNumber", params.get("pageNumber"));
-            }
             return migrateLegacyReport(params);
         });
-    }
-
-    private String currentPageButNotInterstitialOrCompletion(String pageNumber) {
-        // never allow jumping from interstitial  to interstitial, which would happen on
-        // saved report that never left the first page or jumping to completion page ("0")
-        return Arrays.asList("1", "0").contains(pageNumber) ? "2" : pageNumber;
     }
 
     private Map<String, String> migrateLegacyReport(Map<String, String> params) {
