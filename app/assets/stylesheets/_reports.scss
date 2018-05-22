@@ -28,7 +28,7 @@
 }
 
 .next-steps {
-  #view-pdf, #edit-pdf, #document-list {
+  #view-pdf, #edit-pdf, #close-report {
     padding-left: 4em;
     background-repeat: no-repeat;
     background-position-x: 0;
@@ -48,7 +48,7 @@
       background-image: url("../images/edit.png");
     }
   }
-  #document-list {
+  #close-report {
     background-image: url("../images/list-alt.svg");
     @include ie-lte(8) {
       background-image: url("../images/list-alt.png");
