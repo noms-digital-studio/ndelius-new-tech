@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
-import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,21 +19,17 @@ import views.pages.CheckYourReportPage;
 import views.pages.OffenderAssessmentPage;
 import views.pages.StartPage;
 
-import java.time.OffsetDateTime;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 
 import static helpers.JsonHelper.jsonToMap;
-import static helpers.JsonHelper.stringify;
 import static java.util.Arrays.stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.MapEntry.entry;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static play.inject.Bindings.bind;
-import static play.libs.Json.toJson;
+import static views.helpers.AlfrescoDataHelper.legacyReportWith;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OffenderAssessmentWebTest extends WithBrowser {
@@ -214,24 +209,6 @@ public class OffenderAssessmentWebTest extends WithBrowser {
 
         stream(issueOptions).forEach(issue -> assertThat(offenderAssessmentPage.isTicked(issue)).isTrue().describedAs(issue));
         stream(issueOptions).forEach(issue -> assertThat(offenderAssessmentPage.associatedDetailsFor(issue)).isEqualTo(issue + " details").describedAs(issue));
-    }
-
-    private CompletionStage<DocumentStore.OriginalData> legacyReportWith(ImmutableMap<String, Object> values) {
-        val originalReport = Json.parse(getClass().getResourceAsStream("/alfrescodata/legacyOffenderAssessment.json"));
-
-        val reportJson = stringify(toJson(merge(
-                ImmutableMap.of("templateName", originalReport.get("templateName").asText()),
-                ImmutableMap.of("values", merge(
-                        jsonToMap(originalReport.get("values")),
-                        values)))));
-        return CompletableFuture.completedFuture(new DocumentStore.OriginalData(reportJson, OffsetDateTime.now()));
-    }
-
-    private Map<String, Object> merge(Map<String, String> original, Map<String, Object> additions) {
-        Map<String, Object> mergedValues = new HashMap<>();
-        mergedValues.putAll(original);
-        mergedValues.putAll(additions);
-        return ImmutableMap.copyOf(mergedValues);
     }
 
     private Map<String, String> storedData() {

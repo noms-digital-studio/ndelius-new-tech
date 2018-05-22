@@ -42,4 +42,9 @@ public class StartPage extends FluentPage {
         return this;
     }
 
+    public StartPage switchToWindow() {
+        window().switchToLast("reportpopup");
+        return this;
+    }
+
 }
