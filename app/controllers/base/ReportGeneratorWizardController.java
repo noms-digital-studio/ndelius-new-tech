@@ -29,6 +29,8 @@ import java.util.function.Function;
 import static helpers.FluentHelper.not;
 import static helpers.FluentHelper.value;
 import static helpers.JsonHelper.*;
+import static java.lang.Integer.parseInt;
+import static java.lang.Math.max;
 
 public abstract class ReportGeneratorWizardController<T extends ReportGeneratorWizardData> extends WizardController<T> {
 
@@ -112,7 +114,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
     private String currentPageButNotInterstitialOrCompletion(String pageNumber) {
         // never allow jumping from interstitial  to interstitial, which would happen on
         // saved report that never left the first page or jumping to completion page ("0")
-        return String.valueOf(Math.max(Integer.parseInt(pageNumber), 2));
+        return String.valueOf(max(parseInt(pageNumber), 2));
     }
 
 

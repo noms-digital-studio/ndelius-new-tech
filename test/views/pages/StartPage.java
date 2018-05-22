@@ -47,4 +47,7 @@ public class StartPage extends FluentPage {
         return this;
     }
 
+    public String lastUpdatedText() {
+        return $(id("lastUpdated")).text();
+    }
 }

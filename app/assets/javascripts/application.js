@@ -168,7 +168,7 @@ function openPopup(url) {
                 var onBehalfOfUser = encodeURIComponent($('#onBehalfOfUser').val())
                 var documentId = encodeURIComponent($('#documentId').val())
                 var url = $('form').attr('action') + '?documentId=' + documentId + '&onBehalfOfUser=' + onBehalfOfUser + '&continue=true';
-                openPopup(url).focus()
+                openPopup(url)
             } else {
                 openPopup('about:blank')
                 $('form').attr("target", "reportpopup")

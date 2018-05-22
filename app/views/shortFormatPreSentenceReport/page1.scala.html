@@ -18,7 +18,7 @@
     <h1 class="heading-xlarge">Short Format Pre-sentence Report</h1>
 
         <span class="bold-medium">@reportForm("lastUpdated").getValue.map( dateTime => "This draft report was last saved:").orElse("")</span>
-        <span class="font-medium">@reportForm("lastUpdated").getValue.map( dateTime => asDuration(dateTime)).orElse("")</span>
+        <span class="font-medium" id="lastUpdated">@reportForm("lastUpdated").getValue.map( dateTime => asDuration(dateTime)).orElse("")</span>
 
         <ul class="list-bullet margin-top medium">
         <li><div class="bold-medium">Save and close your report at any point</div><div class="font-small">You can save and close your report so you don't have to complete the whole thing at once.</div></li>

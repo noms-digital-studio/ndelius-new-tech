@@ -14,15 +14,18 @@ import play.inject.guice.GuiceApplicationBuilder;
 import play.test.WithBrowser;
 import views.pages.*;
 
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.CompletableFuture;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static play.inject.Bindings.bind;
 import static views.helpers.AlfrescoDataHelper.legacyReportWith;
 
 @RunWith(MockitoJUnitRunner.class)
-public class InterstialWebTest extends WithBrowser {
+public class InterstitialWebTest extends WithBrowser {
     @Mock
     private DocumentStore alfrescoDocumentStore;
 
@@ -76,6 +79,61 @@ public class InterstialWebTest extends WithBrowser {
         offenderAssessmentPage.isAt();
 
     }
+
+    @Test
+    public void reportThatIsLessThanMinuteOldShowsChangedSecondsAgo() {
+        when(alfrescoDocumentStore.retrieveOriginalData(any(), any())).
+                thenReturn(legacyReportWith(
+                        ImmutableMap.of(), OffsetDateTime.now().minus(2, ChronoUnit.SECONDS)));
+
+        assertThat(startPage.navigateWithExistingReport().lastUpdatedText()).containsPattern("[0-9] seconds ago");
+    }
+
+    @Test
+    public void reportThatIsLessThanHourOldShowsChangedMinutesAgo() {
+        when(alfrescoDocumentStore.retrieveOriginalData(any(), any())).
+                thenReturn(legacyReportWith(
+                        ImmutableMap.of(), OffsetDateTime.now().minus(58, ChronoUnit.MINUTES)));
+
+        assertThat(startPage.navigateWithExistingReport().lastUpdatedText()).contains("58 minutes ago");
+    }
+
+    @Test
+    public void reportThatIsLessThanTwoMinutesOldShowsChangedMinuteAgo() {
+        when(alfrescoDocumentStore.retrieveOriginalData(any(), any())).
+                thenReturn(legacyReportWith(
+                        ImmutableMap.of(), OffsetDateTime.now().minus(1, ChronoUnit.MINUTES)));
+
+        assertThat(startPage.navigateWithExistingReport().lastUpdatedText()).contains("1 minute ago");
+    }
+
+    @Test
+    public void reportThatIsLessThanDayOldShowsChangedHoursAgo() {
+        when(alfrescoDocumentStore.retrieveOriginalData(any(), any())).
+                thenReturn(legacyReportWith(
+                        ImmutableMap.of(), OffsetDateTime.now().minus(23, ChronoUnit.HOURS)));
+
+        assertThat(startPage.navigateWithExistingReport().lastUpdatedText()).contains("23 hours ago");
+    }
+
+    @Test
+    public void reportThatIsMoreThanDayOldShowsChangedDaysAgo() {
+        when(alfrescoDocumentStore.retrieveOriginalData(any(), any())).
+                thenReturn(legacyReportWith(
+                        ImmutableMap.of(), OffsetDateTime.now().minus(25, ChronoUnit.HOURS)));
+
+        assertThat(startPage.navigateWithExistingReport().lastUpdatedText()).contains("1 day ago");
+    }
+
+    @Test
+    public void reportThatIsReallyOldShowsChangedDaysAgo() {
+        when(alfrescoDocumentStore.retrieveOriginalData(any(), any())).
+                thenReturn(legacyReportWith(
+                        ImmutableMap.of(), OffsetDateTime.now().minus(10, ChronoUnit.YEARS)));
+
+        assertThat(startPage.navigateWithExistingReport().lastUpdatedText()).containsPattern("365[0-9] days ago"); // not exactly 3650 due to leap years
+    }
+
 
     @Test
     public void continuingAReportThatHasValidPageNumberWillTakeYouToPageWhenReturning() {

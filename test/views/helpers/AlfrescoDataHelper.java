@@ -17,6 +17,10 @@ import static play.libs.Json.toJson;
 
 public class AlfrescoDataHelper {
     public static CompletionStage<DocumentStore.OriginalData> legacyReportWith(ImmutableMap<String, Object> values) {
+        return  legacyReportWith(values, OffsetDateTime.now());
+    }
+
+    public static CompletionStage<DocumentStore.OriginalData> legacyReportWith(ImmutableMap<String, Object> values, OffsetDateTime lastUpdated) {
         val originalReport = Json.parse(AlfrescoDataHelper.class.getResourceAsStream("/alfrescodata/legacyOffenderAssessment.json"));
 
         val reportJson = stringify(toJson(merge(
@@ -24,7 +28,7 @@ public class AlfrescoDataHelper {
                 ImmutableMap.of("values", merge(
                         jsonToMap(originalReport.get("values")),
                         values)))));
-        return CompletableFuture.completedFuture(new DocumentStore.OriginalData(reportJson, OffsetDateTime.now()));
+        return CompletableFuture.completedFuture(new DocumentStore.OriginalData(reportJson, lastUpdated));
     }
 
     private static Map<String, Object> merge(Map<String, String> original, Map<String, Object> additions) {
