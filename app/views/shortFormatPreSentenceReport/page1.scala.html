@@ -57,25 +57,26 @@
 
 
 <script type="text/javascript">
-        @reportForm("lastUpdated").getValue.map( _ => "window.ndelius_newtech_existing_report = true").orElse("")
-        $('.popup-launcher').click(function (e) {
-            e.preventDefault();
-            if ('ndelius_newtech_existing_report' in window) {
-                var onBehalfOfUser = encodeURIComponent($('#onBehalfOfUser').val())
-                var documentId = encodeURIComponent($('#documentId').val())
-                var url = $('form').attr('action') + '?documentId=' + documentId + '&onBehalfOfUser=' + onBehalfOfUser + '&continue=true';
-                openPopup(url)
-            } else {
-                openPopup('about:blank')
-                $('form').attr("target", "reportpopup")
-                $('form').submit()
-                window.ndelius_newtech_existing_report = true
-            }
-        });
+    var isExistingReport = @reportForm("lastUpdated").getValue.map( _ => "true").orElse("false");
 
-        function documentList () {
-            parent.postMessage('Report saved', '*');
+    $('.popup-launcher').click(function (e) {
+        e.preventDefault();
+        if (isExistingReport) {
+            var onBehalfOfUser = encodeURIComponent($('#onBehalfOfUser').val())
+            var documentId = encodeURIComponent($('#documentId').val())
+            var url = $('form').attr('action') + '?documentId=' + documentId + '&onBehalfOfUser=' + onBehalfOfUser + '&continue=true';
+            openPopup(url)
+        } else {
+            openPopup('about:blank')
+            $('form').attr("target", "reportpopup")
+            $('form').submit()
+            isExistingReport = true
         }
+    });
+
+    function documentList () {
+        parent.postMessage('Report saved', '*');
+    }
 </script>
 
 
