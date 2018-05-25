@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static services.helpers.CroHelper.canBeConvertedToACro;
 import static services.helpers.CroHelper.covertToCanonicalCro;
+import static services.helpers.CroHelper.termsThatLookLikeCroNumbers;
 
 public class CroHelperTest {
 
@@ -55,5 +56,11 @@ public class CroHelperTest {
     public void convertsCroToStandardFormat() {
         assertThat(covertToCanonicalCro("123456/99A")).isEqualTo("123456/99a");
         assertThat(covertToCanonicalCro("SF99/123456A")).isEqualTo("sf99/123456a");
+    }
+
+    @Test
+    public void findsTermsThatLookLikeCroNumbers() {
+        assertThat(termsThatLookLikeCroNumbers("john smith 123456/99Z SF94/123456A")).
+            containsExactly("123456/99z", "sf94/123456a");
     }
 }

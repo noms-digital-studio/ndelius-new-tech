@@ -21,6 +21,8 @@ import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import play.Logger;
 import play.libs.Json;
 import services.helpers.OffenderSorter;
+import services.helpers.SearchQueryBuilder;
+import services.helpers.SearchQueryBuilder.QUERY_TYPE;
 import services.helpers.SearchResultPipeline;
 
 import javax.inject.Inject;
@@ -132,7 +134,11 @@ public class ElasticOffenderSearch implements OffenderSearch {
 
         val listener = new FutureListener<SearchResponse>();
         val request = new SearchRequest("offender").preference(bearerToken).source(
-                searchSourceFor(searchTerm, probationAreasFilter, pageSize, pageNumber)
+            searchSourceFor(searchTerm,
+                            probationAreasFilter,
+                            pageSize,
+                            pageNumber,
+                            QUERY_TYPE.MUST)
         );
 
         elasticSearchClient.searchAsync(request, listener);
