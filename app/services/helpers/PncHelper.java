@@ -1,5 +1,8 @@
 package services.helpers;
 
+/**
+ * PNC: Police National Computer reference
+ */
 public interface PncHelper {
 
     static boolean canBeConvertedToAPnc(String term) {

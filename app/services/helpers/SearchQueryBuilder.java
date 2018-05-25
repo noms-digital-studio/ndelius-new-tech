@@ -49,9 +49,10 @@ public class SearchQueryBuilder {
                 .type(CROSS_FIELDS));
         }
 
-//        boolQueryBuilder.must().add(multiMatchQuery(searchTerm.toLowerCase())
-//            .field("otherIds.croNumberLowercase", 10)
-//            .analyzer("whitespace"));
+        termsThatLookLikeCroNumbers(searchTerm).forEach(cro ->
+            boolQueryBuilder.must().add(multiMatchQuery(searchTerm.toLowerCase())
+                .field("otherIds.croNumberLowercase", 10)
+                .analyzer("whitespace")));
 
         termsThatLookLikePncNumbers(searchTerm).forEach(pnc ->
             boolQueryBuilder.must().add(multiMatchQuery(pnc)
@@ -116,6 +117,13 @@ public class SearchQueryBuilder {
 
         Logger.debug(searchSource.toString());
         return searchSource;
+    }
+
+    private static List<String> termsThatLookLikeCroNumbers(String searchTerm) {
+        return Stream.of(searchTerm.split(" "))
+            .filter(CroHelper::canBeConvertedToACro)
+            .map(CroHelper::covertToCanonicalCro)
+            .collect(toList());
     }
 
     private static List<String> termsThatLookLikePncNumbers(String searchTerm) {
