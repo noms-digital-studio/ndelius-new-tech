@@ -107,3 +107,11 @@ footer {
   }
 }
 
+.text-area-editor.ql-container.ql-snow {
+  border: none;
+}
+
+.text-area-editor.ql-container.ql-snow:focus-within {
+  outline: 3px solid $focus-colour;
+  outline-offset: 0;
+}

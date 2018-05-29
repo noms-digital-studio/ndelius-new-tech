@@ -27,7 +27,10 @@
     @if(elements.input.body.contains("textarea id=")) {
       <span id="@elements.id-autosave_error" class="autosave-error-message error-message js-hidden" aria-hidden="true">We can't currently save your report as the service is unavailable</span>
       <span>
-        <textarea class="form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" role="textbox" placeholder="@if(elements.args.get('placeholder)) {@elements.args.get('placeholder)} else {Start typing here...}" id="@elements.id" name="@elements.field.name" @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} } aria-described-by="@elements.id-error" @if(elements.args.get('required)) {aria-required="@elements.args.get('required)"}>@elements.field.value</textarea>
+        <div class="text-area-editor @elements.args.get('class)@if(elements.hasErrors) { form-control-error}"  role="textbox" id="@elements.id"                             @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} } aria-described-by="@elements.id-error" @if(elements.args.get('required)) {aria-required="@elements.args.get('required)"}>
+        @Html(elements.field.value.getOrElse(""))
+        </div>
+        <input type="hidden" name="@elements.field.name" value="@elements.field.value">
 
         @if(elements.args.get(Symbol("data-limit"))) {
             <div class="pull-left js-hidden" id="@elements.id-countHolder">
@@ -37,6 +40,32 @@
         }
 
       </span>
+        <script>
+            @elements.field.name = new Quill('#@elements.id', {
+              placeholder: "@if(elements.args.get('placeholder)) {@elements.args.get('placeholder)} else {Start typing here...}",
+              theme: 'snow',
+              formats: ['bold', 'italic', 'underline', 'list', 'blockquote', 'indent'],
+              modules: {
+                toolbar: [
+                    ['bold', 'italic', 'underline'],
+                    ['blockquote', 'indent'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['clean']
+                 ]
+              }
+            })
+            @(elements.field.name).on('text-change', function(delta, oldDelta, source) {
+              if (source == 'user') {
+                if (@(elements.field.name).getText().replace(/^\s+|\s+$/gm,'')) {
+                    $("input[name='@elements.field.name']").val(@(elements.field.name).root.innerHTML.replace(/<br>/gm,'<br/>'))
+                } else {
+                    $("input[name='@elements.field.name']").val('')
+                }
+              }
+            })
+
+
+        </script>
     } else if(elements.input.body.contains("select id=")) {
       <select class="form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" id="@elements.id" name="@elements.field.name">
           @htmlLines.filter(_.startsWith("<option ")).map(Html(_))

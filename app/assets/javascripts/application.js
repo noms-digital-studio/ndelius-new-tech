@@ -120,6 +120,25 @@ function openPopup(url) {
 
         })
 
+         $('.text-area-editor').keyup(function () {
+            quietSaveProgress($(this));
+
+            var textArea = $(this),
+                limit = textArea.data('limit'),
+                current = Quill.find(this).getText().length,
+                messageHolder = $('#' + textArea.attr('id') + '-countHolder'),
+                messageTarget = $('#' + textArea.attr('id') + '-count');
+
+            if (limit && current > 0) {
+                messageHolder.removeClass('js-hidden');
+                messageTarget.text(limit + ' recommended characters, you have used ' + current);
+            } else {
+                messageHolder.addClass('js-hidden');
+            }
+
+        })
+
+
         /**
          * Navigation items
          */
