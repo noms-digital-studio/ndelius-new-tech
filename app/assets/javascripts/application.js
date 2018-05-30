@@ -11,6 +11,57 @@ function openPopup(url) {
     window.open(url, 'reportpopup', 'top=200,height=760,width=820,resizable=yes,scrollbars=yes,location=no,menubar=no,status=yes,toolbar=no').focus();
 }
 
+function replaceTextArea(textArea) {
+    var name = textArea.attr('name')
+    var placeHolder = textArea.attr('placeholder')
+    var value = textArea.val()
+    var editor = $('<div>'+value+'</div>')
+    $.each(textArea[0].attributes, function(index, element) {
+        var name = this.name;
+        var value = this.value;
+        if (name !== 'name' && name !== 'placeHolder' ) {
+            editor.attr(name, value)
+        }
+    });
+
+    textArea.replaceWith(editor)
+    editor.after('<input type="hidden" name="'+name+'" value="'+value+'"/>')
+    editor.removeClass('form-control')
+    editor.addClass('text-area-editor')
+    return {placeHolder: placeHolder, name: name}
+
+}
+function convertToEditor(textArea) {
+    var id = textArea.attr('id')
+    var areaAttributes = replaceTextArea(textArea)
+    var name = areaAttributes.name;
+    var placeHolder = areaAttributes.placeHolder
+
+    var editor = new Quill('#' + id, {
+        placeholder: placeHolder,
+        theme: 'snow',
+        formats: ['bold', 'italic', 'underline', 'list', 'blockquote', 'indent'],
+        modules: {
+            toolbar: [
+                ['bold', 'italic', 'underline'],
+                ['blockquote', 'indent'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['clean']
+            ]
+        }
+    })
+    editor.on('text-change', function(delta, oldDelta, source) {
+        if (source == 'user') {
+            if (editor.getText().replace(/^\s+|\s+$/gm,'')) {
+                $("input[name='"+ name + "']").val(editor.root.innerHTML.replace(/<br>/gm,'<br/>'))
+            } else {
+                $("input[name='"+ name + "']").val('')
+            }
+        }
+    })
+
+}
+
 (function ($) {
 
     'use strict';
@@ -211,6 +262,12 @@ function openPopup(url) {
             $('.date-picker').datepicker({
                 dateFormat: 'dd/mm/yy'
             }).parent().addClass('date-wrapper');
+
+
+            $('textarea').each(function (i, elem) {
+                convertToEditor($(elem))
+            })
+
         }
 
     });
