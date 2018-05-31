@@ -264,9 +264,13 @@ function convertToEditor(textArea) {
             }).parent().addClass('date-wrapper');
 
 
-            $('textarea').each(function (i, elem) {
-                convertToEditor($(elem))
-            })
+            // htmlunit no longer supports IE8 or conditionals so also check agent to rule out IE8
+            // not needing once we upgrade away from HTMLUnit
+            if (navigator.userAgent.indexOf('MSIE 8.0') === -1) {
+                $('textarea').each(function (i, elem) {
+                    convertToEditor($(elem))
+                })
+            }
 
         }
 
