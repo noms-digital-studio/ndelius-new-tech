@@ -32,19 +32,18 @@ function replaceTextArea(textArea) {
 
 }
 function convertToEditor(textArea) {
-    var id = textArea.attr('id')
+    var id = '#' + textArea.attr('id')
     var areaAttributes = replaceTextArea(textArea)
     var name = areaAttributes.name;
     var placeHolder = areaAttributes.placeHolder
 
-    var editor = new Quill('#' + id, {
+    var editor = new Quill(id, {
         placeholder: placeHolder,
         theme: 'snow',
-        formats: ['bold', 'italic', 'underline', 'list', 'blockquote', 'indent'],
+        formats: ['bold', 'italic', 'underline', 'list'],
         modules: {
             toolbar: [
                 ['bold', 'italic', 'underline'],
-                ['blockquote', 'indent'],
                 [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                 ['clean']
             ]
@@ -59,6 +58,9 @@ function convertToEditor(textArea) {
             }
         }
     })
+
+    // swap toolbar to below editor
+    $(id).prev().before($(id));
 
 }
 
@@ -244,9 +246,6 @@ function convertToEditor(textArea) {
 
         // Progressive enhancement for browsers > IE8
         if (!$('html').is('.lte-ie8')) {
-            // Autosize all Textarea elements (does not support IE8).
-            autosize(document.querySelectorAll('textarea'));
-
             // Autocomplete
             var autoComplete = document.querySelector('.auto-complete');
             if (autoComplete) {
@@ -271,6 +270,8 @@ function convertToEditor(textArea) {
                     convertToEditor($(elem))
                 })
             }
+            // Autosize all Textarea elements (does not support IE8).
+            autosize(document.querySelectorAll('textarea'));
 
         }
 
