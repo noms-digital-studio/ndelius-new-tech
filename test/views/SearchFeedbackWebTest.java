@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
+import play.test.WithBrowser;
 import views.pages.SearchFeedbackPage;
 
 import java.util.Date;
@@ -24,7 +25,7 @@ import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SearchFeedbackWebTest extends WithIE8Browser {
+public class SearchFeedbackWebTest extends WithBrowser {
     private SearchFeedbackPage searchFeedbackPage;
 
     @Mock
