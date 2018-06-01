@@ -26,7 +26,6 @@ function replaceTextArea(textArea) {
 
     textArea.replaceWith(editor)
     editor.after('<input type="hidden" name="'+name+'" value="'+value+'"/>')
-    editor.removeClass('form-control')
     editor.addClass('text-area-editor')
     return {placeHolder: placeHolder, name: name}
 
@@ -51,7 +50,9 @@ function convertToEditor(textArea) {
     })
     editor.on('text-change', function(delta, oldDelta, source) {
         if (source == 'user') {
+            // check if empty (ignoring white space)
             if (editor.getText().replace(/^\s+|\s+$/gm,'')) {
+                // grab cleaned-up html
                 $("input[name='"+ name + "']").val(editor.root.innerHTML.replace(/<br>/gm,'<br/>'))
             } else {
                 $("input[name='"+ name + "']").val('')
@@ -61,6 +62,18 @@ function convertToEditor(textArea) {
 
     // swap toolbar to below editor
     $(id).prev().before($(id));
+
+    // show/hide toolbar with focus change
+    editor.on('selection-change', function(range) {
+        if (range) {
+            $(id).next().css('visibility', 'visible')
+        } else {
+            $(id).next().css('visibility', 'hidden')
+        }
+    })
+
+    // remove tab key binding
+    delete editor.getModule('keyboard').bindings[9];
 
 }
 

@@ -115,3 +115,15 @@ footer {
   outline: 3px solid $focus-colour;
   outline-offset: 0;
 }
+
+.ql-toolbar {
+  visibility: hidden;
+}
+
+.text-area-editor.ql-container {
+  @include core-19();
+}
+
+.text-area-editor.form-control {
+  width: 100%;
+}
