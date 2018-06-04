@@ -71,11 +71,15 @@ function convertToEditor(textArea) {
             $(id).next().css('visibility', 'hidden')
         }
     })
+    // add classes to reduce margins
+    $(id).closest('.form-group').addClass('no-margin-bottom')
+    $(id).closest('.form-group').next('hr').addClass('no-margin-top')
 
     // remove tab key binding
     delete editor.getModule('keyboard').bindings[9];
 
 }
+
 
 (function ($) {
 
@@ -165,45 +169,35 @@ function convertToEditor(textArea) {
         }
 
         var quietSaveProgress = _.debounce(saveProgress, 500);
+
+        function smartenEditor(editor, lengthCalculator) {
+            quietSaveProgress($(editor));
+
+            var textArea = $(editor),
+                limit = textArea.data('limit'),
+                current = lengthCalculator(editor),
+                messageHolder = $('#' + textArea.attr('id') + '-countHolder'),
+                messageTarget = $('#' + textArea.attr('id') + '-count');
+
+            if (limit && current > 0) {
+                messageHolder.removeClass('js-hidden');
+                messageTarget.text(limit + ' recommended characters, you have used ' + current);
+            } else {
+                messageHolder.addClass('js-hidden');
+            }
+
+        }
+
+
         /**
          * Textarea elements
          */
          $('textarea').keyup(function () {
-            quietSaveProgress($(this));
-
-            var textArea = $(this),
-                limit = textArea.data('limit'),
-                current = textArea.val().length,
-                messageHolder = $('#' + textArea.attr('id') + '-countHolder'),
-                messageTarget = $('#' + textArea.attr('id') + '-count');
-
-            if (limit && current > 0) {
-                messageHolder.removeClass('js-hidden');
-                messageTarget.text(limit + ' recommended characters, you have used ' + current);
-            } else {
-                messageHolder.addClass('js-hidden');
-            }
-
+             var editor = this
+             smartenEditor(editor, function() {
+                 return $(editor).val().length
+             })
         })
-
-         $('.text-area-editor').keyup(function () {
-            quietSaveProgress($(this));
-
-            var textArea = $(this),
-                limit = textArea.data('limit'),
-                current = Quill.find(this).getText().length,
-                messageHolder = $('#' + textArea.attr('id') + '-countHolder'),
-                messageTarget = $('#' + textArea.attr('id') + '-count');
-
-            if (limit && current > 0) {
-                messageHolder.removeClass('js-hidden');
-                messageTarget.text(limit + ' recommended characters, you have used ' + current);
-            } else {
-                messageHolder.addClass('js-hidden');
-            }
-
-        })
-
 
         /**
          * Navigation items
@@ -287,6 +281,14 @@ function convertToEditor(textArea) {
             autosize(document.querySelectorAll('textarea'));
 
         }
+
+        $('.text-area-editor').keyup(function () {
+            var editor = this
+            smartenEditor(editor, function() {
+                return Quill.find(editor).getText().length
+            })
+        })
+
 
     });
 
