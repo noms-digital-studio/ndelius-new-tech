@@ -25,7 +25,7 @@ function replaceTextArea(textArea) {
     });
 
     textArea.replaceWith(editor)
-    editor.after('<input type="hidden" name="'+name+'" value="'+value+'"/>')
+    editor.after('<input type="hidden" name="'+name+'" value=""/>')
     editor.addClass('text-area-editor')
     return {placeHolder: placeHolder, name: name}
 
@@ -56,15 +56,21 @@ function convertToEditor(textArea) {
     function hasAnyText() {
         return editor.getText().replace(/^\s+|\s+$/gm,'')
     }
+
+    function transferValueToInput() {
+        if (hasAnyText()) {
+            $("input[name='"+ name + "']").val(cleanHtml())
+        } else {
+            $("input[name='"+ name + "']").val('')
+        }
+    }
     editor.on('text-change', function(delta, oldDelta, source) {
         if (source == 'user') {
-            if (hasAnyText()) {
-                $("input[name='"+ name + "']").val(cleanHtml())
-            } else {
-                $("input[name='"+ name + "']").val('')
-            }
+            transferValueToInput()
         }
     })
+
+    transferValueToInput()
 
     // swap toolbar to below editor
     $(id).prev().before($(id));
