@@ -118,6 +118,7 @@ footer {
 
 .ql-toolbar {
   visibility: hidden;
+  margin-bottom: $gutter-one-third;
 }
 
 .text-area-editor.ql-container {
@@ -126,12 +127,4 @@ footer {
 
 .text-area-editor.form-control {
   width: 100%;
-}
-
-.form-group.no-margin-bottom {
-  margin-bottom: 0px;
-}
-
-hr.no-margin-top {
-  margin-top: -1px;
 }

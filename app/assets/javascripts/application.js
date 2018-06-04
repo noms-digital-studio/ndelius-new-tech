@@ -48,12 +48,18 @@ function convertToEditor(textArea) {
             ]
         }
     })
+
+    function cleanHtml() {
+        return '<!-- RICH_TEXT -->' +  editor.root.innerHTML.replace(/<br>/gm,'<br/>')
+    }
+
+    function hasAnyText() {
+        return editor.getText().replace(/^\s+|\s+$/gm,'')
+    }
     editor.on('text-change', function(delta, oldDelta, source) {
         if (source == 'user') {
-            // check if empty (ignoring white space)
-            if (editor.getText().replace(/^\s+|\s+$/gm,'')) {
-                // grab cleaned-up html
-                $("input[name='"+ name + "']").val(editor.root.innerHTML.replace(/<br>/gm,'<br/>'))
+            if (hasAnyText()) {
+                $("input[name='"+ name + "']").val(cleanHtml())
             } else {
                 $("input[name='"+ name + "']").val('')
             }
