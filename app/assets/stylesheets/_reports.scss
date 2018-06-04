@@ -111,9 +111,9 @@ footer {
   border: none;
 }
 
-.text-area-editor.ql-container.ql-snow:focus-within {
+.ql-editor:focus {
   outline: 3px solid $focus-colour;
-  outline-offset: 0;
+  outline-offset: 2px;
 }
 
 .ql-toolbar {
