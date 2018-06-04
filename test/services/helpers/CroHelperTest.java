@@ -12,7 +12,9 @@ public class CroHelperTest {
     @Test
     public void recognisesValidFullCroStrings() {
         assertThat(canBeConvertedToACro("123456/99Z")).isTrue();
+        assertThat(canBeConvertedToACro("123456/99z")).isTrue();
         assertThat(canBeConvertedToACro("123456/08Z")).isTrue();
+        assertThat(canBeConvertedToACro("000000/00A")).isTrue();
         assertThat(canBeConvertedToACro("123456/00Z")).isTrue();
         assertThat(canBeConvertedToACro("12345/99Z")).isTrue();
         assertThat(canBeConvertedToACro("1234/99Z")).isTrue();
@@ -24,6 +26,8 @@ public class CroHelperTest {
     @Test
     public void recognisesValidSearchFileCroStrings() {
         assertThat(canBeConvertedToACro("SF94/123456A")).isTrue();
+        assertThat(canBeConvertedToACro("sf94/123456a")).isTrue();
+        assertThat(canBeConvertedToACro("SF00/000000A")).isTrue();
         assertThat(canBeConvertedToACro("SF94/12345A")).isTrue();
         assertThat(canBeConvertedToACro("SF94/1234A")).isTrue();
         assertThat(canBeConvertedToACro("SF94/123A")).isTrue();
@@ -34,6 +38,7 @@ public class CroHelperTest {
     @Test
     public void rejectsNonCroFormattedTerms() {
         assertThat(canBeConvertedToACro("1234567/98A")).isFalse();
+        assertThat(canBeConvertedToACro("12345A/98A")).isFalse();
         assertThat(canBeConvertedToACro("123456/8A")).isFalse();
         assertThat(canBeConvertedToACro("123456/zxA")).isFalse();
         assertThat(canBeConvertedToACro("TG98/123456A")).isFalse();

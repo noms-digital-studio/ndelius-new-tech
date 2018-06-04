@@ -26,7 +26,7 @@ public interface CroHelper {
 
     // e.g. SF93/123456A
     static boolean canBeConvertedToASearchFileCro(String term) {
-        return term.matches("^SF[0-9]{2}/[0-9]{1,6}[a-zA-Z]");
+        return term.matches("^(sf|SF)[0-9]{2}/[0-9]{1,6}[a-zA-Z]");
     }
 
     static List<String> termsThatLookLikeCroNumbers(String searchTerm) {
