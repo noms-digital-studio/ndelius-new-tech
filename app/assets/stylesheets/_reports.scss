@@ -121,6 +121,14 @@ footer {
   margin-bottom: $gutter-one-third;
 }
 
+.form-group .ql-snow.ql-toolbar button.ql-active {
+  background-color: $grey-3;
+}
+
+.form-group .ql-snow.ql-toolbar button.ql-active .ql-stroke {
+  stroke: $black;
+}
+
 .text-area-editor.ql-container {
   @include core-19();
 }
