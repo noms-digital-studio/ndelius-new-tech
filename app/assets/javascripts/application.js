@@ -84,8 +84,8 @@ function convertToEditor(textArea) {
         }
     })
     // add classes to reduce margins
-    $(id).closest('.form-group').addClass('no-margin-bottom')
-    $(id).closest('.form-group').next('hr').addClass('no-margin-top')
+    $(id).closest('.form-group').addClass('small-margin-bottom')
+    $(id).closest('.form-group').next('hr').addClass('small-margin-top')
 
     // remove tab key binding
     delete editor.getModule('keyboard').bindings[9];
