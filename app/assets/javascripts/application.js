@@ -30,6 +30,7 @@ function replaceTextArea(textArea) {
     return {placeHolder: placeHolder, name: name}
 
 }
+
 function convertToEditor(textArea) {
     var id = '#' + textArea.attr('id')
     var areaAttributes = replaceTextArea(textArea)
@@ -54,7 +55,7 @@ function convertToEditor(textArea) {
     }
 
     function hasAnyText() {
-        return editor.getText().replace(/^\s+|\s+$/gm,'')
+        return editor.getText().trim()
     }
 
     function transferValueToInput() {
@@ -87,8 +88,10 @@ function convertToEditor(textArea) {
     $(id).closest('.form-group').addClass('small-margin-bottom')
     $(id).closest('.form-group').next('hr').addClass('small-margin-top')
 
-    // remove tab key binding
+    // remove tab key binding for editor, toolbar (and for IE11 svg)
     delete editor.getModule('keyboard').bindings[9];
+    $('.ql-toolbar').find(':button').attr('tabindex', '-1')
+    $('.ql-toolbar').find('svg').attr('focusable', 'false')
 
 }
 
@@ -301,7 +304,7 @@ function convertToEditor(textArea) {
         $('.text-area-editor').keyup(function () {
             var editor = this
             smartenEditor(editor, function() {
-                return Quill.find(editor).getText().length
+                return Quill.find(editor).getText().trim().length
             })
         })
 
