@@ -127,7 +127,7 @@ public class NationalSearchController extends Controller {
         }).orElseGet(ImmutableMap::of);
     }
 
-    public CompletionStage<Result> searchOffender(String searchTerm, Optional<String> areasFilter, int pageSize, int pageNumber, String searchType) {
+    public CompletionStage<Result> searchOffender(String searchTerm, String searchType, Optional<String> areasFilter, int pageSize, int pageNumber) {
 
         return Optional.ofNullable(session(OFFENDER_API_BEARER_TOKEN)).map(bearerToken -> {
 
