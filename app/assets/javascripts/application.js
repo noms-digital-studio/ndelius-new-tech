@@ -95,15 +95,21 @@ function convertToEditor(textArea) {
     toolbar.find(':button').attr('tabindex', '-1')
     toolbar.find('svg').attr('focusable', 'false')
     toolbar.find('button').addClass('tooltip')
-    toolbar.find('.ql-bold svg').after('<span>Bold</span>')
-    toolbar.find('.ql-italic svg').after('<span>Italic</span>')
-    toolbar.find('.ql-underline svg').after('<span>Underline</span>')
+    toolbar.find('.ql-bold svg').after(withModifier('<span>Bold (⌘B)</span>'))
+    toolbar.find('.ql-italic svg').after(withModifier('<span>Italic (⌘I)</span>'))
+    toolbar.find('.ql-underline svg').after(withModifier('<span>Underline (⌘U)</span>'))
     toolbar.find('.ql-list[value="ordered"] svg').after('<span>Numbered List</span>')
     toolbar.find('.ql-list[value="bullet"] svg').after('<span>Bulleted List</span>')
     toolbar.find('.ql-clean svg').after('<span>Remove Formatting</span>')
 
 }
 
+function withModifier(text) {
+    if (/Mac/i.test(navigator.platform)) {
+        return text
+    }
+    return text.replace('⌘', 'Ctrl-')
+}
 
 (function ($) {
 
