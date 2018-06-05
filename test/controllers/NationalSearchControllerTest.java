@@ -33,9 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import static helpers.JwtHelperTest.generateToken;
-import static helpers.JwtHelperTest.generateTokenWithProbationAreaCodes;
-import static helpers.JwtHelperTest.generateTokenWithSubject;
+import static helpers.JwtHelperTest.*;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
@@ -47,6 +45,7 @@ import static org.mockito.Mockito.*;
 import static play.inject.Bindings.bind;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
+import static services.helpers.SearchQueryBuilder.QUERY_TYPE.SHOULD;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NationalSearchControllerTest extends WithApplication {
@@ -77,7 +76,7 @@ public class NationalSearchControllerTest extends WithApplication {
 
         when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
         when(offenderApi.probationAreaDescriptions(any(), any())).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("N01", "N01 Area", "N02", "N02 Area")));
-        when(elasticOffenderSearch.search(any(), any(),  any(), anyInt(), anyInt())).thenReturn(completedFuture(ImmutableMap.of(
+        when(elasticOffenderSearch.search(any(), any(),  any(), anyInt(), anyInt(), SHOULD)).thenReturn(completedFuture(ImmutableMap.of(
                 "offenders", ImmutableList.of(),
                 "suggestions", ImmutableList.of(),
                 "total", 0
@@ -367,7 +366,7 @@ public class NationalSearchControllerTest extends WithApplication {
                 method(GET).uri("/searchOffender/smith?areasFilter=N01,N02,N03");
         val result = route(app, request);
 
-        verify(elasticOffenderSearch).search(anyString(), probationAreasFilter.capture(), anyString(), anyInt(), anyInt());
+        verify(elasticOffenderSearch).search(anyString(), probationAreasFilter.capture(), anyString(), anyInt(), anyInt(), SHOULD);
 
         assertThat(probationAreasFilter.getValue()).containsExactlyInAnyOrder("N01", "N02", "N03");
     }
@@ -380,7 +379,7 @@ public class NationalSearchControllerTest extends WithApplication {
                 method(GET).uri("/searchOffender/smith");
         val result = route(app, request);
 
-        verify(elasticOffenderSearch).search(anyString(), probationAreasFilter.capture(), anyString(), anyInt(), anyInt());
+        verify(elasticOffenderSearch).search(anyString(), probationAreasFilter.capture(), anyString(), anyInt(), anyInt(), SHOULD);
 
         assertThat(probationAreasFilter.getValue()).isEmpty();
     }

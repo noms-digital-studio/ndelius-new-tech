@@ -24,24 +24,24 @@ const clearResults = () => ({type: CLEAR_RESULTS})
 const addAreaFilter = (probationAreaCode, probationAreaDescription) => ({type: ADD_AREA_FILTER, probationAreaCode, probationAreaDescription})
 const removeAreaFilter = probationAreaCode => ({type: REMOVE_AREA_FILTER, probationAreaCode})
 
-const performSearch = _.debounce((dispatch, searchTerm, probationAreasFilter, pageNumber) => {
+const performSearch = _.debounce((dispatch, searchTerm, probationAreasFilter, pageNumber, searchType) => {
     const encodedSearchTerm = encodeURIComponent(searchTerm)
     const toAreaFilter = () => probationAreasFilter.join(',')
 
-    $.getJSON(`searchOffender/${encodedSearchTerm}?pageSize=${PAGE_SIZE}&pageNumber=${pageNumber}&areasFilter=${toAreaFilter()}`, data => {
+    $.getJSON(`searchOffender/${encodedSearchTerm}?pageSize=${PAGE_SIZE}&pageNumber=${pageNumber}&areasFilter=${toAreaFilter()}&searchType=${searchType}`, data => {
         dispatch(searchResults(searchTerm, data, pageNumber))
     });
 }, 500);
 
 
 
-const search = (searchTerm, probationAreasFilter = [], pageNumber = 1) => (
+const search = (searchTerm, searchType, probationAreasFilter = [], pageNumber = 1) => (
     dispatch => {
         if (searchTerm === '') {
             dispatch(clearResults())
         } else {
             dispatch(requestSearch(searchTerm));
-            performSearch(dispatch, searchTerm, probationAreasFilter, pageNumber);
+            performSearch(dispatch, searchTerm, probationAreasFilter, pageNumber, searchType);
         }
     }
 )

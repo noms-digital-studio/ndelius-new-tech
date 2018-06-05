@@ -30,6 +30,8 @@ import java.util.stream.Collectors;
 import static helpers.FluentHelper.not;
 import static helpers.JwtHelper.principal;
 import static helpers.JwtHelper.probationAreaCodes;
+import static services.helpers.SearchQueryBuilder.QUERY_TYPE.MUST;
+import static services.helpers.SearchQueryBuilder.QUERY_TYPE.SHOULD;
 
 public class NationalSearchController extends Controller {
 
@@ -125,7 +127,7 @@ public class NationalSearchController extends Controller {
         }).orElseGet(ImmutableMap::of);
     }
 
-    public CompletionStage<Result> searchOffender(String searchTerm, Optional<String> areasFilter, int pageSize, int pageNumber) {
+    public CompletionStage<Result> searchOffender(String searchTerm, Optional<String> areasFilter, int pageSize, int pageNumber, String searchType) {
 
         return Optional.ofNullable(session(OFFENDER_API_BEARER_TOKEN)).map(bearerToken -> {
 
@@ -142,7 +144,8 @@ public class NationalSearchController extends Controller {
                                             toList(areasFilter),
                                             searchTerm,
                                             pageSize,
-                                            pageNumber).
+                                            pageNumber,
+                                            "exact".equals(searchType) ? MUST : SHOULD).
                                 thenApplyAsync(this::recordSearchResultsAnalytics, ec.current()).
                                 thenApply(JsonHelper::okJson);
 
