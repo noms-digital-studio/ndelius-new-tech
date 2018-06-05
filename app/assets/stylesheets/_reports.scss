@@ -107,41 +107,43 @@ footer {
   }
 }
 
-.text-area-editor.ql-container.ql-snow {
-  border: none;
-}
+.form-group {
+  .ql-container.ql-snow {
+    border: none;
+  }
 
-.ql-editor:focus {
-  outline: 3px solid $focus-colour;
-  outline-offset: 2px;
-}
+  .ql-editor:focus {
+    outline: 3px solid $focus-colour;
+    outline-offset: 2px;
+  }
 
-.ql-toolbar {
-  visibility: hidden;
-  margin-bottom: $gutter-one-third;
-}
+  .ql-toolbar {
+    visibility: hidden;
+    margin-bottom: $gutter-one-third;
+  }
 
-.form-group .ql-snow.ql-toolbar button.ql-active {
-  background-color: $grey-3;
-}
+  .ql-snow.ql-toolbar button.ql-active {
+    background-color: $grey-3;
+  }
 
-.form-group .ql-snow.ql-toolbar button.ql-active .ql-stroke {
-  stroke: $black;
-}
+  .ql-snow.ql-toolbar button.ql-active .ql-stroke {
+    stroke: $black;
+  }
 
-.text-area-editor.ql-container {
-  @include core-19();
-}
+  .ql-container {
+    @include core-19();
+  }
 
-.text-area-editor.form-control {
-  width: 100%;
+  .text-area-editor.form-control {
+    width: 100%;
+  }
+
 }
 
 .small-margin-bottom {
   margin-bottom: $gutter-one-third;
 
 }
-
 .small-margin-top {
   margin-top: $gutter-one-third;
 }

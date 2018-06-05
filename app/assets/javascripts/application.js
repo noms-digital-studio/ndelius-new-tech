@@ -74,7 +74,8 @@ function convertToEditor(textArea) {
     transferValueToInput()
 
     // swap toolbar to below editor
-    $(id).prev().before($(id));
+    var toolbar = $(id).prev()
+    toolbar.before($(id));
 
     // show/hide toolbar with focus change
     editor.on('selection-change', function(range) {
@@ -90,8 +91,16 @@ function convertToEditor(textArea) {
 
     // remove tab key binding for editor, toolbar (and for IE11 svg)
     delete editor.getModule('keyboard').bindings[9];
-    $('.ql-toolbar').find(':button').attr('tabindex', '-1')
-    $('.ql-toolbar').find('svg').attr('focusable', 'false')
+
+    toolbar.find(':button').attr('tabindex', '-1')
+    toolbar.find('svg').attr('focusable', 'false')
+    toolbar.find('button').addClass('tooltip')
+    toolbar.find('.ql-bold svg').after('<span>Bold</span>')
+    toolbar.find('.ql-italic svg').after('<span>Italic</span>')
+    toolbar.find('.ql-underline svg').after('<span>Underline</span>')
+    toolbar.find('.ql-list[value="ordered"] svg').after('<span>Numbered List</span>')
+    toolbar.find('.ql-list[value="bullet"] svg').after('<span>Bulleted List</span>')
+    toolbar.find('.ql-clean svg').after('<span>Remove Formatting</span>')
 
 }
 
