@@ -288,6 +288,10 @@ function convertToEditor(textArea) {
                 $('textarea').each(function (i, elem) {
                     convertToEditor($(elem))
                 })
+            } else {
+                $('textarea').each(function (i, elem) {
+                    $(elem).css('visibility', 'visible')
+                })
             }
             // Autosize all Textarea elements (does not support IE8).
             autosize(document.querySelectorAll('textarea'));
