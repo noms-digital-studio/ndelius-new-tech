@@ -234,7 +234,6 @@ function openPopup(url) {
             textArea.replaceWith(editor)
             editor.after('<input type="hidden" name="'+areaAttributes.name+'" value=""/>')
             editor.addClass('text-area-editor')
-            editor.attr('role', 'application')
             return areaAttributes
 
         }
