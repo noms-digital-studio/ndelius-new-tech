@@ -5,6 +5,7 @@ export const NO_SAVED_SEARCH = 'NO_SAVED_SEARCH'
 export const SAVED_SEARCH = 'SAVED_SEARCH'
 export const ADD_AREA_FILTER = 'ADD_AREA_FILTER'
 export const REMOVE_AREA_FILTER = 'REMOVE_AREA_FILTER'
+export const SEARCH_TYPE_CHANGED = 'SEARCH_TYPE_CHANGED'
 
 export const PAGE_SIZE = 10;
 
@@ -23,6 +24,9 @@ const searchResults = (searchTerm, results, pageNumber) => ({
 const clearResults = () => ({type: CLEAR_RESULTS})
 const addAreaFilter = (probationAreaCode, probationAreaDescription) => ({type: ADD_AREA_FILTER, probationAreaCode, probationAreaDescription})
 const removeAreaFilter = probationAreaCode => ({type: REMOVE_AREA_FILTER, probationAreaCode})
+const searchTypeChanged = searchType => {
+    return {type: SEARCH_TYPE_CHANGED, searchType}
+}
 
 const performSearch = _.debounce((dispatch, searchTerm, probationAreasFilter, pageNumber, searchType) => {
     const encodedSearchTerm = encodeURIComponent(searchTerm)
@@ -49,4 +53,4 @@ const search = (searchTerm, searchType, probationAreasFilter = [], pageNumber = 
 const noSavedSearch = () => ({type: NO_SAVED_SEARCH})
 const savedSearch = (searchTerm, probationAreasFilter) => ({type: SAVED_SEARCH, searchTerm, probationAreasFilter})
 
-export {search, noSavedSearch, savedSearch, addAreaFilter, removeAreaFilter}
+export {search, noSavedSearch, savedSearch, addAreaFilter, removeAreaFilter, searchTypeChanged}
