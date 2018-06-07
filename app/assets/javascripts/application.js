@@ -11,107 +11,6 @@ function openPopup(url) {
     window.open(url, 'reportpopup', 'top=200,height=760,width=820,resizable=yes,scrollbars=yes,location=no,menubar=no,status=yes,toolbar=no').focus();
 }
 
-function replaceTextArea(textArea) {
-    var attributesNotToBeCopied = ['name', 'placeholder', 'role']
-    var areaAttributes = attributesNotToBeCopied.reduce(function(accumulator, currentValue) {
-        accumulator[currentValue] = textArea.attr(currentValue)
-        return accumulator
-    }, {})
-    var value = textArea.val()
-    var editor = $('<div>'+value+'</div>')
-    $.each(textArea[0].attributes, function(index, element) {
-        if (attributesNotToBeCopied.indexOf(this.name) === -1) {
-            editor.attr(this.name, this.value)
-        }
-    });
-
-    textArea.replaceWith(editor)
-    editor.after('<input type="hidden" name="'+areaAttributes.name+'" value=""/>')
-    editor.addClass('text-area-editor')
-    editor.attr('role', 'application')
-    return areaAttributes
-
-}
-
-function convertToEditor(textArea) {
-    var id = '#' + textArea.attr('id')
-    var areaAttributes = replaceTextArea(textArea)
-
-    var editor = new Quill(id, {
-        placeholder: areaAttributes.placeholder,
-        theme: 'snow',
-        formats: ['bold', 'italic', 'underline', 'list'],
-        modules: {
-            toolbar: [
-                ['bold', 'italic', 'underline'],
-                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                ['clean']
-            ]
-        }
-    })
-
-    $(id).find('.ql-editor').attr('role', areaAttributes.role)
-
-    function cleanHtml() {
-        return '<!-- RICH_TEXT -->' +  editor.root.innerHTML.replace(/<br>/gm,'<br/>')
-    }
-
-    function hasAnyText() {
-        return editor.getText().trim()
-    }
-
-    function transferValueToInput() {
-        if (hasAnyText()) {
-            $("input[name='"+ areaAttributes.name + "']").val(cleanHtml())
-        } else {
-            $("input[name='"+ areaAttributes.name + "']").val('')
-        }
-    }
-    editor.on('text-change', function(delta, oldDelta, source) {
-        if (source == 'user') {
-            transferValueToInput()
-        }
-    })
-
-    transferValueToInput()
-
-    // swap toolbar to below editor
-    var toolbar = $(id).prev()
-    toolbar.before($(id));
-
-    // show/hide toolbar with focus change
-    editor.on('selection-change', function(range) {
-        if (range) {
-            $(id).next().css('visibility', 'visible')
-        } else {
-            $(id).next().css('visibility', 'hidden')
-        }
-    })
-    // add classes to reduce margins
-    $(id).closest('.form-group').addClass('small-margin-bottom')
-    $(id).closest('.form-group').next('hr').addClass('small-margin-top')
-
-    // remove tab key binding for editor, toolbar (and for IE11 svg)
-    delete editor.getModule('keyboard').bindings[9];
-
-    toolbar.find(':button').attr('tabindex', '-1')
-    toolbar.find('svg').attr('focusable', 'false')
-    toolbar.find('button').addClass('tooltip')
-    toolbar.find('.ql-bold svg').after(withModifier('<span>Bold (⌘B)</span>'))
-    toolbar.find('.ql-italic svg').after(withModifier('<span>Italic (⌘I)</span>'))
-    toolbar.find('.ql-underline svg').after(withModifier('<span>Underline (⌘U)</span>'))
-    toolbar.find('.ql-list[value="ordered"] svg').after('<span>Numbered List</span>')
-    toolbar.find('.ql-list[value="bullet"] svg').after('<span>Bulleted List</span>')
-    toolbar.find('.ql-clean svg').after('<span>Remove Formatting</span>')
-
-}
-
-function withModifier(text) {
-    if (/Mac/i.test(navigator.platform)) {
-        return text
-    }
-    return text.replace('⌘', 'Ctrl-')
-}
 
 (function ($) {
 
@@ -187,12 +86,13 @@ function withModifier(text) {
          * Save
          */
         function saveProgress(elem) {
-            if ($('form').length) {
+            var form = $('form')
+            if (form.length) {
                 startSaveIcon(elem);
                 $.ajax({
                     type: 'POST',
-                    url: $('form').attr('action') + '/save',
-                    data: formWithZeroJumpNumber($('form')),
+                    url: form.attr('action') + '/save',
+                    data: formWithZeroJumpNumber(form),
                     complete: function(response) {
                         _.delay(endSaveIcon, 500, elem, response.status !== 200)
                     }
@@ -203,13 +103,12 @@ function withModifier(text) {
         var quietSaveProgress = _.debounce(saveProgress, 500);
 
         function smartenEditor(editor, lengthCalculator) {
-            quietSaveProgress($(editor));
+            quietSaveProgress(editor);
 
-            var textArea = $(editor),
-                limit = textArea.data('limit'),
+            var limit = editor.data('limit'),
                 current = lengthCalculator(editor),
-                messageHolder = $('#' + textArea.attr('id') + '-countHolder'),
-                messageTarget = $('#' + textArea.attr('id') + '-count');
+                messageHolder = $('#' + editor.attr('id') + '-countHolder'),
+                messageTarget = $('#' + editor.attr('id') + '-count');
 
             if (limit && current > 0) {
                 messageHolder.removeClass('js-hidden');
@@ -225,9 +124,9 @@ function withModifier(text) {
          * Textarea elements
          */
          $('textarea').keyup(function () {
-             var editor = this
+             var editor = $(this)
              smartenEditor(editor, function() {
-                 return $(editor).val().length
+                 return editor.val().length
              })
         })
 
@@ -318,12 +217,113 @@ function withModifier(text) {
 
         }
 
-        $('.text-area-editor').keyup(function () {
-            var editor = this
-            smartenEditor(editor, function() {
-                return Quill.find(editor).getText().trim().length
+        function replaceTextArea(textArea) {
+            var attributesNotToBeCopied = ['name', 'placeholder', 'role']
+            var areaAttributes = attributesNotToBeCopied.reduce(function(accumulator, currentValue) {
+                accumulator[currentValue] = textArea.attr(currentValue)
+                return accumulator
+            }, {})
+            var value = textArea.val()
+            var editor = $('<div>'+value+'</div>')
+            $.each(textArea[0].attributes, function(index, element) {
+                if (attributesNotToBeCopied.indexOf(this.name) === -1) {
+                    editor.attr(this.name, this.value)
+                }
+            });
+
+            textArea.replaceWith(editor)
+            editor.after('<input type="hidden" name="'+areaAttributes.name+'" value=""/>')
+            editor.addClass('text-area-editor')
+            editor.attr('role', 'application')
+            return areaAttributes
+
+        }
+
+        function convertToEditor(textArea) {
+            var id = '#' + textArea.attr('id')
+            var areaAttributes = replaceTextArea(textArea)
+
+            var editor = new Quill(id, {
+                placeholder: areaAttributes.placeholder,
+                theme: 'snow',
+                formats: ['bold', 'italic', 'underline', 'list'],
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['clean']
+                    ]
+                }
             })
-        })
+
+            $(id).find('.ql-editor').attr('role', areaAttributes.role)
+
+            function cleanHtml() {
+                return '<!-- RICH_TEXT -->' +  editor.root.innerHTML.replace(/<br>/gm,'<br/>')
+            }
+
+            function hasAnyText() {
+                return editor.getText().trim()
+            }
+
+            function transferValueToInput() {
+                if (hasAnyText()) {
+                    $("input[name='"+ areaAttributes.name + "']").val(cleanHtml())
+                } else {
+                    $("input[name='"+ areaAttributes.name + "']").val('')
+                }
+            }
+            editor.on('text-change', function(delta, oldDelta, source) {
+                if (source === 'user') {
+                    transferValueToInput()
+                }
+            })
+
+            transferValueToInput()
+
+            // swap toolbar to below editor
+            var toolbar = $(id).prev()
+            toolbar.before($(id));
+
+            // show/hide toolbar with focus change
+            editor.on('selection-change', function(range) {
+                if (range) {
+                    $(id).next().css('visibility', 'visible')
+                } else {
+                    $(id).next().css('visibility', 'hidden')
+                }
+            })
+            // add classes to reduce margins
+            $(id).closest('.form-group').addClass('small-margin-bottom')
+            $(id).closest('.form-group').next('hr').addClass('small-margin-top')
+
+            // remove tab key binding for editor, toolbar (and for IE11 svg)
+            delete editor.getModule('keyboard').bindings[9];
+
+            toolbar.find(':button').attr('tabindex', '-1')
+            toolbar.find('svg').attr('focusable', 'false')
+            toolbar.find('button').addClass('tooltip')
+            toolbar.find('.ql-bold svg').after(withModifier('<span>Bold (⌘B)</span>'))
+            toolbar.find('.ql-italic svg').after(withModifier('<span>Italic (⌘I)</span>'))
+            toolbar.find('.ql-underline svg').after(withModifier('<span>Underline (⌘U)</span>'))
+            toolbar.find('.ql-list[value="ordered"] svg').after('<span>Numbered List</span>')
+            toolbar.find('.ql-list[value="bullet"] svg').after('<span>Bulleted List</span>')
+            toolbar.find('.ql-clean svg').after('<span>Remove Formatting</span>')
+
+
+            editor.on('text-change', function(delta, oldDelta, source) {
+                smartenEditor($(id), function() {
+                    return editor.getText().trim().length
+                })
+            });
+        }
+
+        function withModifier(text) {
+            if (/Mac/i.test(navigator.platform)) {
+                return text
+            }
+            return text.replace('⌘', 'Ctrl-')
+        }
 
 
     });
