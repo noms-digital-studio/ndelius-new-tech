@@ -12,33 +12,33 @@ function openPopup(url) {
 }
 
 function replaceTextArea(textArea) {
-    var name = textArea.attr('name')
-    var placeHolder = textArea.attr('placeholder')
+    var attributesNotToBeCopied = ['name', 'placeholder', 'role']
+    var areaAttributes = attributesNotToBeCopied.reduce(function(accumulator, currentValue) {
+        accumulator[currentValue] = textArea.attr(currentValue)
+        return accumulator
+    }, {})
     var value = textArea.val()
     var editor = $('<div>'+value+'</div>')
     $.each(textArea[0].attributes, function(index, element) {
-        var name = this.name;
-        var value = this.value;
-        if (name !== 'name' && name !== 'placeHolder' ) {
-            editor.attr(name, value)
+        if (attributesNotToBeCopied.indexOf(this.name) === -1) {
+            editor.attr(this.name, this.value)
         }
     });
 
     textArea.replaceWith(editor)
-    editor.after('<input type="hidden" name="'+name+'" value=""/>')
+    editor.after('<input type="hidden" name="'+areaAttributes.name+'" value=""/>')
     editor.addClass('text-area-editor')
-    return {placeHolder: placeHolder, name: name}
+    editor.attr('role', 'application')
+    return areaAttributes
 
 }
 
 function convertToEditor(textArea) {
     var id = '#' + textArea.attr('id')
     var areaAttributes = replaceTextArea(textArea)
-    var name = areaAttributes.name;
-    var placeHolder = areaAttributes.placeHolder
 
     var editor = new Quill(id, {
-        placeholder: placeHolder,
+        placeholder: areaAttributes.placeholder,
         theme: 'snow',
         formats: ['bold', 'italic', 'underline', 'list'],
         modules: {
@@ -50,6 +50,8 @@ function convertToEditor(textArea) {
         }
     })
 
+    $(id).find('.ql-editor').attr('role', areaAttributes.role)
+
     function cleanHtml() {
         return '<!-- RICH_TEXT -->' +  editor.root.innerHTML.replace(/<br>/gm,'<br/>')
     }
@@ -60,9 +62,9 @@ function convertToEditor(textArea) {
 
     function transferValueToInput() {
         if (hasAnyText()) {
-            $("input[name='"+ name + "']").val(cleanHtml())
+            $("input[name='"+ areaAttributes.name + "']").val(cleanHtml())
         } else {
-            $("input[name='"+ name + "']").val('')
+            $("input[name='"+ areaAttributes.name + "']").val('')
         }
     }
     editor.on('text-change', function(delta, oldDelta, source) {
