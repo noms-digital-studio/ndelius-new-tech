@@ -325,6 +325,7 @@ function openPopup(url) {
         }
 
 
+        $('form:first').find('.ql-editor,input[type!=hidden],textarea').first().focus();
     });
 
     /**
