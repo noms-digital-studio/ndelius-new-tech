@@ -272,6 +272,28 @@ function openPopup(url) {
                     $("input[name='"+ areaAttributes.name + "']").val('')
                 }
             }
+
+            function ensureCaretInView() {
+                var footer = $('footer')
+                var footerPosition = footer.offset()
+                var position = $(id).find('.ql-editor').caret('offset')
+
+                // ensure caret position doesn't go below footer
+                if (position.top + (position.height * 2) > footerPosition.top) {
+                    $('html, body').animate({
+                        scrollTop: position.top - footer.height()
+                    }, 100)
+                }
+            }
+
+            function withModifier(text) {
+                if (/Mac/i.test(navigator.platform)) {
+                    return text
+                }
+                return text.replace('⌘', 'Ctrl-')
+            }
+
+
             editor.on('text-change', function(delta, oldDelta, source) {
                 if (source === 'user') {
                     transferValueToInput()
@@ -288,16 +310,7 @@ function openPopup(url) {
             editor.on('selection-change', function(range) {
                 if (range) {
                     $(id).next().css('visibility', 'visible')
-                    var footer = $('footer')
-                    var footerPosition = footer.offset()
-                    var position = $(id).find('.ql-editor').caret('offset')
-
-                    // ensure caret position doesn't go below footer
-                    if (position.top + (position.height * 2) > footerPosition.top) {
-                        $('html, body').animate({
-                            scrollTop: position.top - footer.height()
-                        }, 100)
-                    }
+                    ensureCaretInView()
                 } else {
                     $(id).next().css('visibility', 'hidden')
                 }
@@ -308,9 +321,9 @@ function openPopup(url) {
 
             // remove tab key binding for editor, toolbar (and for IE11 svg)
             delete editor.getModule('keyboard').bindings[9];
-
             toolbar.find(':button').attr('tabindex', '-1')
             toolbar.find('svg').attr('focusable', 'false')
+
             toolbar.find('button').addClass('tooltip')
             toolbar.find('.ql-bold svg').after(withModifier('<span>Bold (⌘B)</span>'))
             toolbar.find('.ql-italic svg').after(withModifier('<span>Italic (⌘I)</span>'))
@@ -325,13 +338,6 @@ function openPopup(url) {
                     return editor.getText().trim().length
                 })
             });
-        }
-
-        function withModifier(text) {
-            if (/Mac/i.test(navigator.platform)) {
-                return text
-            }
-            return text.replace('⌘', 'Ctrl-')
         }
 
 
