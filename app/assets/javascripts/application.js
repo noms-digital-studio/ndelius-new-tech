@@ -337,6 +337,7 @@ function openPopup(url) {
                 smartenEditor($(id), function() {
                     return editor.getText().trim().length
                 })
+                ensureCaretInView()
             });
         }
 
