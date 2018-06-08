@@ -59,6 +59,20 @@ const HelpPage = () => {
                         </li>
                     </ul>
 
+                    <ul>
+                        <li className="list-bullet">
+                            <h2 className="heading-medium no-margin-bottom margin-top medium">Refine the results by selecting ‘Yes’ to ‘Match all terms’</h2>
+                            <p className="margin-top">This will search on all of the information you enter.</p>
+                        </li>
+                    </ul>
+
+                    <ul>
+                        <li className="list-bullet">
+                            <h2 className="heading-medium no-margin-bottom margin-top medium">Expand the results by selecting ‘No’ to ‘Match all terms’</h2>
+                            <p className="margin-top">This will search on any of the information you enter.</p>
+                        </li>
+                    </ul>
+
                     <p>&nbsp;</p>
 
                     <Link to="search" className="no-underline"><span className="icon prev-arrow"/><span
