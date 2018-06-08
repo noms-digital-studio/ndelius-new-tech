@@ -29,7 +29,7 @@ const searchTypeSelector = ({searchType, searchTypeChanged, search, searchTerm, 
                                }
                            }
                     />
-                    <label htmlFor="match-all-terms-nomultiple-choice">No</label>
+                    <label htmlFor="match-all-terms-no">No</label>
                 </div>
             </fieldset>
         </div>
