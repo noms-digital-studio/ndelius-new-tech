@@ -288,6 +288,16 @@ function openPopup(url) {
             editor.on('selection-change', function(range) {
                 if (range) {
                     $(id).next().css('visibility', 'visible')
+                    var footer = $('footer')
+                    var footerPosition = footer.offset()
+                    var position = $(id).find('.ql-editor').caret('offset')
+
+                    // ensure caret position doesn't go below footer
+                    if (position.top + (position.height * 2) > footerPosition.top) {
+                        $('html, body').animate({
+                            scrollTop: position.top - footer.height()
+                        }, 100)
+                    }
                 } else {
                     $(id).next().css('visibility', 'hidden')
                 }
@@ -325,7 +335,23 @@ function openPopup(url) {
         }
 
 
-        $('form:first').find('.ql-editor,input[type!=hidden],textarea').first().focus();
+        var elementSelector = '.ql-editor,input[type!=hidden],textarea'
+        $('form:first').find(elementSelector).first().focus();
+
+        $(elementSelector).focus(function() {
+            var element = $(this)
+            var footer = $('footer')
+            var footerPosition = footer.offset()
+            var position = element.offset()
+
+            // ensure no focused element falls below footer
+            if (position.top + element.height() > footerPosition.top) {
+                $('html, body').animate({
+                    scrollTop: element.offset().top - footer.height()
+                }, 100)
+            }
+        });
+
     });
 
     /**
