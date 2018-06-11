@@ -183,13 +183,14 @@ public class NationalSearchControllerTest extends WithApplication {
         val request = new Http.RequestBuilder().
                 session("offenderApiBearerToken", generateTokenWithSubject("cn=fake.user,cn=Users,dc=moj,dc=com")).
                 session("searchAnalyticsGroupId", "999-aaa-888").
-                method(GET).uri("/searchOffender/smith?searchType=broad");
+                method(GET).uri("/searchOffender/smith?searchType=exact");
         route(app, request);
 
         verify(analyticsStore, times(2)).recordEvent(analyticsEventCaptor.capture());
 
         assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("username", "cn=fake.user,cn=Users,dc=moj,dc=com"));
         assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("type", "search-request"));
+        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("searchType", "exact"));
         assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("correlationId", "999-aaa-888"));
 
         assertThat(analyticsEventCaptor.getAllValues().get(1)).contains(entry("username", "cn=fake.user,cn=Users,dc=moj,dc=com"));
@@ -211,6 +212,7 @@ public class NationalSearchControllerTest extends WithApplication {
         verify(analyticsStore, atLeastOnce()).recordEvent(analyticsEventCaptor.capture());
 
         assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("type", "search-request"));
+        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("searchType", "broad"));
         assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("filter", ImmutableMap.of("myProviderSelectedCount", 0L, "otherProviderSelectedCount", 0L, "myProviderCount", 2L)));
 
     }
@@ -227,6 +229,7 @@ public class NationalSearchControllerTest extends WithApplication {
         verify(analyticsStore, atLeastOnce()).recordEvent(analyticsEventCaptor.capture());
 
         assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("type", "search-request"));
+        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("searchType", "broad"));
         assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("filter", ImmutableMap.of("myProviderSelectedCount", 2L, "otherProviderSelectedCount", 3L, "myProviderCount", 2L)));
 
     }

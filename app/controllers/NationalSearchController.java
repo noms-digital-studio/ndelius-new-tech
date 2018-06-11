@@ -138,7 +138,8 @@ public class NationalSearchController extends Controller {
                             "myProviderCount", (long)probationAreaCodes(bearerToken).size(),
                             "myProviderSelectedCount", myProviderCount(probationAreaCodes(bearerToken), toList(areasFilter)),
                             "otherProviderSelectedCount", otherProviderCount(probationAreaCodes(bearerToken), toList(areasFilter))
-                            ))));
+                            ),
+                    "searchType", searchType)));
 
             return offenderSearch.search(bearerToken,
                                             toList(areasFilter),

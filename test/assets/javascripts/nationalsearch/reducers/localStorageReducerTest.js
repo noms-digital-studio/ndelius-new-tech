@@ -139,7 +139,7 @@ describe("localStorageReducer", () => {
         })
     })
 
-    describe.only("when SEARCH_TYPE_CHANGED action received", () => {
+    describe("when SEARCH_TYPE_CHANGED action received", () => {
 
         it('searchType will be changed to `exact`', () => {
             state = localStorageReducer({searchTerm: 'Mr Bean', searchType: 'broad',
