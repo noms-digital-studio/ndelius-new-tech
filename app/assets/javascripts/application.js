@@ -86,13 +86,12 @@ function openPopup(url) {
          * Save
          */
         function saveProgress(elem) {
-            var form = $('form')
-            if (form.length) {
+            if ($('form').length) {
                 startSaveIcon(elem);
                 $.ajax({
                     type: 'POST',
-                    url: form.attr('action') + '/save',
-                    data: formWithZeroJumpNumber(form),
+                    url: $('form').attr('action') + '/save',
+                    data: formWithZeroJumpNumber($('form')),
                     complete: function(response) {
                         _.delay(endSaveIcon, 500, elem, response.status !== 200)
                     }
@@ -120,9 +119,6 @@ function openPopup(url) {
         }
 
 
-        /**
-         * Textarea elements
-         */
          $('textarea').keyup(function () {
              var editor = $(this)
              saveAndUpdateTextLimits(editor, function() {
