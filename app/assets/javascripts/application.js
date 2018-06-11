@@ -102,7 +102,7 @@ function openPopup(url) {
 
         var quietSaveProgress = _.debounce(saveProgress, 500);
 
-        function smartenEditor(editor, lengthCalculator) {
+        function saveAndUpdateTextLimits(editor, lengthCalculator) {
             quietSaveProgress(editor);
 
             var limit = editor.data('limit'),
@@ -125,7 +125,7 @@ function openPopup(url) {
          */
          $('textarea').keyup(function () {
              var editor = $(this)
-             smartenEditor(editor, function() {
+             saveAndUpdateTextLimits(editor, function() {
                  return editor.val().length
              })
         })
@@ -208,6 +208,7 @@ function openPopup(url) {
                     convertToEditor($(elem))
                 })
             }
+            // toggle editors back to visible previous hidden while quill initialises
             $('textarea').each(function (i, elem) {
                 $(elem).css('visibility', 'visible')
             })
@@ -293,6 +294,7 @@ function openPopup(url) {
             }
 
 
+
             editor.on('text-change', function(delta, oldDelta, source) {
                 if (source === 'user') {
                     transferValueToInput()
@@ -305,6 +307,22 @@ function openPopup(url) {
             var toolbar = $(id).prev()
             toolbar.before($(id));
 
+            function addTooltipsToToolbar() {
+                toolbar.find('button').addClass('tooltip')
+                var tips = [
+                    {selector: '.ql-bold', tooltip: 'Bold (⌘B)'},
+                    {selector: '.ql-italic', tooltip: 'Italic (⌘I)'},
+                    {selector: '.ql-underline', tooltip: 'Underline (⌘U)'},
+                    {selector: '.ql-list[value="ordered"]', tooltip: 'Numbered List'},
+                    {selector: '.ql-list[value="bullet"]', tooltip: 'Bulleted List'},
+                    {selector: '.ql-clean', tooltip: 'Remove Formatting'}]
+
+                function addTooltop(tip) {
+                    toolbar.find(tip.selector + ' svg').after(withModifier('<span>'+tip.tooltip+'</span>'))
+                }
+                tips.forEach(addTooltop)
+            }
+
             // show/hide toolbar with focus change
             editor.on('selection-change', function(range) {
                 if (range) {
@@ -314,6 +332,14 @@ function openPopup(url) {
                     $(id).next().css('visibility', 'hidden')
                 }
             })
+
+            editor.on('text-change', function() {
+                saveAndUpdateTextLimits($(id), function() {
+                    return editor.getText().trim().length
+                })
+                ensureCaretInView()
+            });
+
             // add classes to reduce margins
             $(id).closest('.form-group').addClass('small-margin-bottom')
             $(id).closest('.form-group').next('hr').addClass('small-margin-top')
@@ -323,28 +349,15 @@ function openPopup(url) {
             toolbar.find(':button').attr('tabindex', '-1')
             toolbar.find('svg').attr('focusable', 'false')
 
-            toolbar.find('button').addClass('tooltip')
-            toolbar.find('.ql-bold svg').after(withModifier('<span>Bold (⌘B)</span>'))
-            toolbar.find('.ql-italic svg').after(withModifier('<span>Italic (⌘I)</span>'))
-            toolbar.find('.ql-underline svg').after(withModifier('<span>Underline (⌘U)</span>'))
-            toolbar.find('.ql-list[value="ordered"] svg').after('<span>Numbered List</span>')
-            toolbar.find('.ql-list[value="bullet"] svg').after('<span>Bulleted List</span>')
-            toolbar.find('.ql-clean svg').after('<span>Remove Formatting</span>')
+            addTooltipsToToolbar()
 
-
-            editor.on('text-change', function(delta, oldDelta, source) {
-                smartenEditor($(id), function() {
-                    return editor.getText().trim().length
-                })
-                ensureCaretInView()
-            });
         }
 
 
         var elementSelector = '.ql-editor,input[type!=hidden],textarea'
         $('form:first').find(elementSelector).first().focus();
 
-        $(elementSelector).focus(function() {
+        function ensureFieldInView() {
             var element = $(this)
             var footer = $('footer')
             var footerPosition = footer.offset()
@@ -356,7 +369,10 @@ function openPopup(url) {
                     scrollTop: element.offset().top - footer.height()
                 }, 100)
             }
-        });
+        }
+
+
+        $(elementSelector).focus(ensureFieldInView)
 
     });
 
