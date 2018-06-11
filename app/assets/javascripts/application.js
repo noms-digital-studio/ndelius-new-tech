@@ -180,6 +180,9 @@ function openPopup(url) {
 
         // Progressive enhancement for browsers > IE8
         if (!$('html').is('.lte-ie8')) {
+            // Autosize all Textarea elements (does not support IE8).
+            autosize(document.querySelectorAll('textarea.classic'));
+
             // Autocomplete
             var autoComplete = document.querySelector('.auto-complete');
             if (autoComplete) {
@@ -196,7 +199,6 @@ function openPopup(url) {
                 dateFormat: 'dd/mm/yy'
             }).parent().addClass('date-wrapper');
 
-
             // htmlunit no longer supports IE8 or conditionals so also check agent to rule out IE8
             // not needing once we upgrade away from HTMLUnit
             if (navigator.userAgent.indexOf('MSIE 8.0') === -1) {
@@ -208,8 +210,6 @@ function openPopup(url) {
             $('textarea').each(function (i, elem) {
                 $(elem).css('visibility', 'visible')
             })
-            // Autosize all Textarea elements (does not support IE8).
-            autosize(document.querySelectorAll('textarea'));
 
         }
 
