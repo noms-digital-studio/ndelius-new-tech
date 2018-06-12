@@ -523,7 +523,7 @@ public class MongoDbStore implements AnalyticsStore {
     @Override
     public CompletableFuture<Map<String, Long>> searchTypeCounts(LocalDateTime from) {
 
-        val result = new CompletableFuture<>();
+        CompletableFuture<Map<String, Long>> result = new CompletableFuture<>();
 
         val hasCorrelationId = _match(_exists("correlationId"));
         val dateFilter = _match(_gte("dateTime", from));
