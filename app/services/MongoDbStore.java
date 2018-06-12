@@ -523,16 +523,21 @@ public class MongoDbStore implements AnalyticsStore {
     @Override
     public CompletableFuture<Map<String, Long>> searchTypeCounts(LocalDateTime from) {
 
-        CompletableFuture<Map<String, Long>> result = new CompletableFuture<>();
+        val result = new CompletableFuture<>();
 
         val hasCorrelationId = _match(_exists("correlationId"));
         val dateFilter = _match(_gte("dateTime", from));
         val match = _match( _eq("type", "search-request"));
         val hasSearchTypeAnalytics = _match(_exists("searchType"));
 
+        val lastSearchType = _group(_by(
+            "_id", "$correlationId",
+            "lastSearchType", _last("$searchType")
+        ));
+
         val sum = _group(new Document(
                 ImmutableMap.of(
-                        "_id", ImmutableMap.of("searchType", "$searchType"),
+                        "_id", ImmutableMap.of("searchType", "$lastSearchType"),
                         "count", _sum()
                 )));
 
@@ -549,6 +554,7 @@ public class MongoDbStore implements AnalyticsStore {
                 dateFilter,
                 match,
                 hasSearchTypeAnalytics,
+                lastSearchType,
                 sum,
                 project
                 );
