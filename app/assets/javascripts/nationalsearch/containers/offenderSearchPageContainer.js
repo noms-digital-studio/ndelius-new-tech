@@ -14,8 +14,8 @@ export default connect(
 
             if (data && data.when && ((Date.now() - data.when) / 1000 / 60 < window.recentSearchMinutes)) {
                 dispatch(savedSearch(data.what, data.filter || {}))
-                dispatch(search(data.what, data.type, probationAreaCodes(data.filter), data.page));
-                dispatch(searchTypeChanged(data.type))
+                dispatch(search(data.what, data.type || 'broad', probationAreaCodes(data.filter), data.page));
+                dispatch(searchTypeChanged(data.type || 'broad'))
             } else {
                 dispatch(noSavedSearch())
             }

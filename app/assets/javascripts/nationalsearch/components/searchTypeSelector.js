@@ -39,7 +39,6 @@ const searchTypeSelector = ({searchType, searchTypeChanged, search, searchTerm, 
 );
 
 const typeChanged = (searchType, searchTypeChanged) => {
-    console.log('typeChanged ' + searchType)
     searchTypeChanged(searchType)
 }
 
