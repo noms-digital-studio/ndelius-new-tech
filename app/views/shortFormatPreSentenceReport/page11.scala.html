@@ -6,7 +6,7 @@
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
 
-@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
+@()(implicit reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String, pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
@@ -42,7 +42,7 @@
             @readOnlyField(reportForm("startDate"), "Start date", encrypter)
             @inputText(reportForm("reportDate"), '_label -> "Completion date", '_help -> "For example: 28/06/2017", 'class -> "date-picker", 'required -> "true")
 
-            @footer(11, reportForm, encrypter, Some(("Submit", Some("Submit and upload your report"))), false)
+            @footer(11, encrypter, Some(("Submit", Some("Submit and upload your report"))), false)
         }
 
         </div>

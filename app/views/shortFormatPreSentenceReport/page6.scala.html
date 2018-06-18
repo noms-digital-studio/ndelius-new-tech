@@ -6,7 +6,7 @@
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
 
-@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
+@()(implicit reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String, pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
@@ -58,7 +58,7 @@
             @page9Fields(reportForm)
             @page11Fields(reportForm, encrypter)
 
-            @footer(6, reportForm, encrypter)
+            @footer(6, encrypter)
         }
 
         </div>
