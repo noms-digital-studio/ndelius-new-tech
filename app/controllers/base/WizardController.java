@@ -2,6 +2,7 @@ package controllers.base;
 
 import com.google.common.base.Strings;
 import com.typesafe.config.Config;
+import controllers.ParamsValidator;
 import data.base.WizardData;
 import data.viewModel.PageStatus;
 import helpers.Encryption;
@@ -25,6 +26,7 @@ import scala.compat.java8.functionConverterImpls.FromJavaFunction;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -49,6 +51,8 @@ public abstract class WizardController<T extends WizardData> extends Controller 
     protected final Function<String, String> encrypter;
     protected final Function<String, String> decrypter;
     protected final HttpExecutionContext ec;
+    protected final Duration userTokenValidDuration;
+    protected final ParamsValidator paramsValidator;
 
     protected WizardController(HttpExecutionContext ec,
                                WebJarsUtil webJarsUtil,
@@ -56,12 +60,14 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                                Environment environment,
                                AnalyticsStore analyticsStore,
                                EncryptedFormFactory formFactory,
-                               Class<T> wizardType) {
+                               Class<T> wizardType,
+                               ParamsValidator paramsValidator) {
 
         this.ec = ec;
         this.webJarsUtil = webJarsUtil;
         this.environment = environment;
         this.analyticsStore = analyticsStore;
+        this.paramsValidator = paramsValidator;
 
         wizardForm = formFactory.form(wizardType, this::decryptParams);
         encryptedFields = newWizardData().encryptedFields().map(Field::getName).collect(Collectors.toList());
@@ -72,9 +78,17 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         decrypter = encrypted -> Encryption.decrypt(encrypted, paramsSecretKey);
 
         viewEncrypter = new FromJavaFunction(encrypter); // Use Scala functions in the view.scala.html markup
+
+        userTokenValidDuration = configuration.getDuration("params.user.token.valid.duration");
     }
 
     public final CompletionStage<Result> wizardGet() {
+
+        val encryptedUsername = request().queryString().get("user").length > 0 ? request().queryString().get("user")[0] : "";
+        val username = decrypter.apply(encryptedUsername);
+
+        val encryptedEpochRequestTimeMills = request().queryString().get("t").length > 0 ? request().queryString().get("t")[0] : "";
+        val epochRequestTimeMills = decrypter.apply(encryptedEpochRequestTimeMills);
 
         return initialParams().thenApplyAsync(params -> {
 
