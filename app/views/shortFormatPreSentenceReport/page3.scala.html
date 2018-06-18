@@ -7,7 +7,7 @@
 @import org.webjars.play.WebJarsUtil
 @import scala.io.Source
 
-@()(implicit reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String, pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
+@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
@@ -46,7 +46,7 @@
             @page9Fields(reportForm)
             @page11Fields(reportForm, encrypter)
 
-            @footer(3, encrypter)
+            @footer(3, reportForm, encrypter)
         }
 
         </div>

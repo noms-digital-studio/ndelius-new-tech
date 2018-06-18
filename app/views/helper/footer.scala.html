@@ -2,7 +2,7 @@
 @import helpers.CallHelper.relative
 @import data._
 
-@(page: Int, encrypter: String => String, nextText: Option[(String, Option[String])] = None, showCloseButton: Boolean = true)(implicit reportForm: Form[ShortFormatPreSentenceReportData])
+@(page: Int, reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String, nextText: Option[(String, Option[String])] = None, showCloseButton: Boolean = true)
 
 <footer class="report-footer">
     <div class="preview-container">
