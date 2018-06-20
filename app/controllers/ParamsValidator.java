@@ -1,7 +1,6 @@
 package controllers;
 
 import com.typesafe.config.Config;
-import helpers.Encryption;
 import lombok.val;
 import play.Logger;
 import play.mvc.Result;
@@ -10,29 +9,24 @@ import javax.inject.Inject;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
-import java.util.function.Function;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static play.mvc.Results.badRequest;
 import static play.mvc.Results.unauthorized;
 
 public class ParamsValidator {
 
     private final Duration userTokenValidDuration;
-    private final Function<String, String> decrypter;
 
     @Inject
     public ParamsValidator(Config configuration) {
-        val paramsSecretKey = configuration.getString("params.secret.key");
-        decrypter = encrypted -> Encryption.decrypt(encrypted, paramsSecretKey);
         userTokenValidDuration = configuration.getDuration("params.user.token.valid.duration");
     }
 
-    Optional<Result> invalidCredentials(String encryptedUsername, String encryptedEpochRequestTimeMills, String username) {
+    Optional<Result> invalidCredentials(String username, String epochRequestTime, Runnable errorReporter) {
 
-        val epochRequestTime = decrypter.apply(encryptedEpochRequestTimeMills);
-
-        if (username == null || epochRequestTime == null) {
-            Logger.error(String.format("Request did not receive user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
+        if (isBlank(username) || isBlank(epochRequestTime)) {
+            errorReporter.run();
             return Optional.of(badRequest("one or both of 'user' or 't' not supplied"));
         }
 

@@ -39,7 +39,7 @@ public class OffenderController extends Controller {
 
         val paramsSecretKey = configuration.getString("params.secret.key");
 
-        decrypter = encrypted -> Encryption.decrypt(encrypted, paramsSecretKey);
+        decrypter = encrypted -> Encryption.decrypt(encrypted, paramsSecretKey).orElse("");
         noPhotoResult = () -> Optional.ofNullable(noPhotoImage(environment)).map(Results::ok).orElseGet(Results::badRequest);
     }
 

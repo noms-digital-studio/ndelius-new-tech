@@ -26,8 +26,8 @@ public class StartPage extends FluentPage {
         val clearUserName = "Smith,John";
 
         try {
-            val documentId = URLEncoder.encode(Encryption.encrypt(clearDocumentId, secretKey), "UTF-8");
-            val onBehalfOfUser = URLEncoder.encode(Encryption.encrypt(clearUserName, secretKey), "UTF-8");
+            val documentId = URLEncoder.encode(Encryption.encrypt(clearDocumentId, secretKey).orElse(""), "UTF-8");
+            val onBehalfOfUser = URLEncoder.encode(Encryption.encrypt(clearUserName, secretKey).orElse(""), "UTF-8");
 
             goTo("/report/shortFormatPreSentenceReport?documentId=" + documentId + "&onBehalfOfUser=" + onBehalfOfUser);
             return this;

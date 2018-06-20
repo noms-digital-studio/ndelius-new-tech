@@ -70,7 +70,7 @@ public class NationalSearchController extends Controller {
         inMaintenanceMode = configuration.getBoolean("maintenance.offender.search");
 
         val paramsSecretKey = configuration.getString("params.secret.key");
-        decrypter = encrypted -> Encryption.decrypt(encrypted, paramsSecretKey);
+        decrypter = encrypted -> Encryption.decrypt(encrypted, paramsSecretKey).orElse("");
     }
 
     public CompletionStage<Result> index(String encryptedUsername, String encryptedEpochRequestTimeMills) {
@@ -79,6 +79,7 @@ public class NationalSearchController extends Controller {
         }
 
         val username = decrypter.apply(encryptedUsername);
+        val epochRequestTime = decrypter.apply(encryptedEpochRequestTimeMills);
 
         final Supplier<CompletionStage<Result>> renderedPage = () -> offenderApi.logon(username).thenApplyAsync(bearerToken -> {
 
@@ -99,7 +100,8 @@ public class NationalSearchController extends Controller {
 
         Logger.info("AUDIT:{}: About to login {}", "anonymous", username);
 
-        return paramsValidator.invalidCredentials(encryptedUsername, encryptedEpochRequestTimeMills, username).
+        Runnable errorReporter = () -> Logger.error(String.format("Request did not receive a valid user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
+        return paramsValidator.invalidCredentials(username, epochRequestTime, errorReporter).
                 map(result -> (CompletionStage<Result>) CompletableFuture.completedFuture(result)).
                 orElseGet(renderedPage).
                 exceptionally(throwable -> {

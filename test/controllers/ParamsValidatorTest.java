@@ -1,7 +1,6 @@
 package controllers;
 
 import com.typesafe.config.Config;
-import helpers.Encryption;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +24,9 @@ public class ParamsValidatorTest {
     @Mock
     private Config configuration;
 
+    @Mock
+    private Runnable errorReporter;
+
     @Before
     public void setup() {
         when(configuration.getString("params.secret.key")).thenReturn("ThisIsASecretKey");
@@ -33,58 +35,76 @@ public class ParamsValidatorTest {
     }
 
     @Test
-    public void returns400WhenUsernameIsNull() {
-        val encryptedUser = Encryption.encrypt("", "ThisIsASecretKey");
-        val encryptedTime = encryptTimePlusMinutesDrift(0);
-
-        Optional<Result> result = paramsValidator.invalidCredentials(
-            encryptedUser,
-            encryptedTime,
-            null);
+    public void returns400WhenUsernameIsBlank() {
+        val result = paramsValidator.invalidCredentials(
+            "",
+            timePlusMinutesDrift(0),
+            errorReporter);
 
         assertThat(result.get().status()).isEqualTo(400);
     }
 
     @Test
-    public void returns401WhenTimeDriftIsGreaterThanExpected() {
-        val encryptedUser = Encryption.encrypt("roger.bobby", "ThisIsASecretKey");
-        val encryptedTime = encryptTimePlusMinutesDrift(61);
+    public void returns400WhenUsernameIsNull() {
+        val result = paramsValidator.invalidCredentials(
+            null,
+            timePlusMinutesDrift(0),
+            errorReporter);
 
-        Optional<Result> result = paramsValidator.invalidCredentials(
-            encryptedUser,
-            encryptedTime,
-            "roger.bobby");
-
-        assertThat(result.get().status()).isEqualTo(401);
+        assertThat(result.get().status()).isEqualTo(400);
     }
 
     @Test
-    public void returns401WhenTimeDriftIsSmallerThanExpected() {
-        val encryptedUser = Encryption.encrypt("roger.bobby", "ThisIsASecretKey");
-        val encryptedTime = encryptTimePlusMinutesDrift(-61);
-
+    public void returns400WhenTimeIsBlank() {
         Optional<Result> result = paramsValidator.invalidCredentials(
-            encryptedUser,
-            encryptedTime,
-            "roger.bobby");
+            "john.smith",
+            "",
+            errorReporter);
 
-        assertThat(result.get().status()).isEqualTo(401);
+        assertThat(result.orElse(new Result(0)).status()).isEqualTo(400);
+    }
+
+    @Test
+    public void returns400WhenTimeIsNull() {
+        Optional<Result> result = paramsValidator.invalidCredentials(
+            "john.smith",
+            null,
+            errorReporter);
+
+        assertThat(result.orElse(new Result(0)).status()).isEqualTo(400);
+    }
+
+    @Test
+    public void returns401WhenTimeDriftIsGreaterThanExpected() {
+        Optional<Result> result = paramsValidator.invalidCredentials(
+            "john.smith",
+            timePlusMinutesDrift(61),
+            errorReporter);
+
+        assertThat(result.orElse(new Result(0)).status()).isEqualTo(401);
+    }
+
+    @Test
+    public void returns401WhenTimeDriftIsLessThanExpected() {
+        Optional<Result> result = paramsValidator.invalidCredentials(
+            "john.smith",
+            timePlusMinutesDrift(-61),
+            errorReporter);
+
+        assertThat(result.orElse(new Result(0)).status()).isEqualTo(401);
     }
 
     @Test
     public void returnsAnEmptyOptionalWhenCredsAreValid() {
-        val encryptedUser = Encryption.encrypt("roger.bobby", "ThisIsASecretKey");
-        val encryptedTime = encryptTimePlusMinutesDrift(0);
-
         Optional<Result> result = paramsValidator.invalidCredentials(
-            encryptedUser,
-            encryptedTime,
-            "roger.bobby");
+            "john.smith",
+            timePlusMinutesDrift(0),
+            errorReporter);
 
         assertThat(result.isPresent()).isFalse();
     }
 
-    private String encryptTimePlusMinutesDrift(int driftInMinutes) {
-        return Encryption.encrypt(String.valueOf(Instant.now().toEpochMilli() + (1000 * 60 * driftInMinutes)), "ThisIsASecretKey");
+    private String timePlusMinutesDrift(int driftInMinutes) {
+        return String.valueOf(Instant.now().toEpochMilli() + (1000 * 60 * driftInMinutes));
     }
 }

@@ -74,8 +74,8 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
         val paramsSecretKey = configuration.getString("params.secret.key");
 
-        encrypter = plainText -> Encryption.encrypt(plainText, paramsSecretKey);
-        decrypter = encrypted -> Encryption.decrypt(encrypted, paramsSecretKey);
+        encrypter = plainText -> Encryption.encrypt(plainText, paramsSecretKey).orElse("");
+        decrypter = encrypted -> Encryption.decrypt(encrypted, paramsSecretKey).orElse("");
 
         viewEncrypter = new FromJavaFunction(encrypter); // Use Scala functions in the view.scala.html markup
 
@@ -83,12 +83,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
     }
 
     public final CompletionStage<Result> wizardGet() {
-
-        val encryptedUsername = request().queryString().get("user").length > 0 ? request().queryString().get("user")[0] : "";
-        val username = decrypter.apply(encryptedUsername);
-
-        val encryptedEpochRequestTimeMills = request().queryString().get("t").length > 0 ? request().queryString().get("t")[0] : "";
-        val epochRequestTimeMills = decrypter.apply(encryptedEpochRequestTimeMills);
 
         return initialParams().thenApplyAsync(params -> {
 

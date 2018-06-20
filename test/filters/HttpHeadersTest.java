@@ -37,7 +37,7 @@ public class HttpHeadersTest extends WithApplication {
     }
 
     private Http.RequestBuilder givenARequestToShortFormatPreSentenceReportAction() {
-        Function<String, String> encryptor = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+        Function<String, String> encryptor = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElse("");
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encryptor.apply("johnsmith"));
