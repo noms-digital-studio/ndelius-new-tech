@@ -13,8 +13,8 @@ public class EncryptionTest {
         val plainText = "Some Plain Text";
         val secretKey = "ThisIsASecretKey";
 
-        val encrypted = Encryption.encrypt(plainText, secretKey).orElse("");
-        val decrypted = Encryption.decrypt(encrypted, secretKey).orElse("");
+        val encrypted = Encryption.encrypt(plainText, secretKey).orElseThrow(() -> new RuntimeException("Encrypt failed"));
+        val decrypted = Encryption.decrypt(encrypted, secretKey).orElseThrow(() -> new RuntimeException("Decrypt failed"));
 
         assertThat(plainText).isEqualTo(decrypted);
         assertThat(plainText).isNotEqualTo(encrypted);
