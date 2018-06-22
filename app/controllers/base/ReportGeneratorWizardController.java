@@ -9,6 +9,7 @@ import helpers.JsonHelper;
 import helpers.ThrowableHelper;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
+import interfaces.OffenderApi;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.springframework.cglib.beans.BeanMap;
@@ -47,9 +48,10 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                                               Class<T> wizardType,
                                               PdfGenerator pdfGenerator,
                                               DocumentStore documentStore,
-                                              ParamsValidator paramsValidator) {
+                                              ParamsValidator paramsValidator,
+                                              OffenderApi offenderApi) {
 
-        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, wizardType, paramsValidator);
+        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, wizardType, paramsValidator, offenderApi);
 
         this.pdfGenerator = pdfGenerator;
         this.documentStore = documentStore;

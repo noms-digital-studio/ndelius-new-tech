@@ -1,12 +1,12 @@
 package controllers;
 
-import com.google.common.base.Strings;
 import com.typesafe.config.Config;
 import controllers.base.EncryptedFormFactory;
 import controllers.base.ReportGeneratorWizardController;
 import data.ShortFormatPreSentenceReportData;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
+import interfaces.OffenderApi;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +20,8 @@ import javax.inject.Inject;
 import java.util.Map;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 public class ShortFormatPreSentenceReportController extends ReportGeneratorWizardController<ShortFormatPreSentenceReportData> {
 
@@ -37,9 +39,10 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                                                   DocumentStore documentStore,
                                                   views.html.shortFormatPreSentenceReport.cancelled cancelledTemplate,
                                                   views.html.shortFormatPreSentenceReport.completed completedTemplate,
-                                                  ParamsValidator paramsValidator) {
+                                                  ParamsValidator paramsValidator,
+                                                  OffenderApi offenderApi) {
 
-        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore, paramsValidator);
+        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore, paramsValidator, offenderApi);
         this.cancelledTemplate = cancelledTemplate;
         this.completedTemplate = completedTemplate;
     }
@@ -54,8 +57,8 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
     protected CompletionStage<Map<String, String>> initialParams() {
         return super.initialParams().thenApply(params -> {
 
-            params.putIfAbsent("pncSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("pnc"))).toString());
-            params.putIfAbsent("addressSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("address"))).toString());
+            params.putIfAbsent("pncSupplied", Boolean.valueOf(!isNullOrEmpty(params.get("pnc"))).toString());
+            params.putIfAbsent("addressSupplied", Boolean.valueOf(!isNullOrEmpty(params.get("address"))).toString());
             return migrateLegacyReport(params);
         });
     }

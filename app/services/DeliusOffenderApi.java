@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
+import helpers.JsonHelper;
 import interfaces.HealthCheckResult;
 import interfaces.OffenderApi;
 import lombok.Data;
@@ -139,6 +140,21 @@ public class DeliusOffenderApi implements OffenderApi {
                             .map(CompletableFuture::join)
                             .collect(toMap(Entry::getKey, Entry::getValue)));
 
+    }
+
+    @Override
+    public CompletionStage<Map<String, Object>> getOffenderByCrn(String bearerToken, String crn) {
+        val url = String.format(offenderApiBaseUrl + "offenders/crn/%d", crn);
+        return wsClient.url(url)
+            .addHeader(AUTHORIZATION, String.format("Bearer %s", bearerToken))
+            .get()
+            .thenApply(response -> assertOkResponse(response, "getOffenderByCrn"))
+            .thenApply(WSResponse::getBody)
+            .thenApply(JsonHelper::jsonToObjectMap)
+            .thenApply(map -> {
+                Logger.info("Offender details: " + map);
+                return map;
+            });
     }
 
     private IntFunction<CompletableFuture<Entry<String, String>>[]> toCompletableFutures() {

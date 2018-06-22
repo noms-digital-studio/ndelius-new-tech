@@ -8,6 +8,7 @@ import data.viewModel.PageStatus;
 import helpers.Encryption;
 import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
+import interfaces.OffenderApi;
 import lombok.val;
 import org.joda.time.DateTime;
 import org.webjars.play.WebJarsUtil;
@@ -33,11 +34,13 @@ import java.util.concurrent.CompletionStage;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static helpers.FluentHelper.content;
+import static helpers.JwtHelper.principal;
 
 public abstract class WizardController<T extends WizardData> extends Controller {
 
@@ -53,6 +56,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
     protected final HttpExecutionContext ec;
     protected final Duration userTokenValidDuration;
     protected final ParamsValidator paramsValidator;
+    protected final OffenderApi offenderApi;
 
     protected WizardController(HttpExecutionContext ec,
                                WebJarsUtil webJarsUtil,
@@ -61,13 +65,15 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                                AnalyticsStore analyticsStore,
                                EncryptedFormFactory formFactory,
                                Class<T> wizardType,
-                               ParamsValidator paramsValidator) {
+                               ParamsValidator paramsValidator,
+                               OffenderApi offenderApi) {
 
         this.ec = ec;
         this.webJarsUtil = webJarsUtil;
         this.environment = environment;
         this.analyticsStore = analyticsStore;
         this.paramsValidator = paramsValidator;
+        this.offenderApi = offenderApi;
 
         wizardForm = formFactory.form(wizardType, this::decryptParams);
         encryptedFields = newWizardData().encryptedFields().map(Field::getName).collect(Collectors.toList());
@@ -84,24 +90,55 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     public final CompletionStage<Result> wizardGet() {
 
-        return initialParams().thenApplyAsync(params -> {
+        val encryptedUsername = request().queryString() != null && request().queryString().get("user") != null ? request().queryString().get("user")[0] : "";
+        val username = decrypter.apply(encryptedUsername);
 
-            val errorMessage = params.get("errorMessage");
+        val encryptedEpochRequestTimeMills = request().queryString() != null && request().queryString().get("t") != null ? request().queryString().get("t")[0] : "";
+        val epochRequestTimeMills = decrypter.apply(encryptedEpochRequestTimeMills);
 
-            if (Strings.isNullOrEmpty(errorMessage)) {
+        val encryptedCrn= request().queryString() != null && request().queryString().get("crn") != null ? request().queryString().get("crn")[0] : "";
+        val crn = decrypter.apply(encryptedCrn);
 
-                val boundForm = wizardForm.bind(params);
-                val thisPage = boundForm.value().map(WizardData::getPageNumber).orElse(1);
-                val pageStatuses = getPageStatuses(boundForm.value(), thisPage, null);
+        final Supplier<CompletionStage<Result>> renderedPage = () -> offenderApi.logon(username)
+            .thenApplyAsync(bearerToken -> {
+                Logger.info("AUDIT:{}: WizardController: Successful logon for user {}", principal(bearerToken), username);
+                return bearerToken;
 
-                return ok(renderPage(thisPage, boundForm, pageStatuses));
+            }, ec.current())
+            .thenCompose(bearerToken -> offenderApi.getOffenderByCrn(bearerToken, crn)
+            .thenApply(offenderDetails -> ok()));
 
-            } else {
+        final Runnable errorReporter = () -> Logger.error(String.format("Short format report search request did not receive a valid user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
+        return paramsValidator.invalidCredentials(username, epochRequestTimeMills, errorReporter).
+            map(result -> (CompletionStage<Result>) CompletableFuture.completedFuture(result)).
+            orElseGet(renderedPage).
+            exceptionally(throwable -> {
 
-                return badRequest(renderErrorMessage(errorMessage));
-            }
+                Logger.info("AUDIT:{}: Unable to login {}", "anonymous", username);
+                Logger.error("Unable to logon to offender API", throwable);
 
-        }, ec.current());
+                return internalServerError();
+            });
+
+//        return initialParams().thenApplyAsync(params -> {
+//
+//            val errorMessage = params.get("errorMessage");
+//
+//            if (Strings.isNullOrEmpty(errorMessage)) {
+//
+//                val boundForm = wizardForm.bind(params);
+//                val thisPage = boundForm.value().map(WizardData::getPageNumber).orElse(1);
+//                val pageStatuses = getPageStatuses(boundForm.value(), thisPage, null);
+//
+//                return ok(renderPage(thisPage, boundForm, pageStatuses));
+//
+//            } else {
+//
+//                return badRequest(renderErrorMessage(errorMessage));
+//            }
+//
+//        }, ec.current());
+
     }
 
     public final CompletionStage<Result> wizardPost() {

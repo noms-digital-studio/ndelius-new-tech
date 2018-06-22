@@ -23,7 +23,7 @@ public class ParamsValidator {
         userTokenValidDuration = configuration.getDuration("params.user.token.valid.duration");
     }
 
-    Optional<Result> invalidCredentials(String username, String epochRequestTime, Runnable errorReporter) {
+    public Optional<Result> invalidCredentials(String username, String epochRequestTime, Runnable errorReporter) {
 
         if (isBlank(username) || isBlank(epochRequestTime)) {
             errorReporter.run();

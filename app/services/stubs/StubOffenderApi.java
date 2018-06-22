@@ -1,6 +1,7 @@
 package services.stubs;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import interfaces.HealthCheckResult;
 import interfaces.OffenderApi;
@@ -48,6 +49,37 @@ public class StubOffenderApi implements OffenderApi {
     @Override
     public CompletionStage<Map<String, String>> probationAreaDescriptions(String bearerToken, List<String> probationAreaCodes) {
         return CompletableFuture.completedFuture(probationAreaCodes.stream().collect(Collectors.toMap(Function.identity(), this::probationAreaDescription)));
+    }
+
+    @Override
+    public CompletionStage<Map<String, Object>> getOffenderByCrn(String bearerToken, String crn) {
+        return CompletableFuture.completedFuture(ImmutableMap.<String, Object>builder()
+            .put("contactDetails", ImmutableMap.of("addresses", addresses()))
+            .put("firstName", "john")
+            .put("surname", "Smith")
+            .put("dateOfBirth", "2000-06-22")
+            .put("otherIds", otherIds())
+            .build());
+    }
+
+    private ImmutableMap<String, String> otherIds() {
+        return ImmutableMap.of("pncNumber", "2018/123456N");
+    }
+
+    private ImmutableList<ImmutableMap<String, Object>> addresses() {
+        return ImmutableList.of(anAddress());
+    }
+
+    private ImmutableMap<String, Object> anAddress() {
+        return ImmutableMap.<String, Object>builder()
+            .put("buildingName", "Big Building")
+            .put("addressNumber", "7")
+            .put("streetName", "Ping String")
+            .put("district", "Pong East")
+            .put("town", "Sheffield")
+            .put("county", "Yorkshire")
+            .put("postcode", "S7 1AB")
+            .build();
     }
 
     private String probationAreaDescription(String code) {

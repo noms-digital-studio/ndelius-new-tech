@@ -20,4 +20,5 @@ public interface OffenderApi {
 
     CompletionStage<Map<String, String>> probationAreaDescriptions(String bearerToken, List<String> probationAreaCodes);
 
+    CompletionStage<Map<String, Object>> getOffenderByCrn(String bearerToken, String crn);
 }

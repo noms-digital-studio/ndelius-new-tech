@@ -2,8 +2,10 @@ package controllers;
 
 import com.google.common.collect.ImmutableMap;
 import helpers.Encryption;
+import helpers.JwtHelperTest;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
+import interfaces.OffenderApi;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.junit.Test;
@@ -31,6 +33,16 @@ import static play.test.Helpers.*;
 public class ShortFormatPreSentenceReportControllerTest extends WithApplication {
 
     private DocumentStore documentStore;
+
+    @Test
+    public void createNewReport() {
+
+        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
+
+        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D"));
+
+        assertEquals(OK, result.status());
+    }
 
     @Test
     public void getSampleReportOK() {
@@ -951,13 +963,18 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         given(pdfGenerator.generate(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
 
         documentStore = mock(DocumentStore.class);
+        OffenderApi offenderApi = mock(OffenderApi.class);
+        given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
+        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(ImmutableMap.of("firstName", "John", "surname", "Smith")));
 
         return new GuiceApplicationBuilder().
                 overrides(
                         bind(PdfGenerator.class).toInstance(pdfGenerator),
                         bind(DocumentStore.class).toInstance(documentStore),
-                        bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class))
+                        bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)),
+                        bind(OffenderApi.class).toInstance(offenderApi)
                 )
+                .configure("params.user.token.valid.duration", "2000d")
                 .build();
     }
 
