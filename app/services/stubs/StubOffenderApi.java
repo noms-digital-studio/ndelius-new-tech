@@ -55,8 +55,8 @@ public class StubOffenderApi implements OffenderApi {
     public CompletionStage<Map<String, Object>> getOffenderByCrn(String bearerToken, String crn) {
         return CompletableFuture.completedFuture(ImmutableMap.<String, Object>builder()
             .put("contactDetails", ImmutableMap.of("addresses", addresses()))
-            .put("firstName", "john")
-            .put("surname", "Smith")
+            .put("firstName", "Sam")
+            .put("surname", "Jones")
             .put("dateOfBirth", "2000-06-22")
             .put("otherIds", otherIds())
             .build());
@@ -74,8 +74,8 @@ public class StubOffenderApi implements OffenderApi {
         return ImmutableMap.<String, Object>builder()
             .put("buildingName", "Big Building")
             .put("addressNumber", "7")
-            .put("streetName", "Ping String")
-            .put("district", "Pong East")
+            .put("streetName", "High Street")
+            .put("district", "Nether Edge")
             .put("town", "Sheffield")
             .put("county", "Yorkshire")
             .put("postcode", "S7 1AB")

@@ -33,25 +33,19 @@ import static play.test.Helpers.*;
 public class ShortFormatPreSentenceReportControllerTest extends WithApplication {
 
     private DocumentStore documentStore;
+    private Function<String, String> encryptor = text -> Encryption.encrypt(text, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
     @Test
     public void createNewReport() {
 
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
 
-        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D"));
+        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D&foo=bar"));
 
         assertEquals(OK, result.status());
-    }
-
-    @Test
-    public void getSampleReportOK() {
-
-        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
-
-        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport"));
-
-        assertEquals(OK, result.status());
+        val content = Helpers.contentAsString(result);
+        assertTrue(content.contains(encryptor.apply("Billy Kid")));
+        assertFalse(content.contains("bar"));
     }
 
     @Test
@@ -59,11 +53,11 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
 
-        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?name=i8%2Fp1Ti7JMS%2FjO%2BPOhHtGA%3D%3D&foobar=xyz987"));
+        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?foobar=xyz987&user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D"));
 
         val content = Helpers.contentAsString(result);
         assertEquals(OK, result.status());
-        assertTrue(content.contains("i8/p1Ti7JMS/jO+POhHtGA=="));
+        assertTrue(content.contains("v5LH8B7tJKI7fEc9uM76SQ=="));
         assertFalse(content.contains("xyz987"));
     }
 
@@ -72,7 +66,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("message", "Upload blows up for this user")));
 
-        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?name=i8%2Fp1Ti7JMS%2FjO%2BPOhHtGA%3D%3D&onBehalfOfUser=i8%2Fp1Ti7JMS%2FjO%2BPOhHtGA%3D%3D"));
+        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D"));
 
         val content = Helpers.contentAsString(result);
         assertEquals(BAD_REQUEST, result.status());
@@ -85,20 +79,22 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new DocumentStore.OriginalData("{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\", \"address\": \"456\", \"pnc\": \"Retrieved From Store\", \"startDate\": \"12/12/2017\", \"crn\": \"1234\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\" } }", OffsetDateTime.now())));
 
         try {
-
-            val secretKey = "ThisIsASecretKey";
             val clearDocumentId = "12345";
             val clearUserName = "John Smith";
 
-            val documentId = URLEncoder.encode(Encryption.encrypt(clearDocumentId, secretKey).orElseThrow(() -> new RuntimeException("Encrypt failed")), "UTF-8");
-            val onBehalfOfUser = URLEncoder.encode(Encryption.encrypt(clearUserName, secretKey).orElseThrow(() -> new RuntimeException("Encrypt failed")), "UTF-8");
+            val documentId = URLEncoder.encode(encryptor.apply(clearDocumentId), "UTF-8");
+            val onBehalfOfUser = URLEncoder.encode(encryptor.apply(clearUserName), "UTF-8");
 
             val request = new RequestBuilder().method(GET).
-                    uri("/report/shortFormatPreSentenceReport?documentId=" + documentId + "&onBehalfOfUser=" + onBehalfOfUser);
+                    uri("/report/shortFormatPreSentenceReport?documentId=" + documentId +
+                        "&onBehalfOfUser=" + onBehalfOfUser +
+                        "&user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D" +
+                        "&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D" +
+                        "&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D");
 
             val content = Helpers.contentAsString(route(app, request));
 
-            assertTrue(content.contains(Encryption.encrypt("Retrieved From Store", secretKey).orElseThrow(() -> new RuntimeException("Encrypt failed"))));   // Returned from Mock retrieveOriginalData
+            assertTrue(content.contains(encryptor.apply("Retrieved From Store")));   // Returned from Mock retrieveOriginalData
 
         } catch (Exception ex) {
 
@@ -123,19 +119,17 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage2AllFieldsReturnsOK() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
-
         val formData = new HashMap<String, String>() {
             {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("documentId", encrypter.apply("67890"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
+                put("onBehalfOfUser", encryptor.apply("johnsmith"));
+                put("entityId", encryptor.apply("12345"));
+                put("documentId", encryptor.apply("67890"));
+                put("name", encryptor.apply("John Smith"));
+                put("dateOfBirth", encryptor.apply("06/02/1976"));
+                put("age", encryptor.apply("41"));
+                put("address", encryptor.apply("10 High Street"));
+                put("crn", encryptor.apply("B56789"));
+                put("pnc", encryptor.apply("98793030"));
 
                 put("pageNumber", "2");
             }
@@ -150,21 +144,19 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage3SomeFieldsMissingReturnsBadRequest() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
-
         val formData = new HashMap<String, String>() {
             {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("documentId", encrypter.apply("67890"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
+                put("onBehalfOfUser", encryptor.apply("johnsmith"));
+                put("entityId", encryptor.apply("12345"));
+                put("documentId", encryptor.apply("67890"));
+                put("name", encryptor.apply("John Smith"));
+                put("dateOfBirth", encryptor.apply("06/02/1976"));
+                put("age", encryptor.apply("41"));
+                put("address", encryptor.apply("10 High Street"));
+                put("crn", encryptor.apply("B56789"));
+                put("pnc", encryptor.apply("98793030"));
 
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
 
                 put("pageNumber", "3");
             }
@@ -179,23 +171,21 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage3AllRequiredFieldsReturnsOK() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
-
         val formData = new HashMap<String, String>() {
             {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("documentId", encrypter.apply("67890"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
+                put("onBehalfOfUser", encryptor.apply("johnsmith"));
+                put("entityId", encryptor.apply("12345"));
+                put("documentId", encryptor.apply("67890"));
+                put("name", encryptor.apply("John Smith"));
+                put("dateOfBirth", encryptor.apply("06/02/1976"));
+                put("age", encryptor.apply("41"));
+                put("address", encryptor.apply("10 High Street"));
+                put("crn", encryptor.apply("B56789"));
+                put("pnc", encryptor.apply("98793030"));
 
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
+                put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("localJusticeArea", encryptor.apply("Greater Manchester"));
 
                 put("pageNumber", "3");
             }
@@ -210,23 +200,21 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage4SomeFieldsMissingReturnsBadRequest() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
-
         val formData = new HashMap<String, String>() {
             {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("documentId", encrypter.apply("67890"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
+                put("onBehalfOfUser", encryptor.apply("johnsmith"));
+                put("entityId", encryptor.apply("12345"));
+                put("documentId", encryptor.apply("67890"));
+                put("name", encryptor.apply("John Smith"));
+                put("dateOfBirth", encryptor.apply("06/02/1976"));
+                put("age", encryptor.apply("41"));
+                put("address", encryptor.apply("10 High Street"));
+                put("crn", encryptor.apply("B56789"));
+                put("pnc", encryptor.apply("98793030"));
 
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
+                put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("localJusticeArea", encryptor.apply("Greater Manchester"));
                 put("otherInformationSource", "true");
 
                 put("pageNumber", "4");
@@ -242,22 +230,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage4AllRequiredFieldsReturnsOK() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
-
         val formData = new HashMap<String, String>() {
             {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("documentId", encrypter.apply("67890"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
+                put("onBehalfOfUser", encryptor.apply("johnsmith"));
+                put("entityId", encryptor.apply("12345"));
+                put("documentId", encryptor.apply("67890"));
+                put("name", encryptor.apply("John Smith"));
+                put("dateOfBirth", encryptor.apply("06/02/1976"));
+                put("age", encryptor.apply("41"));
+                put("address", encryptor.apply("10 High Street"));
+                put("crn", encryptor.apply("B56789"));
+                put("pnc", encryptor.apply("98793030"));
+                put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("localJusticeArea", encryptor.apply("Greater Manchester"));
 
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
@@ -284,22 +270,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage5SomeFieldsMissingReturnsBadRequest() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
-
         val formData = new HashMap<String, String>() {
             {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("documentId", encrypter.apply("67890"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
+                put("onBehalfOfUser", encryptor.apply("johnsmith"));
+                put("entityId", encryptor.apply("12345"));
+                put("documentId", encryptor.apply("67890"));
+                put("name", encryptor.apply("John Smith"));
+                put("dateOfBirth", encryptor.apply("06/02/1976"));
+                put("age", encryptor.apply("41"));
+                put("address", encryptor.apply("10 High Street"));
+                put("crn", encryptor.apply("B56789"));
+                put("pnc", encryptor.apply("98793030"));
+                put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("localJusticeArea", encryptor.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -328,22 +312,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage5AllRequiredFieldsReturnsOK() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
-
         val formData = new HashMap<String, String>() {
             {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("documentId", encrypter.apply("67890"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
+                put("onBehalfOfUser", encryptor.apply("johnsmith"));
+                put("entityId", encryptor.apply("12345"));
+                put("documentId", encryptor.apply("67890"));
+                put("name", encryptor.apply("John Smith"));
+                put("dateOfBirth", encryptor.apply("06/02/1976"));
+                put("age", encryptor.apply("41"));
+                put("address", encryptor.apply("10 High Street"));
+                put("crn", encryptor.apply("B56789"));
+                put("pnc", encryptor.apply("98793030"));
+                put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("localJusticeArea", encryptor.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -373,22 +355,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage6SomeFieldsMissingReturnsBadRequest() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
-
         val formData = new HashMap<String, String>() {
             {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("documentId", encrypter.apply("67890"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
+                put("onBehalfOfUser", encryptor.apply("johnsmith"));
+                put("entityId", encryptor.apply("12345"));
+                put("documentId", encryptor.apply("67890"));
+                put("name", encryptor.apply("John Smith"));
+                put("dateOfBirth", encryptor.apply("06/02/1976"));
+                put("age", encryptor.apply("41"));
+                put("address", encryptor.apply("10 High Street"));
+                put("crn", encryptor.apply("B56789"));
+                put("pnc", encryptor.apply("98793030"));
+                put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("localJusticeArea", encryptor.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -419,22 +399,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage6AllFieldsReturnsOK() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
-
         val formData = new HashMap<String, String>() {
             {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("documentId", encrypter.apply("67890"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
+                put("onBehalfOfUser", encryptor.apply("johnsmith"));
+                put("entityId", encryptor.apply("12345"));
+                put("documentId", encryptor.apply("67890"));
+                put("name", encryptor.apply("John Smith"));
+                put("dateOfBirth", encryptor.apply("06/02/1976"));
+                put("age", encryptor.apply("41"));
+                put("address", encryptor.apply("10 High Street"));
+                put("crn", encryptor.apply("B56789"));
+                put("pnc", encryptor.apply("98793030"));
+                put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("localJusticeArea", encryptor.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -466,22 +444,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage7SomeFieldsMissingReturnsBadRequest() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
-
         val formData = new HashMap<String, String>() {
             {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("documentId", encrypter.apply("67890"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
+                put("onBehalfOfUser", encryptor.apply("johnsmith"));
+                put("entityId", encryptor.apply("12345"));
+                put("documentId", encryptor.apply("67890"));
+                put("name", encryptor.apply("John Smith"));
+                put("dateOfBirth", encryptor.apply("06/02/1976"));
+                put("age", encryptor.apply("41"));
+                put("address", encryptor.apply("10 High Street"));
+                put("crn", encryptor.apply("B56789"));
+                put("pnc", encryptor.apply("98793030"));
+                put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("localJusticeArea", encryptor.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -521,22 +497,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage7AllRequiredFieldsReturnsOK() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
-
         val formData = new HashMap<String, String>() {
             {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("documentId", encrypter.apply("67890"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
+                put("onBehalfOfUser", encryptor.apply("johnsmith"));
+                put("entityId", encryptor.apply("12345"));
+                put("documentId", encryptor.apply("67890"));
+                put("name", encryptor.apply("John Smith"));
+                put("dateOfBirth", encryptor.apply("06/02/1976"));
+                put("age", encryptor.apply("41"));
+                put("address", encryptor.apply("10 High Street"));
+                put("crn", encryptor.apply("B56789"));
+                put("pnc", encryptor.apply("98793030"));
+                put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("localJusticeArea", encryptor.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -580,22 +554,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage8SomeFieldsMissingReturnsBadRequest() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
-
         val formData = new HashMap<String, String>() {
             {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("documentId", encrypter.apply("67890"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
+                put("onBehalfOfUser", encryptor.apply("johnsmith"));
+                put("entityId", encryptor.apply("12345"));
+                put("documentId", encryptor.apply("67890"));
+                put("name", encryptor.apply("John Smith"));
+                put("dateOfBirth", encryptor.apply("06/02/1976"));
+                put("age", encryptor.apply("41"));
+                put("address", encryptor.apply("10 High Street"));
+                put("crn", encryptor.apply("B56789"));
+                put("pnc", encryptor.apply("98793030"));
+                put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("localJusticeArea", encryptor.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -639,22 +611,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage8AllRequiredFieldsReturnsOK() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
-
         val formData = new HashMap<String, String>() {
             {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("documentId", encrypter.apply("67890"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
+                put("onBehalfOfUser", encryptor.apply("johnsmith"));
+                put("entityId", encryptor.apply("12345"));
+                put("documentId", encryptor.apply("67890"));
+                put("name", encryptor.apply("John Smith"));
+                put("dateOfBirth", encryptor.apply("06/02/1976"));
+                put("age", encryptor.apply("41"));
+                put("address", encryptor.apply("10 High Street"));
+                put("crn", encryptor.apply("B56789"));
+                put("pnc", encryptor.apply("98793030"));
+                put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("localJusticeArea", encryptor.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -699,22 +669,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage9SomeFieldsMissingReturnsBadRequest() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
-
         val formData = new HashMap<String, String>() {
             {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("documentId", encrypter.apply("67890"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
+                put("onBehalfOfUser", encryptor.apply("johnsmith"));
+                put("entityId", encryptor.apply("12345"));
+                put("documentId", encryptor.apply("67890"));
+                put("name", encryptor.apply("John Smith"));
+                put("dateOfBirth", encryptor.apply("06/02/1976"));
+                put("age", encryptor.apply("41"));
+                put("address", encryptor.apply("10 High Street"));
+                put("crn", encryptor.apply("B56789"));
+                put("pnc", encryptor.apply("98793030"));
+                put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("localJusticeArea", encryptor.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -758,22 +726,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage9AllRequiredFieldsReturnsOK() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
-
         val formData = new HashMap<String, String>() {
             {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("documentId", encrypter.apply("67890"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
+                put("onBehalfOfUser", encryptor.apply("johnsmith"));
+                put("entityId", encryptor.apply("12345"));
+                put("documentId", encryptor.apply("67890"));
+                put("name", encryptor.apply("John Smith"));
+                put("dateOfBirth", encryptor.apply("06/02/1976"));
+                put("age", encryptor.apply("41"));
+                put("address", encryptor.apply("10 High Street"));
+                put("crn", encryptor.apply("B56789"));
+                put("pnc", encryptor.apply("98793030"));
+                put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("localJusticeArea", encryptor.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -817,27 +783,25 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         assertEquals(OK, result.status());
     }
 
-    // PAGE 10
 
+    // PAGE 10
     @Test
     public void postSampleReportPage11SomeFieldsMissingReturnsBadRequest() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
-
         val formData = new HashMap<String, String>() {
             {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("documentId", encrypter.apply("67890"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
+                put("onBehalfOfUser", encryptor.apply("johnsmith"));
+                put("entityId", encryptor.apply("12345"));
+                put("documentId", encryptor.apply("67890"));
+                put("name", encryptor.apply("John Smith"));
+                put("dateOfBirth", encryptor.apply("06/02/1976"));
+                put("age", encryptor.apply("41"));
+                put("address", encryptor.apply("10 High Street"));
+                put("crn", encryptor.apply("B56789"));
+                put("pnc", encryptor.apply("98793030"));
+                put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("localJusticeArea", encryptor.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -888,22 +852,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         given(documentStore.updateExistingPdf(any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "456")));
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
-
         val formData = new HashMap<String, String>() {
             {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("documentId", encrypter.apply("67890"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
+                put("onBehalfOfUser", encryptor.apply("johnsmith"));
+                put("entityId", encryptor.apply("12345"));
+                put("documentId", encryptor.apply("67890"));
+                put("name", encryptor.apply("John Smith"));
+                put("dateOfBirth", encryptor.apply("06/02/1976"));
+                put("age", encryptor.apply("41"));
+                put("address", encryptor.apply("10 High Street"));
+                put("crn", encryptor.apply("B56789"));
+                put("pnc", encryptor.apply("98793030"));
+                put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("localJusticeArea", encryptor.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -965,16 +927,15 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         documentStore = mock(DocumentStore.class);
         OffenderApi offenderApi = mock(OffenderApi.class);
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
-        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(ImmutableMap.of("firstName", "John", "surname", "Smith")));
+        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(ImmutableMap.of("firstName", "Billy", "surname", "Kid")));
 
         return new GuiceApplicationBuilder().
                 overrides(
                         bind(PdfGenerator.class).toInstance(pdfGenerator),
                         bind(DocumentStore.class).toInstance(documentStore),
                         bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)),
-                        bind(OffenderApi.class).toInstance(offenderApi)
-                )
-                .configure("params.user.token.valid.duration", "2000d")
+                        bind(OffenderApi.class).toInstance(offenderApi))
+                .configure("params.user.token.valid.duration", "100000d")
                 .build();
     }
 

@@ -1,6 +1,5 @@
 package controllers.base;
 
-import com.google.common.base.Strings;
 import com.typesafe.config.Config;
 import controllers.ParamsValidator;
 import data.base.WizardData;
@@ -39,8 +38,12 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static helpers.DateTimeHelper.*;
 import static helpers.FluentHelper.content;
 import static helpers.JwtHelper.principal;
+import static java.time.Clock.systemUTC;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public abstract class WizardController<T extends WizardData> extends Controller {
 
@@ -105,8 +108,56 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                 return bearerToken;
 
             }, ec.current())
-            .thenCompose(bearerToken -> offenderApi.getOffenderByCrn(bearerToken, crn)
-            .thenApply(offenderDetails -> ok()));
+            .thenCompose(bearerToken -> offenderApi.getOffenderByCrn(bearerToken, crn))
+            .thenCombineAsync(initialParams(), (offenderDetails, params) -> {
+                val errorMessage = params.get("errorMessage");
+
+                if (isNullOrEmpty(errorMessage)) {
+
+                    if (offenderDetails.get("firstName") != null) {
+                        params.put("name", String.format("%s %s", offenderDetails.get("firstName"), offenderDetails.get("surname")));
+                    }
+                    if (offenderDetails.get("dateOfBirth") != null) {
+                        params.put("dateOfBirth", prettyPrint((String) offenderDetails.get("dateOfBirth")));
+                    }
+                    if (offenderDetails.get("dateOfBirth") != null) {
+                        params.put("age", String.format("%d", calculateAge((String) offenderDetails.get("dateOfBirth"), systemUTC())));
+                    }
+                    if (offenderDetails.get("otherIds") != null && !isBlank( ((Map<String, String>)offenderDetails.get("otherIds")).get("pncNumber"))) {
+                        params.put("pnc", ((Map<String, String>)offenderDetails.get("otherIds")).get("pncNumber"));
+                        params.put("pncSupplied", "true");
+                    } else {
+                        params.put("pncSupplied", "false");
+                    }
+
+                    if (offenderDetails.get("contactDetails") != null && !((List<Object>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")).isEmpty()) {
+                        val currentAddress = ((List<Map<String, Object>>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")).stream()
+                            .sorted(Comparator.comparing(address -> convert((String) address.get("from"))))
+                            .collect(Collectors.toList()).get(0);
+                        String singleLineAddress = ((currentAddress.get("buildingName") == null) ? "" : currentAddress.get("buildingName") + "\n") +
+                            ((currentAddress.get("addressNumber") == null) ? "" : currentAddress.get("addressNumber") + " ") +
+                            ((currentAddress.get("streetName") == null) ? "" : currentAddress.get("streetName") + "\n") +
+                            ((currentAddress.get("district") == null) ? "" : currentAddress.get("district") + "\n") +
+                            ((currentAddress.get("townCity") == null) ? "" : currentAddress.get("townCity") + "\n") +
+                            ((currentAddress.get("county") == null) ? "" : currentAddress.get("county") + "\n") +
+                            ((currentAddress.get("postcode") == null) ? "" : currentAddress.get("postcode") + "\n");
+                        params.put("address", singleLineAddress);
+                        params.put("addressSupplied", "true");
+                    } else {
+                        params.put("addressSupplied", "false");
+                    }
+
+                    val boundForm = wizardForm.bind(params);
+                    val thisPage = boundForm.value().map(WizardData::getPageNumber).orElse(1);
+                    val pageStatuses = getPageStatuses(boundForm.value(), thisPage, null);
+
+                    return ok(renderPage(thisPage, boundForm, pageStatuses));
+
+                } else {
+
+                    return badRequest(renderErrorMessage(errorMessage));
+                }
+            }, ec.current());
 
         final Runnable errorReporter = () -> Logger.error(String.format("Short format report search request did not receive a valid user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
         return paramsValidator.invalidCredentials(username, epochRequestTimeMills, errorReporter).
@@ -120,24 +171,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                 return internalServerError();
             });
 
-//        return initialParams().thenApplyAsync(params -> {
-//
-//            val errorMessage = params.get("errorMessage");
-//
-//            if (Strings.isNullOrEmpty(errorMessage)) {
-//
-//                val boundForm = wizardForm.bind(params);
-//                val thisPage = boundForm.value().map(WizardData::getPageNumber).orElse(1);
-//                val pageStatuses = getPageStatuses(boundForm.value(), thisPage, null);
-//
-//                return ok(renderPage(thisPage, boundForm, pageStatuses));
-//
-//            } else {
-//
-//                return badRequest(renderErrorMessage(errorMessage));
-//            }
-//
-//        }, ec.current());
 
     }
 
@@ -229,7 +262,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     protected void renderingData(T wizardData) {
 
-        if (Strings.isNullOrEmpty(session("id"))) {
+        if (isNullOrEmpty(session("id"))) {
             session("id", UUID.randomUUID().toString());
         }
 
@@ -309,7 +342,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         ).orElseGet(Stream::empty).collect(Collectors.toList());
 
         val previouslyVisited = (List<Integer>)JsonHelper.readValue(boundForm.map(WizardData::getVisitedPages).
-                        flatMap(value -> Strings.isNullOrEmpty(value) ? Optional.empty() : Optional.of(value)).
+                        flatMap(value -> isNullOrEmpty(value) ? Optional.empty() : Optional.of(value)).
                         orElse("[]"),
                 List.class);
 
