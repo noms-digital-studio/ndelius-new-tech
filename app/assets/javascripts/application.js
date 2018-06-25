@@ -254,10 +254,11 @@ function openPopup(url) {
             var editor = new Quill(id, {
                 placeholder: areaAttributes.placeholder,
                 theme: 'snow',
-                formats: ['bold', 'italic', 'underline', 'list'],
+                formats: ['bold', 'italic', 'underline', 'list', 'align'],
                 modules: {
                     toolbar: [
                         ['bold', 'italic', 'underline'],
+                        [{ align: '' }, { align: 'justify' }],
                         [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                         ['clean']
                     ]
@@ -322,6 +323,8 @@ function openPopup(url) {
                     {selector: '.ql-bold', tooltip: 'Bold (⌘B)'},
                     {selector: '.ql-italic', tooltip: 'Italic (⌘I)'},
                     {selector: '.ql-underline', tooltip: 'Underline (⌘U)'},
+                    {selector: '.ql-align[value="justify"]', tooltip: 'Justify'},
+                    {selector: '.ql-align[value=""]', tooltip: 'Align Left'},
                     {selector: '.ql-list[value="ordered"]', tooltip: 'Numbered List'},
                     {selector: '.ql-list[value="bullet"]', tooltip: 'Bulleted List'},
                     {selector: '.ql-clean', tooltip: 'Remove Formatting'}]
