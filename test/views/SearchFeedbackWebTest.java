@@ -2,8 +2,10 @@ package views;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import helpers.JwtHelperTest;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
+import interfaces.OffenderApi;
 import interfaces.PdfGenerator;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +21,7 @@ import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -74,12 +77,18 @@ public class SearchFeedbackWebTest extends WithBrowser {
 
         DocumentStore documentStore = mock(DocumentStore.class);
 
+        OffenderApi offenderApi = mock(OffenderApi.class);
+        given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
+        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(ImmutableMap.of("firstName", "Billy", "surname", "Kid")));
+
         return new GuiceApplicationBuilder().
             overrides(
                 bind(PdfGenerator.class).toInstance(pdfGenerator),
                 bind(DocumentStore.class).toInstance(documentStore),
-                bind(AnalyticsStore.class).toInstance(analyticsStore)
-            ).build();
+                bind(OffenderApi.class).toInstance(offenderApi),
+                bind(AnalyticsStore.class).toInstance(analyticsStore))
+            .configure("params.user.token.valid.duration", "100000d")
+            .build();
     }
 
 }

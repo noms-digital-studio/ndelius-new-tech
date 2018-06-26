@@ -258,8 +258,7 @@ public class OffenderAssessmentWebTest extends WithIE8Browser {
                 bind(PdfGenerator.class).toInstance(pdfGenerator),
                 bind(DocumentStore.class).toInstance(alfrescoDocumentStore),
                 bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)),
-                bind(OffenderApi.class).toInstance(offenderApi)
-            )
+                bind(OffenderApi.class).toInstance(offenderApi))
             .configure("params.user.token.valid.duration", "100000d")
             .build();
     }
