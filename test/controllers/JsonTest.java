@@ -54,7 +54,7 @@ public class JsonTest implements PdfGenerator, DocumentStore {
     }
 
     @Override
-    public CompletionStage<Map<String, String>> uploadNewPdf(Byte[] document, String filename, String onBehalfOfUser, String originalData, String crn, Long entityId) {
+    public CompletionStage<Map<String, String>> uploadNewPdf(Byte[] document, String filename, String onBehalfOfUser, String originalData, String crn, Long entityId, String user, String t) {
         return null;
     }
 

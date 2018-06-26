@@ -54,7 +54,7 @@ public class AlfrescoStore implements DocumentStore {
     }
 
     @Override
-    public CompletionStage<Map<String, String>> uploadNewPdf(Byte[] document, String filename, String onBehalfOfUser, String originalData, String crn, Long entityId) {
+    public CompletionStage<Map<String, String>> uploadNewPdf(Byte[] document, String filename, String onBehalfOfUser, String originalData, String crn, Long entityId, String user, String t) {
 
         val parameters = new HashMap<String, String>() {
             {
@@ -64,6 +64,8 @@ public class AlfrescoStore implements DocumentStore {
                 put("entityId", Optional.ofNullable(entityId).map(Object::toString).orElse(""));
                 put("docType", "DOCUMENT");
                 put("userData", originalData);
+                put("user", user);
+                put("t", t);
             }
         };
 
