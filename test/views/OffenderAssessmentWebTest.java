@@ -1,8 +1,10 @@
 package views;
 
 import com.google.common.collect.ImmutableMap;
+import helpers.JwtHelperTest;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
+import interfaces.OffenderApi;
 import interfaces.PdfGenerator;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +27,7 @@ import static helpers.JsonHelper.jsonToMap;
 import static java.util.Arrays.stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.MapEntry.entry;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static play.inject.Bindings.bind;
@@ -156,7 +159,7 @@ public class OffenderAssessmentWebTest extends WithIE8Browser {
         assertThat(offenderAssessmentPage.isTicked("Other (Please specify below)")).isTrue();
         assertThat(offenderAssessmentPage.associatedDetailsFor("Other (Please specify below)")).isEqualTo("some offender assessment");
     }
-    
+
     @Test
     public void existingReportWithNoIssuesHasNothingTickedAndNoDetails() {
         when(alfrescoDocumentStore.retrieveOriginalData(any(), any())).
@@ -186,7 +189,7 @@ public class OffenderAssessmentWebTest extends WithIE8Browser {
         stream(issueOptions).forEach(issue -> assertThat(offenderAssessmentPage.isTicked(issue)).isFalse().describedAs(issue));
         stream(issueOptions).forEach(issue -> assertThat(offenderAssessmentPage.associatedDetailsFor(issue)).isEqualTo("").describedAs(issue));
     }
-    
+
     @Test
     public void existingReportWithAllIssuesHasEverythingTickedWithDetails() {
         when(alfrescoDocumentStore.retrieveOriginalData(any(), any())).
@@ -244,14 +247,21 @@ public class OffenderAssessmentWebTest extends WithIE8Browser {
     @Override
     protected Application provideApplication() {
         PdfGenerator pdfGenerator = mock(PdfGenerator.class);
-        when(pdfGenerator.generate(any(), any())).thenReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
+        given(pdfGenerator.generate(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
+
+        OffenderApi offenderApi = mock(OffenderApi.class);
+        given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
+        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(ImmutableMap.of("firstName", "Billy", "surname", "Kid")));
 
         return new GuiceApplicationBuilder().
             overrides(
                 bind(PdfGenerator.class).toInstance(pdfGenerator),
                 bind(DocumentStore.class).toInstance(alfrescoDocumentStore),
-                bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class))
-            ).build();
+                bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)),
+                bind(OffenderApi.class).toInstance(offenderApi)
+            )
+            .configure("params.user.token.valid.duration", "100000d")
+            .build();
     }
 
 }
