@@ -98,7 +98,7 @@ public class SignAndDateReportWebTest extends WithIE8Browser {
         given(pdfGenerator.generate(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
 
         documentStore = mock(DocumentStore.class);
-        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
+        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
 
         return new GuiceApplicationBuilder().
             overrides(

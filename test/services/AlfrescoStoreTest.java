@@ -113,7 +113,8 @@ public class AlfrescoStoreTest {
         val document = Byte.parseByte("1");
         Byte[] documentBytes = { document };
         val result = alfrescoStore.uploadNewPdf(documentBytes, "filename.pdf",
-            "johny userman",  "user data", "crn123", 12345L)
+            "johny userman",  "user data", "crn123", 12345L,
+            "user", "t")
                          .toCompletableFuture().join();
         val entry = new AbstractMap.SimpleEntry<String, String>("ID", "309db0bf-f8bb-4ac0-b325-5dbc368e2636");
         assertThat(result).containsExactly(entry);
