@@ -102,6 +102,8 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         val encryptedCrn= request().queryString() != null && request().queryString().get("crn") != null ? request().queryString().get("crn")[0] : "";
         val crn = decrypter.apply(encryptedCrn);
 
+        Logger.info(String.format("PARAMS: user:%s t:%s crn:%s", username, epochRequestTimeMills, crn));
+
         final Supplier<CompletionStage<Result>> renderedPage = () -> offenderApi.logon(username)
             .thenApplyAsync(bearerToken -> {
                 Logger.info("AUDIT:{}: WizardController: Successful logon for user {}", principal(bearerToken), username);
