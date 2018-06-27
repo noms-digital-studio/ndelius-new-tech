@@ -300,7 +300,7 @@ function openPopup(url) {
                 if (/Mac/i.test(navigator.platform)) {
                     return text
                 }
-                return text.replace('⌘', 'Ctrl-')
+                return text.replace('⌘', 'Ctrl-').replace('⇧', 'Shift-')
             }
 
 
@@ -323,8 +323,8 @@ function openPopup(url) {
                     {selector: '.ql-bold', tooltip: 'Bold (⌘B)'},
                     {selector: '.ql-italic', tooltip: 'Italic (⌘I)'},
                     {selector: '.ql-underline', tooltip: 'Underline (⌘U)'},
-                    {selector: '.ql-align[value="justify"]', tooltip: 'Justify'},
-                    {selector: '.ql-align[value=""]', tooltip: 'Align Left'},
+                    {selector: '.ql-align[value="justify"]', tooltip: 'Justify (⌘⇧J)'},
+                    {selector: '.ql-align[value=""]', tooltip: 'Align Left (⌘⇧L)'},
                     {selector: '.ql-list[value="ordered"]', tooltip: 'Numbered List'},
                     {selector: '.ql-list[value="bullet"]', tooltip: 'Bulleted List'},
                     {selector: '.ql-clean', tooltip: 'Remove Formatting'}]
@@ -358,6 +358,20 @@ function openPopup(url) {
 
             // remove tab key binding for editor, toolbar (and for IE11 svg)
             delete editor.getModule('keyboard').bindings[9];
+            editor.getModule('keyboard').addBinding({
+                key: 'J',
+                shiftKey: true,
+                shortKey: true
+            }, function(range, context) {
+                this.quill.format('align', 'justify');
+            });
+            editor.getModule('keyboard').addBinding({
+                key: 'L',
+                shiftKey: true,
+                shortKey: true
+            }, function(range, context) {
+                this.quill.format('align', '');
+            });
             toolbar.find(':button').attr('tabindex', '-1')
             toolbar.find('svg').attr('focusable', 'false')
 
