@@ -61,7 +61,7 @@ public class OffenderAssessmentWebTest extends WithIE8Browser {
         checkYourReportPage = new CheckYourReportPage(browser);
         when(alfrescoDocumentStore.updateExistingPdf(any(), any(), any(), any(), any()))
                 .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
-        when(alfrescoDocumentStore.uploadNewPdf(any(), any(), any(), any(), any(), any(), any(), any()))
+        when(alfrescoDocumentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
                 .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
     }
 

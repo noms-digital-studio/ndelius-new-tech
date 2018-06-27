@@ -247,9 +247,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                     data.getOnBehalfOfUser(),
                     metaData,
                     data.getCrn(),
-                    data.getEntityId(),
-                    data.getUser(),
-                    data.getT());
+                    data.getEntityId());
         } else {
 
             result = documentStore.updateExistingPdf(

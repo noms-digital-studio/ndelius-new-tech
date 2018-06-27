@@ -14,7 +14,7 @@ public interface DocumentStore {
         private final OffsetDateTime lastModifiedDate;
     }
 
-    CompletionStage<Map<String, String>> uploadNewPdf(Byte[] document, String filename, String onBehalfOfUser, String originalData, String crn, Long entityId, String user, String t);
+    CompletionStage<Map<String, String>> uploadNewPdf(Byte[] document, String filename, String onBehalfOfUser, String originalData, String crn, Long entityId);
 
     CompletionStage<OriginalData> retrieveOriginalData(String documentId, String onBehalfOfUser);
 

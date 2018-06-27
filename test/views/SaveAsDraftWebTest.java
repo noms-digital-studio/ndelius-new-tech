@@ -13,10 +13,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
-import views.pages.CheckYourReportPage;
-import views.pages.DraftSavedConfirmationPage;
-import views.pages.OffenderAssessmentPage;
-import views.pages.OffenderDetailsPage;
+import views.pages.*;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -44,16 +41,30 @@ public class SaveAsDraftWebTest extends WithIE8Browser {
         checkYourReportPage = new CheckYourReportPage(browser);
         when(alfrescoDocumentStore.updateExistingPdf(any(), any(), any(), any(), any()))
                 .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
-        when(alfrescoDocumentStore.uploadNewPdf(any(), any(), any(), any(), any(), any(), any(), any()))
+        when(alfrescoDocumentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
                 .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
     }
 
     @Test
     public void savingDraftWillStoreAllValues() {
+//        StartPage startPage = new StartPage(browser);
+//        startPage.navigateHere();
+//        pause();
+
         offenderAssessmentPage.navigateHere();
+
+//        pause();
         whenSaveAsDraftIsClicked();
 
         verify(alfrescoDocumentStore, atLeastOnce()).updateExistingPdf(any(), any(), any(), any(), any());
+    }
+
+    private void pause() {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

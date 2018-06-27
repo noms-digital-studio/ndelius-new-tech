@@ -46,7 +46,7 @@ public class InterstitialWebTest extends WithBrowser {
         startPage = new StartPage(browser);
         when(alfrescoDocumentStore.updateExistingPdf(any(), any(), any(), any(), any()))
                 .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
-        when(alfrescoDocumentStore.uploadNewPdf(any(), any(), any(), any(), any(), any(), any(), any()))
+        when(alfrescoDocumentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
                 .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
     }
 
