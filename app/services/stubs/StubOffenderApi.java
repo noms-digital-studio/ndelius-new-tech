@@ -17,6 +17,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static interfaces.HealthCheckResult.healthy;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static play.libs.Json.toJson;
 
 public class StubOffenderApi implements OffenderApi {
@@ -53,6 +54,10 @@ public class StubOffenderApi implements OffenderApi {
 
     @Override
     public CompletionStage<Map<String, Object>> getOffenderByCrn(String bearerToken, String crn) {
+        if (isBlank(crn)) {
+            throw new RuntimeException("getOffenderByCrn called with blank CRN");
+        }
+
         return CompletableFuture.completedFuture(ImmutableMap.<String, Object>builder()
             .put("contactDetails", ImmutableMap.of("addresses", addresses()))
             .put("firstName", "Sam")

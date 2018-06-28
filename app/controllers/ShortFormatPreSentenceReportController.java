@@ -12,16 +12,24 @@ import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.webjars.play.WebJarsUtil;
 import play.Environment;
+import play.Logger;
 import play.data.Form;
 import play.libs.concurrent.HttpExecutionContext;
 import play.twirl.api.Content;
 
 import javax.inject.Inject;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static helpers.DateTimeHelper.*;
+import static helpers.JwtHelper.principal;
+import static java.time.Clock.systemUTC;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class ShortFormatPreSentenceReportController extends ReportGeneratorWizardController<ShortFormatPreSentenceReportData> {
 
@@ -55,12 +63,90 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
     @Override
     protected CompletionStage<Map<String, String>> initialParams() {
-        return super.initialParams().thenApply(params -> {
 
-            params.putIfAbsent("pncSupplied", Boolean.valueOf(!isNullOrEmpty(params.get("pnc"))).toString());
-            params.putIfAbsent("addressSupplied", Boolean.valueOf(!isNullOrEmpty(params.get("address"))).toString());
-            return migrateLegacyReport(params);
-        });
+        val username = decryptQueryParam("user");
+        val epochRequestTimeMills = decryptQueryParam("t");
+        val crn = decryptQueryParam("crn");
+
+        Logger.info("queryString: " + request().queryString());
+        Logger.info(String.format("PARAMS: user:%s t:%s crn:%s", username, epochRequestTimeMills, crn));
+
+        // If CRN is blank this is an `update` rather than a `new`
+        if (isBlank(crn)) {
+            return super.initialParams().thenApply(params -> {
+
+                params.putIfAbsent("pncSupplied", Boolean.valueOf(!isNullOrEmpty(params.get("pnc"))).toString());
+                params.putIfAbsent("addressSupplied", Boolean.valueOf(!isNullOrEmpty(params.get("address"))).toString());
+                return migrateLegacyReport(params);
+            });
+        }
+
+        return offenderApi.logon(username)
+            .thenApplyAsync(bearerToken -> {
+                Logger.info("AUDIT:{}: WizardController: Successful logon for user {}", principal(bearerToken), username);
+                return bearerToken;
+
+            }, ec.current())
+            .thenCompose(bearerToken -> offenderApi.getOffenderByCrn(bearerToken, crn))
+            .thenCombineAsync(super.initialParams(), (offenderDetails, params) -> {
+
+                params.putIfAbsent("pncSupplied", Boolean.valueOf(!isNullOrEmpty(params.get("pnc"))).toString());
+                params.putIfAbsent("addressSupplied", Boolean.valueOf(!isNullOrEmpty(params.get("address"))).toString());
+                params = migrateLegacyReport(params);
+
+                if (offenderDetails.get("firstName") != null) {
+                        params.put("name", String.format("%s %s", offenderDetails.get("firstName"), offenderDetails.get("surname")));
+                    }
+                    if (offenderDetails.get("dateOfBirth") != null) {
+                        params.put("dateOfBirth", prettyPrint((String) offenderDetails.get("dateOfBirth")));
+                    }
+                    if (offenderDetails.get("dateOfBirth") != null) {
+                        params.put("age", String.format("%d", calculateAge((String) offenderDetails.get("dateOfBirth"), systemUTC())));
+                    }
+                    if (offenderDetails.get("otherIds") != null && !isBlank( ((Map<String, String>)offenderDetails.get("otherIds")).get("pncNumber"))) {
+                        params.put("pnc", ((Map<String, String>)offenderDetails.get("otherIds")).get("pncNumber"));
+                        params.put("pncSupplied", "true");
+                    } else {
+                        params.put("pncSupplied", "false");
+                    }
+
+                    if (offenderDetails.get("contactDetails") != null && !((List<Object>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")).isEmpty()) {
+                        val currentAddress = ((List<Map<String, Object>>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")).stream()
+                            .sorted(Comparator.comparing(address -> convert((String) address.get("from"))))
+                            .collect(Collectors.toList()).get(0);
+                        String singleLineAddress = ((currentAddress.get("buildingName") == null) ? "" : currentAddress.get("buildingName") + "\n") +
+                            ((currentAddress.get("addressNumber") == null) ? "" : currentAddress.get("addressNumber") + " ") +
+                            ((currentAddress.get("streetName") == null) ? "" : currentAddress.get("streetName") + "\n") +
+                            ((currentAddress.get("district") == null) ? "" : currentAddress.get("district") + "\n") +
+                            ((currentAddress.get("townCity") == null) ? "" : currentAddress.get("townCity") + "\n") +
+                            ((currentAddress.get("county") == null) ? "" : currentAddress.get("county") + "\n") +
+                            ((currentAddress.get("postcode") == null) ? "" : currentAddress.get("postcode") + "\n");
+                        params.put("address", singleLineAddress);
+                        params.put("addressSupplied", "true");
+                    } else {
+                        params.put("addressSupplied", "false");
+                    }
+
+                    return params;
+
+            }, ec.current());
+
+        //        final Runnable errorReporter = () -> Logger.error(String.format("Short format report search request did not receive a valid user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
+//        return paramsValidator.invalidCredentials(username, epochRequestTimeMills, errorReporter).
+//            map(result -> (CompletionStage<Result>) CompletableFuture.completedFuture(result)).
+//            orElseGet(renderedPage).
+//            exceptionally(throwable -> {
+//
+//                Logger.info("AUDIT:{}: Unable to login {}", "anonymous", username);
+//                Logger.error("Unable to logon to offender API", throwable);
+//
+//                return internalServerError();
+//            });
+
+    }
+
+    private String decryptQueryParam(String param) {
+        return decrypter.apply(request().queryString() != null && request().queryString().get(param) != null ? request().queryString().get(param)[0] : "");
     }
 
     private Map<String, String> migrateLegacyReport(Map<String, String> params) {

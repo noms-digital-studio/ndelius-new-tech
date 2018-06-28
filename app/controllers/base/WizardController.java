@@ -1,5 +1,6 @@
 package controllers.base;
 
+import com.google.common.base.Strings;
 import com.typesafe.config.Config;
 import controllers.ParamsValidator;
 import data.base.WizardData;
@@ -33,17 +34,12 @@ import java.util.concurrent.CompletionStage;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static helpers.DateTimeHelper.*;
 import static helpers.FluentHelper.content;
-import static helpers.JwtHelper.principal;
-import static java.time.Clock.systemUTC;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public abstract class WizardController<T extends WizardData> extends Controller {
 
@@ -93,86 +89,24 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     public final CompletionStage<Result> wizardGet() {
 
-        val encryptedUsername = request().queryString() != null && request().queryString().get("user") != null ? request().queryString().get("user")[0] : "";
-        val username = decrypter.apply(encryptedUsername);
+        return initialParams().thenApplyAsync(params -> {
 
-        val encryptedEpochRequestTimeMills = request().queryString() != null && request().queryString().get("t") != null ? request().queryString().get("t")[0] : "";
-        val epochRequestTimeMills = decrypter.apply(encryptedEpochRequestTimeMills);
+            val errorMessage = params.get("errorMessage");
 
-        val encryptedCrn= request().queryString() != null && request().queryString().get("crn") != null ? request().queryString().get("crn")[0] : "";
-        val crn = decrypter.apply(encryptedCrn);
+            if (Strings.isNullOrEmpty(errorMessage)) {
 
-        Logger.info(String.format("PARAMS: user:%s t:%s crn:%s", username, epochRequestTimeMills, crn));
+                val boundForm = wizardForm.bind(params);
+                val thisPage = boundForm.value().map(WizardData::getPageNumber).orElse(1);
+                val pageStatuses = getPageStatuses(boundForm.value(), thisPage, null);
 
-        final Supplier<CompletionStage<Result>> renderedPage = () -> offenderApi.logon(username)
-            .thenApplyAsync(bearerToken -> {
-                Logger.info("AUDIT:{}: WizardController: Successful logon for user {}", principal(bearerToken), username);
-                return bearerToken;
+                return ok(renderPage(thisPage, boundForm, pageStatuses));
 
-            }, ec.current())
-            .thenCompose(bearerToken -> offenderApi.getOffenderByCrn(bearerToken, crn))
-            .thenCombineAsync(initialParams(), (offenderDetails, params) -> {
-                val errorMessage = params.get("errorMessage");
+            } else {
 
-                if (isNullOrEmpty(errorMessage)) {
+                return badRequest(renderErrorMessage(errorMessage));
+            }
 
-                    if (offenderDetails.get("firstName") != null) {
-                        params.put("name", String.format("%s %s", offenderDetails.get("firstName"), offenderDetails.get("surname")));
-                    }
-                    if (offenderDetails.get("dateOfBirth") != null) {
-                        params.put("dateOfBirth", prettyPrint((String) offenderDetails.get("dateOfBirth")));
-                    }
-                    if (offenderDetails.get("dateOfBirth") != null) {
-                        params.put("age", String.format("%d", calculateAge((String) offenderDetails.get("dateOfBirth"), systemUTC())));
-                    }
-                    if (offenderDetails.get("otherIds") != null && !isBlank( ((Map<String, String>)offenderDetails.get("otherIds")).get("pncNumber"))) {
-                        params.put("pnc", ((Map<String, String>)offenderDetails.get("otherIds")).get("pncNumber"));
-                        params.put("pncSupplied", "true");
-                    } else {
-                        params.put("pncSupplied", "false");
-                    }
-
-                    if (offenderDetails.get("contactDetails") != null && !((List<Object>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")).isEmpty()) {
-                        val currentAddress = ((List<Map<String, Object>>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")).stream()
-                            .sorted(Comparator.comparing(address -> convert((String) address.get("from"))))
-                            .collect(Collectors.toList()).get(0);
-                        String singleLineAddress = ((currentAddress.get("buildingName") == null) ? "" : currentAddress.get("buildingName") + "\n") +
-                            ((currentAddress.get("addressNumber") == null) ? "" : currentAddress.get("addressNumber") + " ") +
-                            ((currentAddress.get("streetName") == null) ? "" : currentAddress.get("streetName") + "\n") +
-                            ((currentAddress.get("district") == null) ? "" : currentAddress.get("district") + "\n") +
-                            ((currentAddress.get("townCity") == null) ? "" : currentAddress.get("townCity") + "\n") +
-                            ((currentAddress.get("county") == null) ? "" : currentAddress.get("county") + "\n") +
-                            ((currentAddress.get("postcode") == null) ? "" : currentAddress.get("postcode") + "\n");
-                        params.put("address", singleLineAddress);
-                        params.put("addressSupplied", "true");
-                    } else {
-                        params.put("addressSupplied", "false");
-                    }
-
-                    val boundForm = wizardForm.bind(params);
-                    val thisPage = boundForm.value().map(WizardData::getPageNumber).orElse(1);
-                    val pageStatuses = getPageStatuses(boundForm.value(), thisPage, null);
-
-                    return ok(renderPage(thisPage, boundForm, pageStatuses));
-
-                } else {
-
-                    return badRequest(renderErrorMessage(errorMessage));
-                }
-            }, ec.current());
-
-        final Runnable errorReporter = () -> Logger.error(String.format("Short format report search request did not receive a valid user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
-        return paramsValidator.invalidCredentials(username, epochRequestTimeMills, errorReporter).
-            map(result -> (CompletionStage<Result>) CompletableFuture.completedFuture(result)).
-            orElseGet(renderedPage).
-            exceptionally(throwable -> {
-
-                Logger.info("AUDIT:{}: Unable to login {}", "anonymous", username);
-                Logger.error("Unable to logon to offender API", throwable);
-
-                return internalServerError();
-            });
-
+        }, ec.current());
 
     }
 
