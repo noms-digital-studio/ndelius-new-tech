@@ -63,7 +63,7 @@ public class DateTimeHelper {
             .collect(toList());
     }
 
-    public static String prettyPrint(String dateString) {
+    public static String format(String dateString) {
         val date = parse(dateString, ISO_LOCAL_DATE);
         return date.format(DateTimeFormatter.ofPattern("dd/MM/YYYY"));
     }

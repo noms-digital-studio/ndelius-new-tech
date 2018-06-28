@@ -90,45 +90,35 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
             .thenCompose(bearerToken -> offenderApi.getOffenderByCrn(bearerToken, crn))
             .thenCombineAsync(super.initialParams(), (offenderDetails, params) -> {
 
-                params.putIfAbsent("pncSupplied", Boolean.valueOf(!isNullOrEmpty(params.get("pnc"))).toString());
-                params.putIfAbsent("addressSupplied", Boolean.valueOf(!isNullOrEmpty(params.get("address"))).toString());
                 params = migrateLegacyReport(params);
 
                 if (offenderDetails.get("firstName") != null) {
-                        params.put("name", String.format("%s %s", offenderDetails.get("firstName"), offenderDetails.get("surname")));
-                    }
-                    if (offenderDetails.get("dateOfBirth") != null) {
-                        params.put("dateOfBirth", prettyPrint((String) offenderDetails.get("dateOfBirth")));
-                    }
-                    if (offenderDetails.get("dateOfBirth") != null) {
-                        params.put("age", String.format("%d", calculateAge((String) offenderDetails.get("dateOfBirth"), systemUTC())));
-                    }
-                    if (offenderDetails.get("otherIds") != null && !isBlank( ((Map<String, String>)offenderDetails.get("otherIds")).get("pncNumber"))) {
-                        params.put("pnc", ((Map<String, String>)offenderDetails.get("otherIds")).get("pncNumber"));
-                        params.put("pncSupplied", "true");
-                    } else {
-                        params.put("pncSupplied", "false");
-                    }
+                    params.put("name", String.format("%s %s.", offenderDetails.get("firstName"), offenderDetails.get("surname")));
+                }
 
-                    if (offenderDetails.get("contactDetails") != null && !((List<Object>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")).isEmpty()) {
-                        val currentAddress = ((List<Map<String, Object>>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")).stream()
-                            .sorted(Comparator.comparing(address -> convert((String) address.get("from"))))
-                            .collect(Collectors.toList()).get(0);
-                        String singleLineAddress = ((currentAddress.get("buildingName") == null) ? "" : currentAddress.get("buildingName") + "\n") +
-                            ((currentAddress.get("addressNumber") == null) ? "" : currentAddress.get("addressNumber") + " ") +
-                            ((currentAddress.get("streetName") == null) ? "" : currentAddress.get("streetName") + "\n") +
-                            ((currentAddress.get("district") == null) ? "" : currentAddress.get("district") + "\n") +
-                            ((currentAddress.get("townCity") == null) ? "" : currentAddress.get("townCity") + "\n") +
-                            ((currentAddress.get("county") == null) ? "" : currentAddress.get("county") + "\n") +
-                            ((currentAddress.get("postcode") == null) ? "" : currentAddress.get("postcode") + "\n");
-                        params.put("address", singleLineAddress);
-                        params.put("addressSupplied", "true");
-                    } else {
-                        params.put("addressSupplied", "false");
-                    }
+                if (offenderDetails.get("dateOfBirth") != null) {
+                    params.put("dateOfBirth", format((String) offenderDetails.get("dateOfBirth")));
+                }
 
-                    return params;
+                if (offenderDetails.get("dateOfBirth") != null) {
+                    params.put("age", String.format("%d", calculateAge((String) offenderDetails.get("dateOfBirth"), systemUTC())));
+                }
 
+                if (offenderDetails.get("otherIds") != null && !isBlank(((Map<String, String>) offenderDetails.get("otherIds")).get("pncNumber"))) {
+                    params.put("pnc", ((Map<String, String>) offenderDetails.get("otherIds")).get("pncNumber"));
+                    params.put("pncSupplied", "true");
+                } else {
+                    params.put("pncSupplied", "false");
+                }
+
+                if (offenderDetails.get("contactDetails") != null && !((List<Object>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")).isEmpty()) {
+                    params.put("address", singleLineAddress(offenderDetails));
+                    params.put("addressSupplied", "true");
+                } else {
+                    params.put("addressSupplied", "false");
+                }
+
+                return params;
             }, ec.current());
 
         //        final Runnable errorReporter = () -> Logger.error(String.format("Short format report search request did not receive a valid user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
@@ -143,6 +133,23 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 //                return internalServerError();
 //            });
 
+    }
+
+    private String singleLineAddress(Map<String, Object> offenderDetails) {
+        val currentAddress = currentAddress(offenderDetails);
+        return ((currentAddress.get("buildingName") == null) ? "" : currentAddress.get("buildingName") + "\n") +
+            ((currentAddress.get("addressNumber") == null) ? "" : currentAddress.get("addressNumber") + " ") +
+            ((currentAddress.get("streetName") == null) ? "" : currentAddress.get("streetName") + "\n") +
+            ((currentAddress.get("district") == null) ? "" : currentAddress.get("district") + "\n") +
+            ((currentAddress.get("townCity") == null) ? "" : currentAddress.get("townCity") + "\n") +
+            ((currentAddress.get("county") == null) ? "" : currentAddress.get("county") + "\n") +
+            ((currentAddress.get("postcode") == null) ? "" : currentAddress.get("postcode") + "\n");
+    }
+
+    private Map<String, Object> currentAddress(Map<String, Object> offenderDetails) {
+        return ((List<Map<String, Object>>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")).stream()
+            .sorted(Comparator.comparing(address -> convert((String) address.get("from"))))
+            .collect(Collectors.toList()).get(0);
     }
 
     private String decryptQueryParam(String param) {
