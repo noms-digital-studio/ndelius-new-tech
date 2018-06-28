@@ -29,7 +29,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static helpers.DateTimeHelper.*;
 import static helpers.JwtHelper.principal;
 import static java.time.Clock.systemUTC;
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class ShortFormatPreSentenceReportController extends ReportGeneratorWizardController<ShortFormatPreSentenceReportData> {
 
@@ -67,63 +67,64 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
         val username = decryptQueryParam("user");
         val epochRequestTimeMills = decryptQueryParam("t");
         val crn = decryptQueryParam("crn");
+        val documentId = decryptQueryParam("documentId");
 
         Logger.info("queryString: " + request().queryString());
         Logger.info(String.format("PARAMS: user:%s t:%s crn:%s", username, epochRequestTimeMills, crn));
 
-        // If CRN is blank this is an `update` rather than a `new`
-        if (isBlank(crn)) {
+        // If documentId present this is an `update` rather than a `new`
+        if (isNotBlank(documentId)) {
             return super.initialParams().thenApply(params -> {
 
                 params.putIfAbsent("pncSupplied", Boolean.valueOf(!isNullOrEmpty(params.get("pnc"))).toString());
                 params.putIfAbsent("addressSupplied", Boolean.valueOf(!isNullOrEmpty(params.get("address"))).toString());
                 return migrateLegacyReport(params);
             });
-        }
+        } else {
 
-        return offenderApi.logon(username)
-            .thenApplyAsync(bearerToken -> {
-                Logger.info("AUDIT:{}: WizardController: Successful logon for user {}", principal(bearerToken), username);
-                return bearerToken;
+            return offenderApi.logon(username)
+                .thenApplyAsync(bearerToken -> {
+                    Logger.info("AUDIT:{}: WizardController: Successful logon for user {}", principal(bearerToken), username);
+                    return bearerToken;
 
-            }, ec.current())
-            .thenCompose(bearerToken -> offenderApi.getOffenderByCrn(bearerToken, crn))
-            .thenCombineAsync(super.initialParams(), (offenderDetails, params) -> {
+                }, ec.current())
+                .thenCompose(bearerToken -> offenderApi.getOffenderByCrn(bearerToken, crn))
+                .thenCombineAsync(super.initialParams(), (offenderDetails, params) -> {
 
-                params = migrateLegacyReport(params);
+                    params = migrateLegacyReport(params);
 
-                if (offenderDetails.get("firstName") != null) {
-                    params.put("name", String.format("%s %s.", offenderDetails.get("firstName"), offenderDetails.get("surname")));
-                }
+                    if (offenderDetails.get("firstName") != null) {
+                        params.put("name", String.format("%s %s.", offenderDetails.get("firstName"), offenderDetails.get("surname")));
+                    }
 
-                if (offenderDetails.get("dateOfBirth") != null) {
-                    params.put("dateOfBirth", format((String) offenderDetails.get("dateOfBirth")));
-                }
+                    if (offenderDetails.get("dateOfBirth") != null) {
+                        params.put("dateOfBirth", format((String) offenderDetails.get("dateOfBirth")));
+                    }
 
-                if (offenderDetails.get("dateOfBirth") != null) {
-                    params.put("age", String.format("%d", calculateAge((String) offenderDetails.get("dateOfBirth"), systemUTC())));
-                }
+                    if (offenderDetails.get("dateOfBirth") != null) {
+                        params.put("age", String.format("%d", calculateAge((String) offenderDetails.get("dateOfBirth"), systemUTC())));
+                    }
 
-                if (offenderDetails.get("otherIds") != null && !isBlank(((Map<String, String>) offenderDetails.get("otherIds")).get("pncNumber"))) {
-                    params.put("pnc", ((Map<String, String>) offenderDetails.get("otherIds")).get("pncNumber"));
-                    params.put("pncSupplied", "true");
-                } else {
-                    params.put("pncSupplied", "false");
-                }
+                    if (offenderDetails.get("otherIds") != null && isNotBlank(((Map<String, String>) offenderDetails.get("otherIds")).get("pncNumber"))) {
+                        params.put("pnc", ((Map<String, String>) offenderDetails.get("otherIds")).get("pncNumber"));
+                        params.put("pncSupplied", "true");
+                    } else {
+                        params.put("pncSupplied", "false");
+                    }
 
-                if (offenderDetails.get("contactDetails") != null &&
-                    ((List<Object>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")) != null &&
-                    !((List<Object>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")).isEmpty()) {
-                    params.put("address", singleLineAddress(offenderDetails));
-                    params.put("addressSupplied", "true");
-                } else {
-                    params.put("addressSupplied", "false");
-                }
+                    if (offenderDetails.get("contactDetails") != null &&
+                        ((List<Object>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")) != null &&
+                        !((List<Object>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")).isEmpty()) {
+                        params.put("address", singleLineAddress(offenderDetails));
+                        params.put("addressSupplied", "true");
+                    } else {
+                        params.put("addressSupplied", "false");
+                    }
 
-                return params;
-            }, ec.current());
+                    return params;
+                }, ec.current());
 
-        //        final Runnable errorReporter = () -> Logger.error(String.format("Short format report search request did not receive a valid user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
+            //        final Runnable errorReporter = () -> Logger.error(String.format("Short format report search request did not receive a valid user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
 //        return paramsValidator.invalidCredentials(username, epochRequestTimeMills, errorReporter).
 //            map(result -> (CompletionStage<Result>) CompletableFuture.completedFuture(result)).
 //            orElseGet(renderedPage).
@@ -134,7 +135,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 //
 //                return internalServerError();
 //            });
-
+        }
     }
 
     private String singleLineAddress(Map<String, Object> offenderDetails) {
