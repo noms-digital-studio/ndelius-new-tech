@@ -34,6 +34,7 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
     public void beforeEach() {
         val n01 = loadResource("/deliusoffender/probationAreaByCode_N01.json");
         val n02 = loadResource("/deliusoffender/probationAreaByCode_N02.json");
+        val offender = loadResource("/deliusoffender/offender.json");
 
         wireMock.stubFor(
                 get(urlEqualTo("/probationAreas/code/N01"))
@@ -44,6 +45,11 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
                 get(urlEqualTo("/probationAreas/code/N02"))
                         .willReturn(
                                 okForContentType("application/json",  n02)));
+
+        wireMock.stubFor(
+                get(urlEqualTo("/offenders/crn/X12345"))
+                        .willReturn(
+                                okForContentType("application/json",  offender)));
 
         offenderApi = instanceOf(OffenderApi.class);
     }
@@ -110,6 +116,13 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
         assertThat(probationAreaCodeToDescriptionMap)
                 .contains(entry("N01", "NPS North West"))
                 .contains(entry("N02", "NPS North East"));
+    }
+
+    @Test
+    public void getsOffenderByCrn() {
+        offenderApi.getOffenderByCrn("ABC", "X12345").toCompletableFuture().join();
+
+        wireMock.verify(getRequestedFor(urlEqualTo("/offenders/crn/X12345")));
     }
 
     private static Map.Entry<String, String> entry(String code, String description) {

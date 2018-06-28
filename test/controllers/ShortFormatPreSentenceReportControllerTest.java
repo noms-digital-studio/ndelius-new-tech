@@ -1,5 +1,6 @@
 package controllers;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import helpers.Encryption;
 import helpers.JwtHelperTest;
@@ -14,6 +15,7 @@ import play.inject.guice.GuiceApplicationBuilder;
 import play.test.Helpers;
 import play.test.WithApplication;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
@@ -23,6 +25,7 @@ import java.util.function.Function;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static play.api.test.CSRFTokenHelper.addCSRFToken;
 import static play.inject.Bindings.bind;
@@ -33,12 +36,14 @@ import static play.test.Helpers.*;
 public class ShortFormatPreSentenceReportControllerTest extends WithApplication {
 
     private DocumentStore documentStore;
+    private OffenderApi offenderApi;
     private Function<String, String> encryptor = text -> Encryption.encrypt(text, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
     @Test
     public void createNewReport() {
 
-        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
+        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
+            .willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
 
         val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D&foo=bar"));
 
@@ -47,6 +52,39 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         assertTrue(content.contains(encryptor.apply("Billy Kid.")));
         assertFalse(content.contains("bar"));
     }
+
+    @Test
+    public void createNewReport_offenderHasEmptyContactDetails() throws UnsupportedEncodingException {
+
+        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
+        given(offenderApi.getOffenderByCrn(any(), eq("X12345")))
+            .willReturn(CompletableFuture.completedFuture(ImmutableMap.of("firstName", "Jimmy", "surname", "Fizz", "contactDetails", ImmutableMap.of())));
+
+        val crn = URLEncoder.encode(encryptor.apply("X12345"), "UTF-8");
+        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn="+ crn + "&foo=bar"));
+
+        assertEquals(OK, result.status());
+        val content = Helpers.contentAsString(result);
+        assertTrue(content.contains(encryptor.apply("Jimmy Fizz.")));
+        assertFalse(content.contains("bar"));
+    }
+
+    @Test
+    public void createNewReport_offenderHasEmptyAddressList() throws UnsupportedEncodingException {
+
+        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
+        given(offenderApi.getOffenderByCrn(any(), eq("X12345")))
+            .willReturn(CompletableFuture.completedFuture(ImmutableMap.of("firstName", "Jimmy", "surname", "Fizz", "contactDetails", ImmutableMap.of("addresses", ImmutableList.of()))));
+
+        val crn = URLEncoder.encode(encryptor.apply("X12345"), "UTF-8");
+        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn="+ crn + "&foo=bar"));
+
+        assertEquals(OK, result.status());
+        val content = Helpers.contentAsString(result);
+        assertTrue(content.contains(encryptor.apply("Jimmy Fizz.")));
+        assertFalse(content.contains("bar"));
+    }
+
 
     @Test
     public void getSampleReportConsumesDtoQueryStrings() {
@@ -973,9 +1011,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         given(pdfGenerator.generate(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
 
         documentStore = mock(DocumentStore.class);
-        OffenderApi offenderApi = mock(OffenderApi.class);
+        offenderApi = mock(OffenderApi.class);
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
-        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(ImmutableMap.of("firstName", "Billy", "surname", "Kid")));
+        given(offenderApi.getOffenderByCrn(any(), eq("B56789"))).willReturn(CompletableFuture.completedFuture(ImmutableMap.of("firstName", "Billy", "surname", "Kid")));
 
         return new GuiceApplicationBuilder().
                 overrides(

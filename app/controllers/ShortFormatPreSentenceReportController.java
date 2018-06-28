@@ -111,7 +111,9 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                     params.put("pncSupplied", "false");
                 }
 
-                if (offenderDetails.get("contactDetails") != null && !((List<Object>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")).isEmpty()) {
+                if (offenderDetails.get("contactDetails") != null &&
+                    ((List<Object>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")) != null &&
+                    !((List<Object>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")).isEmpty()) {
                     params.put("address", singleLineAddress(offenderDetails));
                     params.put("addressSupplied", "true");
                 } else {
