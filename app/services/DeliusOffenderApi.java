@@ -144,7 +144,7 @@ public class DeliusOffenderApi implements OffenderApi {
 
     @Override
     public CompletionStage<Map<String, Object>> getOffenderByCrn(String bearerToken, String crn) {
-        val url = String.format(offenderApiBaseUrl + "offenders/crn/%d", crn);
+        val url = String.format(offenderApiBaseUrl + "offenders/crn/%s", crn);
         return wsClient.url(url)
             .addHeader(AUTHORIZATION, String.format("Bearer %s", bearerToken))
             .get()
