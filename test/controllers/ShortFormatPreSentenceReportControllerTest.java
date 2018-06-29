@@ -49,7 +49,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
-        assertTrue(content.contains(encryptor.apply("Billy Kid.")));
+        assertTrue(content.contains(encryptor.apply("Billy Kid")));
         assertFalse(content.contains("bar"));
     }
 
@@ -65,7 +65,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
-        assertTrue(content.contains(encryptor.apply("Jimmy Fizz.")));
+        assertTrue(content.contains(encryptor.apply("Jimmy Fizz")));
         assertFalse(content.contains("bar"));
     }
 
@@ -81,10 +81,31 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
-        assertTrue(content.contains(encryptor.apply("Jimmy Fizz.")));
+        assertTrue(content.contains(encryptor.apply("Jimmy Fizz")));
         assertFalse(content.contains("bar"));
     }
 
+    @Test
+    public void createNewReport_currentAddressIsUsed() throws UnsupportedEncodingException {
+
+        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
+        given(offenderApi.getOffenderByCrn(any(), eq("X12345")))
+            .willReturn(CompletableFuture.completedFuture(
+                ImmutableMap.of(
+                    "firstName", "Jimmy", "surname", "Fizz",
+                    "contactDetails", ImmutableMap.of("addresses", ImmutableList.of(
+                            ImmutableMap.of("county", "Yorkshire", "from", "2018-01-22"),
+                            ImmutableMap.of("county", "Cheshire", "from","1980-06-03", "to", "2018-01-21"))))));
+
+        val crn = URLEncoder.encode(encryptor.apply("X12345"), "UTF-8");
+        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn="+ crn + "&foo=bar"));
+
+        assertEquals(OK, result.status());
+        val content = Helpers.contentAsString(result);
+        assertTrue(content.contains(encryptor.apply("Jimmy Fizz")));
+        assertTrue(content.contains(encryptor.apply("Yorkshire\n")));
+        assertFalse(content.contains("bar"));
+    }
 
     @Test
     public void getSampleReportConsumesDtoQueryStrings() {

@@ -18,7 +18,6 @@ import play.libs.concurrent.HttpExecutionContext;
 import play.twirl.api.Content;
 
 import javax.inject.Inject;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletionStage;
@@ -26,9 +25,11 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static helpers.DateTimeHelper.*;
+import static helpers.DateTimeHelper.calculateAge;
+import static helpers.DateTimeHelper.format;
 import static helpers.JwtHelper.principal;
 import static java.time.Clock.systemUTC;
+import static java.util.Comparator.comparing;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class ShortFormatPreSentenceReportController extends ReportGeneratorWizardController<ShortFormatPreSentenceReportData> {
@@ -94,7 +95,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                     params = migrateLegacyReport(params);
 
                     if (offenderDetails.get("firstName") != null) {
-                        params.put("name", String.format("%s %s.", offenderDetails.get("firstName"), offenderDetails.get("surname")));
+                        params.put("name", String.format("%s %s", offenderDetails.get("firstName"), offenderDetails.get("surname")));
                     }
 
                     if (offenderDetails.get("dateOfBirth") != null) {
@@ -151,7 +152,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
     private Map<String, Object> currentAddress(Map<String, Object> offenderDetails) {
         return ((List<Map<String, Object>>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")).stream()
-            .sorted(Comparator.comparing(address -> convert((String) address.get("from"))))
+            .sorted(comparing((Map<String, Object> address) -> (String) address.get("from")).reversed())
             .collect(Collectors.toList()).get(0);
     }
 
