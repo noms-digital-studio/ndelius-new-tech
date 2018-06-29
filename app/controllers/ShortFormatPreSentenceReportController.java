@@ -79,6 +79,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
                 params.putIfAbsent("pncSupplied", Boolean.valueOf(!isNullOrEmpty(params.get("pnc"))).toString());
                 params.putIfAbsent("addressSupplied", Boolean.valueOf(!isNullOrEmpty(params.get("address"))).toString());
+                Logger.info("Updating report. Params: " + params);
                 return migrateLegacyReport(params);
             });
         } else {
@@ -122,6 +123,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                         params.put("addressSupplied", "false");
                     }
 
+                    Logger.info("Creating report. Params: " + params);
                     return params;
                 }, ec.current());
 
