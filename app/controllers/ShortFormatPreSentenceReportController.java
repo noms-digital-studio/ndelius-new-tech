@@ -125,17 +125,6 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                     return params;
                 }, ec.current());
 
-            //        final Runnable errorReporter = () -> Logger.error(String.format("Short format report search request did not receive a valid user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
-//        return paramsValidator.invalidCredentials(username, epochRequestTimeMills, errorReporter).
-//            map(result -> (CompletionStage<Result>) CompletableFuture.completedFuture(result)).
-//            orElseGet(renderedPage).
-//            exceptionally(throwable -> {
-//
-//                Logger.info("AUDIT:{}: Unable to login {}", "anonymous", username);
-//                Logger.error("Unable to logon to offender API", throwable);
-//
-//                return internalServerError();
-//            });
         }
     }
 
