@@ -24,7 +24,6 @@ import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
 import static helpers.DateTimeHelper.calculateAge;
 import static helpers.DateTimeHelper.format;
 import static helpers.JwtHelper.principal;
@@ -117,16 +116,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
     @Override
     protected CompletionStage<Map<String, String>> initialParams() {
-
-
-
-            return super.initialParams().thenApply(params -> {
-
-                params.putIfAbsent("pncSupplied", Boolean.valueOf(!isNullOrEmpty(params.get("pnc"))).toString());
-                params.putIfAbsent("addressSupplied", Boolean.valueOf(!isNullOrEmpty(params.get("address"))).toString());
-                Logger.info("Updating report. Params: " + params);
-                return migrateLegacyReport(params);
-            });
+            return super.initialParams().thenApply(this::migrateLegacyReport);
     }
 
     private String singleLineAddress(Map<String, Object> offenderDetails) {
@@ -144,10 +134,6 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
         return ((List<Map<String, Object>>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")).stream()
             .sorted(comparing((Map<String, Object> address) -> (String) address.get("from")).reversed())
             .collect(Collectors.toList()).get(0);
-    }
-
-    private String decryptQueryParam(String param) {
-        return decrypter.apply(request().queryString() != null && request().queryString().get(param) != null ? request().queryString().get(param)[0] : "");
     }
 
     private Map<String, String> migrateLegacyReport(Map<String, String> params) {
