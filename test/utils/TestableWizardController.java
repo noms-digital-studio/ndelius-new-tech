@@ -22,7 +22,6 @@ public class TestableWizardController extends ShortFormatPreSentenceReportContro
                 documentStore,
                 null,
                null,
-            null,
             null);
     }
 

@@ -2,10 +2,10 @@ package controllers.base;
 
 import com.google.common.base.Strings;
 import com.typesafe.config.Config;
-import controllers.ParamsValidator;
 import data.base.WizardData;
 import data.viewModel.PageStatus;
 import helpers.Encryption;
+import helpers.InvalidCredentialsException;
 import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
 import interfaces.OffenderApi;
@@ -54,7 +54,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
     protected final Function<String, String> decrypter;
     protected final HttpExecutionContext ec;
     protected final Duration userTokenValidDuration;
-    protected final ParamsValidator paramsValidator;
     protected final OffenderApi offenderApi;
 
     protected WizardController(HttpExecutionContext ec,
@@ -64,14 +63,12 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                                AnalyticsStore analyticsStore,
                                EncryptedFormFactory formFactory,
                                Class<T> wizardType,
-                               ParamsValidator paramsValidator,
                                OffenderApi offenderApi) {
 
         this.ec = ec;
         this.webJarsUtil = webJarsUtil;
         this.environment = environment;
         this.analyticsStore = analyticsStore;
-        this.paramsValidator = paramsValidator;
         this.offenderApi = offenderApi;
 
         wizardForm = formFactory.form(wizardType, this::decryptParams);
@@ -106,8 +103,18 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                 return badRequest(renderErrorMessage(errorMessage));
             }
 
-        }, ec.current());
+        }, ec.current()).
+            exceptionally(throwable -> {
 
+                Logger.error("Wizard Get failure", throwable);
+
+                if (throwable instanceof InvalidCredentialsException) {
+
+                    return ((InvalidCredentialsException) throwable).getErrorResult();
+                }
+
+                return internalServerError();
+            });
     }
 
     public final CompletionStage<Result> wizardPost() {

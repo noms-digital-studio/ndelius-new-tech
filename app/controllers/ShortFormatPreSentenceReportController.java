@@ -1,5 +1,6 @@
 package controllers;
 
+import com.google.common.base.Strings;
 import com.typesafe.config.Config;
 import controllers.base.EncryptedFormFactory;
 import controllers.base.ReportGeneratorWizardController;
@@ -47,10 +48,9 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                                                   DocumentStore documentStore,
                                                   views.html.shortFormatPreSentenceReport.cancelled cancelledTemplate,
                                                   views.html.shortFormatPreSentenceReport.completed completedTemplate,
-                                                  ParamsValidator paramsValidator,
                                                   OffenderApi offenderApi) {
 
-        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore, paramsValidator, offenderApi);
+        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore, offenderApi);
         this.cancelledTemplate = cancelledTemplate;
         this.completedTemplate = completedTemplate;
     }
@@ -92,18 +92,12 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
                     if (offenderDetails.get("otherIds") != null && isNotBlank(((Map<String, String>) offenderDetails.get("otherIds")).get("pncNumber"))) {
                         params.put("pnc", ((Map<String, String>) offenderDetails.get("otherIds")).get("pncNumber"));
-                        params.put("pncSupplied", "true");
-                    } else {
-                        params.put("pncSupplied", "false");
                     }
 
                     if (offenderDetails.get("contactDetails") != null &&
                         ((List<Object>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")) != null &&
                         !((List<Object>) ((Map<String, Object>) offenderDetails.get("contactDetails")).get("addresses")).isEmpty()) {
                         params.put("address", singleLineAddress(offenderDetails));
-                        params.put("addressSupplied", "true");
-                    } else {
-                        params.put("addressSupplied", "false");
                     }
 
                     Logger.info("Creating report. Params: " + params);
@@ -116,7 +110,12 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
     @Override
     protected CompletionStage<Map<String, String>> initialParams() {
-            return super.initialParams().thenApply(this::migrateLegacyReport);
+        return super.initialParams().thenApply(params -> {
+
+            params.putIfAbsent("pncSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("pnc"))).toString());
+            params.putIfAbsent("addressSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("address"))).toString());
+            return migrateLegacyReport(params);
+        });
     }
 
     private String singleLineAddress(Map<String, Object> offenderDetails) {

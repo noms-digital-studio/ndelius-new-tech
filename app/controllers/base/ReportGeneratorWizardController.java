@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import controllers.ParamsValidator;
 import data.base.ReportGeneratorWizardData;
+import helpers.InvalidCredentialsException;
 import helpers.JsonHelper;
 import helpers.ThrowableHelper;
 import interfaces.AnalyticsStore;
@@ -34,10 +35,11 @@ import static helpers.JsonHelper.*;
 import static java.lang.Integer.parseInt;
 import static java.lang.Math.max;
 
-public abstract class ReportGeneratorWizardController<T extends ReportGeneratorWizardData> extends WizardController<T> {
+public abstract class ReportGeneratorWizardController<T extends ReportGeneratorWizardData> extends WizardController<T> implements ParamsValidator {
 
     private final PdfGenerator pdfGenerator;
     private final DocumentStore documentStore;
+    private final Config configuration;
 
     protected ReportGeneratorWizardController(HttpExecutionContext ec,
                                               WebJarsUtil webJarsUtil,
@@ -48,13 +50,18 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                                               Class<T> wizardType,
                                               PdfGenerator pdfGenerator,
                                               DocumentStore documentStore,
-                                              ParamsValidator paramsValidator,
                                               OffenderApi offenderApi) {
 
-        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, wizardType, paramsValidator, offenderApi);
+        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, wizardType, offenderApi);
 
         this.pdfGenerator = pdfGenerator;
         this.documentStore = documentStore;
+        this.configuration = configuration;
+    }
+
+    @Override
+    public Config getConfiguration() {
+        return configuration;
     }
 
     public CompletionStage<Result> reportPost() {
@@ -102,7 +109,27 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
         val continueFromInterstitial = queryParams.contains("continue");
         val stopAtInterstitial = queryParams.contains("documentId") && !continueFromInterstitial;
 
-        return super.initialParams().thenCompose(params -> originalData(params).orElseGet(() -> addPageAndDocumentId(params))).thenApply(params -> {
+        return super.initialParams().thenCompose(params -> {
+
+            val encryptedUsername = params.get("user");
+            val encryptedEpochRequestTimeMills = params.get("t");
+            final Runnable errorReporter = () -> Logger.error(String.format("National search request did not receive a valid user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
+
+            val badRequest = invalidCredentials(
+                decrypter.apply(encryptedUsername),
+                decrypter.apply(encryptedEpochRequestTimeMills),
+                errorReporter);
+
+            if (badRequest.isPresent()) {
+
+                throw new InvalidCredentialsException(badRequest.get());
+
+            } else {
+
+                return originalData(params).orElseGet(() -> addPageAndDocumentId(params));
+            }
+
+        }).thenApply(params -> {
             if (stopAtInterstitial) {
                 params.put("originalPageNumber", currentPageButNotInterstitialOrCompletion(params.get("pageNumber")));
                 params.put("pageNumber", "1");
@@ -217,6 +244,8 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
                     info.put("onBehalfOfUser", params.get("onBehalfOfUser"));
                     info.put("documentId", params.get("documentId"));
+                    info.put("user", params.get("user"));
+                    info.put("t", params.get("t"));
 
                     return info;
                 }));
