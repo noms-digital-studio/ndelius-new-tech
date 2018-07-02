@@ -30,6 +30,7 @@ import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.CompletionStage;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -108,9 +109,10 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
                 Logger.error("Wizard Get failure", throwable);
 
-                if (throwable instanceof InvalidCredentialsException) {
+                if (throwable instanceof CompletionException &&
+                    throwable.getCause() instanceof InvalidCredentialsException) {
 
-                    return ((InvalidCredentialsException) throwable).getErrorResult();
+                    return ((InvalidCredentialsException) throwable.getCause()).getErrorResult();
                 }
 
                 return internalServerError();
