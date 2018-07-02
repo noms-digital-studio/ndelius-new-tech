@@ -177,7 +177,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
     protected abstract Content renderCancelledView();
 
-    private CompletionStage<Map<String, String>> addPageAndDocumentId(Map<String, String> params) {
+    protected CompletionStage<Map<String, String>> addPageAndDocumentId(Map<String, String> params) {
 
         params.put("pageNumber", "1");
         params.put("startDate", new SimpleDateFormat("dd/MM/yyyy").format(new Date()));

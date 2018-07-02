@@ -63,26 +63,12 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
     }
 
     @Override
-    protected CompletionStage<Map<String, String>> initialParams() {
+    protected CompletionStage<Map<String, String>> addPageAndDocumentId(Map<String, String> origParams) {
 
-        val username = decryptQueryParam("user");
-        val epochRequestTimeMills = decryptQueryParam("t");
-        val crn = decryptQueryParam("crn");
-        val documentId = decryptQueryParam("documentId");
+        return super.addPageAndDocumentId(origParams).thenCompose(params -> {
 
-        Logger.info("queryString: " + request().queryString());
-        Logger.info(String.format("PARAMS: user:%s t:%s crn:%s", username, epochRequestTimeMills, crn));
-
-        // If documentId present this is an `update` rather than a `new`
-        if (isNotBlank(documentId)) {
-            return super.initialParams().thenApply(params -> {
-
-                params.putIfAbsent("pncSupplied", Boolean.valueOf(!isNullOrEmpty(params.get("pnc"))).toString());
-                params.putIfAbsent("addressSupplied", Boolean.valueOf(!isNullOrEmpty(params.get("address"))).toString());
-                Logger.info("Updating report. Params: " + params);
-                return migrateLegacyReport(params);
-            });
-        } else {
+            val username = decrypter.apply(params.get("user"));
+            val crn = params.get("crn");
 
             return offenderApi.logon(username)
                 .thenApplyAsync(bearerToken -> {
@@ -91,9 +77,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
                 }, ec.current())
                 .thenCompose(bearerToken -> offenderApi.getOffenderByCrn(bearerToken, crn))
-                .thenCombineAsync(super.initialParams(), (offenderDetails, params) -> {
-
-                    params = migrateLegacyReport(params);
+                .thenApply(offenderDetails -> {
 
                     if (offenderDetails.get("firstName") != null) {
                         params.put("name", String.format("%s %s", offenderDetails.get("firstName"), offenderDetails.get("surname")));
@@ -124,10 +108,25 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                     }
 
                     Logger.info("Creating report. Params: " + params);
-                    return params;
-                }, ec.current());
 
-        }
+                    return params;
+                });
+
+        });
+    }
+
+    @Override
+    protected CompletionStage<Map<String, String>> initialParams() {
+
+
+
+            return super.initialParams().thenApply(params -> {
+
+                params.putIfAbsent("pncSupplied", Boolean.valueOf(!isNullOrEmpty(params.get("pnc"))).toString());
+                params.putIfAbsent("addressSupplied", Boolean.valueOf(!isNullOrEmpty(params.get("address"))).toString());
+                Logger.info("Updating report. Params: " + params);
+                return migrateLegacyReport(params);
+            });
     }
 
     private String singleLineAddress(Map<String, Object> offenderDetails) {
