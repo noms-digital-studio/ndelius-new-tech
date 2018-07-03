@@ -87,6 +87,7 @@ public class StubOffenderApi implements OffenderApi {
         offenderAddress.setDistrict("Nether Edge");
         offenderAddress.setTownCity("Sheffield");
         offenderAddress.setPostcode("S7 1AB");
+        offenderAddress.setFrom("2010-06-22");
 
         return offenderAddress;
     }
