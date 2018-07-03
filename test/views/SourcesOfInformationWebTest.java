@@ -36,6 +36,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static play.inject.Bindings.bind;
 import static play.libs.Json.toJson;
+import static views.helpers.OffenderHelper.anOffender;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SourcesOfInformationWebTest extends WithIE8Browser {
@@ -187,7 +188,7 @@ public class SourcesOfInformationWebTest extends WithIE8Browser {
 
         OffenderApi offenderApi = mock(OffenderApi.class);
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
-        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(ImmutableMap.of("firstName", "Billy", "surname", "Kid")));
+        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffender()));
 
         return new GuiceApplicationBuilder().
                 overrides(

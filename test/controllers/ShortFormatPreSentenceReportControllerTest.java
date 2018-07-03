@@ -1,6 +1,5 @@
 package controllers;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import helpers.Encryption;
 import helpers.JwtHelperTest;
@@ -32,6 +31,7 @@ import static play.inject.Bindings.bind;
 import static play.mvc.Http.RequestBuilder;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
+import static views.helpers.OffenderHelper.*;
 
 public class ShortFormatPreSentenceReportControllerTest extends WithApplication {
 
@@ -49,7 +49,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
-        assertTrue(content.contains(encryptor.apply("Billy Kid")));
+        assertTrue(content.contains(encryptor.apply("Jimmy Fizz")));
         assertFalse(content.contains("bar"));
     }
 
@@ -58,7 +58,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
         given(offenderApi.getOffenderByCrn(any(), eq("X12345")))
-            .willReturn(CompletableFuture.completedFuture(ImmutableMap.of("firstName", "Jimmy", "surname", "Fizz", "contactDetails", ImmutableMap.of())));
+            .willReturn(CompletableFuture.completedFuture(anOffenderWithEmptyContactDetails()));
 
         val crn = URLEncoder.encode(encryptor.apply("X12345"), "UTF-8");
         val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn="+ crn + "&foo=bar"));
@@ -74,7 +74,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
         given(offenderApi.getOffenderByCrn(any(), eq("X12345")))
-            .willReturn(CompletableFuture.completedFuture(ImmutableMap.of("firstName", "Jimmy", "surname", "Fizz", "contactDetails", ImmutableMap.of("addresses", ImmutableList.of()))));
+            .willReturn(CompletableFuture.completedFuture(anOffenderWithEmptyAddressList()));
 
         val crn = URLEncoder.encode(encryptor.apply("X12345"), "UTF-8");
         val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn="+ crn + "&foo=bar"));
@@ -90,12 +90,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
         given(offenderApi.getOffenderByCrn(any(), eq("X12345")))
-            .willReturn(CompletableFuture.completedFuture(
-                ImmutableMap.of(
-                    "firstName", "Jimmy", "surname", "Fizz",
-                    "contactDetails", ImmutableMap.of("addresses", ImmutableList.of(
-                            ImmutableMap.of("county", "Yorkshire", "from", "2018-01-22"),
-                            ImmutableMap.of("county", "Cheshire", "from","1980-06-03", "to", "2018-01-21"))))));
+            .willReturn(CompletableFuture.completedFuture(anOffenderWithMultipleAddresses()));
 
         val crn = URLEncoder.encode(encryptor.apply("X12345"), "UTF-8");
         val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn="+ crn + "&foo=bar"));
@@ -1034,7 +1029,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         documentStore = mock(DocumentStore.class);
         offenderApi = mock(OffenderApi.class);
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
-        given(offenderApi.getOffenderByCrn(any(), eq("B56789"))).willReturn(CompletableFuture.completedFuture(ImmutableMap.of("firstName", "Billy", "surname", "Kid")));
+        given(offenderApi.getOffenderByCrn(any(), eq("B56789"))).willReturn(CompletableFuture.completedFuture(anOffender()));
 
         return new GuiceApplicationBuilder().
                 overrides(

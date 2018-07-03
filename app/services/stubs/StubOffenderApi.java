@@ -53,38 +53,42 @@ public class StubOffenderApi implements OffenderApi {
     }
 
     @Override
-    public CompletionStage<Map<String, Object>> getOffenderByCrn(String bearerToken, String crn) {
+    public CompletionStage<Offender> getOffenderByCrn(String bearerToken, String crn) {
         if (isBlank(crn)) {
             throw new RuntimeException("getOffenderByCrn called with blank CRN");
         }
 
-        return CompletableFuture.completedFuture(ImmutableMap.<String, Object>builder()
-            .put("contactDetails", ImmutableMap.of("addresses", addresses()))
-            .put("firstName", "Sam")
-            .put("surname", "Jones")
-            .put("dateOfBirth", "2000-06-22")
-            .put("otherIds", otherIds())
-            .build());
+        val contactDetails = new ContactDetails();
+        contactDetails.setAddresses(addresses());
+        val offender = new Offender();
+        offender.setContactDetails(contactDetails);
+        offender.setFirstName("Sam");
+        offender.setSurname("Jones");
+        offender.setDateOfBirth("2000-06-22");
+        offender.setOtherIds(otherIds());
+
+        return CompletableFuture.completedFuture(offender);
     }
 
     private ImmutableMap<String, String> otherIds() {
         return ImmutableMap.of("pncNumber", "2018/123456N");
     }
 
-    private ImmutableList<ImmutableMap<String, Object>> addresses() {
+    private ImmutableList<OffenderAddress> addresses() {
         return ImmutableList.of(anAddress());
     }
 
-    private ImmutableMap<String, Object> anAddress() {
-        return ImmutableMap.<String, Object>builder()
-            .put("buildingName", "Big Building")
-            .put("addressNumber", "7")
-            .put("streetName", "High Street")
-            .put("district", "Nether Edge")
-            .put("town", "Sheffield")
-            .put("county", "Yorkshire")
-            .put("postcode", "S7 1AB")
-            .build();
+    private OffenderAddress anAddress() {
+        val offenderAddress = new OffenderAddress();
+        offenderAddress.setBuildingName("Big Building");
+        offenderAddress.setCounty("Yorkshire");
+        offenderAddress.setBuildingName("Big Building");
+        offenderAddress.setStreetName("7");
+        offenderAddress.setDistrict("Nether Edge");
+        offenderAddress.setTownCity("Sheffield");
+        offenderAddress.setPostcode("S7 1AB");
+
+        return offenderAddress;
     }
 
     private String probationAreaDescription(String code) {

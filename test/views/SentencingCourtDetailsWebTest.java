@@ -24,6 +24,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static play.inject.Bindings.bind;
+import static views.helpers.OffenderHelper.anOffender;
 
 public class SentencingCourtDetailsWebTest extends WithIE8Browser {
     private SentencingCourtDetailsPage sentencingCourtDetailsPage;
@@ -70,7 +71,7 @@ public class SentencingCourtDetailsWebTest extends WithIE8Browser {
 
         OffenderApi offenderApi = mock(OffenderApi.class);
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
-        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(ImmutableMap.of("firstName", "Billy", "surname", "Kid")));
+        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffender()));
 
         return new GuiceApplicationBuilder().
             overrides(
