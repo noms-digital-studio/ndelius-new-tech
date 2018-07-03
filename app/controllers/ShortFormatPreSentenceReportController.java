@@ -92,7 +92,8 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
                     if (offender.getContactDetails() != null &&
                         offender.getContactDetails().getAddresses() != null &&
-                        !offender.getContactDetails().getAddresses().isEmpty()) {
+                        !offender.getContactDetails().getAddresses().isEmpty() &&
+                        offender.getContactDetails().getAddresses().stream().anyMatch(address -> address.getFrom() != null)) {
                         params.put("address", singleLineAddress(offender.getContactDetails().getAddresses()));
                     }
 
@@ -127,7 +128,6 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
     private OffenderAddress currentAddress(List<OffenderAddress> offenderAddresses) {
         return offenderAddresses.stream()
-            .filter(address -> address.getFrom() != null)
             .sorted(comparing(OffenderAddress::getFrom).reversed())
             .collect(Collectors.toList()).get(0);
     }

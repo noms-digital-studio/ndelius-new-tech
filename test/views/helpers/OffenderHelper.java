@@ -48,4 +48,19 @@ public class OffenderHelper {
         return offender;
     }
 
+    public static Offender anOffenderWithAddressListWithNoFromDate() {
+        val offender = anOffenderWithEmptyAddressList();
+
+        OffenderAddress address1 = new OffenderAddress();
+        address1.setCounty("Yorkshire");
+
+        OffenderAddress address2 = new OffenderAddress();
+        address2.setCounty("Cheshire");
+        address2.setTo("2018-01-21");
+
+        offender.getContactDetails().getAddresses().add(address1);
+        offender.getContactDetails().getAddresses().add(address2);
+
+        return offender;
+    }
 }

@@ -13,7 +13,7 @@ public interface OffenderApi {
 
     @Data
     @NoArgsConstructor
-    public static class Offender {
+    class Offender {
         private String firstName;
         private String surname;
         private String dateOfBirth;
@@ -23,13 +23,13 @@ public interface OffenderApi {
 
     @Data
     @NoArgsConstructor
-    public static class ContactDetails {
+    class ContactDetails {
         private List<OffenderAddress> addresses;
     }
 
     @Data
     @NoArgsConstructor
-    public static class OffenderAddress {
+    class OffenderAddress {
         private String buildingName;
         private String addressNumber;
         private String streetName;

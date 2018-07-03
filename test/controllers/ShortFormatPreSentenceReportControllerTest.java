@@ -61,12 +61,11 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             .willReturn(CompletableFuture.completedFuture(anOffenderWithEmptyContactDetails()));
 
         val crn = URLEncoder.encode(encryptor.apply("X12345"), "UTF-8");
-        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn="+ crn + "&foo=bar"));
+        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn="+ crn));
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
         assertTrue(content.contains(encryptor.apply("Jimmy Fizz")));
-        assertFalse(content.contains("bar"));
     }
 
     @Test
@@ -77,12 +76,26 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             .willReturn(CompletableFuture.completedFuture(anOffenderWithEmptyAddressList()));
 
         val crn = URLEncoder.encode(encryptor.apply("X12345"), "UTF-8");
-        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn="+ crn + "&foo=bar"));
+        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn="+ crn));
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
         assertTrue(content.contains(encryptor.apply("Jimmy Fizz")));
-        assertFalse(content.contains("bar"));
+    }
+
+    @Test
+    public void createNewReport_noAddressWithAFromDate() throws UnsupportedEncodingException {
+
+        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
+        given(offenderApi.getOffenderByCrn(any(), eq("X12345")))
+            .willReturn(CompletableFuture.completedFuture(anOffenderWithAddressListWithNoFromDate()));
+
+        val crn = URLEncoder.encode(encryptor.apply("X12345"), "UTF-8");
+        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn="+ crn));
+
+        assertEquals(OK, result.status());
+        val content = Helpers.contentAsString(result);
+        assertTrue(content.contains(encryptor.apply("Jimmy Fizz")));
     }
 
     @Test
@@ -93,13 +106,12 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             .willReturn(CompletableFuture.completedFuture(anOffenderWithMultipleAddresses()));
 
         val crn = URLEncoder.encode(encryptor.apply("X12345"), "UTF-8");
-        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn="+ crn + "&foo=bar"));
+        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn="+ crn));
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
         assertTrue(content.contains(encryptor.apply("Jimmy Fizz")));
         assertTrue(content.contains(encryptor.apply("Yorkshire\n")));
-        assertFalse(content.contains("bar"));
     }
 
     @Test
