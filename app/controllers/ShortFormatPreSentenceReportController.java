@@ -36,6 +36,8 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
     private final views.html.shortFormatPreSentenceReport.cancelled cancelledTemplate;
     private final views.html.shortFormatPreSentenceReport.completed completedTemplate;
+    protected final OffenderApi offenderApi;
+
 
     @Inject
     public ShortFormatPreSentenceReportController(HttpExecutionContext ec,
@@ -50,9 +52,10 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                                                   views.html.shortFormatPreSentenceReport.completed completedTemplate,
                                                   OffenderApi offenderApi) {
 
-        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore, offenderApi);
+        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore);
         this.cancelledTemplate = cancelledTemplate;
         this.completedTemplate = completedTemplate;
+        this.offenderApi = offenderApi;
     }
 
     @Override
@@ -71,7 +74,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
             return offenderApi.logon(username)
                 .thenApplyAsync(bearerToken -> {
-                    Logger.info("AUDIT:{}: WizardController: Successful logon for user {}", principal(bearerToken), username);
+                    Logger.info("AUDIT:{}: ShortFormatPreSentenceReportController: Successful logon for user {}", principal(bearerToken), username);
                     return bearerToken;
 
                 }, ec.current())

@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
 import com.google.common.collect.ImmutableList;
 import interfaces.OffenderApi;
+import interfaces.OffenderApi.Offender;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Rule;
@@ -120,8 +121,10 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
 
     @Test
     public void getsOffenderByCrn() {
-        offenderApi.getOffenderByCrn("ABC", "X12345").toCompletableFuture().join();
+        Offender offender = offenderApi.getOffenderByCrn("ABC", "X12345").toCompletableFuture().join();
 
+        assertThat(offender.getFirstName()).isEqualTo("John");
+        assertThat(offender.getSurname()).isEqualTo("Smith");
         wireMock.verify(getRequestedFor(urlEqualTo("/offenders/crn/X12345")));
     }
 

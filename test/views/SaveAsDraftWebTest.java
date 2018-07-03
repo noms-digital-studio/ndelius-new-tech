@@ -22,7 +22,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static play.inject.Bindings.bind;
-import static views.helpers.OffenderHelper.anOffender;
+import static utils.OffenderHelper.anOffender;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SaveAsDraftWebTest extends WithIE8Browser {
@@ -48,24 +48,12 @@ public class SaveAsDraftWebTest extends WithIE8Browser {
 
     @Test
     public void savingDraftWillStoreAllValues() {
-//        StartPage startPage = new StartPage(browser);
-//        startPage.navigateHere();
-//        pause();
 
         offenderAssessmentPage.navigateHere();
 
-//        pause();
         whenSaveAsDraftIsClicked();
 
         verify(alfrescoDocumentStore, atLeastOnce()).updateExistingPdf(any(), any(), any(), any(), any());
-    }
-
-    private void pause() {
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test

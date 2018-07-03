@@ -28,7 +28,7 @@ import static org.mockito.Mockito.mock;
 import static play.api.test.CSRFTokenHelper.addCSRFToken;
 import static play.inject.Bindings.bind;
 import static play.test.Helpers.*;
-import static views.helpers.OffenderHelper.anOffender;
+import static utils.OffenderHelper.anOffender;
 
 public class SentencingCourtDetailsTest extends WithApplication {
 

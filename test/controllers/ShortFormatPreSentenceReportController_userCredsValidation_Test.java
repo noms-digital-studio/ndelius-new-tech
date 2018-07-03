@@ -29,7 +29,7 @@ import static play.inject.Bindings.bind;
 import static play.mvc.Http.RequestBuilder;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
-import static views.helpers.OffenderHelper.anOffender;
+import static utils.OffenderHelper.anOffender;
 
 public class ShortFormatPreSentenceReportController_userCredsValidation_Test extends WithApplication {
 

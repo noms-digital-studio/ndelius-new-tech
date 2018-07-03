@@ -26,7 +26,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
-import static views.helpers.OffenderHelper.anOffender;
+import static utils.OffenderHelper.anOffender;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SearchFeedbackWebTest extends WithBrowser {

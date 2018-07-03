@@ -10,7 +10,6 @@ import helpers.JsonHelper;
 import helpers.ThrowableHelper;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
-import interfaces.OffenderApi;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.springframework.cglib.beans.BeanMap;
@@ -49,10 +48,9 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                                               EncryptedFormFactory formFactory,
                                               Class<T> wizardType,
                                               PdfGenerator pdfGenerator,
-                                              DocumentStore documentStore,
-                                              OffenderApi offenderApi) {
+                                              DocumentStore documentStore) {
 
-        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, wizardType, offenderApi);
+        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, wizardType);
 
         this.pdfGenerator = pdfGenerator;
         this.documentStore = documentStore;
@@ -113,7 +111,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
             val encryptedUsername = params.get("user");
             val encryptedEpochRequestTimeMills = params.get("t");
-            final Runnable errorReporter = () -> Logger.error(String.format("National search request did not receive a valid user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
+            final Runnable errorReporter = () -> Logger.error(String.format("Report page request did not receive a valid user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
 
             val badRequest = invalidCredentials(
                 decrypter.apply(encryptedUsername),
@@ -121,11 +119,9 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                 errorReporter);
 
             if (badRequest.isPresent()) {
-
                 throw new InvalidCredentialsException(badRequest.get());
 
             } else {
-
                 return originalData(params).orElseGet(() -> addPageAndDocumentId(params));
             }
 

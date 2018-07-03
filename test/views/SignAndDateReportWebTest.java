@@ -26,7 +26,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static play.inject.Bindings.bind;
-import static views.helpers.OffenderHelper.anOffender;
+import static utils.OffenderHelper.anOffender;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SignAndDateReportWebTest extends WithIE8Browser {
