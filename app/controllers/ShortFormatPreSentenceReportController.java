@@ -22,9 +22,9 @@ import play.twirl.api.Content;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import static helpers.DateTimeHelper.calculateAge;
 import static helpers.DateTimeHelper.format;
@@ -81,7 +81,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                 .thenCompose(bearerToken -> offenderApi.getOffenderByCrn(bearerToken, crn))
                 .thenApply(offender -> {
 
-                    params.put("name", String.format("%s %s", offender.getFirstName(), offender.getSurname()));
+                    params.put("name", offender.displayName());
 
                     if (offender.getDateOfBirth() != null) {
                         params.put("dateOfBirth", format(offender.getDateOfBirth()));
@@ -97,7 +97,8 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                         offender.getContactDetails().getAddresses() != null &&
                         !offender.getContactDetails().getAddresses().isEmpty() &&
                         offender.getContactDetails().getAddresses().stream().anyMatch(address -> address.getFrom() != null)) {
-                        params.put("address", singleLineAddress(offender.getContactDetails().getAddresses()));
+
+                        singleLineAddress(offender.getContactDetails().getAddresses()).map(str ->  params.put("address", str));
                     }
 
                     Logger.info("Creating report. Params: " + params);
@@ -111,28 +112,26 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
     @Override
     protected CompletionStage<Map<String, String>> initialParams() {
         return super.initialParams().thenApply(params -> {
-
             params.putIfAbsent("pncSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("pnc"))).toString());
             params.putIfAbsent("addressSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("address"))).toString());
             return migrateLegacyReport(params);
         });
     }
 
-    private String singleLineAddress(List<OffenderAddress> addresses) {
-        OffenderAddress currentAddress = currentAddress(addresses);
-        return ((currentAddress.getBuildingName() == null) ? "" : currentAddress.getBuildingName() + "\n") +
+    private Optional<String> singleLineAddress(List<OffenderAddress> addresses) {
+        Optional<OffenderAddress> address = currentAddress(addresses);
+        return address.map(currentAddress ->
+            ((currentAddress.getBuildingName() == null) ? "" : currentAddress.getBuildingName() + "\n") +
             ((currentAddress.getAddressNumber() == null) ? "" : currentAddress.getAddressNumber() + " ") +
             ((currentAddress.getStreetName() == null) ? "" : currentAddress.getStreetName() + "\n") +
             ((currentAddress.getDistrict() == null) ? "" : currentAddress.getDistrict() + "\n") +
             ((currentAddress.getTownCity() == null) ? "" : currentAddress.getTownCity() + "\n") +
             ((currentAddress.getCounty() == null) ? "" : currentAddress.getCounty() + "\n") +
-            ((currentAddress.getPostcode() == null) ? "" : currentAddress.getPostcode() + "\n");
+            ((currentAddress.getPostcode() == null) ? "" : currentAddress.getPostcode() + "\n"));
     }
 
-    private OffenderAddress currentAddress(List<OffenderAddress> offenderAddresses) {
-        return offenderAddresses.stream()
-            .sorted(comparing(OffenderAddress::getFrom).reversed())
-            .collect(Collectors.toList()).get(0);
+    private Optional<OffenderAddress> currentAddress(List<OffenderAddress> offenderAddresses) {
+        return offenderAddresses.stream().max(comparing(OffenderAddress::getFrom));
     }
 
     private Map<String, String> migrateLegacyReport(Map<String, String> params) {

@@ -49,7 +49,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
-        assertTrue(content.contains(encryptor.apply("Jimmy Fizz")));
+        assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
         assertFalse(content.contains("bar"));
     }
 
@@ -65,7 +65,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
-        assertTrue(content.contains(encryptor.apply("Jimmy Fizz")));
+        assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
-        assertTrue(content.contains(encryptor.apply("Jimmy Fizz")));
+        assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
     }
 
     @Test
@@ -95,7 +95,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
-        assertTrue(content.contains(encryptor.apply("Jimmy Fizz")));
+        assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
     }
 
     @Test
@@ -110,7 +110,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
-        assertTrue(content.contains(encryptor.apply("Jimmy Fizz")));
+        assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
         assertTrue(content.contains(encryptor.apply("Yorkshire\n")));
     }
 

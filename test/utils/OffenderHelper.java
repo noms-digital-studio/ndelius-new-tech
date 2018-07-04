@@ -1,5 +1,6 @@
 package utils;
 
+import com.google.common.collect.ImmutableList;
 import interfaces.OffenderApi.Offender;
 import interfaces.OffenderApi.OffenderAddress;
 import lombok.val;
@@ -12,7 +13,7 @@ public class OffenderHelper {
         val offender = new Offender();
         offender.setFirstName("Jimmy");
         offender.setSurname("Fizz");
-
+        offender.setMiddleNames(ImmutableList.of("Jammy", "Fred"));
         return offender;
     }
 

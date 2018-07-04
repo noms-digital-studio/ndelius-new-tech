@@ -1,12 +1,15 @@
 package interfaces;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.ImmutableList;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletionStage;
+
+import static java.util.Optional.ofNullable;
 
 
 public interface OffenderApi {
@@ -16,9 +19,21 @@ public interface OffenderApi {
     class Offender {
         private String firstName;
         private String surname;
+        private List<String> middleNames;
         private String dateOfBirth;
         private Map<String, String> otherIds;
         private ContactDetails contactDetails;
+
+        public String displayName() {
+            List<String> names = ImmutableList.<String>builder()
+                .add(ofNullable(firstName).orElse(""))
+                .addAll(ofNullable(middleNames)
+                    .map(middleNames -> middleNames.stream().findFirst().map(ImmutableList::of)
+                    .orElse(ImmutableList.of())).orElse(ImmutableList.of()))
+                .add(ofNullable(surname).orElse("")).build();
+
+            return String.join(" ", names).trim();
+        }
     }
 
     @Data

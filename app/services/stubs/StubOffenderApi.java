@@ -64,6 +64,7 @@ public class StubOffenderApi implements OffenderApi {
         offender.setContactDetails(contactDetails);
         offender.setFirstName("Sam");
         offender.setSurname("Jones");
+        offender.setMiddleNames(ImmutableList.of("Henry", "James"));
         offender.setDateOfBirth("2000-06-22");
         offender.setOtherIds(otherIds());
 
