@@ -125,7 +125,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
             ((currentAddress.getAddressNumber() == null) ? "" : currentAddress.getAddressNumber() + " ") +
             ((currentAddress.getStreetName() == null) ? "" : currentAddress.getStreetName() + "\n") +
             ((currentAddress.getDistrict() == null) ? "" : currentAddress.getDistrict() + "\n") +
-            ((currentAddress.getTownCity() == null) ? "" : currentAddress.getTownCity() + "\n") +
+            ((currentAddress.getTown() == null) ? "" : currentAddress.getTown() + "\n") +
             ((currentAddress.getCounty() == null) ? "" : currentAddress.getCounty() + "\n") +
             ((currentAddress.getPostcode() == null) ? "" : currentAddress.getPostcode() + "\n"));
     }

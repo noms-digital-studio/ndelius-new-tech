@@ -1,67 +1,98 @@
 package utils;
 
 import com.google.common.collect.ImmutableList;
+import interfaces.OffenderApi.ContactDetails;
 import interfaces.OffenderApi.Offender;
 import interfaces.OffenderApi.OffenderAddress;
-import lombok.val;
-import services.DeliusOffenderApi;
 
 import java.util.ArrayList;
 
 public class OffenderHelper {
     public static Offender anOffender() {
-        val offender = new Offender();
-        offender.setFirstName("Jimmy");
-        offender.setSurname("Fizz");
-        offender.setMiddleNames(ImmutableList.of("Jammy", "Fred"));
-        return offender;
+        return new Offender(
+            "Jimmy",
+            "Fizz",
+            ImmutableList.of("Jammy", "Fred"),
+            null,
+            null,
+            null
+        );
     }
 
     public static Offender anOffenderWithEmptyContactDetails() {
-        val offender = anOffender();
-        offender.setContactDetails(new DeliusOffenderApi.ContactDetails());
-
-        return offender;
+        return new Offender(
+            "Jimmy",
+            "Fizz",
+            ImmutableList.of("Jammy", "Fred"),
+            null,
+            null,
+            new ContactDetails(null));
     }
 
     public static Offender anOffenderWithEmptyAddressList() {
-        val offender = anOffenderWithEmptyContactDetails();
-        offender.getContactDetails().setAddresses(new ArrayList<>());
-
-        return offender;
+        return new Offender(
+            "Jimmy",
+            "Fizz",
+            ImmutableList.of("Jammy", "Fred"),
+            null,
+            null,
+            new ContactDetails(new ArrayList<>()));
     }
 
     public static Offender anOffenderWithMultipleAddresses() {
-        val offender = anOffenderWithEmptyAddressList();
 
-        OffenderAddress address1 = new OffenderAddress();
-        address1.setCounty("Yorkshire");
-        address1.setFrom("2018-01-22");
+        OffenderAddress address1 = new OffenderAddress(
+            "Big Building",
+            "7",
+            "High Street",
+            "Nether Edge",
+            "Sheffield",
+            "Yorkshire",
+            "S10 1LE",
+            "2000-06-12",
+            null
+        );
 
-        OffenderAddress address2 = new OffenderAddress();
-        address2.setCounty("Cheshire");
-        address2.setFrom("1980-06-03");
-        address2.setTo("2018-01-21");
+        OffenderAddress address2 = new OffenderAddress(
+            "Big Building",
+            "7",
+            "High Street",
+            "Nether Edge",
+            "Sheffield",
+            "Yorkshire",
+            "S10 1LE",
+            "1980-01-01",
+            "2000-06-12"
+        );
 
-        offender.getContactDetails().getAddresses().add(address1);
-        offender.getContactDetails().getAddresses().add(address2);
-
-        return offender;
+        return new Offender(
+            "Jimmy",
+            "Fizz",
+            ImmutableList.of("Jammy", "Fred"),
+            null,
+            null,
+            new ContactDetails(ImmutableList.of(address1, address2)));
     }
 
     public static Offender anOffenderWithAddressListWithNoFromDate() {
-        val offender = anOffenderWithEmptyAddressList();
+        OffenderAddress address1 = new OffenderAddress(
+            "Big Building",
+            "7",
+            "High Street",
+            "Nether Edge",
+            "Sheffield",
+            "Yorkshire",
+            "S10 1LE",
+            null,
+            null
+        );
 
-        OffenderAddress address1 = new OffenderAddress();
-        address1.setCounty("Yorkshire");
-
-        OffenderAddress address2 = new OffenderAddress();
-        address2.setCounty("Cheshire");
-        address2.setTo("2018-01-21");
-
-        offender.getContactDetails().getAddresses().add(address1);
-        offender.getContactDetails().getAddresses().add(address2);
-
-        return offender;
+        return new Offender(
+            "Jimmy",
+            "Fizz",
+            ImmutableList.of("Jammy", "Fred"),
+            null,
+            null,
+            new ContactDetails(ImmutableList.of(address1)));
     }
 }

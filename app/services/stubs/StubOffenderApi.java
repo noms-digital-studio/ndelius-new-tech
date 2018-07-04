@@ -58,15 +58,14 @@ public class StubOffenderApi implements OffenderApi {
             throw new RuntimeException("getOffenderByCrn called with blank CRN");
         }
 
-        val contactDetails = new ContactDetails();
-        contactDetails.setAddresses(addresses());
-        val offender = new Offender();
-        offender.setContactDetails(contactDetails);
-        offender.setFirstName("Sam");
-        offender.setSurname("Jones");
-        offender.setMiddleNames(ImmutableList.of("Henry", "James"));
-        offender.setDateOfBirth("2000-06-22");
-        offender.setOtherIds(otherIds());
+        val offender = new Offender(
+            "Sam",
+            "Jones",
+            ImmutableList.of("Henry", "James"),
+            "2000-06-22",
+            otherIds(),
+            new ContactDetails(addresses())
+            );
 
         return CompletableFuture.completedFuture(offender);
     }
@@ -80,16 +79,17 @@ public class StubOffenderApi implements OffenderApi {
     }
 
     private OffenderAddress anAddress() {
-        val offenderAddress = new OffenderAddress();
-        offenderAddress.setBuildingName("Big Building");
-        offenderAddress.setCounty("Yorkshire");
-        offenderAddress.setBuildingName("Big Building");
-        offenderAddress.setStreetName("7");
-        offenderAddress.setDistrict("Nether Edge");
-        offenderAddress.setTownCity("Sheffield");
-        offenderAddress.setPostcode("S7 1AB");
-        offenderAddress.setFrom("2010-06-22");
-
+        val offenderAddress = new OffenderAddress(
+            "Big Building",
+            "7",
+            "High Street",
+            "Nether Edge",
+            "Sheffield",
+            "Yorkshire",
+            "S7 1AB",
+            "2010-06-22",
+            null
+        );
         return offenderAddress;
     }
 

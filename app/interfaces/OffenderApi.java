@@ -2,8 +2,7 @@ package interfaces;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableList;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Value;
 
 import java.util.List;
 import java.util.Map;
@@ -14,8 +13,7 @@ import static java.util.Optional.ofNullable;
 
 public interface OffenderApi {
 
-    @Data
-    @NoArgsConstructor
+    @Value
     class Offender {
         private String firstName;
         private String surname;
@@ -36,20 +34,18 @@ public interface OffenderApi {
         }
     }
 
-    @Data
-    @NoArgsConstructor
+    @Value
     class ContactDetails {
         private List<OffenderAddress> addresses;
     }
 
-    @Data
-    @NoArgsConstructor
+    @Value
     class OffenderAddress {
         private String buildingName;
         private String addressNumber;
         private String streetName;
         private String district;
-        private String townCity;
+        private String town;
         private String county;
         private String postcode;
         private String from;

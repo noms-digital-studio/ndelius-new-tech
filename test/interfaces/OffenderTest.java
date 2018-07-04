@@ -10,40 +10,68 @@ public class OffenderTest {
 
     @Test
     public void displayNameCorrectForFirstNameSurnameOnly() {
-        Offender offender = new Offender();
-        offender.setFirstName("Sam");
-        offender.setSurname("Jones");
+        Offender offender = new Offender(
+            "Sam",
+            "Jones",
+            null,
+            null,
+            null,
+            null
+        );
+
         assertThat(offender.displayName()).isEqualTo("Sam Jones");
     }
 
     @Test
     public void displayNameCorrectForFirstNameSurnameAndMiddleName() {
-        Offender offender = new Offender();
-        offender.setFirstName("Sam");
-        offender.setSurname("Jones");
-        offender.setMiddleNames(ImmutableList.of("Ping", "Pong"));
+        Offender offender = new Offender(
+            "Sam",
+            "Jones",
+            ImmutableList.of("Ping", "Pong"),
+            null,
+            null,
+            null
+        );
+
         assertThat(offender.displayName()).isEqualTo("Sam Ping Jones");
     }
 
     @Test
     public void displayNameCorrectForMissingFirstName() {
-        Offender offender = new Offender();
-        offender.setSurname("Jones");
-        offender.setMiddleNames(ImmutableList.of("Ping", "Pong"));
+        Offender offender = new Offender(
+            null,
+            "Jones",
+            ImmutableList.of("Ping", "Pong"),
+            null,
+            null,
+            null
+        );
         assertThat(offender.displayName()).isEqualTo("Ping Jones");
     }
 
     @Test
     public void displayNameCorrectForMissingSurname() {
-        Offender offender = new Offender();
-        offender.setFirstName("Sam");
-        offender.setMiddleNames(ImmutableList.of("Ping", "Pong"));
+        Offender offender = new Offender(
+            "Sam",
+            null,
+            ImmutableList.of("Ping", "Pong"),
+            null,
+            null,
+            null
+        );
         assertThat(offender.displayName()).isEqualTo("Sam Ping");
     }
 
     @Test
     public void displayNameCorrectForMissingEverything() {
-        Offender offender = new Offender();
+        Offender offender = new Offender(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
         assertThat(offender.displayName()).isEqualTo("");
     }
 
