@@ -8,5 +8,5 @@ import play.mvc.Result;
 @Value
 public class InvalidCredentialsException extends RuntimeException {
 
-    private Result errorResult;
+    private final Result errorResult;
 }

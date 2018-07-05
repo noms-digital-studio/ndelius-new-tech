@@ -90,7 +90,7 @@ public class OffenderHelper {
             "Sheffield",
             "Yorkshire",
             "S10 1LE",
-            "2000-06-12",
+            "2000-11-12",
             null
         );
 
@@ -102,12 +102,12 @@ public class OffenderHelper {
             "Dover",
             "Kent",
             "S10 1LE",
-            "1980-01-01",
-            "2000-06-11"
+            "2000-02-11",
+            "2000-02-12"
         );
 
 
-        return new ContactDetails(ImmutableList.of(address1, address2));
+        return new ContactDetails(ImmutableList.of(address2, address1));
     }
 
     public static ContactDetails contactDetailsWithEmptyAddressList() {

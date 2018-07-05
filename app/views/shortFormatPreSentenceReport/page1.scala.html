@@ -66,13 +66,12 @@
             var documentId = encodeURIComponent($('#documentId').val())
             var user = encodeURIComponent($('#user').val())
             var t = encodeURIComponent($('#t').val())
-            var crn = encodeURIComponent($('#crn').val())
+
             var url = $('form').attr('action') + '?documentId=' + documentId +
                 '&onBehalfOfUser=' + onBehalfOfUser
                 + '&continue=true'
                 + '&user=' + user
-                + '&t=' + t
-                + '&crn=' + crn;
+                + '&t=' + t;
             openPopup(url)
         } else {
             openPopup('about:blank')

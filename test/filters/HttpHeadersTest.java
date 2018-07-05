@@ -47,8 +47,6 @@ public class HttpHeadersTest extends WithApplication {
                 put("dateOfBirth", encryptor.apply("06/02/1976"));
                 put("pageNumber", "2");
                 put("jumpNumber", "3");
-                put("user", "john.smith");
-                put("t", "1516976954871");
             }
         };
         return new Http.RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
