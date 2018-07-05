@@ -25,6 +25,20 @@ public class OffenderTest {
     }
 
     @Test
+    public void displayNameCorrectForFirstNameSurnameOnlyWithEmptyMiddleNameArray() {
+        val offender = new Offender(
+            "Sam",
+            "Jones",
+            ImmutableList.of(),
+            null,
+            null,
+            null
+        );
+
+        assertThat(offender.displayName()).isEqualTo("Sam Jones");
+    }
+
+    @Test
     public void displayNameCorrectForFirstNameSurnameAndMiddleName() {
         val offender = new Offender(
             "Sam",
@@ -99,6 +113,13 @@ public class OffenderTest {
     public void addressCorrectWhenContactDetailsHasMultipleAddress() {
         val contactDetails = contactDetailsWithMultipleAddresses();
         assertThat(contactDetails.currentAddress().get().render())
-            .isEqualTo("Big Building\n7 High Street\nNether Edge\nSheffield\nYorkshire\nS10 1LE\n");
+            .isEqualTo("Big Building\n7 High Street\nNether Edge\nSheffield\nYorkshire\nS10 1LE");
+    }
+
+    @Test
+    public void addressCorrectWhenContactDetailsPartialAddress() {
+        val contactDetails = contactDetailsPartialAddresses();
+        assertThat(contactDetails.currentAddress().get().render())
+            .isEqualTo("High Street\nSheffield\nYorkshire\nS10 1LE");
     }
 }

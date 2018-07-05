@@ -1,16 +1,18 @@
 package interfaces;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.collect.ImmutableList;
 import lombok.Value;
+import lombok.val;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
+import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 
 
 public interface OffenderApi {
@@ -25,14 +27,9 @@ public interface OffenderApi {
         private ContactDetails contactDetails;
 
         public String displayName() {
-            List<String> names = ImmutableList.<String>builder()
-                .add(ofNullable(firstName).orElse(""))
-                .addAll(ofNullable(middleNames)
-                    .map(middleNames -> middleNames.stream().findFirst().map(ImmutableList::of)
-                    .orElse(ImmutableList.of())).orElse(ImmutableList.of()))
-                .add(ofNullable(surname).orElse("")).build();
 
-            return String.join(" ", names).trim();
+            String middleName = ofNullable(middleNames).flatMap(names -> names.stream().findFirst()).orElse(null);
+            return joinList(" ", asList(firstName, middleName, surname));
         }
     }
 
@@ -41,10 +38,11 @@ public interface OffenderApi {
         private List<OffenderAddress> addresses;
 
         public Optional<OffenderAddress> currentAddress() {
-            return Optional.ofNullable(addresses)
-                .flatMap(offenderAddresses -> offenderAddresses.stream()
-                    .filter(address -> address.getFrom() != null)
-                    .max(comparing(OffenderAddress::getFrom)));
+            return ofNullable(addresses)
+                .flatMap(offenderAddresses ->
+                    offenderAddresses.stream()
+                        .filter(address -> ofNullable(address.getFrom()).isPresent())
+                        .max(comparing(OffenderAddress::getFrom)));
         }
 
     }
@@ -62,15 +60,26 @@ public interface OffenderApi {
         private String to;
 
         public String render() {
-            return Optional.ofNullable(this.getBuildingName()).orElse("")  + "\n" +
-                   Optional.ofNullable(this.getAddressNumber()).orElse("")  + " " +
-                   Optional.ofNullable(this.getStreetName()).orElse("")  + "\n" +
-                   Optional.ofNullable(this.getDistrict()).orElse("")  + "\n" +
-                   Optional.ofNullable(this.getTown()).orElse("")  + "\n" +
-                   Optional.ofNullable(this.getCounty()).orElse("")  + "\n" +
-                   Optional.ofNullable(this.getPostcode()).orElse("")  + "\n";
-        }
 
+            val address = asList(
+                    buildingName,
+                    joinList(" ", asList(addressNumber, streetName)),
+                    district,
+                    town,
+                    county,
+                    postcode);
+
+            return joinList("\n", address);
+        }
+    }
+
+    static String joinList(String delimiter, List<String> list) {
+        return String.join(delimiter,
+            list.stream()
+                .map(Optional::ofNullable)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(toList()));
     }
 
     CompletionStage<String> logon(String username);

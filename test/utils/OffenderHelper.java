@@ -81,6 +81,22 @@ public class OffenderHelper {
         return new ContactDetails(ImmutableList.of(address1));
     }
 
+    public static ContactDetails contactDetailsPartialAddresses() {
+        OffenderAddress address1 = new OffenderAddress(
+            null,
+            null,
+            "High Street",
+            null,
+            "Sheffield",
+            "Yorkshire",
+            "S10 1LE",
+            "2000-11-12",
+            null
+        );
+
+        return new ContactDetails(ImmutableList.of(address1));
+    }
+
     public static ContactDetails contactDetailsWithMultipleAddresses() {
         OffenderAddress address1 = new OffenderAddress(
             "Big Building",

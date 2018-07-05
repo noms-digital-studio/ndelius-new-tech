@@ -111,7 +111,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
         assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
-        assertTrue(content.contains(encryptor.apply("Big Building\n7 High Street\nNether Edge\nSheffield\nYorkshire\nS10 1LE\n")));
+        assertTrue(content.contains(encryptor.apply("Big Building\n7 High Street\nNether Edge\nSheffield\nYorkshire\nS10 1LE")));
     }
 
     @Test

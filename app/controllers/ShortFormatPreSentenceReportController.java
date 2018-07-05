@@ -27,6 +27,7 @@ import static helpers.DateTimeHelper.calculateAge;
 import static helpers.DateTimeHelper.format;
 import static helpers.JwtHelper.principal;
 import static java.time.Clock.systemUTC;
+import static java.util.Optional.ofNullable;
 
 public class ShortFormatPreSentenceReportController extends ReportGeneratorWizardController<ShortFormatPreSentenceReportData> {
 
@@ -79,21 +80,20 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
                     params.put("name", offender.displayName());
 
-                    if (offender.getDateOfBirth() != null) {
-                        params.put("dateOfBirth", format(offender.getDateOfBirth()));
-                        params.put("age", String.format("%d", calculateAge(offender.getDateOfBirth(), systemUTC())));
-                    }
+                    ofNullable(offender.getDateOfBirth()).ifPresent(dob -> {
+                        params.put("dateOfBirth", format(dob));
+                        params.put("age", String.format("%d", calculateAge(dob, systemUTC())));
+                    });
 
-                    if (offender.getOtherIds() != null &&
-                        offender.getOtherIds().containsKey("pncNumber")) {
-                        params.put("pnc", offender.getOtherIds().get("pncNumber"));
-                    }
+                    ofNullable(offender.getOtherIds())
+                        .filter(otherIds -> otherIds.containsKey("pncNumber"))
+                        .map(otherIds -> otherIds.get("pncNumber"))
+                        .ifPresent(pnc -> params.put("pnc", pnc));
 
-                    if (offender.getContactDetails() != null &&
-                        offender.getContactDetails().currentAddress().isPresent()) {
-                        offender.getContactDetails().currentAddress()
-                            .map(address -> params.put("address", address.render()));
-                    }
+                    ofNullable(offender.getContactDetails())
+                        .flatMap(OffenderApi.ContactDetails::currentAddress)
+                        .map(OffenderApi.OffenderAddress::render)
+                        .ifPresent(address -> params.put("address", address));
 
                     Logger.info("Creating report. Params: " + params);
 
