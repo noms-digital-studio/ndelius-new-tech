@@ -29,7 +29,7 @@ import static play.inject.Bindings.bind;
 import static play.mvc.Http.RequestBuilder;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
-import static utils.OffenderHelper.anOffender;
+import static utils.OffenderHelper.anOffenderWithNoContactDetails;
 
 public class ShortFormatPreSentenceReportController_userCredsValidation_Test extends WithApplication {
 
@@ -118,7 +118,7 @@ public class ShortFormatPreSentenceReportController_userCredsValidation_Test ext
         documentStore = mock(DocumentStore.class);
         offenderApi = mock(OffenderApi.class);
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
-        given(offenderApi.getOffenderByCrn(any(), eq("B56789"))).willReturn(CompletableFuture.completedFuture(anOffender()));
+        given(offenderApi.getOffenderByCrn(any(), eq("B56789"))).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
 
         return new GuiceApplicationBuilder().
                 overrides(

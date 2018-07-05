@@ -1041,7 +1041,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         documentStore = mock(DocumentStore.class);
         offenderApi = mock(OffenderApi.class);
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
-        given(offenderApi.getOffenderByCrn(any(), eq("B56789"))).willReturn(CompletableFuture.completedFuture(anOffender()));
+        given(offenderApi.getOffenderByCrn(any(), eq("B56789"))).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
 
         return new GuiceApplicationBuilder().
                 overrides(

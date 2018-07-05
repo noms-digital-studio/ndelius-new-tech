@@ -28,7 +28,7 @@ import static org.mockito.Mockito.mock;
 import static play.api.test.CSRFTokenHelper.addCSRFToken;
 import static play.inject.Bindings.bind;
 import static play.test.Helpers.*;
-import static utils.OffenderHelper.anOffender;
+import static utils.OffenderHelper.anOffenderWithNoContactDetails;
 
 public class SentencingCourtDetailsTest extends WithApplication {
 
@@ -92,7 +92,7 @@ public class SentencingCourtDetailsTest extends WithApplication {
 
         OffenderApi offenderApi = mock(OffenderApi.class);
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
-        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffender()));
+        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
 
         return new GuiceApplicationBuilder().
             overrides(

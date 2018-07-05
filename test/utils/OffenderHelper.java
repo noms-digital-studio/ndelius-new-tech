@@ -8,7 +8,7 @@ import interfaces.OffenderApi.OffenderAddress;
 import java.util.ArrayList;
 
 public class OffenderHelper {
-    public static Offender anOffender() {
+    public static Offender anOffenderWithNoContactDetails() {
         return new Offender(
             "Jimmy",
             "Fizz",
@@ -26,7 +26,7 @@ public class OffenderHelper {
             ImmutableList.of("Jammy", "Fred"),
             null,
             null,
-            new ContactDetails(null));
+            emptyContactDetails());
     }
 
     public static Offender anOffenderWithEmptyAddressList() {
@@ -36,11 +36,52 @@ public class OffenderHelper {
             ImmutableList.of("Jammy", "Fred"),
             null,
             null,
-            new ContactDetails(new ArrayList<>()));
+            contactDetailsWithEmptyAddressList());
     }
 
     public static Offender anOffenderWithMultipleAddresses() {
+        return new Offender(
+            "Jimmy",
+            "Fizz",
+            ImmutableList.of("Jammy", "Fred"),
+            null,
+            null,
+            contactDetailsWithMultipleAddresses()
+            );
+    }
 
+    public static Offender anOffenderWithAddressListWithNoFromDate() {
+        return new Offender(
+            "Jimmy",
+            "Fizz",
+            ImmutableList.of("Jammy", "Fred"),
+            null,
+            null,
+            contactDetailsAddressesHaveNoFromDates()
+            );
+    }
+
+    public static ContactDetails emptyContactDetails() {
+        return new ContactDetails(null);
+    }
+
+    public static ContactDetails contactDetailsAddressesHaveNoFromDates() {
+        OffenderAddress address1 = new OffenderAddress(
+            "Big Building",
+            "7",
+            "High Street",
+            "Nether Edge",
+            "Sheffield",
+            "Yorkshire",
+            "S10 1LE",
+            null,
+            null
+        );
+
+        return new ContactDetails(ImmutableList.of(address1));
+    }
+
+    public static ContactDetails contactDetailsWithMultipleAddresses() {
         OffenderAddress address1 = new OffenderAddress(
             "Big Building",
             "7",
@@ -54,45 +95,23 @@ public class OffenderHelper {
         );
 
         OffenderAddress address2 = new OffenderAddress(
-            "Big Building",
-            "7",
-            "High Street",
-            "Nether Edge",
-            "Sheffield",
-            "Yorkshire",
+            "Small Building",
+            "14",
+            "Low Street",
+            "East Field",
+            "Dover",
+            "Kent",
             "S10 1LE",
             "1980-01-01",
-            "2000-06-12"
+            "2000-06-11"
         );
 
-        return new Offender(
-            "Jimmy",
-            "Fizz",
-            ImmutableList.of("Jammy", "Fred"),
-            null,
-            null,
-            new ContactDetails(ImmutableList.of(address1, address2)));
+
+        return new ContactDetails(ImmutableList.of(address1, address2));
     }
 
-    public static Offender anOffenderWithAddressListWithNoFromDate() {
-        OffenderAddress address1 = new OffenderAddress(
-            "Big Building",
-            "7",
-            "High Street",
-            "Nether Edge",
-            "Sheffield",
-            "Yorkshire",
-            "S10 1LE",
-            null,
-            null
-        );
-
-        return new Offender(
-            "Jimmy",
-            "Fizz",
-            ImmutableList.of("Jammy", "Fred"),
-            null,
-            null,
-            new ContactDetails(ImmutableList.of(address1)));
+    public static ContactDetails contactDetailsWithEmptyAddressList() {
+        return new ContactDetails(new ArrayList<>());
     }
+
 }

@@ -26,7 +26,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
-import static utils.OffenderHelper.anOffender;
+import static utils.OffenderHelper.anOffenderWithNoContactDetails;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SearchFeedbackWebTest extends WithBrowser {
@@ -80,7 +80,7 @@ public class SearchFeedbackWebTest extends WithBrowser {
 
         OffenderApi offenderApi = mock(OffenderApi.class);
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
-        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffender()));
+        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
 
         return new GuiceApplicationBuilder().
             overrides(

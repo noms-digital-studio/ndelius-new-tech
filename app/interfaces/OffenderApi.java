@@ -6,8 +6,10 @@ import lombok.Value;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
+import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 
 
@@ -37,6 +39,14 @@ public interface OffenderApi {
     @Value
     class ContactDetails {
         private List<OffenderAddress> addresses;
+
+        public Optional<OffenderAddress> currentAddress() {
+            return Optional.ofNullable(addresses)
+                .flatMap(offenderAddresses -> offenderAddresses.stream()
+                    .filter(address -> address.getFrom() != null)
+                    .max(comparing(OffenderAddress::getFrom)));
+        }
+
     }
 
     @Value
@@ -50,6 +60,17 @@ public interface OffenderApi {
         private String postcode;
         private String from;
         private String to;
+
+        public String render() {
+            return Optional.ofNullable(this.getBuildingName()).orElse("")  + "\n" +
+                   Optional.ofNullable(this.getAddressNumber()).orElse("")  + " " +
+                   Optional.ofNullable(this.getStreetName()).orElse("")  + "\n" +
+                   Optional.ofNullable(this.getDistrict()).orElse("")  + "\n" +
+                   Optional.ofNullable(this.getTown()).orElse("")  + "\n" +
+                   Optional.ofNullable(this.getCounty()).orElse("")  + "\n" +
+                   Optional.ofNullable(this.getPostcode()).orElse("")  + "\n";
+        }
+
     }
 
     CompletionStage<String> logon(String username);

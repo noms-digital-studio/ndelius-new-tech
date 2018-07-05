@@ -2,15 +2,17 @@ package interfaces;
 
 import com.google.common.collect.ImmutableList;
 import interfaces.OffenderApi.Offender;
+import lombok.val;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static utils.OffenderHelper.*;
 
 public class OffenderTest {
 
     @Test
     public void displayNameCorrectForFirstNameSurnameOnly() {
-        Offender offender = new Offender(
+        val offender = new Offender(
             "Sam",
             "Jones",
             null,
@@ -24,7 +26,7 @@ public class OffenderTest {
 
     @Test
     public void displayNameCorrectForFirstNameSurnameAndMiddleName() {
-        Offender offender = new Offender(
+        val offender = new Offender(
             "Sam",
             "Jones",
             ImmutableList.of("Ping", "Pong"),
@@ -38,7 +40,7 @@ public class OffenderTest {
 
     @Test
     public void displayNameCorrectForMissingFirstName() {
-        Offender offender = new Offender(
+        val offender = new Offender(
             null,
             "Jones",
             ImmutableList.of("Ping", "Pong"),
@@ -51,7 +53,7 @@ public class OffenderTest {
 
     @Test
     public void displayNameCorrectForMissingSurname() {
-        Offender offender = new Offender(
+        val offender = new Offender(
             "Sam",
             null,
             ImmutableList.of("Ping", "Pong"),
@@ -64,7 +66,7 @@ public class OffenderTest {
 
     @Test
     public void displayNameCorrectForMissingEverything() {
-        Offender offender = new Offender(
+        val offender = new Offender(
             null,
             null,
             null,
@@ -75,4 +77,28 @@ public class OffenderTest {
         assertThat(offender.displayName()).isEqualTo("");
     }
 
+    @Test
+    public void noAddressWhenContactDetailsAreEmpty() {
+        val contactDetails = emptyContactDetails();
+        assertThat(contactDetails.currentAddress().isPresent()).isFalse();
+    }
+
+    @Test
+    public void noAddressWhenContactDetailsHaveNoFromDates() {
+        val contactDetails = contactDetailsAddressesHaveNoFromDates();
+        assertThat(contactDetails.currentAddress().isPresent()).isFalse();
+    }
+
+    @Test
+    public void noAddressWhenContactDetailsHaveEmptyAddressList() {
+        val contactDetails = contactDetailsWithEmptyAddressList();
+        assertThat(contactDetails.currentAddress().isPresent()).isFalse();
+    }
+
+    @Test
+    public void addressCorrectWhenContactDetailsHasMultipleAddress() {
+        val contactDetails = contactDetailsWithMultipleAddresses();
+        assertThat(contactDetails.currentAddress().get().render())
+            .isEqualTo("Big Building\n7 High Street\nNether Edge\nSheffield\nYorkshire\nS10 1LE\n");
+    }
 }

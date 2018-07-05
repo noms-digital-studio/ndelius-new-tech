@@ -8,7 +8,6 @@ import data.ShortFormatPreSentenceReportData;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
-import interfaces.OffenderApi.OffenderAddress;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
@@ -20,9 +19,7 @@ import play.libs.concurrent.HttpExecutionContext;
 import play.twirl.api.Content;
 
 import javax.inject.Inject;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
 
@@ -30,7 +27,6 @@ import static helpers.DateTimeHelper.calculateAge;
 import static helpers.DateTimeHelper.format;
 import static helpers.JwtHelper.principal;
 import static java.time.Clock.systemUTC;
-import static java.util.Comparator.comparing;
 
 public class ShortFormatPreSentenceReportController extends ReportGeneratorWizardController<ShortFormatPreSentenceReportData> {
 
@@ -94,11 +90,9 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                     }
 
                     if (offender.getContactDetails() != null &&
-                        offender.getContactDetails().getAddresses() != null &&
-                        !offender.getContactDetails().getAddresses().isEmpty() &&
-                        offender.getContactDetails().getAddresses().stream().anyMatch(address -> address.getFrom() != null)) {
-
-                        singleLineAddress(offender.getContactDetails().getAddresses()).map(str ->  params.put("address", str));
+                        offender.getContactDetails().currentAddress().isPresent()) {
+                        offender.getContactDetails().currentAddress()
+                            .map(address -> params.put("address", address.render()));
                     }
 
                     Logger.info("Creating report. Params: " + params);
@@ -118,21 +112,6 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
         });
     }
 
-    private Optional<String> singleLineAddress(List<OffenderAddress> addresses) {
-        Optional<OffenderAddress> address = currentAddress(addresses);
-        return address.map(currentAddress ->
-            ((currentAddress.getBuildingName() == null) ? "" : currentAddress.getBuildingName() + "\n") +
-            ((currentAddress.getAddressNumber() == null) ? "" : currentAddress.getAddressNumber() + " ") +
-            ((currentAddress.getStreetName() == null) ? "" : currentAddress.getStreetName() + "\n") +
-            ((currentAddress.getDistrict() == null) ? "" : currentAddress.getDistrict() + "\n") +
-            ((currentAddress.getTown() == null) ? "" : currentAddress.getTown() + "\n") +
-            ((currentAddress.getCounty() == null) ? "" : currentAddress.getCounty() + "\n") +
-            ((currentAddress.getPostcode() == null) ? "" : currentAddress.getPostcode() + "\n"));
-    }
-
-    private Optional<OffenderAddress> currentAddress(List<OffenderAddress> offenderAddresses) {
-        return offenderAddresses.stream().max(comparing(OffenderAddress::getFrom));
-    }
 
     private Map<String, String> migrateLegacyReport(Map<String, String> params) {
         return migrateLegacyOffenderAssessmentIssues(params);
