@@ -48,7 +48,7 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
                                 okForContentType("application/json",  n02)));
 
         wireMock.stubFor(
-                get(urlEqualTo("/offenders/crn/X12345"))
+                get(urlEqualTo("/offenders/crn/X12345/all"))
                         .willReturn(
                                 okForContentType("application/json",  offender)));
 
@@ -125,7 +125,7 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
 
         assertThat(offender.getFirstName()).isEqualTo("John");
         assertThat(offender.getSurname()).isEqualTo("Smith");
-        wireMock.verify(getRequestedFor(urlEqualTo("/offenders/crn/X12345")));
+        wireMock.verify(getRequestedFor(urlEqualTo("/offenders/crn/X12345/all")));
     }
 
     private static Map.Entry<String, String> entry(String code, String description) {
