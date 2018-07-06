@@ -1,0 +1,7 @@
+.govuk-button {
+  &.moj-button--inverted {
+    background-image: url(/assets/images/icon-pointer--blue.png);
+    background-color: govuk-colour("white");
+    color: govuk-colour("blue");
+  }
+}

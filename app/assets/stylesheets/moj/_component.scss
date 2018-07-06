@@ -1,0 +1,21 @@
+
+/*
+  MOJ Pattern Library
+ */
+
+
+.moj-box-border {
+  border: 10px solid govuk-colour("turquoise");
+  margin: 1em 0;
+  padding: 2em 2em;
+  background: transparent;
+  text-align: left;
+}
+
+.moj-interrupt {
+  margin: 1em 0;
+  padding: 1em;
+  background: govuk-colour("blue");
+  text-align: left;
+  color: white;
+}
