@@ -31,10 +31,9 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
                                         PdfGenerator pdfGenerator,
                                         DocumentStore documentStore,
                                         views.html.paroleParom1Report.cancelled cancelledTemplate,
-                                        views.html.paroleParom1Report.completed completedTemplate,
-                                        ParamsValidator paramsValidator) {
+                                        views.html.paroleParom1Report.completed completedTemplate) {
 
-        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ParoleParom1ReportData.class, pdfGenerator, documentStore, paramsValidator);
+        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ParoleParom1ReportData.class, pdfGenerator, documentStore);
         this.cancelledTemplate = cancelledTemplate;
         this.completedTemplate = completedTemplate;
     }
