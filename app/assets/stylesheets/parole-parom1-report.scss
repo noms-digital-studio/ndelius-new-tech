@@ -1,2 +1,13 @@
 @import "../../../node_modules/govuk-frontend/all";
 @import "moj/moj";
+
+
+.new-window {
+  span {
+    background-image: url("../images/new-window.png");
+    background-position: 100% 50%;
+    background-repeat: no-repeat;
+    padding-right: 20px;
+  }
+}
+
