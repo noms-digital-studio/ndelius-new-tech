@@ -10,3 +10,9 @@
   }
 }
 
+.govuk-width-container {
+  // Left align since we are in an iframe within Delius
+  @include govuk-media-query($and: "(min-width: #{($govuk-page-width + $govuk-gutter * 2)})") {
+    margin: 0 $govuk-gutter;
+  }
+}
