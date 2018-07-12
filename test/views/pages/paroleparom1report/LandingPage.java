@@ -20,13 +20,7 @@ public class LandingPage extends FluentPage {
 
     public LandingPage gotoNext() {
         $(id("nextButton")).click();
-        switchToWindow();
+        window().switchTo("reportpopup");
         return this;
     }
-
-    public LandingPage switchToWindow() {
-        window().switchToLast("reportpopup");
-        return this;
-    }
-
 }

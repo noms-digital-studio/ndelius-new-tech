@@ -11,7 +11,7 @@ public class ParoleParom1PopupReportPage extends FluentPage {
 
     @Override
     public void isAt(Object... parameters) {
-        control.await().until((driver) -> driver.find(By.tagName("h1")).first().text().equals(parameters[0]));
+        control.await().until(driver -> driver.find(By.tagName("h1")).first().text().equals(parameters[0]));
     }
 
 }
