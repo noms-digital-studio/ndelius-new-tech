@@ -8,6 +8,7 @@ import data.ShortFormatPreSentenceReportData;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
+import interfaces.OffenderApi.Offender;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +24,6 @@ import java.util.Map;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
 
-import static controllers.SessionKeys.OFFENDER_API_BEARER_TOKEN;
 import static helpers.DateTimeHelper.calculateAge;
 import static helpers.DateTimeHelper.format;
 import static java.time.Clock.systemUTC;
@@ -59,40 +59,31 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
     }
 
     @Override
-    protected CompletionStage<Map<String, String>> addPageAndDocumentId(Map<String, String> origParams) {
+    protected Map<String, String> storeOffenderDetails(Map<String, String> params, Offender offender) {
 
-        return super.addPageAndDocumentId(origParams).thenComposeAsync(params -> {
+        params.put("name", offender.displayName());
 
-            val crn = params.get("crn");
-            return offenderApi.getOffenderByCrn(session(OFFENDER_API_BEARER_TOKEN), crn)
-                .thenApply(offender -> {
+        ofNullable(offender.getDateOfBirth()).ifPresent(dob -> {
+            params.put("dateOfBirth", format(dob));
+            params.put("age", String.format("%d", calculateAge(dob, systemUTC())));
+        });
 
-                    params.put("name", offender.displayName());
+        ofNullable(offender.getOtherIds())
+            .filter(otherIds -> otherIds.containsKey("pncNumber"))
+            .map(otherIds -> otherIds.get("pncNumber"))
+            .ifPresent(pnc -> params.put("pnc", pnc));
 
-                    ofNullable(offender.getDateOfBirth()).ifPresent(dob -> {
-                        params.put("dateOfBirth", format(dob));
-                        params.put("age", String.format("%d", calculateAge(dob, systemUTC())));
-                    });
+        ofNullable(offender.getContactDetails())
+            .flatMap(OffenderApi.ContactDetails::mainAddress)
+            .map(OffenderApi.OffenderAddress::render)
+            .ifPresent(address -> {
+                Logger.info("Using the main address obtained from the API");
+                params.put("address", address);
+            });
 
-                    ofNullable(offender.getOtherIds())
-                        .filter(otherIds -> otherIds.containsKey("pncNumber"))
-                        .map(otherIds -> otherIds.get("pncNumber"))
-                        .ifPresent(pnc -> params.put("pnc", pnc));
+        Logger.info("Creating report. Params: " + params);
 
-                    ofNullable(offender.getContactDetails())
-                        .flatMap(OffenderApi.ContactDetails::mainAddress)
-                        .map(OffenderApi.OffenderAddress::render)
-                        .ifPresent(address -> {
-                            Logger.info("Using the main address obtained from the API");
-                            params.put("address", address);
-                        });
-
-                    Logger.info("Creating report. Params: " + params);
-
-                    return params;
-                });
-
-        }, ec.current());
+        return params;
     }
 
     @Override

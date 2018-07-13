@@ -17,6 +17,7 @@ import play.mvc.Result;
 import play.twirl.api.Content;
 
 import javax.inject.Inject;
+import java.util.Map;
 
 public class ParoleParom1ReportController extends ReportGeneratorWizardController<ParoleParom1ReportData> {
 
@@ -42,6 +43,11 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
         this.cancelledTemplate = cancelledTemplate;
         this.completedTemplate = completedTemplate;
         this.analyticsTesterTemplate = analyticsTesterTemplate;
+    }
+
+    @Override
+    protected Map<String, String> storeOffenderDetails(Map<String, String> params, OffenderApi.Offender offender) {
+        return params;
     }
 
     @Override

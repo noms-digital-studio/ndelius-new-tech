@@ -11,6 +11,7 @@ import helpers.ThrowableHelper;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
+import interfaces.OffenderApi.Offender;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.springframework.cglib.beans.BeanMap;
@@ -34,6 +35,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
+import static controllers.SessionKeys.OFFENDER_API_BEARER_TOKEN;
 import static helpers.FluentHelper.not;
 import static helpers.FluentHelper.value;
 import static helpers.JsonHelper.badRequestJson;
@@ -147,6 +149,8 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
         });
     }
 
+    protected abstract Map<String, String> storeOffenderDetails(Map<String, String> params, Offender offender);
+
     private String currentPageButNotInterstitialOrCompletion(String pageNumber) {
         // never allow jumping from interstitial  to interstitial, which would happen on
         // saved report that never left the first page or jumping to completion page ("0")
@@ -213,26 +217,30 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
         params.put("pageNumber", "1");
         params.put("startDate", new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
 
-        return generateAndStoreReport(wizardForm.bind(params).value().orElseGet(this::newWizardData)).
+        val crn = params.get("crn");
+        return offenderApi.getOffenderByCrn(session(OFFENDER_API_BEARER_TOKEN), crn)
+            .thenApply(offender -> storeOffenderDetails(params, offender))
+            .thenCompose(updatedParams -> generateAndStoreReport(wizardForm.bind(updatedParams).value().orElseGet(this::newWizardData)).
                 exceptionally(error -> {
 
-                    Logger.error("Initial Params: Generation or Storage error - " + params.toString(), error);
+                    Logger.error("Initial Params: Generation or Storage error - " + updatedParams.toString(), error);
                     return ImmutableMap.of("errorMessage", ThrowableHelper.toMessageCauseStack(error));
                 }).
                 thenApply(stored -> {
 
-                    params.put("documentId", stored.get("ID"));
-                    params.put("errorMessage", stored.get("errorMessage"));
+                    updatedParams.put("documentId", stored.get("ID"));
+                    updatedParams.put("errorMessage", stored.get("errorMessage"));
 
-                    if (Strings.isNullOrEmpty(params.get("documentId")) && Strings.isNullOrEmpty(params.get("errorMessage"))) {
+                    if (Strings.isNullOrEmpty(updatedParams.get("documentId")) && Strings.isNullOrEmpty(updatedParams.get("errorMessage"))) {
 
                         val errorMessage = stored.get("message");
 
-                        params.put("errorMessage", Strings.isNullOrEmpty(errorMessage) ? "No Document ID" : errorMessage);
+                        updatedParams.put("errorMessage", Strings.isNullOrEmpty(errorMessage) ? "No Document ID" : errorMessage);
                     }
 
-                    return params;
-                });
+                    return updatedParams;
+                })
+            );
     }
 
     private Optional<CompletionStage<Map<String, String>>> originalData(Map<String, String> params) {
