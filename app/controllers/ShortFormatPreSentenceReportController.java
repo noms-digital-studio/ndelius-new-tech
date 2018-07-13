@@ -23,9 +23,9 @@ import java.util.Map;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
 
+import static controllers.SessionKeys.OFFENDER_API_BEARER_TOKEN;
 import static helpers.DateTimeHelper.calculateAge;
 import static helpers.DateTimeHelper.format;
-import static helpers.JwtHelper.principal;
 import static java.time.Clock.systemUTC;
 import static java.util.Optional.ofNullable;
 
@@ -33,8 +33,6 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
     private final views.html.shortFormatPreSentenceReport.cancelled cancelledTemplate;
     private final views.html.shortFormatPreSentenceReport.completed completedTemplate;
-    protected final OffenderApi offenderApi;
-
 
     @Inject
     public ShortFormatPreSentenceReportController(HttpExecutionContext ec,
@@ -49,10 +47,9 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                                                   views.html.shortFormatPreSentenceReport.completed completedTemplate,
                                                   OffenderApi offenderApi) {
 
-        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore);
+        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore, offenderApi);
         this.cancelledTemplate = cancelledTemplate;
         this.completedTemplate = completedTemplate;
-        this.offenderApi = offenderApi;
     }
 
     @Override
@@ -64,18 +61,10 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
     @Override
     protected CompletionStage<Map<String, String>> addPageAndDocumentId(Map<String, String> origParams) {
 
-        return super.addPageAndDocumentId(origParams).thenCompose(params -> {
+        return super.addPageAndDocumentId(origParams).thenComposeAsync(params -> {
 
-            val username = decrypter.apply(params.get("user"));
             val crn = params.get("crn");
-
-            return offenderApi.logon(username)
-                .thenApplyAsync(bearerToken -> {
-                    Logger.info("AUDIT:{}: ShortFormatPreSentenceReportController: Successful logon for user {}", principal(bearerToken), username);
-                    return bearerToken;
-
-                }, ec.current())
-                .thenCompose(bearerToken -> offenderApi.getOffenderByCrn(bearerToken, crn))
+            return offenderApi.getOffenderByCrn(session(OFFENDER_API_BEARER_TOKEN), crn)
                 .thenApply(offender -> {
 
                     params.put("name", offender.displayName());
@@ -103,7 +92,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                     return params;
                 });
 
-        });
+        }, ec.current());
     }
 
     @Override

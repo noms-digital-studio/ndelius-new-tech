@@ -54,6 +54,10 @@ public class StubOffenderApi implements OffenderApi {
 
     @Override
     public CompletionStage<Offender> getOffenderByCrn(String bearerToken, String crn) {
+        if (isBlank(bearerToken)) {
+            throw new RuntimeException("getOffenderByCrn called with blank bearerToken");
+        }
+
         if (isBlank(crn)) {
             throw new RuntimeException("getOffenderByCrn called with blank CRN");
         }

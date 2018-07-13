@@ -10,6 +10,7 @@ import helpers.JsonHelper;
 import helpers.ThrowableHelper;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
+import interfaces.OffenderApi;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.springframework.cglib.beans.BeanMap;
@@ -23,14 +24,21 @@ import play.twirl.api.Content;
 
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
 import static helpers.FluentHelper.not;
 import static helpers.FluentHelper.value;
-import static helpers.JsonHelper.*;
+import static helpers.JsonHelper.badRequestJson;
+import static helpers.JsonHelper.okJson;
+import static helpers.JsonHelper.serverUnavailableJson;
 import static java.lang.Integer.parseInt;
 import static java.lang.Math.max;
 
@@ -48,9 +56,10 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                                               EncryptedFormFactory formFactory,
                                               Class<T> wizardType,
                                               PdfGenerator pdfGenerator,
-                                              DocumentStore documentStore) {
+                                              DocumentStore documentStore,
+                                              OffenderApi offenderApi) {
 
-        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, wizardType);
+        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, wizardType, offenderApi);
 
         this.pdfGenerator = pdfGenerator;
         this.documentStore = documentStore;
@@ -108,7 +117,6 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
         val stopAtInterstitial = queryParams.contains("documentId") && !continueFromInterstitial;
 
         return super.initialParams().thenCompose(params -> {
-
             val encryptedUsername = params.get("user");
             val encryptedEpochRequestTimeMills = params.get("t");
             final Runnable errorReporter = () -> Logger.error(String.format("Report page request did not receive a valid user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));

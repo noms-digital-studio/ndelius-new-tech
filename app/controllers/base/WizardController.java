@@ -8,6 +8,7 @@ import helpers.Encryption;
 import helpers.InvalidCredentialsException;
 import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
+import interfaces.OffenderApi;
 import lombok.val;
 import org.joda.time.DateTime;
 import org.webjars.play.WebJarsUtil;
@@ -26,7 +27,11 @@ import scala.compat.java8.functionConverterImpls.FromJavaFunction;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.CompletionStage;
@@ -38,7 +43,9 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static controllers.SessionKeys.OFFENDER_API_BEARER_TOKEN;
 import static helpers.FluentHelper.content;
+import static helpers.JwtHelper.principal;
 
 public abstract class WizardController<T extends WizardData> extends Controller {
 
@@ -52,6 +59,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
     protected final Function<String, String> encrypter;
     protected final Function<String, String> decrypter;
     protected final HttpExecutionContext ec;
+    protected final OffenderApi offenderApi;
 
     protected WizardController(HttpExecutionContext ec,
                                WebJarsUtil webJarsUtil,
@@ -59,12 +67,14 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                                Environment environment,
                                AnalyticsStore analyticsStore,
                                EncryptedFormFactory formFactory,
-                               Class<T> wizardType) {
+                               Class<T> wizardType,
+                               OffenderApi offenderApi) {
 
         this.ec = ec;
         this.webJarsUtil = webJarsUtil;
         this.environment = environment;
         this.analyticsStore = analyticsStore;
+        this.offenderApi = offenderApi;
 
         wizardForm = formFactory.form(wizardType, this::decryptParams);
         encryptedFields = newWizardData().encryptedFields().map(Field::getName).collect(Collectors.toList());
@@ -169,8 +179,16 @@ public abstract class WizardController<T extends WizardData> extends Controller 
     protected CompletionStage<Map<String, String>> initialParams() { // Overridable in derived Controllers to supplant initial params
 
         val params = request().queryString().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue()[0]));
+        val username = decrypter.apply(params.get("user"));
 
-        return CompletableFuture.supplyAsync(() -> decryptParams(params), ec.current());
+        return offenderApi.logon(username)
+            .thenApplyAsync(bearerToken -> {
+                Logger.info("AUDIT:{}: ShortFormatPreSentenceReportController: Successful logon for user {}", principal(bearerToken), username);
+                session(OFFENDER_API_BEARER_TOKEN, bearerToken);
+                return bearerToken;
+
+            }, ec.current())
+            .thenApplyAsync(ignored -> decryptParams(params), ec.current());
     }
 
     protected Map<String, String> modifyParams(Map<String, String> params, Consumer<String> paramEncrypter) {
