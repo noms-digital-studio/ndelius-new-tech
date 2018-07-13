@@ -132,7 +132,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                 throw new InvalidCredentialsException(badRequest.get());
 
             } else {
-                return originalData(params).orElseGet(() -> addPageAndDocumentId(params));
+                return loadExistingDocument(params).orElseGet(() -> createNewDocument(params));
             }
 
         }).thenApply(params -> {
@@ -212,7 +212,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
     protected abstract Content renderCancelledView();
 
-    protected CompletionStage<Map<String, String>> addPageAndDocumentId(Map<String, String> params) {
+    protected CompletionStage<Map<String, String>> createNewDocument(Map<String, String> params) {
 
         params.put("pageNumber", "1");
         params.put("startDate", new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
@@ -243,17 +243,19 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
             );
     }
 
-    private Optional<CompletionStage<Map<String, String>>> originalData(Map<String, String> params) {
+    private Optional<CompletionStage<Map<String, String>>> loadExistingDocument(Map<String, String> params) {
 
         return Optional.ofNullable(params.get("documentId")).
                 map(documentId -> documentStore.retrieveOriginalData(documentId, params.get("onBehalfOfUser"))).
-                map(originalData -> originalData.thenApply(data -> {
+                map(originalData -> originalData.thenApplyAsync(data -> {
                     val info = JsonHelper.jsonToMap(Json.parse(data.getUserData()).get("values"));
                     info.put("lastUpdated", data.getLastModifiedDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
                     return info;
-                })).
+                }, ec.current())).
+                map(originalInfo -> originalInfo.thenComposeAsync(info ->
+                    offenderApi.getOffenderByCrn(session(OFFENDER_API_BEARER_TOKEN), info.get("crn"))
+                        .thenApply(offender -> storeOffenderDetails(info, offender)), ec.current())).
                 map(originalInfo -> originalInfo.thenApply(info -> {
-
                     info.put("onBehalfOfUser", params.get("onBehalfOfUser"));
                     info.put("documentId", params.get("documentId"));
                     info.put("user", params.get("user"));

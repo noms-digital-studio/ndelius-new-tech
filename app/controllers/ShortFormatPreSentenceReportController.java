@@ -71,7 +71,10 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
         ofNullable(offender.getOtherIds())
             .filter(otherIds -> otherIds.containsKey("pncNumber"))
             .map(otherIds -> otherIds.get("pncNumber"))
-            .ifPresent(pnc -> params.put("pnc", pnc));
+            .ifPresent(pnc -> {
+                params.put("pnc", pnc);
+                params.put("pncSupplied", Boolean.TRUE.toString());
+            });
 
         ofNullable(offender.getContactDetails())
             .flatMap(OffenderApi.ContactDetails::mainAddress)
@@ -79,6 +82,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
             .ifPresent(address -> {
                 Logger.info("Using the main address obtained from the API");
                 params.put("address", address);
+                params.put("addressSupplied", Boolean.TRUE.toString());
             });
 
         Logger.info("Creating report. Params: " + params);

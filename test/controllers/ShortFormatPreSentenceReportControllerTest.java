@@ -140,9 +140,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     }
 
     @Test
-    public void getSampleReportWithDocumentIdDecryptsAndRetrievesFromStore() {
+    public void updateReportRetrievesDocumentFromStoreAndUpdatesReportWithOffenderDetailsFromAPI() {
 
-        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new DocumentStore.OriginalData("{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\", \"address\": \"456\", \"pnc\": \"Retrieved From Store\", \"startDate\": \"12/12/2017\", \"crn\": \"1234\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\" } }", OffsetDateTime.now())));
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new DocumentStore.OriginalData("{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\", \"address\": \"SHOULD NOT BE IN REPORT\", \"pnc\": \"2018/123456M\", \"startDate\": \"12/12/2017\", \"crn\": \"B56789\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\", \"court\": \"Retrieved From Store\" } }", OffsetDateTime.now())));
 
         try {
             val clearDocumentId = "12345";
@@ -155,12 +155,12 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                     uri("/report/shortFormatPreSentenceReport?documentId=" + documentId +
                         "&onBehalfOfUser=" + onBehalfOfUser +
                         "&user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D" +
-                        "&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D" +
-                        "&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D");
+                        "&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D");
 
             val content = Helpers.contentAsString(route(app, request));
-
-            assertTrue(content.contains(encryptor.apply("Retrieved From Store")));   // Returned from Mock retrieveOriginalData
+            assertTrue(content.contains(encryptor.apply("Retrieved From Store")));
+            assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
+            assertFalse(content.contains(encryptor.apply("SHOULD NOT BE IN REPORT")));
 
         } catch (Exception ex) {
 
@@ -1041,7 +1041,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         documentStore = mock(DocumentStore.class);
         offenderApi = mock(OffenderApi.class);
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
-        given(offenderApi.getOffenderByCrn(any(), eq("B56789"))).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
+        given(offenderApi.getOffenderByCrn(any(), eq("B56789"))).willReturn(CompletableFuture.completedFuture(anOffenderWithMultipleAddresses()));
 
         return new GuiceApplicationBuilder().
                 overrides(
