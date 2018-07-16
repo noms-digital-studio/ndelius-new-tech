@@ -11,6 +11,7 @@ import lombok.val;
 import org.junit.Test;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
+import play.mvc.Result;
 import play.test.Helpers;
 import play.test.WithApplication;
 
@@ -32,6 +33,7 @@ import static play.mvc.Http.RequestBuilder;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
 import static utils.OffenderHelper.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ShortFormatPreSentenceReportControllerTest extends WithApplication {
 
@@ -165,6 +167,34 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             assertTrue(content.contains("name=\"age\" value=\""+encryptor.apply("49")));
             assertTrue(content.contains(encryptor.apply("Main address Building\n7 High Street\nNether Edge\nSheffield\nYorkshire\nS10 1LE")));
             assertFalse(content.contains(encryptor.apply("SHOULD NOT BE IN REPORT")));
+
+        } catch (Exception ex) {
+
+            fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void updateReportRetrievesDocumentFromStore_crnNotFoundInAPICauses500Error() {
+
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new DocumentStore.OriginalData("{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\", \"address\": \"SHOULD NOT BE IN REPORT\", \"pnc\": \"2018/123456M\", \"startDate\": \"12/12/2017\", \"crn\": \"B56789\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\", \"court\": \"Retrieved From Store\" } }", OffsetDateTime.now())));
+        given(offenderApi.getOffenderByCrn(any(), eq("B56789"))).willThrow(RuntimeException.class);
+
+        try {
+            val clearDocumentId = "12345";
+            val clearUserName = "John Smith";
+
+            val documentId = URLEncoder.encode(encryptor.apply(clearDocumentId), "UTF-8");
+            val onBehalfOfUser = URLEncoder.encode(encryptor.apply(clearUserName), "UTF-8");
+
+            val request = new RequestBuilder().method(GET).
+                    uri("/report/shortFormatPreSentenceReport?documentId=" + documentId +
+                        "&onBehalfOfUser=" + onBehalfOfUser +
+                        "&user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D" +
+                        "&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D");
+
+            Result result = route(app, request);
+            assertThat(result.status()).isEqualTo(500);
 
         } catch (Exception ex) {
 
