@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import controllers.ParamsValidator;
 import data.base.ReportGeneratorWizardData;
-import helpers.InvalidCredentialsException;
 import helpers.JsonHelper;
 import helpers.ThrowableHelper;
 import interfaces.AnalyticsStore;
@@ -118,24 +117,9 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
         val continueFromInterstitial = queryParams.contains("continue");
         val stopAtInterstitial = queryParams.contains("documentId") && !continueFromInterstitial;
 
-        return super.initialParams().thenCompose(params -> {
-            val encryptedUsername = params.get("user");
-            val encryptedEpochRequestTimeMills = params.get("t");
-            final Runnable errorReporter = () -> Logger.error(String.format("Report page request did not receive a valid user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
+        return super.initialParams().thenCompose(params ->
+            loadExistingDocument(params).orElseGet(() -> createNewDocument(params))).thenApply(params -> {
 
-            val badRequest = invalidCredentials(
-                decrypter.apply(encryptedUsername),
-                decrypter.apply(encryptedEpochRequestTimeMills),
-                errorReporter);
-
-            if (badRequest.isPresent()) {
-                throw new InvalidCredentialsException(badRequest.get());
-
-            } else {
-                return loadExistingDocument(params).orElseGet(() -> createNewDocument(params));
-            }
-
-        }).thenApply(params -> {
             if (stopAtInterstitial) {
                 params.put("originalPageNumber", currentPageButNotInterstitialOrCompletion(params.get("pageNumber")));
                 params.put("pageNumber", "1");

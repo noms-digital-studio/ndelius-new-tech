@@ -1,6 +1,7 @@
 package utils;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import interfaces.OffenderApi.AddressStatus;
 import interfaces.OffenderApi.ContactDetails;
 import interfaces.OffenderApi.Offender;
@@ -68,6 +69,7 @@ public class OffenderHelper {
             .firstName("Jimmy")
             .surname("Fizz")
             .middleNames(ImmutableList.of("Jammy", "Fred"))
+            .otherIds(ImmutableMap.of("pncNumber", "2018/123456N"))
             .build();
     }
 

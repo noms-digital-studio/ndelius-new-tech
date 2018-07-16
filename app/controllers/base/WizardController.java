@@ -2,6 +2,7 @@ package controllers.base;
 
 import com.google.common.base.Strings;
 import com.typesafe.config.Config;
+import controllers.ParamsValidator;
 import data.base.WizardData;
 import data.viewModel.PageStatus;
 import helpers.Encryption;
@@ -47,7 +48,7 @@ import static controllers.SessionKeys.OFFENDER_API_BEARER_TOKEN;
 import static helpers.FluentHelper.content;
 import static helpers.JwtHelper.principal;
 
-public abstract class WizardController<T extends WizardData> extends Controller {
+public abstract class WizardController<T extends WizardData> extends Controller implements ParamsValidator {
 
     private final AnalyticsStore analyticsStore;
     private final List<String> encryptedFields;
@@ -179,8 +180,22 @@ public abstract class WizardController<T extends WizardData> extends Controller 
     protected CompletionStage<Map<String, String>> initialParams() { // Overridable in derived Controllers to supplant initial params
 
         val params = request().queryString().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue()[0]));
-        val username = decrypter.apply(params.get("user"));
 
+        val encryptedUsername = params.get("user");
+        val encryptedEpochRequestTimeMills = params.get("t");
+        final Runnable errorReporter = () -> Logger.error(String.format("Report page request did not receive a valid user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
+
+        val badRequest = invalidCredentials(
+            decrypter.apply(encryptedUsername),
+            decrypter.apply(encryptedEpochRequestTimeMills),
+            errorReporter);
+        if (badRequest.isPresent()) {
+            return CompletableFuture.supplyAsync(() -> {
+                throw new InvalidCredentialsException(badRequest.get());
+            });
+        }
+
+        val username = decrypter.apply(params.get("user"));
         return offenderApi.logon(username)
             .thenApplyAsync(bearerToken -> {
                 Logger.info("AUDIT:{}: ShortFormatPreSentenceReportController: Successful logon for user {}", principal(bearerToken), username);
