@@ -231,11 +231,11 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
         return Optional.ofNullable(params.get("documentId")).
                 map(documentId -> documentStore.retrieveOriginalData(documentId, params.get("onBehalfOfUser"))).
-                map(originalData -> originalData.thenApplyAsync(data -> {
+                map(originalData -> originalData.thenApply(data -> {
                     val info = JsonHelper.jsonToMap(Json.parse(data.getUserData()).get("values"));
                     info.put("lastUpdated", data.getLastModifiedDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
                     return info;
-                }, ec.current())).
+                })).
                 map(originalInfo -> originalInfo.thenComposeAsync(info ->
                     offenderApi.getOffenderByCrn(session(OFFENDER_API_BEARER_TOKEN), info.get("crn"))
                         .thenApply(offender -> storeOffenderDetails(info, offender)), ec.current())).

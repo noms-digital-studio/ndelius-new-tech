@@ -33,7 +33,7 @@ public class OffenderApiMock {
                 post(urlEqualTo("/documentLink")).willReturn(created()));
 
         offenderApiWireMock.stubFor(
-                post(urlEqualTo("/logon")).willReturn(ok()));
+                post(urlEqualTo("/logon")).willReturn(ok().withBody("aBearerToken")));
 
         offenderApiWireMock.stubFor(
                 get(urlEqualTo("/offenders/crn/B56789/all"))
