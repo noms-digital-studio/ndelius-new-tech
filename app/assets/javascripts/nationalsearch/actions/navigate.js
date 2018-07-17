@@ -4,6 +4,13 @@ export const SHOW_OFFENDER_DETAILS = 'SHOW_OFFENDER_DETAILS'
 export const ADD_NEW_OFFENDER = 'ADD_NEW_OFFENDER'
 
 const recordSearchOutcome = (data, callback) => {
+
+    gtag('event', 'search_outcome', {
+        'event_category': data.type,
+        'event_label': data.type,
+        'value': data.rankIndex || 0
+    })
+
     $.ajax({
         url: 'nationalSearch/recordSearchOutcome',
         type: 'POST',
