@@ -15,6 +15,10 @@ public class OffenderHelper {
         return aBasicOffender();
     }
 
+    public static Offender anOffenderWithNoContactDetailsAndNoPnc() {
+        return aBasicOffender().toBuilder().otherIds(ImmutableMap.of()).build();
+    }
+
     public static Offender anOffenderWithEmptyContactDetails() {
         return aBasicOffender().toBuilder()
                 .contactDetails(emptyContactDetails())

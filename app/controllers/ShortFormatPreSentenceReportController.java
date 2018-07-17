@@ -68,6 +68,8 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
             params.put("age", String.format("%d", calculateAge(dob, systemUTC())));
         });
 
+        params.put("pncSupplied", Boolean.FALSE.toString());
+        params.put("pnc", "");
         ofNullable(offender.getOtherIds())
             .filter(otherIds -> otherIds.containsKey("pncNumber"))
             .map(otherIds -> otherIds.get("pncNumber"))
@@ -76,6 +78,8 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                 params.put("pncSupplied", Boolean.TRUE.toString());
             });
 
+        params.put("addressSupplied", Boolean.FALSE.toString());
+        params.put("address", "");
         ofNullable(offender.getContactDetails())
             .flatMap(OffenderApi.ContactDetails::mainAddress)
             .map(OffenderApi.OffenderAddress::render)
