@@ -6,8 +6,6 @@ import {stub, match} from 'sinon';
 describe('navigate action', () => {
     let dispatch;
 
-    window.gtag = () => {}
-
     beforeEach(() => {
         dispatch = stub()
         global.$ = {

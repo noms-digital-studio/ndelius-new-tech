@@ -32,19 +32,23 @@ const performSearch = _.debounce((dispatch, searchTerm, probationAreasFilter, pa
     const encodedSearchTerm = encodeURIComponent(searchTerm)
     const toAreaFilter = () => probationAreasFilter.join(',')
 
-    gtag('event', 'search-request', {
-        'event_category': 'Type:' + searchType + ' Page: ' + pageNumber,
-        'event_label': 'Type:' + searchType + ' Page: ' + pageNumber,
-        'value': searchTerm.length
-    })
+    if (typeof gtag === 'function') {
+        gtag('event', 'search-request', {
+            'event_category': 'Type:' + searchType + ' Page: ' + pageNumber,
+            'event_label': 'Type:' + searchType + ' Page: ' + pageNumber,
+            'value': searchTerm.length
+        })
+    }
 
     $.getJSON(`searchOffender/${encodedSearchTerm}?pageSize=${PAGE_SIZE}&pageNumber=${pageNumber}&areasFilter=${toAreaFilter()}&searchType=${searchType}`, data => {
 
-        gtag('event', 'search-results', {
-            'event_category': 'Type:' + searchType + ' Page: ' + pageNumber,
-            'event_label': 'Type:' + searchType + ' Page: ' + pageNumber,
-            'value': data.results.total
-        })
+        if (typeof gtag === 'function') {
+            gtag('event', 'search-results', {
+                'event_category': 'Type:' + searchType + ' Page: ' + pageNumber,
+                'event_label': 'Type:' + searchType + ' Page: ' + pageNumber,
+                'value': data.results.total
+            })
+        }
 
         dispatch(searchResults(searchTerm, data, pageNumber))
     });
