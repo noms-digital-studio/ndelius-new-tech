@@ -34,8 +34,8 @@ const performSearch = _.debounce((dispatch, searchTerm, probationAreasFilter, pa
 
     if (typeof gtag === 'function') {
         gtag('event', 'search-request', {
-            'event_category': 'Type:' + searchType + ' Page: ' + pageNumber,
-            'event_label': 'Type:' + searchType + ' Page: ' + pageNumber,
+            'event_category': 'Type: ' + searchType + ' Page: ' + pageNumber,
+            'event_label': 'Type: ' + searchType + ' Page: ' + pageNumber,
             'value': searchTerm.length
         })
     }
@@ -44,9 +44,9 @@ const performSearch = _.debounce((dispatch, searchTerm, probationAreasFilter, pa
 
         if (typeof gtag === 'function') {
             gtag('event', 'search-results', {
-                'event_category': 'Type:' + searchType + ' Page: ' + pageNumber,
-                'event_label': 'Type:' + searchType + ' Page: ' + pageNumber,
-                'value': data.results.total
+                'event_category': 'Type: ' + searchType + ' Page: ' + pageNumber,
+                'event_label': 'Type: ' + searchType + ' Page: ' + pageNumber,
+                'value': data.total
             })
         }
 
