@@ -6,11 +6,13 @@ export const ADD_NEW_OFFENDER = 'ADD_NEW_OFFENDER'
 const recordSearchOutcome = (data, callback) => {
 
     if (typeof gtag === 'function') {
-        gtag('event', 'search_outcome', {
-            'event_category': data.type,
-            'event_label': data.type,
+        gtag('event', data.type, {
+            'event_category': 'search',
+            'event_label': 'Search Outcome: ' + (data.rankIndex ? data.type + (' (Rank: ' + data.rankIndex + ')') : ''),
             'value': data.rankIndex || 0
         })
+
+        virtualPageLoad(data.type.replace('search-', ''))
     }
 
     $.ajax({

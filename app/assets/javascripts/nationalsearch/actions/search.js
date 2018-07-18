@@ -33,21 +33,25 @@ const performSearch = _.debounce((dispatch, searchTerm, probationAreasFilter, pa
     const toAreaFilter = () => probationAreasFilter.join(',')
 
     if (typeof gtag === 'function') {
-        gtag('event', 'search-request', {
-            'event_category': 'Type: ' + searchType + ' Page: ' + pageNumber,
-            'event_label': 'Type: ' + searchType + ' Page: ' + pageNumber,
+        gtag('event', 'search-request(type:' + searchType + ')(page:' + pageNumber + ')', {
+            'event_category': 'search',
+            'event_label': 'Search Request: ' + searchTerm.length + ' chars (Type: ' + searchType + ') (Page: ' + pageNumber + ')',
             'value': searchTerm.length
         })
+
+        virtualPageLoad('request')
     }
 
     $.getJSON(`searchOffender/${encodedSearchTerm}?pageSize=${PAGE_SIZE}&pageNumber=${pageNumber}&areasFilter=${toAreaFilter()}&searchType=${searchType}`, data => {
 
         if (typeof gtag === 'function') {
-            gtag('event', 'search-results', {
-                'event_category': 'Type: ' + searchType + ' Page: ' + pageNumber,
-                'event_label': 'Type: ' + searchType + ' Page: ' + pageNumber,
+            gtag('event', 'search-results(type:' + searchType + ')(page:' + pageNumber + ')', {
+                'event_category': 'search',
+                'event_label': 'Search Results: ' + data.total + ' (Type: ' + searchType + ') (Page: ' + pageNumber + ')',
                 'value': data.total
             })
+
+            virtualPageLoad('result')
         }
 
         dispatch(searchResults(searchTerm, data, pageNumber))
