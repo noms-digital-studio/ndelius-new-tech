@@ -58,7 +58,7 @@ public class LandingPageSteps {
         prisonerDetailsPage.isAt(CURRENT_ROSH_CUSTODY.getPageHeader());
     }
 
-    @Given("^I had previously edited a report \"([^\"]*)\" ago$")
+    @Given("^I had previously edited a report \"([^\"]*)\" minutes ago$")
     public void iHadPreviouslyEditedAReportAgo(String minutes) {
         val lastModifiedDate = now().minusMinutes(Long.parseLong(minutes));
         alfrescoStoreMock.stubExistingDocument(

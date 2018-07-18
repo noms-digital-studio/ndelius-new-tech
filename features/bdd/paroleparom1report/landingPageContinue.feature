@@ -8,7 +8,7 @@ Feature: Parole Report
 
   Scenario Outline: A time stamp must be displayed on the landing page to state when the user last worked on the report
 
-    Given I had previously edited a report "<minutes>" ago
+    Given I had previously edited a report "<minutes>" minutes ago
     When when I navigate to the Parole Report landing page for that report
     Then I should the the timestamp "<timestamp>" display indicating when the report was last edited
 
