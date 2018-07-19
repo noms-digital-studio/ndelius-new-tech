@@ -38,8 +38,6 @@ const performSearch = _.debounce((dispatch, searchTerm, probationAreasFilter, pa
             'event_label': 'Search Request: ' + searchTerm.length + ' chars (Type: ' + searchType + ') (Page: ' + pageNumber + ')',
             'value': searchTerm.length
         })
-
-        virtualPageLoad('request')
     }
 
     $.getJSON(`searchOffender/${encodedSearchTerm}?pageSize=${PAGE_SIZE}&pageNumber=${pageNumber}&areasFilter=${toAreaFilter()}&searchType=${searchType}`, data => {
@@ -51,7 +49,7 @@ const performSearch = _.debounce((dispatch, searchTerm, probationAreasFilter, pa
                 'value': data.total
             })
 
-            virtualPageLoad('result')
+            virtualPageLoad('search')
         }
 
         dispatch(searchResults(searchTerm, data, pageNumber))
