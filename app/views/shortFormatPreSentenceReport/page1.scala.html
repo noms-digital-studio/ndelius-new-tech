@@ -82,7 +82,7 @@
     });
 
     function documentList () {
-        parent.postMessage('Report saved', '*');
+        parent.postMessage(JSON.stringify({ action: 'documentList', data: null }), '*')
     }
 </script>
 
