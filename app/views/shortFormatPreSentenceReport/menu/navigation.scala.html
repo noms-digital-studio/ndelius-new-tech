@@ -1,8 +1,11 @@
+@import helper._
 @import data.viewModel.PageStatus
 
 @(current: Int)(implicit pageStatuses: Map[Int, PageStatus])
 
 @renderNavigation(entries: Seq[String]) = {
+
+    @virtualPageLoad(current)
 
     <nav class="js-stick-at-top-when-scrolling">
 

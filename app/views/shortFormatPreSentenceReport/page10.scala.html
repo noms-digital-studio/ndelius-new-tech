@@ -22,6 +22,8 @@
 
 @main("Check your report - Short Format Pre Sentence Report") {
 
+    @virtualPageLoad(10)
+
     <h1 class="heading-xlarge">Check your report</h1>
 
     @navigationEntries(renderCheckList, entries => entries.dropRight(2))

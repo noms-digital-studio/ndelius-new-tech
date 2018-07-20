@@ -9,11 +9,14 @@
 
 @import java.time.OffsetDateTime
 @import java.time.Duration
+
 @(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @main("Start your report - Short Format Pre Sentence Report") {
+
+    @virtualPageLoad(1)
 
     <div class="panel interrupt-panel">
     <h1 class="heading-xlarge">Short Format Pre-sentence Report</h1>
