@@ -36,7 +36,7 @@ public class OffenderApiMock {
                 post(urlEqualTo("/logon")).willReturn(ok().withBody("aBearerToken")));
 
         offenderApiWireMock.stubFor(
-                get(urlEqualTo("/offenders/crn/B56789/all"))
+                get(urlEqualTo("/offenders/crn/X12345/all"))
                     .willReturn(ok().withBody(JsonHelper.stringify(anOffenderWithNoContactDetails()))));
 
         return this;
