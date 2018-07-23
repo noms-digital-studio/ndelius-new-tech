@@ -35,7 +35,7 @@
                     <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem </h2>
                     <div class="govuk-error-summary__body">
                         <ul class="govuk-list govuk-error-summary__list">
-                            @reportForm.allErrors.map(error => error.messages.map(message => <li><a href={s"#${error.key}-error"}>{message}</a></li>))
+                            @reportForm.allErrors.map(error => <li><a href={s"#${error.key}-error"}>{error.format(messages())}</a></li>)
                         </ul>
                     </div>
                 </div>
