@@ -6,6 +6,7 @@
 @import data.viewModel.PageStatus
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
+@import play.twirl.api.Template1
 
 @(reportForm: Form[ParoleParom1ReportData], encrypter: String => String, header: String, pageNumber: Int)(content: Html)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
 
@@ -27,6 +28,18 @@
             @CSRF.formField
 
             @commonFields(reportForm, encrypter)
+            @allHiddenFieldsExcept(reportForm, pageNumber)
+
+            @if(!reportForm.allErrors().isEmpty) {
+                <div aria-labelledby="error-summary-title" class="govuk-error-summary" role="alert" tabindex="-1">
+                    <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem </h2>
+                    <div class="govuk-error-summary__body">
+                        <ul class="govuk-list govuk-error-summary__list">
+                            @reportForm.allErrors.map(error => error.messages.map(message => <li><a href={s"#${error.key}-error"}>{message}</a></li>))
+                        </ul>
+                    </div>
+                </div>
+            }
 
             @content
 
@@ -37,4 +50,21 @@
         </div>
     </div>
 
+}
+
+
+@allHiddenFieldsExcept(reportForm: Form[ParoleParom1ReportData], pageNumber: Int) = @{
+    val allPages = 2 to 23
+
+    allPages.filter(_ != pageNumber).map(hiddenFieldsFor(reportForm, _))
+
+}
+@hiddenFieldsFor(reportForm: Form[ParoleParom1ReportData], pageNumber: Int) = @{
+    def getTemplate[T](name : String)(implicit man: Manifest[T]) : T =
+        Class.forName(name + "$").getField("MODULE$").get(man.runtimeClass).asInstanceOf[T]
+
+    def render(pageNumber: Int) =
+        getTemplate[Template1[Form[ParoleParom1ReportData], play.twirl.api.Html]](s"views.html.paroleParom1Report.hiddenInputs.page${pageNumber}Fields").render(reportForm)
+
+    render(pageNumber)
 }
