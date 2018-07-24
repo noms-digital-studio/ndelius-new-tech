@@ -1,6 +1,6 @@
 @import com.typesafe.config.Config
 
-@(implicit configuration: Config)
+@(hashName: Option[Any] = None)(implicit configuration: Config)
 
 @googleAnalyticsId = @{configuration.getString("google.analytics.id")}
 
@@ -11,10 +11,14 @@
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
 
-          gtag('config', '@googleAnalyticsId');
-
           function virtualPageLoad(hashName) {
-
               gtag('config', '@googleAnalyticsId', { 'page_path': window.location.pathname + '#' + hashName });
           }
+
+          @if(hashName.isDefined) {
+            virtualPageLoad('@hashName.get.toString');
+          } else {
+            gtag('config', '@googleAnalyticsId');
+          }
+
 </script>
