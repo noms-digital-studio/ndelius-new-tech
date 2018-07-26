@@ -5,8 +5,6 @@
 
 @(title: String, banner: Boolean = true, hashName: Option[Any] = None)(content: Html)(implicit webJarsUtil: WebJarsUtil, configuration: Config)
 
-@googleAnalyticsId = @{configuration.getString("google.analytics.id")}
-
 <!DOCTYPE html>
 <!--[if lt IE 9]><html class="lte-ie8" lang="en"><![endif]-->
 <!--[if gt IE 8]><!--><html lang="en"><!--<![endif]-->
