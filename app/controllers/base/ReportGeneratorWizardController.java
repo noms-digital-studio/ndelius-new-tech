@@ -115,22 +115,21 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
         val continueFromInterstitial = queryParams.contains("continue");
         val stopAtInterstitial = queryParams.contains("documentId") && !continueFromInterstitial;
 
-        return super.initialParams()
-            .thenCompose(params -> Optional.ofNullable(params.get("documentId"))
-                .map(ignored -> loadExistingDocument(params))
-                .orElseGet(() -> createNewDocument(params)))
-            .thenApply(params -> {
-                if (stopAtInterstitial) {
-                    params.put("originalPageNumber", currentPageButNotInterstitialOrCompletion(params.get("pageNumber")));
-                    params.put("pageNumber", "1");
-                }
-                if (continueFromInterstitial) {
-                    params.put("pageNumber", currentPageButNotInterstitialOrCompletion(params.get("pageNumber")));
-                    params.put("jumpNumber", params.get("pageNumber"));
-                }
 
-                return params;
-            });
+        return super.initialParams().thenCompose(params ->
+            loadExistingDocument(params).orElseGet(() -> createNewDocument(params))).thenApply(params -> {
+
+            if (stopAtInterstitial) {
+                params.put("originalPageNumber", currentPageButNotInterstitialOrCompletion(params.get("pageNumber")));
+                params.put("pageNumber", "1");
+            }
+            if (continueFromInterstitial) {
+                params.put("pageNumber", currentPageButNotInterstitialOrCompletion(params.get("pageNumber")));
+                params.put("jumpNumber", params.get("pageNumber"));
+            }
+
+            return params;
+        });
     }
 
     protected abstract Map<String, String> storeOffenderDetails(Map<String, String> params, Offender offender);
@@ -227,24 +226,26 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
             );
     }
 
-    private CompletionStage<Map<String, String>> loadExistingDocument(Map<String, String> params) {
+    private Optional<CompletionStage<Map<String, String>>> loadExistingDocument(Map<String, String> params) {
 
-        return documentStore.retrieveOriginalData(params.get("documentId"), params.get("onBehalfOfUser"))
-            .thenApply(data -> {
+        return Optional.ofNullable(params.get("documentId")).
+            map(documentId -> documentStore.retrieveOriginalData(documentId, params.get("onBehalfOfUser"))).
+            map(originalData -> originalData.thenApply(data -> {
                 val info = JsonHelper.jsonToMap(Json.parse(data.getUserData()).get("values"));
                 info.put("lastUpdated", data.getLastModifiedDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-                return info; })
-            .thenComposeAsync(info ->
+                return info;
+            })).
+            map(originalInfo -> originalInfo.thenComposeAsync(info ->
                 offenderApi.getOffenderByCrn(session(OFFENDER_API_BEARER_TOKEN), info.get("crn"))
-                    .thenApply(offender -> storeOffenderDetails(info, offender)), ec.current())
-            .thenApply(info -> {
+                    .thenApply(offender -> storeOffenderDetails(info, offender)), ec.current())).
+            map(originalInfo -> originalInfo.thenApply(info -> {
                 info.put("onBehalfOfUser", params.get("onBehalfOfUser"));
                 info.put("documentId", params.get("documentId"));
                 info.put("user", params.get("user"));
                 info.put("t", params.get("t"));
 
                 return info;
-            });
+            }));
     }
 
     private CompletionStage<Byte[]> generateReport(T data) {
