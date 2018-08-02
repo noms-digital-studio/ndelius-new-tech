@@ -14,7 +14,6 @@ import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
-
 public interface OffenderApi {
 
     @Value
@@ -83,6 +82,31 @@ public interface OffenderApi {
         private String description;
     }
 
+    @Value
+    @Builder(toBuilder = true)
+    class CourtAppearance {
+        private Long courtAppearanceId;
+        private String appearanceDate;
+        private Boolean softDeleted;
+        private Court court;
+        private List<CourtReport> courtReports;
+    }
+
+    @Value
+    @Builder
+    class Court {
+        private Long courtId;
+        private String courtName;
+        private String locality;
+    }
+
+    @Value
+    @Builder
+    class CourtReport {
+        private Long courtReportId;
+        private Boolean softDeleted;
+    }
+
     static String joinList(String delimiter, List<String> list) {
         return String.join(delimiter,
             list.stream()
@@ -105,4 +129,6 @@ public interface OffenderApi {
     CompletionStage<Map<String, String>> probationAreaDescriptions(String bearerToken, List<String> probationAreaCodes);
 
     CompletionStage<Offender> getOffenderByCrn(String bearerToken, String crn);
+
+    CompletionStage<List<CourtAppearance>> getCourtAppearancesByCrn(String abc, String x12345);
 }

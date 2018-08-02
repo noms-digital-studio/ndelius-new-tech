@@ -75,6 +75,37 @@ public class StubOffenderApi implements OffenderApi {
         return CompletableFuture.completedFuture(offender);
     }
 
+    @Override
+    public CompletionStage<List<CourtAppearance>> getCourtAppearancesByCrn(String bearerToken, String crn) {
+        if (isBlank(bearerToken)) {
+            throw new RuntimeException("getOffenderByCrn called with blank bearerToken");
+        }
+
+        if (isBlank(crn)) {
+            throw new RuntimeException("getOffenderByCrn called with blank CRN");
+        }
+
+        val courtAppearance = CourtAppearance.builder()
+            .appearanceDate("2018-08-01")
+            .softDeleted(false)
+            .court(Court.builder()
+                .courtName("High Court")
+                .locality("City of Westminster")
+                .build())
+            .courtReports(ImmutableList.of(
+                CourtReport.builder()
+                    .courtReportId(1L)
+                    .build(),
+                CourtReport.builder()
+                    .courtReportId(2L)
+                    .build()
+                ))
+            .build();
+
+        return CompletableFuture.completedFuture(ImmutableList.of(courtAppearance));
+
+    }
+
     private ContactDetails contactDetails() {
         return ContactDetails.builder().addresses(addresses()).build();
     }
