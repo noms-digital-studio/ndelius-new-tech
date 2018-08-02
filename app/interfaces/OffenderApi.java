@@ -84,6 +84,23 @@ public interface OffenderApi {
 
     @Value
     @Builder(toBuilder = true)
+    class CourtAppearances {
+        private List<CourtAppearance> items;
+
+        public Optional<CourtAppearance> findForCourtReportId(Long courtReportId) {
+
+            return items.stream()
+                .filter(courtAppearance -> !courtAppearance.softDeleted)
+                .filter(courtAppearance ->
+                    courtAppearance.courtReports.stream()
+                        .filter(report -> !report.softDeleted)
+                        .anyMatch(report -> report.getCourtReportId().equals(courtReportId)))
+                .findFirst();
+        }
+    }
+
+    @Value
+    @Builder(toBuilder = true)
     class CourtAppearance {
         private Long courtAppearanceId;
         private String appearanceDate;
@@ -93,7 +110,7 @@ public interface OffenderApi {
     }
 
     @Value
-    @Builder
+    @Builder(toBuilder = true)
     class Court {
         private Long courtId;
         private String courtName;
@@ -101,7 +118,7 @@ public interface OffenderApi {
     }
 
     @Value
-    @Builder
+    @Builder(toBuilder = true)
     class CourtReport {
         private Long courtReportId;
         private Boolean softDeleted;
@@ -130,5 +147,5 @@ public interface OffenderApi {
 
     CompletionStage<Offender> getOffenderByCrn(String bearerToken, String crn);
 
-    CompletionStage<List<CourtAppearance>> getCourtAppearancesByCrn(String abc, String x12345);
+    CompletionStage<CourtAppearances> getCourtAppearancesByCrn(String bearerToken, String crn);
 }

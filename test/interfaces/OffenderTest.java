@@ -1,6 +1,7 @@
 package interfaces;
 
 import com.google.common.collect.ImmutableList;
+import interfaces.OffenderApi.CourtAppearance;
 import interfaces.OffenderApi.Offender;
 import lombok.val;
 import org.junit.Test;
@@ -97,4 +98,41 @@ public class OffenderTest {
             .isEqualTo("Main address Building\n7 High Street\nNether Edge\nSheffield\nYorkshire\nS10 1LE");
     }
 
+    @Test
+    public void findsCourtAppearanceForCourtReportId() {
+        assertThat(courtAppearances().findForCourtReportId(1L).get().getCourtAppearanceId()).isEqualTo(3L);
+    }
+
+    private OffenderApi.CourtAppearances courtAppearances() {
+        return OffenderApi.CourtAppearances.builder()
+            .items(ImmutableList.of(
+                CourtAppearance.builder()
+                    .courtAppearanceId(1L)
+                    .softDeleted(true)
+                    .courtReports(ImmutableList.of(
+                        OffenderApi.CourtReport.builder()
+                            .courtReportId(1L)
+                            .softDeleted(false)
+                            .build()
+                    )).build(),
+                CourtAppearance.builder()
+                    .courtAppearanceId(2L)
+                    .softDeleted(false)
+                    .courtReports(ImmutableList.of(
+                        OffenderApi.CourtReport.builder()
+                            .courtReportId(1L)
+                            .softDeleted(true)
+                            .build()
+                    )).build(),
+                CourtAppearance.builder()
+                    .courtAppearanceId(3L)
+                    .softDeleted(false)
+                    .courtReports(ImmutableList.of(
+                        OffenderApi.CourtReport.builder()
+                            .courtReportId(1L)
+                            .softDeleted(false)
+                            .build()
+                    )).build()
+                )).build();
+    }
 }

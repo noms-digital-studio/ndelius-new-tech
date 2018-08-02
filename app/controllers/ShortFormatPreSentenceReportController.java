@@ -8,6 +8,8 @@ import data.ShortFormatPreSentenceReportData;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
+import interfaces.OffenderApi.CourtAppearance;
+import interfaces.OffenderApi.CourtAppearances;
 import interfaces.OffenderApi.Offender;
 import interfaces.PdfGenerator;
 import lombok.val;
@@ -21,9 +23,11 @@ import play.twirl.api.Content;
 
 import javax.inject.Inject;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
 
+import static controllers.SessionKeys.OFFENDER_API_BEARER_TOKEN;
 import static helpers.DateTimeHelper.calculateAge;
 import static helpers.DateTimeHelper.format;
 import static java.time.Clock.systemUTC;
@@ -96,11 +100,31 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
     @Override
     protected CompletionStage<Map<String, String>> initialParams() {
+
         return super.initialParams().thenApply(params -> {
-            params.putIfAbsent("pncSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("pnc"))).toString());
-            params.putIfAbsent("addressSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("address"))).toString());
-            return migrateLegacyReport(params);
+                params.putIfAbsent("pncSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("pnc"))).toString());
+                params.putIfAbsent("addressSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("address"))).toString());
+                return migrateLegacyReport(params);
+            })
+            .thenComposeAsync(params -> offenderApi.getCourtAppearancesByCrn(session(OFFENDER_API_BEARER_TOKEN), params.get("crn"))
+                .thenApply(courtAppearances -> storeCourtData(params, courtAppearances)), ec.current());
+    }
+
+    private Map<String, String> storeCourtData(Map<String, String> params, CourtAppearances courtAppearances) {
+
+        Optional<CourtAppearance> courtAppearance = courtAppearances.findForCourtReportId(Long.parseLong(params.get("entityId")));
+        courtAppearance.map(appearance -> {
+           params.put("court", appearance.getCourt().getCourtName());
+           params.put("dateOfHearing", appearance.getAppearanceDate());
+           return params;
+        })
+        .orElseGet(() -> {
+            params.put("court", "");
+            params.put("dateOfHearing", "");
+            return params;
         });
+
+        return params;
     }
 
 

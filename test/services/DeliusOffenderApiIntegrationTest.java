@@ -142,10 +142,10 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
     public void getsCourtAppearancesByCrn() {
         val courtAppearances = offenderApi.getCourtAppearancesByCrn("ABC", "X12345").toCompletableFuture().join();
 
-        assertThat(courtAppearances.size()).isEqualTo(3);
-        assertThat(courtAppearances.get(0).getCourtAppearanceId()).isEqualTo(1);
-        assertThat(courtAppearances.get(0).getCourt().getCourtId()).isEqualTo(1);
-        assertThat(courtAppearances.get(0).getCourtReports().get(0).getCourtReportId()).isEqualTo(1);
+        assertThat(courtAppearances.getItems().size()).isEqualTo(3);
+        assertThat(courtAppearances.getItems().get(0).getCourtAppearanceId()).isEqualTo(1);
+        assertThat(courtAppearances.getItems().get(0).getCourt().getCourtId()).isEqualTo(1);
+        assertThat(courtAppearances.getItems().get(0).getCourtReports().get(0).getCourtReportId()).isEqualTo(1);
         wireMock.verify(getRequestedFor(urlEqualTo("/offenders/crn/X12345/courtAppearances")));
     }
 

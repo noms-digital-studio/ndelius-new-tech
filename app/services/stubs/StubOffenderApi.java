@@ -76,7 +76,7 @@ public class StubOffenderApi implements OffenderApi {
     }
 
     @Override
-    public CompletionStage<List<CourtAppearance>> getCourtAppearancesByCrn(String bearerToken, String crn) {
+    public CompletionStage<CourtAppearances> getCourtAppearancesByCrn(String bearerToken, String crn) {
         if (isBlank(bearerToken)) {
             throw new RuntimeException("getOffenderByCrn called with blank bearerToken");
         }
@@ -85,24 +85,26 @@ public class StubOffenderApi implements OffenderApi {
             throw new RuntimeException("getOffenderByCrn called with blank CRN");
         }
 
-        val courtAppearance = CourtAppearance.builder()
-            .appearanceDate("2018-08-01")
-            .softDeleted(false)
-            .court(Court.builder()
-                .courtName("High Court")
-                .locality("City of Westminster")
-                .build())
-            .courtReports(ImmutableList.of(
-                CourtReport.builder()
-                    .courtReportId(1L)
-                    .build(),
-                CourtReport.builder()
-                    .courtReportId(2L)
-                    .build()
-                ))
+        CourtAppearances courtAppearances = CourtAppearances.builder()
+            .items(ImmutableList.of(CourtAppearance.builder()
+                .appearanceDate("2018-08-01")
+                .softDeleted(false)
+                .court(Court.builder()
+                    .courtName("High Court")
+                    .locality("City of Westminster")
+                    .build())
+                .courtReports(ImmutableList.of(
+                    CourtReport.builder()
+                        .courtReportId(1L)
+                        .build(),
+                    CourtReport.builder()
+                        .courtReportId(2L)
+                        .build()
+                    ))
+                .build()))
             .build();
 
-        return CompletableFuture.completedFuture(ImmutableList.of(courtAppearance));
+        return CompletableFuture.completedFuture(courtAppearances);
 
     }
 
