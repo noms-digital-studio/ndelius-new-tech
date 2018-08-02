@@ -95,7 +95,7 @@ public class StubOffenderApi implements OffenderApi {
                     .build())
                 .courtReports(ImmutableList.of(
                     CourtReport.builder()
-                        .courtReportId(1L)
+                        .courtReportId(41L)
                         .build(),
                     CourtReport.builder()
                         .courtReportId(2L)

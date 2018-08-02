@@ -117,8 +117,10 @@ public class OffenderTest {
                     )).build(),
                 CourtAppearance.builder()
                     .courtAppearanceId(2L)
-                    .softDeleted(false)
                     .courtReports(ImmutableList.of(
+                        OffenderApi.CourtReport.builder()
+                            .courtReportId(2L)
+                            .build(),
                         OffenderApi.CourtReport.builder()
                             .courtReportId(1L)
                             .softDeleted(true)

@@ -90,10 +90,10 @@ public interface OffenderApi {
         public Optional<CourtAppearance> findForCourtReportId(Long courtReportId) {
 
             return items.stream()
-                .filter(courtAppearance -> !courtAppearance.softDeleted)
+                .filter(courtAppearance -> courtAppearance.softDeleted == null || !courtAppearance.softDeleted)
                 .filter(courtAppearance ->
                     courtAppearance.courtReports.stream()
-                        .filter(report -> !report.softDeleted)
+                        .filter(report -> report.softDeleted == null || !report.softDeleted)
                         .anyMatch(report -> report.getCourtReportId().equals(courtReportId)))
                 .findFirst();
         }
