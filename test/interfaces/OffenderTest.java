@@ -2,6 +2,7 @@ package interfaces;
 
 import com.google.common.collect.ImmutableList;
 import interfaces.OffenderApi.CourtAppearance;
+import interfaces.OffenderApi.CourtAppearances;
 import interfaces.OffenderApi.Offender;
 import lombok.val;
 import org.junit.Test;
@@ -103,8 +104,26 @@ public class OffenderTest {
         assertThat(courtAppearances().findForCourtReportId(1L).get().getCourtAppearanceId()).isEqualTo(3L);
     }
 
-    private OffenderApi.CourtAppearances courtAppearances() {
-        return OffenderApi.CourtAppearances.builder()
+    @Test
+    public void findsNoCourtAppearanceWhenAllAreSoftDeleted() {
+        assertThat(softDeletedCourtAppearances().findForCourtReportId(1L).isPresent()).isFalse();
+    }
+
+    @Test
+    public void findsNoCourtAppearanceWhenAllCourtReportsAreSoftDeleted() {
+        assertThat(courtAppearancesWithSoftDeletedCourtReports().findForCourtReportId(1L).isPresent()).isFalse();
+    }
+
+    @Test
+    public void findsNoCourtAppearanceWhenNoCourtReportsMatch() {
+        assertThat(courtAppearances().findForCourtReportId(3L).isPresent()).isFalse();
+    }
+
+    private CourtAppearance courtAppearanceWithNullItems() {
+        return null;
+    }
+    private CourtAppearances courtAppearances() {
+        return CourtAppearances.builder()
             .items(ImmutableList.of(
                 CourtAppearance.builder()
                     .courtAppearanceId(1L)
@@ -112,7 +131,6 @@ public class OffenderTest {
                     .courtReports(ImmutableList.of(
                         OffenderApi.CourtReport.builder()
                             .courtReportId(1L)
-                            .softDeleted(false)
                             .build()
                     )).build(),
                 CourtAppearance.builder()
@@ -128,13 +146,55 @@ public class OffenderTest {
                     )).build(),
                 CourtAppearance.builder()
                     .courtAppearanceId(3L)
-                    .softDeleted(false)
                     .courtReports(ImmutableList.of(
                         OffenderApi.CourtReport.builder()
                             .courtReportId(1L)
-                            .softDeleted(false)
                             .build()
                     )).build()
                 )).build();
+    }
+
+    private CourtAppearances softDeletedCourtAppearances() {
+        return CourtAppearances.builder()
+            .items(ImmutableList.of(
+                CourtAppearance.builder()
+                    .courtAppearanceId(1L)
+                    .softDeleted(true)
+                    .courtReports(ImmutableList.of(
+                        OffenderApi.CourtReport.builder()
+                            .courtReportId(1L)
+                            .build()
+                    )).build(),
+                CourtAppearance.builder()
+                    .courtAppearanceId(2L)
+                    .softDeleted(true)
+                    .courtReports(ImmutableList.of(
+                        OffenderApi.CourtReport.builder()
+                            .courtReportId(2L)
+                            .build()
+                    )).build()
+            )).build();
+    }
+
+    private CourtAppearances courtAppearancesWithSoftDeletedCourtReports() {
+        return CourtAppearances.builder()
+            .items(ImmutableList.of(
+                CourtAppearance.builder()
+                    .courtAppearanceId(1L)
+                    .courtReports(ImmutableList.of(
+                        OffenderApi.CourtReport.builder()
+                            .courtReportId(1L)
+                            .softDeleted(true)
+                            .build()
+                    )).build(),
+                CourtAppearance.builder()
+                    .courtAppearanceId(2L)
+                    .courtReports(ImmutableList.of(
+                        OffenderApi.CourtReport.builder()
+                            .courtReportId(2L)
+                            .softDeleted(true)
+                            .build()
+                    )).build()
+            )).build();
     }
 }

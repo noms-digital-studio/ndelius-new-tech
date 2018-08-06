@@ -112,19 +112,25 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
     private Map<String, String> storeCourtData(Map<String, String> params, CourtAppearances courtAppearances) {
 
-        Optional<CourtAppearance> courtAppearance = courtAppearances.findForCourtReportId(Long.parseLong(params.get("entityId")));
-        courtAppearance.map(appearance -> {
-           params.put("court", appearance.getCourt().getCourtName());
-           params.put("dateOfHearing", appearance.getAppearanceDate());
-           return params;
-        })
-        .orElseGet(() -> {
-            params.put("court", "");
-            params.put("dateOfHearing", "");
-            return params;
-        });
-
-        return params;
+        return Optional.ofNullable(params.get("entityId"))
+            .map(s -> {
+                long id = Long.parseLong(s);
+                Optional<CourtAppearance> courtAppearance = courtAppearances.findForCourtReportId(id);
+                return courtAppearance.map(appearance -> {
+                    params.put("court", appearance.getCourt().getCourtName());
+                    params.put("dateOfHearing", appearance.getAppearanceDate());
+                    return params;
+                }).orElseGet(() -> {
+                        params.put("court", "");
+                        params.put("dateOfHearing", "");
+                        return params;
+                    });
+            })
+            .orElseGet(() -> {
+                params.put("court", "");
+                params.put("dateOfHearing", "");
+                return params;
+            });
     }
 
 
