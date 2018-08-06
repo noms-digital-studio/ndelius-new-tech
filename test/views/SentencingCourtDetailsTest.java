@@ -27,7 +27,10 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static play.api.test.CSRFTokenHelper.addCSRFToken;
 import static play.inject.Bindings.bind;
-import static play.test.Helpers.*;
+import static play.test.Helpers.OK;
+import static play.test.Helpers.POST;
+import static play.test.Helpers.contentAsString;
+import static play.test.Helpers.route;
 import static utils.OffenderHelper.anOffenderWithNoContactDetails;
 
 public class SentencingCourtDetailsTest extends WithApplication {
@@ -93,6 +96,17 @@ public class SentencingCourtDetailsTest extends WithApplication {
         OffenderApi offenderApi = mock(OffenderApi.class);
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
         given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
+        given(offenderApi.getCourtAppearancesByCrn(any(), any()))
+            .willReturn(CompletableFuture.completedFuture(
+                OffenderApi.CourtAppearances.builder()
+                    .items(ImmutableList.of(OffenderApi.CourtAppearance.builder()
+                        .appearanceDate("2018-08-06")
+                        .court(OffenderApi.Court.builder().courtName("Some court").build())
+                        .courtReports(ImmutableList.of(OffenderApi.CourtReport.builder()
+                            .courtReportId(41L)
+                            .build()))
+                        .build()))
+                    .build()));
 
         return new GuiceApplicationBuilder().
             overrides(

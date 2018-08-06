@@ -1,6 +1,7 @@
 package interfaces;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.ImmutableList;
 import lombok.Builder;
 import lombok.Value;
 import lombok.val;
@@ -85,7 +86,7 @@ public interface OffenderApi {
     @Value
     @Builder(toBuilder = true)
     class CourtAppearances {
-        private List<CourtAppearance> items;
+        @Builder.Default private List<CourtAppearance> items = ImmutableList.of();
 
         public Optional<CourtAppearance> findForCourtReportId(Long courtReportId) {
 
@@ -106,7 +107,7 @@ public interface OffenderApi {
         private String appearanceDate;
         private Boolean softDeleted;
         private Court court;
-        private List<CourtReport> courtReports;
+        @Builder.Default private List<CourtReport> courtReports = ImmutableList.of();
     }
 
     @Value

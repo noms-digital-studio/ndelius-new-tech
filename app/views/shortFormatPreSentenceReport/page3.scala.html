@@ -34,12 +34,12 @@
             @commonFields(reportForm, encrypter)
             @page2Fields(reportForm, encrypter)
 
-            @inputText(reportForm("court"), '_label -> "Court", 'required -> "true", '_error -> "Enter the name of the sentencing court")
+            @readOnlyField(reportForm("court"), "Court")
 
             @select(reportForm("localJusticeArea"), options(justiceAreas.toList), '_label -> "Local justice area",
                 '_default -> "Please select", 'class -> "auto-complete")
 
-            @inputText(reportForm("dateOfHearing"), '_label -> "Date of hearing", '_help -> "For example: 28/06/2017", 'class -> "date-picker", 'required -> "true", '_error -> "Enter the date of the hearing")
+            @readOnlyField(reportForm("dateOfHearing"), "Date of hearing")
 
             @page4Fields(reportForm)
             @page5Fields(reportForm)

@@ -1,10 +1,12 @@
 package views;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import helpers.JwtHelperTest;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
+import interfaces.OffenderApi.CourtAppearances;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.junit.Before;
@@ -106,6 +108,17 @@ public class SignAndDateReportWebTest extends WithIE8Browser {
         OffenderApi offenderApi = mock(OffenderApi.class);
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
         given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
+        given(offenderApi.getCourtAppearancesByCrn(any(), any()))
+            .willReturn(CompletableFuture.completedFuture(
+                CourtAppearances.builder()
+                    .items(ImmutableList.of(OffenderApi.CourtAppearance.builder()
+                        .appearanceDate("2018-08-06")
+                        .court(OffenderApi.Court.builder().courtName("Some court").build())
+                        .courtReports(ImmutableList.of(OffenderApi.CourtReport.builder()
+                            .courtReportId(41L)
+                            .build()))
+                        .build()))
+                    .build()));
 
         return new GuiceApplicationBuilder().
             overrides(
