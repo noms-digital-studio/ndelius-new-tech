@@ -119,8 +119,18 @@ public class OffenderTest {
         assertThat(courtAppearances().findForCourtReportId(3L).isPresent()).isFalse();
     }
 
-    private CourtAppearance courtAppearanceWithNullItems() {
-        return null;
+    @Test
+    public void findsNoCourtAppearanceWhenCourtReportsIsNull() {
+        assertThat(courtAppearanceWithNullItems().findForCourtReportId(1L).isPresent()).isFalse();
+    }
+
+    private CourtAppearances courtAppearanceWithNullItems() {
+        return CourtAppearances.builder()
+            .items(ImmutableList.of(
+                CourtAppearance.builder()
+                    .courtAppearanceId(1L)
+                    .courtReports(null).build()
+            )).build();
     }
     private CourtAppearances courtAppearances() {
         return CourtAppearances.builder()

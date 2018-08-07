@@ -92,6 +92,7 @@ public interface OffenderApi {
 
             return items.stream()
                 .filter(courtAppearance -> courtAppearance.softDeleted == null || !courtAppearance.softDeleted)
+                .filter(courtAppearance -> courtAppearance.courtReports != null)
                 .filter(courtAppearance ->
                     courtAppearance.courtReports.stream()
                         .filter(report -> report.softDeleted == null || !report.softDeleted)

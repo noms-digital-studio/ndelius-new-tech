@@ -112,6 +112,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
     private Map<String, String> storeCourtData(Map<String, String> params, CourtAppearances courtAppearances) {
 
+        Logger.info("CourtAppearances: " + courtAppearances);
         return Optional.ofNullable(params.get("entityId"))
             .map(s -> {
                 long id = Long.parseLong(s);
