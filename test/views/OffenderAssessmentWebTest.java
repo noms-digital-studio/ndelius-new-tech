@@ -1,12 +1,10 @@
 package views;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import helpers.JwtHelperTest;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
-import interfaces.OffenderApi.CourtAppearances;
 import interfaces.PdfGenerator;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +34,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
+import static utils.CourtAppearanceHelpers.someCourtAppearances;
 import static utils.OffenderHelper.anOffenderWithNoContactDetails;
 import static views.helpers.AlfrescoDataHelper.legacyReportWith;
 
@@ -258,17 +257,7 @@ public class OffenderAssessmentWebTest extends WithIE8Browser {
         OffenderApi offenderApi = mock(OffenderApi.class);
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
         given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
-        given(offenderApi.getCourtAppearancesByCrn(any(), any()))
-            .willReturn(CompletableFuture.completedFuture(
-                CourtAppearances.builder()
-                    .items(ImmutableList.of(OffenderApi.CourtAppearance.builder()
-                        .appearanceDate("2018-08-06")
-                        .court(OffenderApi.Court.builder().courtName("Some court").build())
-                        .courtReports(ImmutableList.of(OffenderApi.CourtReport.builder()
-                            .courtReportId(41L)
-                            .build()))
-                        .build()))
-                    .build()));
+        given(offenderApi.getCourtAppearancesByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(someCourtAppearances()));
 
         return new GuiceApplicationBuilder().
             overrides(

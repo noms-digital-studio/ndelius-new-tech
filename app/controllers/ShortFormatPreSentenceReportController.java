@@ -118,7 +118,11 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                 Optional<CourtAppearance> courtAppearance = courtAppearances.findForCourtReportId(id);
                 return courtAppearance.map(appearance -> {
                     params.put("court", appearance.getCourt().getCourtName());
-                    params.put("dateOfHearing", appearance.getAppearanceDate());
+
+                    ofNullable(appearance.getAppearanceDate()).ifPresent(dateOfHearing -> {
+                        params.put("dateOfHearing", format(dateOfHearing));
+                    });
+
                     return params;
                 }).orElseGet(() -> {
                         params.put("court", "");

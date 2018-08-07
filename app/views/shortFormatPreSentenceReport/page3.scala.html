@@ -14,8 +14,6 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@justiceAreas = @{ Source.fromInputStream(environment.resourceAsStream("justiceAreas.txt"), "UTF-8").getLines }
-
 @main("Sentencing court details - Short Format Pre Sentence Report", true, Some(3)) {
 
     <h1 class="heading-xlarge">Sentencing court details</h1>
@@ -36,8 +34,7 @@
 
             @readOnlyField(reportForm("court"), "Court")
 
-            @select(reportForm("localJusticeArea"), options(justiceAreas.toList), '_label -> "Local justice area",
-                '_default -> "Please select", 'class -> "auto-complete")
+            @inputText(reportForm("localJusticeArea"), '_label -> "Local justice area", 'required -> "true", '_error -> "Enter a local justice area")
 
             @readOnlyField(reportForm("dateOfHearing"), "Date of hearing")
 
