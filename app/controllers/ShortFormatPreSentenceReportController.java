@@ -173,9 +173,6 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
         }
 
         if ("3".equals(params.get("pageNumber"))) {
-
-            paramEncrypter.accept("court");
-            paramEncrypter.accept("dateOfHearing");
             paramEncrypter.accept("localJusticeArea");
         }
 
