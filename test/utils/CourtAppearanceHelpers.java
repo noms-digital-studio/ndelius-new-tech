@@ -11,7 +11,7 @@ public class CourtAppearanceHelpers {
 
         return CourtAppearances.builder()
             .items(ImmutableList.of(CourtAppearance.builder()
-                .appearanceDate("2018-08-06")
+                .appearanceDate("2018-08-06T00:00:00")
                 .court(OffenderApi.Court.builder().courtName("Some court").build())
                 .courtReports(ImmutableList.of(CourtReport.builder()
                     .courtReportId(41L).build()))

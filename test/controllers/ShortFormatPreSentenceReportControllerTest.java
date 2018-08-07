@@ -1119,7 +1119,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             .willReturn(CompletableFuture.completedFuture(CourtAppearances.builder()
                 .items(ImmutableList.of(CourtAppearance.builder()
                     .court(Court.builder().courtName("court name from api").build())
-                    .appearanceDate("2018-08-06")
+                    .appearanceDate("2018-08-06T00:00:00")
                     .courtReports(ImmutableList.of(CourtReport.builder().courtReportId(456L).build()))
                     .build()))
                 .build()));

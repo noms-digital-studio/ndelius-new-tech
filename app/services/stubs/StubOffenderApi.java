@@ -87,7 +87,7 @@ public class StubOffenderApi implements OffenderApi {
 
         CourtAppearances courtAppearances = CourtAppearances.builder()
             .items(ImmutableList.of(CourtAppearance.builder()
-                .appearanceDate("2018-08-01")
+                .appearanceDate("2018-08-01T00:00:00")
                 .softDeleted(false)
                 .court(Court.builder()
                     .courtName("High Court")
