@@ -8,7 +8,6 @@ import data.ShortFormatPreSentenceReportData;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
-import interfaces.OffenderApi.CourtAppearance;
 import interfaces.OffenderApi.CourtAppearances;
 import interfaces.OffenderApi.Offender;
 import interfaces.PdfGenerator;
@@ -115,27 +114,20 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
         Logger.info("CourtAppearances: " + courtAppearances);
         return Optional.ofNullable(params.get("entityId"))
-            .map(s -> {
-                long id = Long.parseLong(s);
-                Optional<CourtAppearance> courtAppearance = courtAppearances.findForCourtReportId(id);
-                return courtAppearance.map(appearance -> {
+            .map(Long::parseLong)
+            .flatMap(courtAppearances::findForCourtReportId)
+            .map(appearance -> {
                     params.put("court", appearance.getCourt().getCourtName());
 
-                    ofNullable(appearance.getAppearanceDate()).ifPresent(dateOfHearing -> {
-                        params.put("dateOfHearing", formatDateTime(dateOfHearing));
-                    });
+                    ofNullable(appearance.getAppearanceDate()).ifPresent(dateOfHearing ->
+                        params.put("dateOfHearing", formatDateTime(dateOfHearing)));
 
                     return params;
-                }).orElseGet(() -> {
+            })
+            .orElseGet(() -> {
                         params.put("court", "");
                         params.put("dateOfHearing", "");
                         return params;
-                    });
-            })
-            .orElseGet(() -> {
-                params.put("court", "");
-                params.put("dateOfHearing", "");
-                return params;
             });
     }
 

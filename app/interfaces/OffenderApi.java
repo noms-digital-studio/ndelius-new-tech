@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
+import static helpers.FluentHelper.not;
 import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
@@ -91,11 +92,11 @@ public interface OffenderApi {
         public Optional<CourtAppearance> findForCourtReportId(Long courtReportId) {
 
             return items.stream()
-                .filter(courtAppearance -> courtAppearance.softDeleted == null || !courtAppearance.softDeleted)
-                .filter(courtAppearance -> courtAppearance.courtReports != null)
+                .filter(not(courtAppearance -> Optional.ofNullable(courtAppearance.softDeleted).orElse(false)))
+                .filter(courtAppearance -> Optional.ofNullable(courtAppearance.courtReports).isPresent())
                 .filter(courtAppearance ->
                     courtAppearance.courtReports.stream()
-                        .filter(report -> report.softDeleted == null || !report.softDeleted)
+                        .filter(not(report -> Optional.ofNullable(report.softDeleted).orElse(false)))
                         .anyMatch(report -> report.getCourtReportId().equals(courtReportId)))
                 .findFirst();
         }
