@@ -188,31 +188,27 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         val encryptedEpochRequestTimeMills = params.get("t");
         final Runnable errorReporter = () -> Logger.error(String.format("Report page request did not receive a valid user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
 
-        if (isBlank(session(OFFENDER_API_BEARER_TOKEN))) {
-            val invalidRequest = invalidCredentials(
-                decrypter.apply(encryptedUsername),
-                decrypter.apply(encryptedEpochRequestTimeMills),
-                errorReporter);
+        val invalidRequest = invalidCredentials(
+            decrypter.apply(encryptedUsername),
+            decrypter.apply(encryptedEpochRequestTimeMills),
+            errorReporter);
 
-            if (invalidRequest.isPresent()) {
-                return CompletableFuture.supplyAsync(() -> {
-                    throw new InvalidCredentialsException(invalidRequest.get());
-                });
-            }
-
-            val username = decrypter.apply(params.get("user"));
-
-            return offenderApi.logon(username)
-                .thenApplyAsync(bearerToken -> {
-                    Logger.info("AUDIT:{}: ShortFormatPreSentenceReportController: Successful logon for user {}", principal(bearerToken), username);
-                    session(OFFENDER_API_BEARER_TOKEN, bearerToken);
-                    return bearerToken;
-
-                }, ec.current())
-                .thenApplyAsync(ignored -> decryptParams(params), ec.current());
-        } else {
-            return CompletableFuture.supplyAsync(() -> decryptParams(params), ec.current());
+        if (invalidRequest.isPresent()) {
+            return CompletableFuture.supplyAsync(() -> {
+                throw new InvalidCredentialsException(invalidRequest.get());
+            });
         }
+
+        val username = decrypter.apply(params.get("user"));
+
+        return offenderApi.logon(username)
+            .thenApplyAsync(bearerToken -> {
+                Logger.info("AUDIT:{}: ShortFormatPreSentenceReportController: Successful logon for user {}", principal(bearerToken), username);
+                session(OFFENDER_API_BEARER_TOKEN, bearerToken);
+                return bearerToken;
+
+            }, ec.current())
+            .thenApplyAsync(ignored -> decryptParams(params), ec.current());
     }
 
     protected Map<String, String> modifyParams(Map<String, String> params, Consumer<String> paramEncrypter) {
