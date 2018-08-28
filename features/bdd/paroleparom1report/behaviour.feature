@@ -13,9 +13,9 @@ Feature: Parole report
 
     Then this information should be saved in the prisoner parole report
 
-  Scenario: Delius user wants to leave the "Behaviour in Prison" page without entering any details into the "Detail the prisoner’s behaviour whilst in prison" free text fields
+  Scenario: Delius user wants to leave the "Behaviour in Prison" page without entering any details into the "Detail the prisoner`s behaviour whilst in prison" free text fields
 
-    Given that the Delius user does not enter any text into "Detail the prisoner’s behaviour whilst in prison" fields
+    Given that the Delius user does not enter any text into "Detail the prisoner`s behaviour whilst in prison" fields
     When they select "Continue" button
     Then an error message must be displayed
 
