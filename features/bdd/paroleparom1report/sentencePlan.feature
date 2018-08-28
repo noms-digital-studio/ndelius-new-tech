@@ -8,7 +8,7 @@ Feature: Parole Report
     Given that the Delius user wants to enter details of the current sentence plan in the offender parole report
     When  they enter the following information
 
-      | Detail the prisoner`s current sentence plan objectives, including their response  | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Egestas purus viverra accumsan in nisl nisi scelerisque eu. |
+      | Detail the prisoner`s current sentence plan objectives, including their response  | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
 
     Then this information should be saved in the prisoner parole report
 
