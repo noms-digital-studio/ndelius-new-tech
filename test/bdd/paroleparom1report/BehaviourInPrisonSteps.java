@@ -1,0 +1,23 @@
+package bdd.paroleparom1report;
+
+import cucumber.api.java.en.Given;
+import views.pages.paroleparom1report.BehaviourInPrisonPage;
+
+import javax.inject.Inject;
+
+public class BehaviourInPrisonSteps {
+
+    @Inject
+    private BehaviourInPrisonPage page;
+
+    @Given("^that the Delius user is on the \"Behaviour in prison\" page within the Parole Report$")
+    public void thatTheDeliusUserIsOnThePageWithinTheParoleReport() throws Throwable {
+        page.navigateHere();
+    }
+
+    @Given("^they want to enter the behaviour of a prisoner$")
+    public void theyWantToEnterTheBehaviourOfAPrisoner() {
+        // no page action required
+    }
+
+}

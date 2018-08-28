@@ -5,15 +5,15 @@ import play.test.TestBrowser;
 import javax.inject.Inject;
 
 public class BehaviourInPrisonPage extends ParoleParom1PopupReportPage {
-    private final OPDPathwayPage opdPathwayPage;
+    private final PrisonerDetailsPage prisonerDetailsPage;
     @Inject
-    public BehaviourInPrisonPage(OPDPathwayPage opdPathwayPage, TestBrowser control) {
+    public BehaviourInPrisonPage(PrisonerDetailsPage prisonerDetailsPage, TestBrowser control) {
         super(control);
-        this.opdPathwayPage = opdPathwayPage;
+        this.prisonerDetailsPage = prisonerDetailsPage;
     }
 
     public BehaviourInPrisonPage navigateHere() {
-        opdPathwayPage.navigateHere();
+        prisonerDetailsPage.navigateHere();
         jumpTo(Page.BEHAVIOUR_IN_PRISON);
         return this;
     }
