@@ -20,4 +20,8 @@ public class BehaviourInPrisonSteps {
         // no page action required
     }
 
+    @Given("^that the Delius user wants to enter details of the offender's behaviour in Prison in the offender parole report$")
+    public void thatTheDeliusUserWantsToEnterDetailsOfTheOffenderSBehaviourInPrisonInTheOffenderParoleReport() throws Throwable {
+        // no page action required
+    }
 }
