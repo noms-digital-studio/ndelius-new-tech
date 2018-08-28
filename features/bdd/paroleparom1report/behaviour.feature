@@ -8,7 +8,7 @@ Feature: Parole report
     Given that the Delius user wants to enter details of the offender's behaviour in Prison in the offender parole report
     When  they enter the following information
 
-      | Detail the prisoner`s behaviour whilst in prison  | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Egestas purus viverra accumsan in nisl nisi scelerisque eu. |
+      | Detail the prisoner`s behaviour whilst in prison  | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
       | RoTL summary                                      | Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.                                                                             |
 
     Then this information should be saved in the prisoner parole report
