@@ -15,11 +15,6 @@ public class BehaviourInPrisonSteps {
         page.navigateHere();
     }
 
-    @Given("^they want to enter the behaviour of a prisoner$")
-    public void theyWantToEnterTheBehaviourOfAPrisoner() {
-        // no page action required
-    }
-
     @Given("^that the Delius user wants to enter details of the offender's behaviour in Prison in the offender parole report$")
     public void thatTheDeliusUserWantsToEnterDetailsOfTheOffenderSBehaviourInPrisonInTheOffenderParoleReport() throws Throwable {
         // no page action required
