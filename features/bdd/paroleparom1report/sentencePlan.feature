@@ -14,7 +14,7 @@ Feature: Parole Report
 
   Scenario: Delius User does not enter any text into "Detail the prisoner`s current sentence plan objectives, including their response" free text field
 
-    Given that the Delius user does not enter any text into "Detail the prisoner's current sentence plan objectives, including their response" free text field
+    Given that the Delius user does not enter any text into "Detail the prisoner`s current sentence plan objectives, including their response" free text field
     When they select "continue"
     Then an error message must be displayed
 
@@ -26,6 +26,6 @@ Feature: Parole Report
 
   Scenario: Delius user wants to leave the parole report
 
-    Given that the Delius User enters character into the "Detail the prisoner’s current sentence plan objectives, including their response" free text field
+    Given that the Delius User enters character into the "Detail the prisoner`s current sentence plan objectives, including their response" free text field
     When  they select "Close" button on the UI
     Then  they should be directed to the "Draft Report Saved" UI
