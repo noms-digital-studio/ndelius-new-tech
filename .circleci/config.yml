@@ -4,6 +4,7 @@ general:
 jobs:
     build:
         working_directory: ~/ndelius-new-tech
+        parallelism: 2
         docker:
             - image: circleci/openjdk:8-node-browsers
         steps:
@@ -15,7 +16,7 @@ jobs:
             - run:
                 name: Run sbt build
                 command: |
-                  export _JAVA_OPTIONS="-Xms512m -Xmx1024m"
+                  export _JAVA_OPTIONS="-Xms512m -Xmx2048m"
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   sbt assembly < /dev/null
             - save_cache:
