@@ -15,24 +15,19 @@ Feature: Parole report
 
   Scenario: Delius user wants to leave the "Behaviour in Prison" page without entering any details into the "Detail the prisoner`s behaviour whilst in prison" free text fields
 
-    Given that the Delius user does not enter any text into "Detail the prisoner`s behaviour whilst in prison" fields
-    When they select "Continue" button
-    Then an error message must be displayed
-
-  Scenario: Delius user wants to leave the "Behaviour in Prison" page without entering any details into the "RoTL summary" free text fields
-
-    Given that the Delius user does not enter any text into "RoTL summary" fields
-    When they select "Continue" button
-    Then an error message must be displayed
-
-  Scenario: Delius user wants to leave the parole report
-
-    Given that the Delius User is in the "Behaviour in Prison" UI
-    When  they select "Close" button on the UI
-    Then  they should be directed to the "Draft Report Saved" UI
+    Given the user does not any enter any characters in the free text fields on the page
+    When  they select the "Continue" button
+    Then  the following error messages are displayed
+      | Detail the prisoner`s behaviour whilst in prison | Enter details of the prisoner's behaviour in prison |
+      | RoTL summary                                     | Enter the RoTL summary |
 
   Scenario: Delius user wants to continue populating the Parole Report with information
 
-    Given that the Delius User has completed all the relevant fields in "Behaviour in Prison" UI
-    When they select "Continue" button
-    Then the user must be directed to the "Interventions" Screen
+    Given that the Delius user has entered details into "Detail the prisoner`s behaviour whilst in prison" and "RoTL summary" field
+    When  they select the "Continue" button
+    Then  the user should be directed to the "Interventions" UI
+
+  Scenario: Delius user wants to leave the parole report
+
+    When  they select the "Close" button
+    Then  the user should be directed to the "Draft report saved" UI
