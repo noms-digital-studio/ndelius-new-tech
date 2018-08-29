@@ -4,7 +4,6 @@ general:
 jobs:
     build:
         working_directory: ~/ndelius-new-tech
-        parallelism: 2
         docker:
             - image: circleci/openjdk:8-node-browsers
         steps:
