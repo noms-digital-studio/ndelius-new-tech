@@ -28,7 +28,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     private String consideredForOPDPathwayServices;
 
     // Page 7 - Behaviour in prison
-    @RequiredOnPage(value = 7, message = "Enter details of the prisoner’s behaviour in prison")
+    @RequiredOnPage(value = 7, message = "Enter details of the prisoner's behaviour in prison")
     @JsonProperty("BEHAVIOUR_DETAIL")
     private String behaviourDetail;
 
