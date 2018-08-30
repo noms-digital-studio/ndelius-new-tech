@@ -44,9 +44,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static controllers.SessionKeys.OFFENDER_API_BEARER_TOKEN;
 import static helpers.FluentHelper.content;
-import static helpers.JwtHelper.principal;
 
 public abstract class WizardController<T extends WizardData> extends Controller implements ParamsValidator {
 
@@ -182,36 +180,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
     protected CompletionStage<Map<String, String>> initialParams() { // Overridable in derived Controllers to supplant initial params
 
         val params = request().queryString().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue()[0]));
-
-        val encryptedUsername = params.get("user");
-        val encryptedEpochRequestTimeMills = params.get("t");
-        final Runnable errorReporter = () -> Logger.error(String.format("Report page request did not receive a valid user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
-
-        if (params.get("continue") == null) {
-            val invalidRequest = invalidCredentials(
-                decrypter.apply(encryptedUsername),
-                decrypter.apply(encryptedEpochRequestTimeMills),
-                errorReporter);
-
-            if (invalidRequest.isPresent()) {
-                return CompletableFuture.supplyAsync(() -> {
-                    throw new InvalidCredentialsException(invalidRequest.get());
-                });
-            }
-
-            val username = decrypter.apply(params.get("user"));
-
-            return offenderApi.logon(username)
-                .thenApplyAsync(bearerToken -> {
-                    Logger.info("AUDIT:{}: ShortFormatPreSentenceReportController: Successful logon for user {}", principal(bearerToken), username);
-                    session(OFFENDER_API_BEARER_TOKEN, bearerToken);
-                    return bearerToken;
-
-                }, ec.current())
-                .thenApplyAsync(ignored -> decryptParams(params), ec.current());
-        } else {
-            return CompletableFuture.supplyAsync(() -> decryptParams(params), ec.current());
-        }
+        return CompletableFuture.supplyAsync(() -> decryptParams(params), ec.current());
     }
 
     protected Map<String, String> modifyParams(Map<String, String> params, Consumer<String> paramEncrypter) {
@@ -344,7 +313,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         return formRenderer(viewPageName(pageNumber)).apply(formContent, pageStatuses);
     }
 
-    private Map<String, String> decryptParams(Map<String, String> params) {
+    protected Map<String, String> decryptParams(Map<String, String> params) {
 
         Consumer<String> paramEncrypter = key -> Optional.ofNullable(params.get(key)).map(value -> params.put(key, encrypter.apply(value)));
 

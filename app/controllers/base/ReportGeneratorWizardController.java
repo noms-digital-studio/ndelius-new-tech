@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import controllers.ParamsValidator;
 import data.base.ReportGeneratorWizardData;
+import helpers.InvalidCredentialsException;
 import helpers.JsonHelper;
 import helpers.ThrowableHelper;
 import interfaces.AnalyticsStore;
@@ -33,6 +34,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static controllers.SessionKeys.OFFENDER_API_BEARER_TOKEN;
 import static helpers.FluentHelper.not;
@@ -40,6 +42,7 @@ import static helpers.FluentHelper.value;
 import static helpers.JsonHelper.badRequestJson;
 import static helpers.JsonHelper.okJson;
 import static helpers.JsonHelper.serverUnavailableJson;
+import static helpers.JwtHelper.principal;
 import static java.lang.Integer.parseInt;
 import static java.lang.Math.max;
 
@@ -111,12 +114,48 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
     @Override
     protected CompletionStage<Map<String, String>> initialParams() {
+
+        val paramz = request().queryString().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue()[0]));
+
         val queryParams = request().queryString().keySet();
         val continueFromInterstitial = queryParams.contains("continue");
+
+        val user = (request().queryString().get("user") != null) ? request().queryString().get("user")[0] : null;
+        val t = (request().queryString().get("t") != null) ? request().queryString().get("t")[0] : null;
+
         val stopAtInterstitial = queryParams.contains("documentId") && !continueFromInterstitial;
 
+        CompletionStage<Map<String, String>> thing;
 
-        return super.initialParams().thenCompose(params ->
+        final Runnable errorReporter = () -> Logger.error(String.format("Report page request did not receive a valid user (%s) or t (%s)", user, t));
+
+        if (!continueFromInterstitial) {
+            val invalidRequest = invalidCredentials(
+                decrypter.apply(user),
+                decrypter.apply(t),
+                errorReporter);
+
+            if (invalidRequest.isPresent()) {
+                return CompletableFuture.supplyAsync(() -> {
+                    throw new InvalidCredentialsException(invalidRequest.get());
+                });
+            }
+
+            val username = decrypter.apply(user);
+
+            thing = offenderApi.logon(username)
+                .thenApplyAsync(bearerToken -> {
+                    Logger.info("AUDIT:{}: ShortFormatPreSentenceReportController: Successful logon for user {}", principal(bearerToken), username);
+                    session(OFFENDER_API_BEARER_TOKEN, bearerToken);
+                    return bearerToken;
+
+                }, ec.current())
+                .thenApplyAsync(ignored -> decryptParams(paramz), ec.current());
+        } else {
+            thing = super.initialParams();
+        }
+
+        return thing.thenCompose(params ->
             loadExistingDocument(params).orElseGet(() -> createNewDocument(params))).thenApply(params -> {
 
             if (stopAtInterstitial) {
