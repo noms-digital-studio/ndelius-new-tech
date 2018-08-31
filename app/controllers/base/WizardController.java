@@ -313,7 +313,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         return formRenderer(viewPageName(pageNumber)).apply(formContent, pageStatuses);
     }
 
-    protected Map<String, String> decryptParams(Map<String, String> params) {
+    private Map<String, String> decryptParams(Map<String, String> params) {
 
         Consumer<String> paramEncrypter = key -> Optional.ofNullable(params.get(key)).map(value -> params.put(key, encrypter.apply(value)));
 
