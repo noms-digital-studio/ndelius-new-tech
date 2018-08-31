@@ -34,7 +34,6 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static controllers.SessionKeys.OFFENDER_API_BEARER_TOKEN;
 import static helpers.FluentHelper.not;
@@ -114,48 +113,48 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
     @Override
     protected CompletionStage<Map<String, String>> initialParams() {
-
-        val paramz = request().queryString().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue()[0]));
-
         val queryParams = request().queryString().keySet();
         val continueFromInterstitial = queryParams.contains("continue");
-
-        val user = (request().queryString().get("user") != null) ? request().queryString().get("user")[0] : null;
-        val t = (request().queryString().get("t") != null) ? request().queryString().get("t")[0] : null;
-
         val stopAtInterstitial = queryParams.contains("documentId") && !continueFromInterstitial;
 
-        CompletionStage<Map<String, String>> thing;
+        val user = Optional.ofNullable(request().queryString().get("user"))
+            .map(users -> users[0])
+            .orElse(null);
+        val t = Optional.ofNullable(request().queryString().get("t"))
+            .map(times -> times[0])
+            .orElse(null);
 
         final Runnable errorReporter = () -> Logger.error(String.format("Report page request did not receive a valid user (%s) or t (%s)", user, t));
 
-        if (!continueFromInterstitial) {
-            val invalidRequest = invalidCredentials(
-                decrypter.apply(user),
-                decrypter.apply(t),
-                errorReporter);
+        val possibleBearerTokenRefresh = Optional.of(continueFromInterstitial)
+            .filter(not(bool -> bool))
+            .map(ignored -> {
 
-            if (invalidRequest.isPresent()) {
-                return CompletableFuture.supplyAsync(() -> {
-                    throw new InvalidCredentialsException(invalidRequest.get());
-                });
-            }
+                val invalidRequest = invalidCredentials(
+                    decrypter.apply(user),
+                    decrypter.apply(t),
+                    errorReporter);
 
-            val username = decrypter.apply(user);
+                if (invalidRequest.isPresent()) {
+                    return CompletableFuture.supplyAsync(() -> {
+                        throw new InvalidCredentialsException(invalidRequest.get());
+                    });
+                }
 
-            thing = offenderApi.logon(username)
-                .thenApplyAsync(bearerToken -> {
-                    Logger.info("AUDIT:{}: ShortFormatPreSentenceReportController: Successful logon for user {}", principal(bearerToken), username);
-                    session(OFFENDER_API_BEARER_TOKEN, bearerToken);
-                    return bearerToken;
+                val username = decrypter.apply(user);
 
-                }, ec.current())
-                .thenApplyAsync(ignored -> decryptParams(paramz), ec.current());
-        } else {
-            thing = super.initialParams();
-        }
+                final CompletionStage<String> result = offenderApi.logon(username)
+                    .thenApplyAsync(bearerToken -> {
+                        Logger.info("AUDIT:{}: ReportGeneratorWizardController: Successful logon for user {}", principal(bearerToken), username);
+                        session(OFFENDER_API_BEARER_TOKEN, bearerToken);
+                        return bearerToken;
 
-        return thing.thenCompose(params ->
+                    }, ec.current());
+
+                return result; })
+            .orElse(CompletableFuture.completedFuture("ignored"));
+
+        return possibleBearerTokenRefresh.thenCompose(ignored -> super.initialParams()).thenCompose(params ->
             loadExistingDocument(params).orElseGet(() -> createNewDocument(params))).thenApply(params -> {
 
             if (stopAtInterstitial) {
