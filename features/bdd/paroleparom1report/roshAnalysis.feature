@@ -24,14 +24,6 @@ Feature: Parole Report
       |  Analyse the likelihood of further offending                                        | Enter your analysis of the likelihood of further offending                            |
       |  Does the prisoner pose a risk of absconding?                                       | Specify if the prisoner poses a risk of absconding                                    |
 
-#  TODO: Backend changes to support conditionally required fields
-#  Scenario: Delius user selects "Yes" to the risk of absconding
-
-#    Given they select the "Yes" option on the "Does the prisoner pose a risk of absconding?"
-#    When  they select the "Continue" button
-#    Then  the following error messages are displayed
-#      | Does the prisoner pose a risk of absconding? | Enter the details of the absconding risk |
-
   Scenario: Delius user wants to continue completing the parole report
 
     Given they select the "Yes" option on the "Does the prisoner pose a risk of absconding?"
