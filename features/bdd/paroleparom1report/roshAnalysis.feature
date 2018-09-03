@@ -28,7 +28,7 @@ Feature: Parole Report
 
     Given they select the "Yes" option on the "Does the prisoner pose a risk of absconding?"
     And   they enter the following information
-      |  Provide details of the absconding risk | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      |  Provide details of the absconding risk | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
     When  they select the "Continue" button
     Then the user should be directed to the "Risk Management Plan (RMP)" UI
 
