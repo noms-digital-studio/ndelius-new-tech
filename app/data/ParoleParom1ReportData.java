@@ -87,7 +87,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("RISK_OF_ABSCONDING")
     private String riskOfAbsconding;
 
-    @OnPage(value = 15)
+    @RequiredOnPage(value = 15, message = "Enter the details of the absconding risk", onlyIfField = "riskOfAbsconding", onlyIfFieldMatchValue= "yes")
     @JsonProperty("RISK_OF_ABSCONDING_DETAILS")
     private String riskOfAbscondingDetails;
 
