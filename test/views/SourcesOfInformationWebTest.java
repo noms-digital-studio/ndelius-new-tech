@@ -30,6 +30,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static play.libs.Json.toJson;
 import static utils.CourtAppearanceHelpers.someCourtAppearances;
+import static utils.OffenceHelpers.someOffences;
 import static utils.OffenderHelper.anOffenderWithNoContactDetails;
 
 @RunWith(MockitoJUnitRunner.class)

@@ -1,0 +1,13 @@
+@(formField: Field, label: String, encrypter: String => String = identity)
+
+@lines = @{formField.value.get.split("\n")}
+
+<p class="body-text"><span class="bold">@label</span>
+@for(line <- lines) {
+    <br/><span id="value_@formField.id">@line</span>
+}
+
+</p>
+
+<input type="hidden" name="@formField.name" id="@formField.id" value="@encrypter(formField.value.getOrElse(""))" />
+

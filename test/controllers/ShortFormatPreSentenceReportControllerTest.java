@@ -12,6 +12,7 @@ import interfaces.OffenderApi.Court;
 import interfaces.OffenderApi.CourtAppearance;
 import interfaces.OffenderApi.CourtAppearances;
 import interfaces.OffenderApi.CourtReport;
+import interfaces.OffenderApi.Offences;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -86,6 +87,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                     .courtReports(ImmutableList.of(CourtReport.builder().courtReportId(456L).build()))
                     .build()))
                 .build()));
+        given(offenderApi.getOffencesByCrn(any(), eq("X12345")))
+            .willReturn(CompletableFuture.completedFuture(Offences.builder().items(ImmutableList.of()).build()));
 
         val crn = URLEncoder.encode(encryptor.apply("X12345"), "UTF-8");
         val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D&crn="+ crn));
@@ -109,6 +112,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                     .courtReports(ImmutableList.of(CourtReport.builder().courtReportId(456L).build()))
                     .build()))
                 .build()));
+        given(offenderApi.getOffencesByCrn(any(), eq("X12345")))
+            .willReturn(CompletableFuture.completedFuture(Offences.builder().items(ImmutableList.of()).build()));
 
         val crn = URLEncoder.encode(encryptor.apply("X12345"), "UTF-8");
         val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D&crn="+ crn));
@@ -132,6 +137,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                     .courtReports(ImmutableList.of(CourtReport.builder().courtReportId(456L).build()))
                     .build()))
                 .build()));
+        given(offenderApi.getOffencesByCrn(any(), eq("X12345")))
+            .willReturn(CompletableFuture.completedFuture(Offences.builder().items(ImmutableList.of()).build()));
 
         val crn = URLEncoder.encode(encryptor.apply("X12345"), "UTF-8");
         val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D&crn="+ crn));
@@ -155,6 +162,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                     .courtReports(ImmutableList.of(CourtReport.builder().courtReportId(456L).build()))
                     .build()))
                 .build()));
+        given(offenderApi.getOffencesByCrn(any(), eq("X12345")))
+            .willReturn(CompletableFuture.completedFuture(Offences.builder().items(ImmutableList.of()).build()));
 
         val crn = URLEncoder.encode(encryptor.apply("X12345"), "UTF-8");
         val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D&crn="+ crn));
@@ -474,8 +483,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
 
-                put("mainOffence", "Some offence");
-                put("otherOffences", "Some other offences");
+                put("mainOffence", encryptor.apply("Some offence"));
+                put("otherOffences", encryptor.apply("Some other offences"));
 
                 put("pageNumber", "5");
             }
@@ -517,8 +526,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
 
-                put("mainOffence", "Some offence");
-                put("otherOffences", "Some other offences");
+                put("mainOffence", encryptor.apply("Some offence"));
+                put("otherOffences", encryptor.apply("Some other offences"));
                 put("offenceSummary", "Some offence summary");
 
                 put("pageNumber", "5");
@@ -560,8 +569,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", "Some offence");
-                put("otherOffences", "Some other offences");
+                put("mainOffence", encryptor.apply("Some offence"));
+                put("otherOffences", encryptor.apply("Some other offences"));
                 put("offenceSummary", "Some offence summary");
 
                 put("patternOfOffending", "Some pattern of offending");
@@ -605,8 +614,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", "Some offence");
-                put("otherOffences", "Some other offences");
+                put("mainOffence", encryptor.apply("Some offence"));
+                put("otherOffences", encryptor.apply("Some other offences"));
                 put("offenceSummary", "Some offence summary");
 
                 put("offenceAnalysis", "Some offence analysis");
@@ -651,8 +660,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", "Some offence");
-                put("otherOffences", "Some other offences");
+                put("mainOffence", encryptor.apply("Some offence"));
+                put("otherOffences", encryptor.apply("Some other offences"));
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
@@ -705,8 +714,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", "Some offence");
-                put("otherOffences", "Some other offences");
+                put("mainOffence", encryptor.apply("Some offence"));
+                put("otherOffences", encryptor.apply("Some other offences"));
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
@@ -763,8 +772,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", "Some offence");
-                put("otherOffences", "Some other offences");
+                put("mainOffence", encryptor.apply("Some offence"));
+                put("otherOffences", encryptor.apply("Some other offences"));
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
@@ -821,8 +830,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", "Some offence");
-                put("otherOffences", "Some other offences");
+                put("mainOffence", encryptor.apply("Some offence"));
+                put("otherOffences", encryptor.apply("Some other offences"));
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
@@ -880,8 +889,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", "Some offence");
-                put("otherOffences", "Some other offences");
+                put("mainOffence", encryptor.apply("Some offence"));
+                put("otherOffences", encryptor.apply("Some other offences"));
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
@@ -938,8 +947,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", "Some offence");
-                put("otherOffences", "Some other offences");
+                put("mainOffence", encryptor.apply("Some offence"));
+                put("otherOffences", encryptor.apply("Some other offences"));
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
@@ -1001,8 +1010,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", "Some offence");
-                put("otherOffences", "Some other offences");
+                put("mainOffence", encryptor.apply("Some offence"));
+                put("otherOffences", encryptor.apply("Some other offences"));
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
@@ -1066,8 +1075,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", "Some offence");
-                put("otherOffences", "Some other offences");
+                put("mainOffence", encryptor.apply("Some offence"));
+                put("otherOffences", encryptor.apply("Some other offences"));
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
@@ -1125,6 +1134,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                     .courtReports(ImmutableList.of(CourtReport.builder().courtReportId(456L).build()))
                     .build()))
                 .build()));
+        given(offenderApi.getOffencesByCrn(any(), eq("B56789")))
+            .willReturn(CompletableFuture.completedFuture(Offences.builder().items(ImmutableList.of()).build()));
+
 
         return new GuiceApplicationBuilder().
                 overrides(
