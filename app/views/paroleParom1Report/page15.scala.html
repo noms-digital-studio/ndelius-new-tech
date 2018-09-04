@@ -46,7 +46,7 @@
         </fieldset>
 
         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="risk-of-absconding-yes">
-            @textarea(reportForm("riskOfAbscondingDetails"), '_label -> "Provide details of the absconding risk", 'class -> "wide")
+            @textarea(reportForm("riskOfAbscondingDetails"), '_label -> "Provide details of the absconding risk", 'class -> "wide", 'required -> "true", 'error -> "Enter the details of the absconding risk")
         </div>
     </div>
 
