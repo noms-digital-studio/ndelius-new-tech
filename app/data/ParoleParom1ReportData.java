@@ -75,7 +75,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("INCREASE_FACTORS")
     private String increaseFactors;
 
-    @RequiredOnPage(value = 15, message = "Enter the factors that may decrease the risk of serious harm")
+    @RequiredOnPage(value = 15, message = "Enter the factors that might decrease the risk of serious harm")
     @JsonProperty("DECREASE_FACTORS")
     private String decreaseFactors;
 
