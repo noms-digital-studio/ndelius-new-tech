@@ -1,7 +1,9 @@
-Feature:  Parole Report
-  Background: Delius user is on the "Risk Management Plan (RMP)" UI within the Parole Report
+Feature: Parole Report
 
-  Scenario: Delius user does not complete all the fields in the "Risk Management Plan (RMP)" UI
+  Background:
+  Given Delius user is on the "Risk Managemant Plan (RMP)" UI on the Parole Report
+
+  Scenario: Delius user wants to leave the "Risk Management Plan (RMP)" page without entering any details into the free text fields
 
     When they select the "Continue" button
     Then  the following error messages are displayed
@@ -14,7 +16,8 @@ Feature:  Parole Report
       | Level of contact                         | Enter the level of contact                         |
       | Contingency plan                         | Enter the contingency plan                         |
 
-  Scenario: Delius user wants to continue writing the parole report
+  Scenario: Delius user wants to continue populating the Parole Report with information
+
     When they enter the following information
       | Agencies                                 | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.                                    |
       | Support                                  | Pharetra pharetra massa massa ultricies mi.                                                                                                                    |
