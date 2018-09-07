@@ -125,6 +125,16 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("CONTINGENCY_PLAN")
     private String contingencyPlan;
 
+    // Page 17 - Resettlement plan for release
+    @RequiredOnPage(value = 17, message = "Enter the contingency plan")
+    @JsonProperty("RESETTLEMENT_PLAN")
+    private String resettlementPlan;
+
+    @RequiredOnPage(value = 17, message = "Enter the contingency plan", onlyIfField = "resettlementPlan", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("RESETTLEMENT_PLAN_DETAIL")
+    private String resettlementPlanDetail;
+
+    // Page 21 - Sources
     @RequiredGroupOnPage(value = 21, message = "Select the case documents you have used")
     @JsonProperty("SOURCES_PREVIOUS_CONVICTIONS")
     private boolean sourcesPreviousConvictions;
