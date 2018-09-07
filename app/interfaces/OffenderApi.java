@@ -110,14 +110,14 @@ public interface OffenderApi {
         @Builder.Default private List<CourtReport> courtReports = ImmutableList.of();
         @Builder.Default private List<String> offenceIds = ImmutableList.of();
 
-        public String getMainOffenceId() {
+        public String mainOffenceId() {
             return offenceIds.stream()
                 .filter(s -> s.startsWith("M"))
                 .findFirst()
                 .orElse("");
         }
 
-        public List<String> getOtherOffenceIds() {
+        public List<String> otherOffenceIds() {
             return offenceIds.stream()
                 .filter(s -> s.startsWith("A"))
                 .collect(toList());
@@ -150,7 +150,7 @@ public interface OffenderApi {
                 .filter(offence -> Optional.ofNullable(offence.getOffenceId()).isPresent())
                 .filter(offence -> offence.getOffenceId().equals(mainOffenceId))
                 .findFirst()
-                .map(Offence::getOffenceDescription)
+                .map(Offence::offenceDescription)
                 .orElse("NO MAIN OFFENCE FOUND");
         }
 
@@ -159,7 +159,7 @@ public interface OffenderApi {
                 .filter(offence -> !offence.mainOffence)
                 .filter(offence -> Optional.ofNullable(offence.getOffenceId()).isPresent())
                 .filter(offence -> otherOffenceIds.contains(offence.getOffenceId()))
-                .map(Offence::getOffenceDescription)
+                .map(Offence::offenceDescription)
                 .collect(joining("\n"));
         }
     }
@@ -172,11 +172,15 @@ public interface OffenderApi {
         private String offenceDate;
         private OffenceDetail detail;
 
-        String getOffenceDescription() {
-            return String.format("%s, %s - %s",
-                detail.getMainCategoryDescription(),
-                detail.getSubCategoryDescription(),
-                formatDateTime(offenceDate));
+        String offenceDescription() {
+            return Optional.ofNullable(offenceDate)
+                .map(ignored -> String.format("%s, %s - %s",
+                    detail.getMainCategoryDescription(),
+                    detail.getSubCategoryDescription(),
+                    formatDateTime(offenceDate)))
+                .orElse(String.format("%s, %s",
+                    detail.getMainCategoryDescription(),
+                    detail.getSubCategoryDescription()));
         }
     }
 
