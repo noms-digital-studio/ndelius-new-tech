@@ -1,7 +1,7 @@
 Feature: Parole Report
 
-  Background
-  Given: Delius user is on the "Resettlement plan for release" UI on the Parole Report
+  Background:
+  Given Delius user is on the "Resettlement plan for release" UI on the Parole Report
 
   Scenario: Delius user wants to enter Resettlement details for an offender within their Parole report
 
