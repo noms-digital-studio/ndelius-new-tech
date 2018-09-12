@@ -123,8 +123,8 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
             .map(appearance -> {
                 params.put("court", appearance.getCourt().getCourtName());
 
-                params.put("mainOffence", offences.mainOffenceDescriptionForId(appearance.getMainOffenceId()));
-                params.put("otherOffences", offences.otherOffenceDescriptionsForIds(appearance.getOtherOffenceIds()));
+                params.put("mainOffence", offences.mainOffenceDescriptionForId(appearance.mainOffenceId()));
+                params.put("otherOffences", offences.otherOffenceDescriptionsForIds(appearance.otherOffenceIds()));
                 return params;
             })
             .orElseGet(() -> {

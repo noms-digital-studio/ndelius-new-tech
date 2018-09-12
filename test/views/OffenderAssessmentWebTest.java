@@ -52,14 +52,15 @@ public class OffenderAssessmentWebTest extends WithIE8Browser {
         offenderAssessmentPage = new OffenderAssessmentPage(browser);
         startPage = new StartPage(browser);
         checkYourReportPage = new CheckYourReportPage(browser);
-        when(documentStore.updateExistingPdf(any(), any(), any(), any(), any()))
-                .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
-        when(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
-                .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
+        given(documentStore.updateExistingPdf(any(), any(), any(), any(), any()))
+                .willReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
+        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
+                .willReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
         given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
         given(offenderApi.getCourtAppearancesByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(someCourtAppearances()));
         given(pdfGenerator.generate(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
+        given(offenderApi.getOffencesByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(someOffences()));
     }
 
     @Test

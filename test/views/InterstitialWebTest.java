@@ -34,16 +34,16 @@ public class InterstitialWebTest extends WithPartialMockedApplicationBrowser {
         offenderAssessmentPage = new OffenderAssessmentPage(browser);
         offenderDetailsPage = new OffenderDetailsPage(browser);
         startPage = new StartPage(browser);
-        when(documentStore.updateExistingPdf(any(), any(), any(), any(), any()))
-                .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
-        when(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
-                .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
-        when(pdfGenerator.generate(any(), any())).thenReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
+        given(documentStore.updateExistingPdf(any(), any(), any(), any(), any()))
+                .willReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
+        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
+                .willReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
+        given(pdfGenerator.generate(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
 
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
         given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
         given(offenderApi.getCourtAppearancesByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(someCourtAppearances()));
-
+        given(offenderApi.getOffencesByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(someOffences()));
     }
 
     @Test
