@@ -19,7 +19,7 @@ public class OffenderApiMock {
     private WireMockServer offenderApiWireMock;
 
     public OffenderApiMock start() {
-        offenderApiWireMock.start();
+            offenderApiWireMock.start();
         return this;
     }
 

@@ -144,6 +144,9 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     private String supervisionPlanDetail;
 
     // Page 19 - Recommendation
+    @RequiredOnPage(value = 19, message = "Enter your recommendation")
+    @JsonProperty("RECOMMENDATION")
+    private String recommendation;
 
     // Page 20 - Oral hearing
     @RequiredOnPage(value = 20, message = "Enter the oral hearing considerations")

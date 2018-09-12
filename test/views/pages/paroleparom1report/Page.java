@@ -14,6 +14,7 @@ public enum Page {
     RESETTLEMENT_PLAN("17", "Resettlement plan for release"),
     SUPERVISION_PLAN("18", "Supervision plan for release"),
     ORAL_HEARING("20", "Oral hearing"),
+    RECOMMENDATION("19", "Recommendation"),
     SOURCES("21", "Sources")
     ;
     private final String pageNumber;
