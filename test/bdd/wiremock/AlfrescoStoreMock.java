@@ -18,7 +18,7 @@ public class AlfrescoStoreMock {
 
 
     public AlfrescoStoreMock start() {
-        alfrescofWireMock.start();
+            alfrescofWireMock.start();
         return this;
     }
 
