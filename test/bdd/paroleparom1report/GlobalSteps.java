@@ -93,8 +93,8 @@ public class GlobalSteps {
         nameErrorMessages.forEach((name, message) -> assertThat(page.errorMessage(name)).isEqualTo(nameErrorMessages.get(name)));
     }
 
-    @When("^they select the \"([^\"]*)\" option for the radio with id \"([^\"]*)\"$")
-    public void theySelectTheOptionWithTheId(String label, String id)  {
+    @When("^they select the radio button with id \"([^\"]*)\"$")
+    public void theySelectTheOptionWithTheId(String id)  {
         page.clickElementWithId(id);
     }
 
