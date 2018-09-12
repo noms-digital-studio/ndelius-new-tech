@@ -93,6 +93,12 @@ public class GlobalSteps {
         nameErrorMessages.forEach((name, message) -> assertThat(page.errorMessage(name)).isEqualTo(nameErrorMessages.get(name)));
     }
 
+    @Then("^the following error messages for each field are displayed$")
+    public void theFollowingErrorMessagesForEachFieldAreDisplayed(DataTable errorFieldMessages) {
+        val nameErrorMessages = errorFieldMessages.asMap(String.class, String.class);
+        nameErrorMessages.forEach((name, message) -> assertThat(page.errorMessage(name)).isEqualTo(nameErrorMessages.get(name)));
+    }
+
     @When("^they select the radio button with id \"([^\"]*)\"$")
     public void theySelectTheOptionWithTheId(String id)  {
         page.clickElementWithId(id);
