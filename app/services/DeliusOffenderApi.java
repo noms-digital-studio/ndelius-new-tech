@@ -65,7 +65,7 @@ public class DeliusOffenderApi implements OffenderApi {
     @Override
     public CompletionStage<String> logon(String username) {
         return wsClient.url(offenderApiBaseUrl + "logon")
-            .post(format(ldapStringFormat, username))
+            .post(username.equals("NationalUser") ? username : format(ldapStringFormat, username))
             .thenApply(response ->  assertOkResponse(response, "logon"))
             .thenApply(WSResponse::getBody);
     }
