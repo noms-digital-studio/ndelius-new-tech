@@ -188,7 +188,7 @@ public class DeliusOffenderApi implements OffenderApi {
 
     private CompletionStage<JsonNode> logonAndCallOffenderApi(String action, Map<String, String> params) {
 
-        val url = offenderApiBaseUrl + action + queryParamsFrom(params);
+        val url = action + queryParamsFrom(params);
         return wsClient.url(offenderApiBaseUrl + "logon")
                 .post("NationalUser")
                 .thenApply(response ->  assertOkResponse(response, "logon"))
@@ -196,9 +196,9 @@ public class DeliusOffenderApi implements OffenderApi {
                 .thenCompose(bearerToken -> callOffenderApi(bearerToken, url));
     }
 
-    private CompletionStage<JsonNode> callOffenderApi(String bearerToken, String url) {
+    public CompletionStage<JsonNode> callOffenderApi(String bearerToken, String url) {
 
-        return wsClient.url(url)
+        return wsClient.url(offenderApiBaseUrl + url)
             .addHeader(AUTHORIZATION, String.format("Bearer %s", bearerToken))
             .get()
             .thenApply(wsResponse -> {
