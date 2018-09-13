@@ -180,7 +180,7 @@ public class OffenderTest {
 
     @Test
     public void itFindTheOtherOffenceDescriptions() {
-        assertThat(offences().otherOffenceDescriptionsForIds(ImmutableList.of("A1", "A2"))).isEqualTo("Main1, Sub1\nMain2, Sub2");
+        assertThat(offences().otherOffenceDescriptionsForIds(ImmutableList.of("A1", "A2"))).isEqualTo("Main1, Sub1<br>Main2, Sub2");
     }
 
     @Test

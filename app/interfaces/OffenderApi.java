@@ -160,7 +160,7 @@ public interface OffenderApi {
                 .filter(offence -> Optional.ofNullable(offence.getOffenceId()).isPresent())
                 .filter(offence -> otherOffenceIds.contains(offence.getOffenceId()))
                 .map(Offence::offenceDescription)
-                .collect(joining("\n"));
+                .collect(joining("<br>"));
         }
     }
 

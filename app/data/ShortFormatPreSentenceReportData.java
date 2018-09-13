@@ -125,12 +125,10 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
 
     // Page 5
 
-    @Encrypted
     @RequiredOnPage(5)
     @JsonProperty("MAIN_OFFENCE")
     private String mainOffence;
 
-    @Encrypted
     @OnPage(5)
     @JsonProperty("OTHER_OFFENCE")
     private String otherOffences;

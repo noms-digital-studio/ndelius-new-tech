@@ -483,8 +483,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
 
-                put("mainOffence", encryptor.apply("Some offence"));
-                put("otherOffences", encryptor.apply("Some other offences"));
+                put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
 
                 put("pageNumber", "5");
             }
@@ -526,8 +526,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
 
-                put("mainOffence", encryptor.apply("Some offence"));
-                put("otherOffences", encryptor.apply("Some other offences"));
+                put("mainOffence", "Some offence");
+                put("otherOffences","Some other offences");
                 put("offenceSummary", "Some offence summary");
 
                 put("pageNumber", "5");
@@ -569,8 +569,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", encryptor.apply("Some offence"));
-                put("otherOffences", encryptor.apply("Some other offences"));
+                put("mainOffence","Some offence");
+                put("otherOffences","Some other offences");
                 put("offenceSummary", "Some offence summary");
 
                 put("patternOfOffending", "Some pattern of offending");
@@ -614,8 +614,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", encryptor.apply("Some offence"));
-                put("otherOffences", encryptor.apply("Some other offences"));
+                put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
 
                 put("offenceAnalysis", "Some offence analysis");
@@ -660,8 +660,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", encryptor.apply("Some offence"));
-                put("otherOffences", encryptor.apply("Some other offences"));
+                put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
@@ -714,8 +714,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", encryptor.apply("Some offence"));
-                put("otherOffences", encryptor.apply("Some other offences"));
+                put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
@@ -772,8 +772,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", encryptor.apply("Some offence"));
-                put("otherOffences", encryptor.apply("Some other offences"));
+                put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
@@ -830,8 +830,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", encryptor.apply("Some offence"));
-                put("otherOffences", encryptor.apply("Some other offences"));
+                put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
@@ -889,8 +889,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", encryptor.apply("Some offence"));
-                put("otherOffences", encryptor.apply("Some other offences"));
+                put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
@@ -947,8 +947,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", encryptor.apply("Some offence"));
-                put("otherOffences", encryptor.apply("Some other offences"));
+                put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
@@ -1010,8 +1010,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", encryptor.apply("Some offence"));
-                put("otherOffences", encryptor.apply("Some other offences"));
+                put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
@@ -1075,8 +1075,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", encryptor.apply("Some offence"));
-                put("otherOffences", encryptor.apply("Some other offences"));
+                put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");

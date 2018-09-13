@@ -1,8 +1,8 @@
 @import helper._
 
-@(reportForm: Form[_], encrypter: String => String)
+@(reportForm: Form[_])
 
 
-@inputHidden(reportForm("mainOffence"), encrypter)
-@inputHidden(reportForm("otherOffences"), encrypter)
+@inputHidden(reportForm("mainOffence"))
+@inputHidden(reportForm("otherOffences"))
 @inputHidden(reportForm("offenceSummary"))

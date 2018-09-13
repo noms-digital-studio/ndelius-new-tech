@@ -38,11 +38,11 @@
             @page3Fields(reportForm, encrypter)
             @page4Fields(reportForm)
 
-            @readOnlyField(reportForm("mainOffence"), "Main offence", encrypter)
+            @textarea(reportForm("mainOffence"), '_label -> "Main offence and date", 'class -> "wide", 'required -> "true", '_error -> "Enter the main offence and date")
 
             <hr />
 
-            @readOnlyListField(reportForm("otherOffences"), "Other offences", encrypter)
+            @textarea(reportForm("otherOffences"), '_label -> "Other offences and dates (if applicable)", 'class -> "wide")
 
             <hr />
 
