@@ -123,10 +123,10 @@ public class OffenderTest {
         val offence = Offence.builder()
             .offenceDate("2016-12-24T00:00")
             .detail(OffenceDetail.builder()
-                .mainCategoryDescription("main")
+                .code("code")
                 .subCategoryDescription("sub")
                 .build()).build();
-        assertThat(offence.offenceDescription()).isEqualTo("main, sub - 24/12/2016");
+        assertThat(offence.offenceDescription()).isEqualTo("sub (code) - 24/12/2016");
     }
 
     @Test

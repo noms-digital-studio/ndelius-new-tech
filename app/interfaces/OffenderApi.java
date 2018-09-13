@@ -174,13 +174,13 @@ public interface OffenderApi {
 
         String offenceDescription() {
             return Optional.ofNullable(offenceDate)
-                .map(ignored -> String.format("%s, %s - %s",
-                    detail.getMainCategoryDescription(),
+                .map(ignored -> String.format("%s (%s) - %s",
                     detail.getSubCategoryDescription(),
+                    detail.getCode(),
                     formatDateTime(offenceDate)))
                 .orElse(String.format("%s, %s",
-                    detail.getMainCategoryDescription(),
-                    detail.getSubCategoryDescription()));
+                    detail.getSubCategoryDescription(),
+                    detail.getCode()));
         }
     }
 
