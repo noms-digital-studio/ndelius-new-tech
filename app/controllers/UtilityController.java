@@ -136,7 +136,7 @@ public class UtilityController extends Controller {
 
         return supplied.equals(required) ?
                 offenderApi.logon(request().body().asText()).thenApply(Results::ok) :
-                CompletableFuture.completedFuture(unauthorized());
+                CompletableFuture.supplyAsync(Results::unauthorized);
     }
 
     public CompletionStage<Result> apiCall(String url) {
