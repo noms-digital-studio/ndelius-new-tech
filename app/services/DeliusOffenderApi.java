@@ -205,7 +205,11 @@ public class DeliusOffenderApi implements OffenderApi {
                 if (wsResponse.getStatus() != OK) {
                     throw new RuntimeException(String.format("Bad response calling Delius Offender API %s. Status %d", url, wsResponse.getStatus()));
                 }
-                return wsResponse.asJson();
+
+                return wsResponse.getContentType().toLowerCase().contains("json") ?
+                        wsResponse.asJson() :
+                        Json.toJson(ImmutableMap.of("content", wsResponse.getBody()));
+
             })
             .exceptionally(throwable -> {
                 Logger.error("Got an error calling Delius Offender API", throwable);
