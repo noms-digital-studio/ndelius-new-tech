@@ -18,6 +18,7 @@ import play.libs.ws.WSResponse;
 import javax.inject.Inject;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -208,7 +209,10 @@ public class DeliusOffenderApi implements OffenderApi {
 
                 return wsResponse.getContentType().toLowerCase().contains("json") ?
                         wsResponse.asJson() :
-                        Json.toJson(ImmutableMap.of("content", wsResponse.getBody()));
+                        Json.toJson(ImmutableMap.of(
+                                "headers", wsResponse.getHeaders(),
+                                "content", Base64.getEncoder().encodeToString(wsResponse.asByteArray()))
+                        );
 
             })
             .exceptionally(throwable -> {
