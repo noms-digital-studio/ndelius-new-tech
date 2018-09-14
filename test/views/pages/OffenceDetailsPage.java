@@ -19,6 +19,7 @@ public class OffenceDetailsPage extends FluentPage {
 
     public OffenceDetailsPage gotoNext() {
         $(id("offenceSummary")).fill().with("Offence summary");
+        $(id("mainOffence")).fill().with("Main offence");
         $(id("nextButton")).click();
         return this;
     }

@@ -178,7 +178,7 @@ public interface OffenderApi {
                     detail.getSubCategoryDescription(),
                     detail.getCode(),
                     formatDateTime(offenceDate)))
-                .orElse(String.format("%s, %s",
+                .orElse(String.format("%s (%s)",
                     detail.getSubCategoryDescription(),
                     detail.getCode()));
         }

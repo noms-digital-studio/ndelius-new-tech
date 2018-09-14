@@ -3,7 +3,6 @@ package interfaces;
 import com.google.common.collect.ImmutableList;
 import interfaces.OffenderApi.CourtAppearance;
 import interfaces.OffenderApi.CourtAppearances;
-import interfaces.OffenderApi.CourtReport;
 import interfaces.OffenderApi.Offence;
 import interfaces.OffenderApi.OffenceDetail;
 import interfaces.OffenderApi.Offences;
@@ -12,6 +11,8 @@ import lombok.val;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static utils.CourtAppearanceHelpers.someCourtAppearances;
+import static utils.OffenceHelpers.someOffences;
 import static utils.OffenderHelper.contactDetailsAddressesNonOfWhichHAveAMainStatus;
 import static utils.OffenderHelper.contactDetailsHaveOneAddressWithNullStatus;
 import static utils.OffenderHelper.contactDetailsWithEmptyAddressList;
@@ -105,12 +106,12 @@ public class OffenderTest {
 
     @Test
     public void findsCourtAppearanceForCourtReportId() {
-        assertThat(courtAppearances().findForCourtReportId(4L).get().getCourtAppearanceId()).isEqualTo(3L);
+        assertThat(someCourtAppearances().findForCourtReportId(4L).get().getCourtAppearanceId()).isEqualTo(3L);
     }
 
     @Test
     public void findsNoCourtAppearanceWhenNoCourtReportsMatch() {
-        assertThat(courtAppearances().findForCourtReportId(42L).isPresent()).isFalse();
+        assertThat(someCourtAppearances().findForCourtReportId(42L).isPresent()).isFalse();
     }
 
     @Test
@@ -133,44 +134,44 @@ public class OffenderTest {
     public void formatsTheOffenceDescriptionCorrectlyWhenDateIsMissing() {
         val offence = Offence.builder()
             .detail(OffenceDetail.builder()
-                .mainCategoryDescription("main")
+                .code("00101")
                 .subCategoryDescription("sub")
                 .build()).build();
-        assertThat(offence.offenceDescription()).isEqualTo("main, sub");
+        assertThat(offence.offenceDescription()).isEqualTo("sub (00101)");
     }
 
     @Test
     public void itGetsTheCorrectMainOffenceId() {
-        CourtAppearance courtAppearance = courtAppearances().getItems().get(0);
+        CourtAppearance courtAppearance = someCourtAppearances().getItems().get(0);
         assertThat(courtAppearance.mainOffenceId()).isEqualTo("M1");
     }
 
     @Test
     public void itReturnEmptyStringWhenThereIsNoMainOffenceId() {
-        CourtAppearance courtAppearance = courtAppearances().getItems().get(1);
+        CourtAppearance courtAppearance = someCourtAppearances().getItems().get(1);
         assertThat(courtAppearance.mainOffenceId()).isEqualTo("");
     }
 
     @Test
     public void itGetsTheCorrectOtherOffenceIds() {
-        CourtAppearance courtAppearance = courtAppearances().getItems().get(0);
+        CourtAppearance courtAppearance = someCourtAppearances().getItems().get(0);
         assertThat(courtAppearance.otherOffenceIds()).containsOnly("A1", "A2");
     }
 
     @Test
-    public void itEmptyListWhenThereAreNoOtherOffenceIds() {
-        CourtAppearance courtAppearance = courtAppearances().getItems().get(2);
+    public void itReturnsAnEmptyListWhenThereAreNoOtherOffenceIds() {
+        CourtAppearance courtAppearance = someCourtAppearances().getItems().get(2);
         assertThat(courtAppearance.otherOffenceIds()).isEmpty();
     }
 
     @Test
     public void itFindsTheMainOffenceDescription() {
-        assertThat(offences().mainOffenceDescriptionForId("M1")).isEqualTo("Main, Sub");
+        assertThat(someOffences().mainOffenceDescriptionForId("M1")).isEqualTo("Some sub category description (00101) - 14/09/2018");
     }
 
     @Test
     public void itReturnsDefaultTextWhenIdsDontMatch() {
-        assertThat(offences().mainOffenceDescriptionForId("M92")).isEqualTo("NO MAIN OFFENCE FOUND");
+        assertThat(someOffences().mainOffenceDescriptionForId("M92")).isEqualTo("NO MAIN OFFENCE FOUND");
     }
 
     @Test
@@ -180,12 +181,12 @@ public class OffenderTest {
 
     @Test
     public void itFindTheOtherOffenceDescriptions() {
-        assertThat(offences().otherOffenceDescriptionsForIds(ImmutableList.of("A1", "A2"))).isEqualTo("Main1, Sub1<br>Main2, Sub2");
+        assertThat(someOffences().otherOffenceDescriptionsForIds(ImmutableList.of("A1", "A2"))).isEqualTo("A different sub category description (00202) - 13/09/2018");
     }
 
     @Test
     public void itReturnsEmptyStringWhenIdsDontMatchOffenceIds() {
-        assertThat(offences().otherOffenceDescriptionsForIds(ImmutableList.of("A92", "A93"))).isEqualTo("");
+        assertThat(someOffences().otherOffenceDescriptionsForIds(ImmutableList.of("A92", "A93"))).isEqualTo("");
     }
 
     @Test
@@ -202,74 +203,6 @@ public class OffenderTest {
             )).build();
     }
 
-    private CourtAppearances courtAppearances() {
-        return CourtAppearances.builder()
-            .items(ImmutableList.of(
-                CourtAppearance.builder()
-                    .courtAppearanceId(1L)
-                    .courtReports(ImmutableList.of(
-                        CourtReport.builder()
-                            .courtReportId(1L)
-                            .build()
-                    ))
-                    .offenceIds(ImmutableList.of("M1", "A1", "A2"))
-                    .build(),
-                CourtAppearance.builder()
-                    .courtAppearanceId(2L)
-                    .courtReports(ImmutableList.of(
-                        CourtReport.builder()
-                            .courtReportId(2L)
-                            .build(),
-                        CourtReport.builder()
-                            .courtReportId(3L)
-                            .build()
-                    ))
-                    .offenceIds(ImmutableList.of("A1", "A2"))
-                    .build(),
-                CourtAppearance.builder()
-                    .courtAppearanceId(3L)
-                    .courtReports(ImmutableList.of(
-                        CourtReport.builder()
-                            .courtReportId(4L)
-                            .build()
-                    ))
-                    .offenceIds(ImmutableList.of("M1"))
-                    .build()
-                )).build();
-    }
-
-    private Offences offences() {
-
-        return Offences.builder().items(
-            ImmutableList.of(
-                Offence.builder()
-                    .offenceId("M1")
-                    .mainOffence(true)
-                    .detail(OffenceDetail.builder()
-                        .mainCategoryDescription("Main")
-                        .subCategoryDescription("Sub")
-                        .build())
-                    .build(),
-                Offence.builder()
-                    .offenceId("A1")
-                    .mainOffence(false)
-                    .detail(OffenceDetail.builder()
-                        .mainCategoryDescription("Main1")
-                        .subCategoryDescription("Sub1")
-                        .build())
-                    .build(),
-                Offence.builder()
-                    .offenceId("A1")
-                    .mainOffence(false)
-                    .detail(OffenceDetail.builder()
-                        .mainCategoryDescription("Main2")
-                        .subCategoryDescription("Sub2")
-                        .build())
-                    .build()
-
-            )).build();
-    }
-
     private Offences onlyAMainOffence() {
 
         return Offences.builder().items(
@@ -278,7 +211,7 @@ public class OffenderTest {
                     .offenceId("M1")
                     .mainOffence(true)
                     .detail(OffenceDetail.builder()
-                        .mainCategoryDescription("Main")
+                        .code("00101")
                         .subCategoryDescription("Sub")
                         .build())
                     .build()
@@ -293,7 +226,7 @@ public class OffenderTest {
                     .offenceId("A1")
                     .mainOffence(false)
                     .detail(OffenceDetail.builder()
-                        .mainCategoryDescription("Main")
+                        .code("00102")
                         .subCategoryDescription("Sub")
                         .build())
                     .build()
