@@ -223,7 +223,7 @@ public class WizardData implements Validatable<List<ValidationError>> {
     }
 
     protected String formattedDateFromDateParts(String fieldName) {
-        return formattedDateFromDateParts(forName(fieldName));
+        return formattedDateFromDateParts(fieldForName(fieldName));
     }
 
     private String formattedDateFromDateParts(Field field) {
@@ -235,7 +235,7 @@ public class WizardData implements Validatable<List<ValidationError>> {
     private Stream<String> dateFieldValues(Field field) {
         return Stream.of("day", "month", "year")
                 .map(postifx -> String.format("%s_%s", field.getName(), postifx))
-                .map(this::forName)
+                .map(this::fieldForName)
                 .map(this::getStringValue)
                 .map(value -> value.orElse(""));
     }
@@ -287,7 +287,7 @@ public class WizardData implements Validatable<List<ValidationError>> {
         return annotatedFields(RequiredGroupOnPage.class);
     }
 
-    private Field forName(String name) {
+    private Field fieldForName(String name) {
         return FieldUtils.getField(this.getClass(), name, true);
     }
 
