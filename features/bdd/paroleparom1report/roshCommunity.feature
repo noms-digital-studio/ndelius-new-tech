@@ -5,11 +5,11 @@ Feature: Parole Report
 
   Scenario: Delius user wants to enter RoSH community data for an offender within their parole report
 
-    When they select the "Low" option on the "Public"
-    And they select the "Medium" option on the "Known adult"
-    And they select the "High" option on the "Children"
-    And they select the "Very high" option on the "Prisoners"
-    And they select the "Low" option on the "Staff"
+    Given they select the radio button with id "roshCommunityPublic_low"
+    And they select the radio button with id "roshCommunityKnownAdult_medium"
+    And they select the radio button with id "roshCommunityChildren_high"
+    And they select the radio button with id "roshCommunityPrisoners_very_high"
+    And they select the radio button with id "roshCommunityStaff_low"
     When they select the "Continue" button
     Then the user should be directed to the "Current ROSH: custody" UI
 
