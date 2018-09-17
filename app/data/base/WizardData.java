@@ -212,7 +212,7 @@ public class WizardData implements Validatable<List<ValidationError>> {
     }
     private boolean composedDateBitsAreInvalid(Field field) {
         try {
-            String formattedDate = dateFieldValues(field).reduce("%s/%s/%s", (current, value) -> current.replaceFirst("%s", value));
+            String formattedDate = dateFieldValues(field).collect(Collectors.joining("/"));
             SimpleDateFormat dateFormat = new SimpleDateFormat("d/M/yyyy");
             dateFormat.setLenient(false);
             dateFormat.parse(formattedDate);
@@ -229,7 +229,7 @@ public class WizardData implements Validatable<List<ValidationError>> {
     private String formattedDateFromDateParts(Field field) {
         return composedDateBitsAreInvalid(field) ?
                 "" :
-                dateFieldValues(field).reduce("%s/%s/%s", (current, value) -> current.replaceFirst("%s", value));
+                dateFieldValues(field).collect(Collectors.joining("/"));
     }
 
     private Stream<String> dateFieldValues(Field field) {
@@ -237,7 +237,7 @@ public class WizardData implements Validatable<List<ValidationError>> {
                 .map(postifx -> String.format("%s_%s", field.getName(), postifx))
                 .map(this::forName)
                 .map(this::getStringValue)
-                .map(o -> o.orElse(""));
+                .map(value -> value.orElse(""));
     }
 
     private boolean isJumping() {

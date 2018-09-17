@@ -6,10 +6,12 @@ import data.annotations.RequiredGroupOnPage;
 import data.annotations.RequiredOnPage;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Before;
 import org.junit.Test;
 import play.data.validation.ValidationError;
 
+import static data.base.WizardData.fieldPage;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class WizardDataValidationTest {
@@ -56,6 +58,15 @@ public class WizardDataValidationTest {
         @OnPage(9)
         private String dummyFinalPageField;
 
+        @OnPage(10)
+        private String page10Field;
+        @RequiredOnPage(11)
+        private String page11Field;
+        @RequiredGroupOnPage(12)
+        private String page12Field;
+        @RequiredDateOnPage(13)
+        private String page13Field;
+
     }
 
     private MyTestData data;
@@ -66,6 +77,13 @@ public class WizardDataValidationTest {
         data.setOnBehalfOfUser("whatever");
     }
 
+    @Test
+    public void fieldPageNumberReadFromAllPageAnnotations() {
+        assertThat(fieldPage(FieldUtils.getField(MyTestData.class, "page10Field", true))).isEqualTo(10);
+        assertThat(fieldPage(FieldUtils.getField(MyTestData.class, "page11Field", true))).isEqualTo(11);
+        assertThat(fieldPage(FieldUtils.getField(MyTestData.class, "page12Field", true))).isEqualTo(12);
+        assertThat(fieldPage(FieldUtils.getField(MyTestData.class, "page13Field", true))).isEqualTo(13);
+    }
 
     @Test
     public void optionalFieldsCanBeLeftNull() {
