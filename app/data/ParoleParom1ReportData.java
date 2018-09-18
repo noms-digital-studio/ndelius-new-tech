@@ -97,23 +97,23 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     private String roshCommunityStaff;
 
     // Page 13 - Current RoSH: community
-    @RequiredOnPage(value = 12, message = "Select the risk to the public")
+    @RequiredOnPage(value = 13, message = "Select the risk to the public")
     @JsonProperty("ROSH_CUSTODY_PUBLIC")
     private String roshCustodyPublic;
 
-    @RequiredOnPage(value = 12, message = "Select the risk to any known adult")
+    @RequiredOnPage(value = 13, message = "Select the risk to any known adult")
     @JsonProperty("ROSH_CUSTODY_KNOWN_ADULT")
     private String roshCustodyKnownAdult;
 
-    @RequiredOnPage(value = 12, message = "Select the risk to children")
+    @RequiredOnPage(value = 13, message = "Select the risk to children")
     @JsonProperty("ROSH_CUSTODY_CHILDREN")
     private String roshCustodyChildren;
 
-    @RequiredOnPage(value = 12, message = "Select the risk to prisoners")
+    @RequiredOnPage(value = 13, message = "Select the risk to prisoners")
     @JsonProperty("ROSH_CUSTODY_PRISONERS")
     private String roshCustodyPrisoners;
 
-    @RequiredOnPage(value = 12, message = "Select the risk to staff")
+    @RequiredOnPage(value = 13, message = "Select the risk to staff")
     @JsonProperty("ROSH_CUSTODY_STAFF")
     private String roshCustodyStaff;
 
