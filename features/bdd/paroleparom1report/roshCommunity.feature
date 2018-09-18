@@ -11,7 +11,7 @@ Feature: Parole Report
     And they select the radio button with id "roshCommunityPrisoners_very_high"
     And they select the radio button with id "roshCommunityStaff_low"
     When they select the "Continue" button
-    Then the user should be directed to the "Current ROSH: custody" UI
+    Then the user should be directed to the "Current RoSH: custody" UI
 
   Scenario: Delius User does not complete the relevant fields within the "Current RoSH community" UI
 
