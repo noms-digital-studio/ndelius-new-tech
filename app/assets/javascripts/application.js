@@ -30,7 +30,7 @@ function openPopup(url, name, top, left) {
         // SFR Feedback
         $('#sfrFeedback').click(function (e) {
             e.preventDefault();
-            openPopup('https://docs.google.com/forms/d/e/1FAIpQLSdVaRoXyzB0WFo3znJDKF5REV914kFM1iaoAOjVWySQJgvknA/viewform?usp=send_form', 'sfrFeedback', 250, 50);
+            openPopup($(this).attr('href'), 'sfrFeedback', 250, 50);
         });
 
         /**
