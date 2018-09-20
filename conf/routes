@@ -32,7 +32,6 @@ GET     /nationalSearch/satisfaction                controllers.FeedbackControll
 GET     /nationalSearch/analytics/satisfaction      controllers.NationalSearchAnalyticsController.satisfaction
 GET     /feedback                                   controllers.FeedbackController.viewNationalSearchFeedback
 GET     /feedback/nationalSearch                    controllers.FeedbackController.viewNationalSearchFeedback
-GET     /feedback/sfpsr                             controllers.FeedbackController.viewSfpsrFeedback
 
 GET     /offender/oneTimeNomisRef/:reference/image  controllers.OffenderController.image(reference: String)
 
@@ -40,8 +39,6 @@ GET     /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSe
 POST    /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSentenceReportController.wizardPost
 POST    /report/shortFormatPreSentenceReport/save   controllers.ShortFormatPreSentenceReportController.reportPost
 GET     /report/shortFormatPreSentenceReport/get    controllers.ShortFormatPreSentenceReportController.getPdf(documentId: String, onBehalfOfUser: String)
-
-POST    /report/shortFormatPreSentenceReport/feedback   controllers.ShortFormatPreSentenceReportController.feedbackPost
 
 GET     /report/paroleParom1Report                      controllers.ParoleParom1ReportController.wizardGet
 POST    /report/paroleParom1Report                      controllers.ParoleParom1ReportController.wizardPost

@@ -156,16 +156,6 @@ function openPopup(url) {
         });
 
         /**
-         * Feedback link - change form action and submit
-         */
-        $('.feedback-link').click(function (e) {
-            e.preventDefault();
-
-            var form = $('form');
-            form.attr('action', form.attr('action') + '/feedback').submit();
-        });
-
-        /**
          * Ensure jumpNumber is cleared if next after clicking browser back button
          */
         $('#nextButton:not(.popup-launcher)').click(function () {
