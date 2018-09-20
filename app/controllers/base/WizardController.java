@@ -165,18 +165,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         }
     }
 
-    public final CompletionStage<Result> feedbackPost() {
-
-        return CompletableFuture.supplyAsync(() -> {
-
-            val formData = wizardForm.bindFromRequest();
-
-            return ok(formRenderer(baseViewName() + "Feedback").apply(
-                    formData, getPageStatuses(formData.value(), 0, null)));
-
-        }, ec.current());
-    }
-
     protected CompletionStage<Map<String, String>> initialParams() { // Overridable in derived Controllers to supplant initial params
 
         val params = request().queryString().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue()[0]));
