@@ -32,6 +32,7 @@ GET     /nationalSearch/satisfaction                controllers.FeedbackControll
 GET     /nationalSearch/analytics/satisfaction      controllers.NationalSearchAnalyticsController.satisfaction
 GET     /feedback                                   controllers.FeedbackController.viewNationalSearchFeedback
 GET     /feedback/nationalSearch                    controllers.FeedbackController.viewNationalSearchFeedback
+GET     /feedback/sfpsr                             controllers.FeedbackController.viewSfpsrFeedback
 
 GET     /offender/oneTimeNomisRef/:reference/image  controllers.OffenderController.image(reference: String)
 

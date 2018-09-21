@@ -24,6 +24,7 @@ public class FeedbackController extends Controller {
     private final AnalyticsStore analyticsStore;
     private final views.html.viewNationalSearchFeedback viewNationalSearchFeedbackTemplate;
     private final views.html.viewSatisfactionTemplate viewSatisfactionTemplate;
+    private final views.html.viewSfpsrFeedback viewSfpsrFeedbackTemplate;
     private final HttpExecutionContext ec;
     private final Config configuration;
 
@@ -31,11 +32,13 @@ public class FeedbackController extends Controller {
     public FeedbackController(AnalyticsStore analyticsStore,
                               views.html.viewNationalSearchFeedback viewNationalSearchFeedbackTemplate,
                               views.html.viewSatisfactionTemplate viewSatisfactionTemplate,
+                              views.html.viewSfpsrFeedback viewSfpsrFeedbackTemplate,
                               HttpExecutionContext ec, Config configuration) {
 
         this.analyticsStore = analyticsStore;
         this.viewNationalSearchFeedbackTemplate = viewNationalSearchFeedbackTemplate;
         this.viewSatisfactionTemplate = viewSatisfactionTemplate;
+        this.viewSfpsrFeedbackTemplate = viewSfpsrFeedbackTemplate;
         this.ec = ec;
         this.configuration = configuration;
     }
@@ -46,6 +49,10 @@ public class FeedbackController extends Controller {
 
     public CompletionStage<Result> viewSatisfaction() {
         return authorizedRender(this::renderSatisfactionPage);
+    }
+
+    public CompletionStage<Result> viewSfpsrFeedback() {
+        return authorizedRender(this::renderSfpsrFeedbackPage);
     }
 
     private CompletionStage<Result> authorizedRender(Supplier<CompletionStage<Result>> renderPage) {
@@ -65,6 +72,11 @@ public class FeedbackController extends Controller {
 
     private CompletionStage<Result> renderSatisfactionPage() {
         return CompletableFuture.completedFuture(ok(viewSatisfactionTemplate.render()));
+    }
+
+    private CompletionStage<Result> renderSfpsrFeedbackPage() {
+        return analyticsStore.sfpsrFeedback()
+            .thenApplyAsync(feedback -> ok(viewSfpsrFeedbackTemplate.render(feedback)), ec.current());
     }
 
     private Map<String, String> getTokenFromHeader(String authHeader) {
