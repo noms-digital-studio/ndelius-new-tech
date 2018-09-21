@@ -201,18 +201,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
             session("id", UUID.randomUUID().toString());
         }
 
-        val feedback = new HashMap<String, Object>()
-        {
-            {
-                put("email", wizardData.getEmail());
-                put("rating", wizardData.getRating());
-                put("feedback", wizardData.getFeedback());
-                put("role", wizardData.getRoleother() == null || wizardData.getRoleother().isEmpty() ? wizardData.getRole() : wizardData.getRoleother());
-                put("provider", wizardData.getProvider());
-                put("region", wizardData.getRegion());
-            }
-        };
-
         val eventData = new HashMap<String, Object>()
         {
             {
@@ -220,7 +208,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                 put("sessionId", session("id"));
                 put("pageNumber", wizardData.getPageNumber());
                 put("dateTime", DateTime.now().toDate());
-                put("feedback", feedback);
             }
         };
 
