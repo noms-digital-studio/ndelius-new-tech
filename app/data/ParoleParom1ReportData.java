@@ -75,6 +75,26 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("SENTENCE_PLAN")
     private String sentencePlan;
 
+    // Page 10 - MAPPA
+    @RequiredOnPage(value = 10, message = "Specify if the prisoner is eligible for MAPPA")
+    @JsonProperty("ELIGIBLE_FOR_MAPPA")
+    private String eligibleForMappa;
+
+    @RequiredDateOnPage(value = 10, message = "Enter the date when the prisoner was screened for MAPPA", incompleteMessage = "Enter the date when the prisoner was screened for MAPPA and include a day, month and year", invalidMessage = "Enter a real date when the prisoner was screened for MAPPA", onlyIfField = "eligibleForMappa", onlyIfFieldMatchValue= "yes")
+    private String mappaScreenedDate;
+    private String mappaScreenedDate_day;
+    private String mappaScreenedDate_month;
+    private String mappaScreenedDate_year;
+
+    @RequiredOnPage(value = 10, message = "Select the prisoner’s current MAPPA category", onlyIfField = "eligibleForMappa", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("MAPPA_CATEGORY")
+    private String mappaCategory;
+
+    @RequiredOnPage(value = 10, message = "Select the prisoner’s current MAPPA level", onlyIfField = "eligibleForMappa", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("MAPPA_LEVEL")
+    private String mappaLevel;
+
+
     // Page 12 - Current RoSH: community
     @RequiredOnPage(value = 12, message = "Select the risk to the public")
     @JsonProperty("ROSH_COMMUNITY_PUBLIC")
