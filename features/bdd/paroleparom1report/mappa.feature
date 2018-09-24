@@ -22,8 +22,8 @@ Feature: Parole Report - Prisoner contact
 
     Given they select the "Yes" option on the "Is the prisoner eligible for MAPPA?"
     When they enter the date "07/08/2018" for "What date was the prisoner screened for MAPPA (MAPPAQ completed)?"
-    And they select the "1" option on the "What is the prisoner`s current MAPPA category?"
-    And they select the "2" option on the "What is the prisoner`s current MAPPA level?"
+    And they select the radio button with id "mappaCategory_1"
+    And they select the radio button with id "mappaLevel_2"
     When they select the "Continue" button
     Then the user should be directed to the "Current risk assessment" UI
 
