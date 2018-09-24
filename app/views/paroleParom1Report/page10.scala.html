@@ -24,7 +24,7 @@
     <div class="form-group" data-module="radios">
         <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
             <legend class="govuk-fieldset__legend govuk-label">
-                Does the prisoner pose a risk of absconding?
+                Is the prisoner eligible for MAPPA?
             </legend>
 
             @inputRadioGroup(
@@ -42,7 +42,7 @@
 
             @inputText(
                 reportForm("mappaScreenedDate"),
-                '_label -> "On what date did you contact the VLO?",
+                '_label -> "What date was the prisoner screened for MAPPA (MAPPAQ completed)?",
                 'required -> "true",
                 '_date -> "true",
                 '_form_hint -> "For example, 31 3 1980",
@@ -50,6 +50,7 @@
                 '_month -> reportForm("mappaScreenedDate_month").getValue.orElse(""),
                 '_year -> reportForm("mappaScreenedDate_year").getValue.orElse(""))
 
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
             <div class="form-group" data-module="radios">
                 <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
