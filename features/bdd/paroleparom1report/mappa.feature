@@ -21,9 +21,9 @@ Feature: Parole Report - Prisoner contact
   Scenario: Delius user wants to enter the Multi Agency Public Protection Arrangements (MAPPA) information
 
     Given they select the "Yes" option on the "Is the prisoner eligible for MAPPA?"
-    And they enter the date "07/08/2018" for "What date was the prisoner screened for MAPPA (MAPPAQ completed)?"
-    And they select the "1" option on the "What is the prisoner's current MAPPA category?"
-    And they select the "2" option on the "What is the prisoner's current MAPPA level?"
+    When they enter the date "07/08/2018" for "What date was the prisoner screened for MAPPA (MAPPAQ completed)?"
+    And they select the "1" option on the "What is the prisoner`s current MAPPA category?"
+    And they select the "2" option on the "What is the prisoner`s current MAPPA level?"
     When they select the "Continue" button
     Then the user should be directed to the "Current risk assessment" UI
 
