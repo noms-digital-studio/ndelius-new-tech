@@ -96,11 +96,11 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     private String mappaScreenedDate_month;
     private String mappaScreenedDate_year;
 
-    @RequiredOnPage(value = 10, message = "Select the prisoner’s current MAPPA category", onlyIfField = "eligibleForMappa", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 10, message = "Select the prisoner's current MAPPA category", onlyIfField = "eligibleForMappa", onlyIfFieldMatchValue= "yes")
     @JsonProperty("MAPPA_CATEGORY")
     private String mappaCategory;
 
-    @RequiredOnPage(value = 10, message = "Select the prisoner’s current MAPPA level", onlyIfField = "eligibleForMappa", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 10, message = "Select the prisoner's current MAPPA level", onlyIfField = "eligibleForMappa", onlyIfFieldMatchValue= "yes")
     @JsonProperty("MAPPA_LEVEL")
     private String mappaLevel;
 
