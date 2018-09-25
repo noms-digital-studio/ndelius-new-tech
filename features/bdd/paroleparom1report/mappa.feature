@@ -14,14 +14,14 @@ Feature: Parole Report - Prisoner contact
     Given they select the "Yes" option on the "Is the prisoner eligible for MAPPA?"
     When  they select the "Continue" button
     Then  the following error messages are displayed
-      | What date was the prisoner screened for MAPPA (MAPPAQ completed)? | Enter the date when the prisoner was screened for MAPPA |
+      | When was the prisoner screened for MAPPA (MAPPA Q completed)? | Enter the date when the prisoner was screened for MAPPA |
       | What is the prisoner's current MAPPA category? | Select the prisoner's current MAPPA category |
       | What is the prisoner's current MAPPA level? | Select the prisoner's current MAPPA level |
 
   Scenario: Delius user wants to enter the Multi Agency Public Protection Arrangements (MAPPA) information
 
     Given they select the "Yes" option on the "Is the prisoner eligible for MAPPA?"
-    When they enter the date "07/08/2018" for "What date was the prisoner screened for MAPPA (MAPPAQ completed)?"
+    When they enter the date "07/08/2018" for "When was the prisoner screened for MAPPA (MAPPA Q completed)?"
     And they select the radio button with id "mappaCategory_1"
     And they select the radio button with id "mappaLevel_2"
     When they select the "Continue" button
