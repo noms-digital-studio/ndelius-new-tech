@@ -21,6 +21,7 @@ public enum Page {
     ORAL_HEARING("20", "Oral hearing"),
     SOURCES("21", "Sources"),
     CHECK_YOUR_REPORT("22", "Check your report"),
+    SIGNATURE("23", "Signature & date"),
     ;
     private final String pageNumber;
     private final String pageHeader;
