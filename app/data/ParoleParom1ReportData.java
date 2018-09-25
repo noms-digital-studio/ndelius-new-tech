@@ -80,6 +80,11 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("ELIGIBLE_FOR_MAPPA")
     private String eligibleForMappa;
 
+    @JsonProperty("MAPPA_SCREENED_DATE")
+    public String getMappaScreenedDate() {
+        return formattedDateFromDateParts("mappaScreenedDate");
+    }
+
     @RequiredDateOnPage(value = 10, message = "Enter the date when the prisoner was screened for MAPPA", incompleteMessage = "Enter the date when the prisoner was screened for MAPPA and include a day, month and year", invalidMessage = "Enter a real date when the prisoner was screened for MAPPA", onlyIfField = "eligibleForMappa", onlyIfFieldMatchValue= "yes")
     private String mappaScreenedDate;
     private String mappaScreenedDate_day;
