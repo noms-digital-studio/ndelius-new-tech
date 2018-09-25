@@ -7,21 +7,21 @@ Feature: Parole Report - Prisoner contact
 
     When  they select the "Continue" button
     Then  the following error messages are displayed
-      | Is the prisoner eligible for MAPPA? | Specify if the prisoner is eligible for MAPPA |
+      | Is the prisoner eligible for MAPPA (MAPPAQ completed)? | Specify if the prisoner is eligible for MAPPA |
 
   Scenario: Delius user specifies that the prisoner is eligible for MAPPA but does not enter any information
 
     Given they select the "Yes" option on the "Is the prisoner eligible for MAPPA?"
     When  they select the "Continue" button
     Then  the following error messages are displayed
-      | When was the prisoner screened for MAPPA? | Enter the date when the prisoner was screened for MAPPA |
+      | What date was the prisoner screened for MAPPA (MAPPAQ completed)? | Enter the date when the prisoner was screened for MAPPA |
       | What is the prisoner's current MAPPA category? | Select the prisoner's current MAPPA category |
       | What is the prisoner's current MAPPA level? | Select the prisoner's current MAPPA level |
 
   Scenario: Delius user wants to enter the Multi Agency Public Protection Arrangements (MAPPA) information
 
     Given they select the "Yes" option on the "Is the prisoner eligible for MAPPA?"
-    When they enter the date "07/08/2018" for "What date was the prisoner screened for MAPPA?"
+    When they enter the date "07/08/2018" for "What date was the prisoner screened for MAPPA (MAPPAQ completed)?"
     And they select the radio button with id "mappaCategory_1"
     And they select the radio button with id "mappaLevel_2"
     When they select the "Continue" button
