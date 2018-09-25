@@ -25,13 +25,13 @@ Feature: Parole Report - Prisoner contact
     And they select the radio button with id "mappaCategory_1"
     And they select the radio button with id "mappaLevel_2"
     When they select the "Continue" button
-    Then the user should be directed to the "Current risk assessment" UI
+    Then the user should be directed to the "Current risk assessment scores" UI
 
   Scenario: Delius user specifies prisoner is not eligible for MAPPA
 
     Given they select the radio button with id "eligibleForMappa_no"
     When they select the "Continue" button
-    Then the user should be directed to the "Current risk assessment" UI
+    Then the user should be directed to the "Current risk assessment scores" UI
 
   Scenario: Delius user wants to close the report
 
