@@ -1,9 +1,72 @@
-Feature: Parole Report
+Feature: Parole Report - Signature & date
 
   Background:
-    Given Delius User is on the "Signature" UI within the Parole Report
+    Given that the Delius user is on the "Prisoner details" page within the Parole Report
+    And Delius User completes the "Prisoner details" UI within the Parole Report
+    Then the user should be directed to the "Prisoner contact" UI
+    And Delius User completes the "Prisoner contact" UI within the Parole Report
+    Then the user should be directed to the "RoSH at point of sentence" UI
+    And Delius User completes the "RoSH at point of sentence" UI within the Parole Report
+    Then the user should be directed to the "Victims" UI
+    And Delius User completes the "Victims" UI within the Parole Report
+    Then the user should be directed to the "OPD pathway" UI
+    And Delius User completes the "OPD Pathway" UI within the Parole Report
+    Then the user should be directed to the "Behaviour in prison" UI
+    And Delius User completes the "Behaviour in prison" UI within the Parole Report
+    Then the user should be directed to the "Interventions" UI
+    And Delius User completes the "Interventions" UI within the Parole Report
+    Then the user should be directed to the "Current sentence plan and response" UI
+    And Delius User completes the "Current sentence plan and response" UI within the Parole Report
+    Then the user should be directed to the "Multi Agency Public Protection Arrangements (MAPPA)" UI
+    And Delius User completes the "MAPPA" UI within the Parole Report
+    Then the user should be directed to the "Current risk assessment scores" UI
+    And Delius User completes the "Current risk assessment scores" UI within the Parole Report
+    Then the user should be directed to the "Current RoSH: community" UI
+    And Delius User completes the "Current RoSH community" UI within the Parole Report
+    Then the user should be directed to the "Current RoSH: custody" UI
+    And Delius User completes the "Current RoSH custody" UI within the Parole Report
+    Then the user should be directed to the "Risk to the prisoner" UI
+    And Delius User completes the "Risk to the prisoner" UI within the Parole Report
+    Then the user should be directed to the "RoSH analysis" UI
+    And Delius User completes the "RoSH analysis" UI within the Parole Report
+    Then the user should be directed to the "Risk Management Plan (RMP)" UI
+    And Delius User completes the "Risk Management Plan" UI within the Parole Report
+    Then the user should be directed to the "Resettlement plan for release" UI
+    And Delius User completes the "Resettlement plan for release" UI within the Parole Report
+    Then the user should be directed to the "Supervision plan for release" UI
+    And Delius User completes the "Supervision plan for release" UI within the Parole Report
+    Then the user should be directed to the "Recommendation" UI
+    And Delius User completes the "Recommendation" UI within the Parole Report
+    Then the user should be directed to the "Oral hearing" UI
+    And Delius User completes the "Oral hearing" UI within the Parole Report
+    Then the user should be directed to the "Sources" UI
+    And Delius User completes the "Sources" UI within the Parole Report
+    Then the user should be directed to the "Check your report" UI
+    And the button for "Prisoner details" must display "SAVED"
+    And the button for "Prisoner contact" must display "SAVED"
+    And the button for "RoSH at point of sentence" must display "SAVED"
+    And the button for "Victims" must display "SAVED"
+    And the button for "OPD pathway" must display "SAVED"
+    And the button for "Behaviour in prison" must display "SAVED"
+    And the button for "Interventions" must display "SAVED"
+    And the button for "Current sentence plan" must display "SAVED"
+    And the button for "MAPPA" must display "SAVED"
+    And the button for "Current risk assessment" must display "SAVED"
+    And the button for "Current RoSH: community" must display "SAVED"
+    And the button for "Current RoSH: custody" must display "SAVED"
+    And the button for "Risk to the prisoner" must display "SAVED"
+    And the button for "RoSH analysis" must display "SAVED"
+    And the button for "Risk Management Plan (RMP)" must display "SAVED"
+    And the button for "Resettlement plan for release" must display "SAVED"
+    And the button for "Supervision plan for release" must display "SAVED"
+    And the button for "Recommendation" must display "SAVED"
+    And the button for "Oral hearing" must display "SAVED"
+    And the button for "Sources" must display "SAVED"
+    And the button for "Signature & date" must display "NOT STARTED"
+    And Delius User is ready to sign their Parole Report
+    Then the user should be directed to the "Signature & date" UI
 
-  Scenario: Delius user does not complete the relevant questions on the UI
+  Scenario: Delius user does not complete the relevant questions on the "Signature & date" UI
 
     When they select the "Submit" button
     Then the following error messages are displayed
@@ -14,15 +77,17 @@ Feature: Parole Report
       | Telephone number and extension    | Enter the telephone number and extension |
       | Completion date                   | Enter the completion date                |
 
-  Scenario: Delius user wants to sign and date their parole report
+  Scenario: Delius user wants to sign and date their parole report WITHOUT counter signature
 
-    When they enter the following information
+    When they input the following information
       | Name                              | Jane Doe                               |
       | NPS Division and LDU              | Stafford, Midlands                     |
+    And they enter the following information into a classic TextArea
       | Office address                    | 4 Lichfield Road, Stafford ST17 4JX    |
+    And they input the following information
       | Email address                     | jane.doe@nps.gov.uk                    |
       | Telephone number and extension    | 0124 5896456                           |
-      | Completion date                   | 06/12/2018                             |
+    And they enter the date "07/08/2018" for "Completion date"
 
     Then the following information should be saved in the prisoner parole report
       | signatureName                     | Jane Doe                               |
@@ -30,19 +95,21 @@ Feature: Parole Report
       | signatureOfficeAddress            | 4 Lichfield Road, Stafford ST17 4JX    |
       | signatureEmail                    | jane.doe@nps.gov.uk                    |
       | signatureTelephone                | 0124 5896456                           |
-      | signatureDate                     | 06/12/2018                             |
+      | signatureDate                     | 07/08/2018                             |
 
-  Scenario: The parole report needs to be counter signed
+  Scenario: Delius user wants to sign and date their parole report WITH counter signature
 
-    When they enter the following information
+    When they input the following information
       | Name                              | Jane Doe                               |
       | NPS Division and LDU              | Stafford, Midlands                     |
+    And they enter the following information into a classic TextArea
       | Office address                    | 4 Lichfield Road, Stafford ST17 4JX    |
+    And they input the following information
       | Email address                     | jane.doe@nps.gov.uk                    |
       | Telephone number and extension    | 0124 5896456                           |
       | Name of countersignature          | Joe Bloggs                             |
       | Role of countersignature          | SPO                                    |
-      | Completion date                   | 06/12/2018                             |
+    And they enter the date "07/08/2018" for "Completion date"
 
     Then the following information should be saved in the prisoner parole report
       | signatureName                     | Jane Doe                               |
@@ -52,32 +119,36 @@ Feature: Parole Report
       | signatureTelephone                | 0124 5896456                           |
       | signatureCounterName              | Joe Bloggs                             |
       | signatureCounterRole              | SPO                                    |
-      | signatureDate                     | 06/12/2018                             |
+      | signatureDate                     | 07/08/2018                             |
 
   Scenario: Delius user wants to submit their Parole report WITHOUT counter signature
 
-    When they enter the following information
+    When they input the following information
       | Name                              | Jane Doe                               |
       | NPS Division and LDU              | Stafford, Midlands                     |
       | Office address                    | 4 Lichfield Road, Stafford ST17 4JX    |
+    And they enter the following information into a classic TextArea
       | Email address                     | jane.doe@nps.gov.uk                    |
+    And they input the following information
       | Telephone number and extension    | 0124 5896456                           |
-      | Completion date                   | 06/12/2018                             |
+    And they enter the date "07/08/2018" for "Completion date"
 
     And they select the "Submit" button
     Then the user should be directed to the "Report saved" UI
 
   Scenario: Delius user wants to submit their Parole report WITH counter signature
 
-    When they enter the following information
+    When they input the following information
       | Name                              | Jane Doe                               |
       | NPS Division and LDU              | Stafford, Midlands                     |
+    And they enter the following information into a classic TextArea
       | Office address                    | 4 Lichfield Road, Stafford ST17 4JX    |
+    And they input the following information
       | Email address                     | jane.doe@nps.gov.uk                    |
       | Telephone number and extension    | 0124 5896456                           |
       | Name of countersignature          | Joe Bloggs                             |
       | Role of countersignature          | SPO                                    |
-      | Completion date                   | 06/12/2018                             |
+    And they enter the date "07/08/2018" for "Completion date"
 
     And they select the "Submit" button
     Then the user should be directed to the "Report saved" UI

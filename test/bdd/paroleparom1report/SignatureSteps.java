@@ -9,8 +9,9 @@ public class SignatureSteps {
     @Inject
     private SignaturePage page;
 
-    @Given("^Delius User is on the \"Signature\" UI within the Parole Report$")
-    public void deliusUserIsOnTheUIWithinTheParoleReport() {
+    @Given("^Delius user is on the \"Signature and date\" UI within the Parole Report$")
+    public void thatTheDeliusUserIsOnThePageWithinTheParoleReport() throws Throwable {
         page.navigateHere();
     }
 }
+
