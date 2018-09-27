@@ -30,6 +30,48 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("PRISONER_CONTACT_AGENCIES_DETAIL")
     private String prisonerContactAgenciesDetail;
 
+    // Page 4 - RoSH at point of sentence
+
+    @RequiredOnPage(value = 4, message = "Specify if a RoSH assessment was completed at the point of sentence")
+    @JsonProperty("ROSH_AT_POS_ASSESSMENT_COMPLETED")
+    private String roshAtPosAssessmentCompleted;
+
+    @RequiredDateOnPage(value = 4, message = "Enter the date when the RoSH assessment was completed", incompleteMessage = "Enter the date when the RoSH assessment was completed and include a month and year", invalidMessage = "Enter a real date when the RoSH assessment was completed", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    private String roshAtPosDate;
+    private String roshAtPosDate_day;
+    private String roshAtPosDate_month;
+    private String roshAtPosDate_year;
+
+    @RequiredOnPage(value = 4, message = "Select the risk to the public", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("ROSH_AT_POS_PUBLIC")
+    private String roshAtPosPublic;
+
+    @RequiredOnPage(value = 4, message = "Select the risk to any known adult", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("ROSH_AT_POS_KNOWN_ADULT")
+    private String roshAtPosKnownAdult;
+
+    @RequiredOnPage(value = 4, message = "Select the risk to children", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("ROSH_AT_POS_CHILDREN")
+    private String roshAtPosChildren;
+
+    @RequiredOnPage(value = 4, message = "Select the risk to prisoners", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("ROSH_AT_POS_PRISONERS")
+    private String roshAtPosPrisoners;
+
+    @RequiredOnPage(value = 4, message = "Select the risk to staff", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("ROSH_AT_POS_STAFF")
+    private String roshAtPosStaff;
+
+    @RequiredOnPage(value = 4, message = "Enter the prisoner's attitude to the index offence")
+    @JsonProperty("ROSH_AT_POS_ATTITUDE_INDEX_OFFENCE")
+    private String roshAtPosAttitudeIndexOffence;
+
+    @RequiredOnPage(value = 4, message = "Enter the prisoner's attitude to their previous offending")
+    @JsonProperty("ROSH_AT_POS_ATTITUDE_PREVIOUS_OFFENDING")
+    private String roshAtPosAttitudePreviousOffending;
+
+    // Page 5 - Victims
+
     @RequiredOnPage(value = 5, message = "Enter your analysis of the impact of the offence on the victims")
     @JsonProperty("VICTIMS_IMPACT_DETAILS")
     private String victimsImpactDetails;
