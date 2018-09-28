@@ -29,7 +29,6 @@ public class NomisCustodyApiIntegrationTest  extends WithApplication {
 
     @Rule
     public WireMockRule wireMock = new WireMockRule(wireMockConfig().port(PORT).jettyStopTimeout(10000L));
-    private String cacheExpiry = "60";
 
     @Before
     public void beforeEach() {
@@ -52,11 +51,6 @@ public class NomisCustodyApiIntegrationTest  extends WithApplication {
 
 
         prisonerApi = instanceOf(PrisonerApi.class);
-    }
-
-    @After
-    public void tearDown() {
-        cacheExpiry = "60";
     }
 
     @Test
@@ -89,11 +83,6 @@ public class NomisCustodyApiIntegrationTest  extends WithApplication {
 
     @Test
     public void retrievesNewTokenAfterCachedExpires() throws InterruptedException {
-        stopPlay();
-        cacheExpiry = "1";
-        startPlay();
-        prisonerApi = instanceOf(PrisonerApi.class);
-
         prisonerApi.getImage("123").toCompletableFuture().join();
         Thread.sleep(1000);
         prisonerApi.getImage("123").toCompletableFuture().join();
@@ -251,7 +240,7 @@ public class NomisCustodyApiIntegrationTest  extends WithApplication {
                 .configure("prisoner.api.provider", "custody")
                 .configure("custody.api.auth.username", "my_username")
                 .configure("custody.api.auth.password", "my_password")
-                .configure("custody.api.token.cache.time.seconds", cacheExpiry)
+                .configure("custody.api.token.cache.time.seconds", "1")
                 .build();
     }
 
