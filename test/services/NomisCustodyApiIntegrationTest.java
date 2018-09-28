@@ -6,10 +6,7 @@ import com.google.common.io.ByteStreams;
 import helpers.JsonHelper;
 import interfaces.PrisonerApi;
 import lombok.val;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import play.Application;
 import play.Environment;
 import play.Mode;
@@ -32,6 +29,7 @@ public class NomisCustodyApiIntegrationTest  extends WithApplication {
 
     @Rule
     public WireMockRule wireMock = new WireMockRule(wireMockConfig().port(PORT).jettyStopTimeout(10000L));
+    private String cacheExpiry = "60";
 
     @Before
     public void beforeEach() {
@@ -53,10 +51,13 @@ public class NomisCustodyApiIntegrationTest  extends WithApplication {
 
 
 
-
         prisonerApi = instanceOf(PrisonerApi.class);
     }
 
+    @After
+    public void tearDown() {
+        cacheExpiry = "60";
+    }
 
     @Test
     public void credentialsSuppliedToRetrieveToken() {
@@ -82,6 +83,27 @@ public class NomisCustodyApiIntegrationTest  extends WithApplication {
 
         wireMock.verify(
                 3,
+                getRequestedFor(urlMatching("/custodyapi/api/offenders/nomsId/.*/images/.*/thumbnail")));
+
+    }
+
+    @Test
+    public void retrievesNewTokenAfterCachedExpires() throws InterruptedException {
+        stopPlay();
+        cacheExpiry = "1";
+        startPlay();
+        prisonerApi = instanceOf(PrisonerApi.class);
+
+        prisonerApi.getImage("123").toCompletableFuture().join();
+        Thread.sleep(1000);
+        prisonerApi.getImage("123").toCompletableFuture().join();
+
+        wireMock.verify(
+                2,
+                postRequestedFor(urlEqualTo("/auth/oauth/token")));
+
+        wireMock.verify(
+                2,
                 getRequestedFor(urlMatching("/custodyapi/api/offenders/nomsId/.*/images/.*/thumbnail")));
 
     }
@@ -125,6 +147,19 @@ public class NomisCustodyApiIntegrationTest  extends WithApplication {
         assertThatThrownBy(() -> prisonerApi.getImage("123").toCompletableFuture().join())
                 .hasCauseInstanceOf(RuntimeException.class)
                 .hasMessageEndingWith("No offender found in NOMIS - check the noms number 123 is correct");
+
+    }
+
+    @Test
+    public void completesExceptionallyIfOffenderImageRowNotFoundInNomis() {
+        wireMock.stubFor(
+                get(urlMatching("/custodyapi/api/offenders/nomsId/.*/images/.*/thumbnail"))
+                        .willReturn(
+                                aResponse().withStatus(404)));
+
+        assertThatThrownBy(() -> prisonerApi.getImage("123").toCompletableFuture().join())
+                .hasCauseInstanceOf(RuntimeException.class)
+                .hasMessageEndingWith("No images found for offender 123");
 
     }
 
@@ -184,6 +219,18 @@ public class NomisCustodyApiIntegrationTest  extends WithApplication {
                 postRequestedFor(urlEqualTo("/auth/oauth/token")));
     }
 
+    @Test
+    public void completesExceptionallyIfOffenderServiceErrors() {
+        wireMock.stubFor(
+                get(urlMatching("/custodyapi/api/offenders/nomsId/123/images"))
+                        .willReturn(
+                                aResponse().withStatus(500)));
+
+        assertThatThrownBy(() -> prisonerApi.getImage("123").toCompletableFuture().join())
+                .hasCauseInstanceOf(RuntimeException.class)
+                .hasMessageEndingWith("Failed to retrieve offender record from NOMIS. Status code 500");
+
+    }
 
 
     @Test
@@ -204,6 +251,7 @@ public class NomisCustodyApiIntegrationTest  extends WithApplication {
                 .configure("prisoner.api.provider", "custody")
                 .configure("custody.api.auth.username", "my_username")
                 .configure("custody.api.auth.password", "my_password")
+                .configure("custody.api.token.cache.time.seconds", cacheExpiry)
                 .build();
     }
 

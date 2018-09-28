@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static helpers.JsonHelper.readValue;
 import static interfaces.HealthCheckResult.healthy;
@@ -53,33 +54,34 @@ public class NomisCustodyApi  implements PrisonerApi {
 
     @Override
     public CompletionStage<byte[]> getImage(String nomsNumber) {
-        Function<WSResponse, WSResponse> checkForValidResponse = (wsResponse) -> checkForValidResponse(nomsNumber, wsResponse);
+        Function<WSResponse, WSResponse> checkForValidOffenceResponse = (wsResponse) -> checkForValidResponse(wsResponse, () -> String.format("No offender found in NOMIS - check the noms number %s is correct", nomsNumber));
+        Function<WSResponse, WSResponse> checkForValidImageResponse = (wsResponse) -> checkForValidResponse(wsResponse, () -> String.format("No images found for offender %s", nomsNumber));
         return apiToken
                 .getAsync()
                 .thenCompose(token -> wsClient
                         .url(String.format("%scustodyapi/api/offenders/nomsId/%s/images", apiBaseUrl, nomsNumber))
                         .addHeader(AUTHORIZATION, "Bearer " + token)
                         .get()
-                        .thenApply(checkForValidResponse)
+                        .thenApply(checkForValidOffenceResponse)
                         .thenApply(WSResponse::getBody)
                         .thenApply(this::toImageMetaDataList)
                         .thenApply(this::findLatestFaceThumbnail)
-                        .thenCompose( image -> wsClient
-                                .url(String.format("%scustodyapi/api/offenders/nomsId/%s/images/%s/thumbnail", apiBaseUrl, nomsNumber, image.getOffenderImageId()))
+                        .thenCompose( imageMetaData -> wsClient
+                                .url(String.format("%scustodyapi/api/offenders/nomsId/%s/images/%s/thumbnail", apiBaseUrl, nomsNumber, imageMetaData.getOffenderImageId()))
                                 .addHeader(AUTHORIZATION, "Bearer " + token)
                                 .get()
-                                .thenApply(checkForValidResponse)
+                                .thenApply(checkForValidImageResponse)
                                 .thenApply(WSResponse::getBodyAsBytes)
                                 .thenApply(ByteString::toArray)));
 
     }
 
-    private WSResponse checkForValidResponse(String nomsNumber, WSResponse wsResponse) {
+    private WSResponse checkForValidResponse(WSResponse wsResponse, Supplier<String> notFoundMessage) {
         switch (wsResponse.getStatus()) {
             case OK:
                 return wsResponse;
             case NOT_FOUND:
-                throw new RuntimeException(String.format("No offender found in NOMIS - check the noms number %s is correct", nomsNumber));
+                throw new RuntimeException(notFoundMessage.get());
             case UNAUTHORIZED:
             case FORBIDDEN:
                 apiToken.clearToken();
