@@ -8,10 +8,13 @@ import data.annotations.RequiredOnPage;
 import data.base.ReportGeneratorWizardData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Optional;
 
 @Data
@@ -36,7 +39,19 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("ROSH_AT_POS_ASSESSMENT_COMPLETED")
     private String roshAtPosAssessmentCompleted;
 
-    @RequiredDateOnPage(value = 4, message = "Enter the date when the RoSH assessment was completed", incompleteMessage = "Enter the date when the RoSH assessment was completed and include a month and year", invalidMessage = "Enter a real date when the RoSH assessment was completed", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("ROSH_AT_POS_DATE")
+    public String getRoshAtPosDate() {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("d/M/yyyy");
+            val date = dateFormat.parse(formattedDateFromDateParts("roshAtPosDate"));
+            SimpleDateFormat dateNoDayFormat = new SimpleDateFormat("MMM yyyy");
+            return dateNoDayFormat.format(date);
+        } catch (ParseException e) {
+            return "";
+        }
+    }
+
+    @RequiredDateOnPage(value = 4, message = "Enter the date when the RoSH assessment was completed", incompleteMessage = "Enter the date when the RoSH assessment was completed", invalidMessage = "Enter a real date when the RoSH assessment was completed", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue= "yes")
     private String roshAtPosDate;
     private String roshAtPosDate_day;
     private String roshAtPosDate_month;

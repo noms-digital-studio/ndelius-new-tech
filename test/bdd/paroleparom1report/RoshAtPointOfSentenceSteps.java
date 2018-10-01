@@ -17,7 +17,6 @@ public class RoshAtPointOfSentenceSteps {
     @Given("^Delius User completes the \"RoSH at point of sentence\" UI within the Parole Report$")
     public void deliusUserCompletesThePageWithinTheParoleReport() throws Throwable {
         page.clickRadioButtonWithLabelWithinLegend("Yes", "Was a RoSH assessment completed at the point of sentence?");
-        page.fillInputInSectionWithLegend("When was the RoSH assessment completed?", "Day", "19");
         page.fillInputInSectionWithLegend("When was the RoSH assessment completed?", "Month", "07");
         page.fillInputInSectionWithLegend("When was the RoSH assessment completed?", "Year", "2018");
         page.clickRadioButtonWithLabelWithinLegend("Low", "Public");
