@@ -252,9 +252,19 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 .willReturn(CompletableFuture.completedFuture(
                         anOffenderWithMultipleAddresses()
                                 .toBuilder()
+                                .firstName("John")
+                                .surname("Smith")
                                 .dateOfBirth("1965-07-19")
                                 .build()));
 
+        given(offenderApi.getCourtAppearancesByCrn(any(), eq("B56789")))
+                .willReturn(CompletableFuture.completedFuture(CourtAppearances.builder()
+                        .items(ImmutableList.of(CourtAppearance.builder()
+                                .court(Court.builder().courtName("court name from api").build())
+                                .appearanceDate("2018-08-06T00:00:00")
+                                .courtReports(ImmutableList.of(CourtReport.builder().courtReportId(456L).build()))
+                                .build()))
+                        .build()));
 
         try {
             val clearDocumentId = "12345";
@@ -271,7 +281,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
             val content = Helpers.contentAsString(route(app, request));
             assertTrue(content.contains(encryptor.apply("court name from api")));
-            assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
+            assertTrue(content.contains(encryptor.apply("John Smith")));
             assertTrue(content.contains(encryptor.apply("19/07/1965")));
             assertTrue(content.contains(encryptor.apply("2018/123456N")));
             assertTrue(content.contains(encryptor.apply("Main address Building\n7 High Street\nNether Edge\nSheffield\nYorkshire\nS10 1LE")));
