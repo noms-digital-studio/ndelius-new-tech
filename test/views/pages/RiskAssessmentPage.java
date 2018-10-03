@@ -21,7 +21,7 @@ public class RiskAssessmentPage extends FluentPage {
     public RiskAssessmentPage gotoNext() {
         $(id("likelihoodOfReOffending")).fill().with("Likelihood Of ReOffending");
         $(id("riskOfSeriousHarm")).fill().with("Risk of Serious Harm");
-        $(id("previousSupervisionResponse_Good")).click();
+        $(id("previousSupervisionResponse_good")).click();
         $(id("additionalPreviousSupervision")).fill().with("Additional previous supervision");
         $(id("nextButton")).click();
         return this;
