@@ -118,6 +118,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
         Logger.info("CourtAppearances: " + courtAppearances);
         Logger.info("Offences: " + offences);
+        Logger.info("Params: " + params);
         return Optional.ofNullable(params.get("entityId"))
             .map(Long::parseLong)
             .flatMap(courtAppearances::findForCourtReportId)
@@ -136,6 +137,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                 return params;
             })
             .orElseGet(() -> {
+                        Logger.warn("No court appearance found for given report id");
                         params.put("court", "");
                         return params;
             });
