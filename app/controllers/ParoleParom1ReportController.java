@@ -47,6 +47,8 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
 
     @Override
     protected Map<String, String> storeOffenderDetails(Map<String, String> params, OffenderApi.Offender offender) {
+        System.out.println("XXXX: " + offender.getGender());
+        params.put("gender", offender.getGender());
         return params;
     }
 

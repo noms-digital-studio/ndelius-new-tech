@@ -1,4 +1,5 @@
 @import helper._
 
-@(reportForm: Form[_])
+@(reportForm: Form[_], encryptor: String => String)
 
+@inputHidden(reportForm("gender"), encryptor)

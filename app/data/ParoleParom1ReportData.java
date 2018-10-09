@@ -1,6 +1,7 @@
 package data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import data.annotations.Encrypted;
 import data.annotations.OnPage;
 import data.annotations.RequiredDateOnPage;
 import data.annotations.RequiredGroupOnPage;
@@ -20,6 +21,44 @@ import java.util.Optional;
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class ParoleParom1ReportData extends ReportGeneratorWizardData {
+
+    // Page 2
+
+    @Encrypted
+    @RequiredOnPage(2)
+    @JsonProperty("GENDER")
+    private String gender;
+
+    @RequiredOnPage(value = 2, message = "Enter the prison or Young Offender Institution")
+    @JsonProperty("PRISONER_DETAILS_PRISON_INSTITUTION")
+    private String prisonerDetailsPrisonInstitution;
+
+    @RequiredOnPage(value = 2, message = "Enter the prisoner’s full name")
+    @JsonProperty("PRISONER_DETAILS_PRISONERS_FULL_NAME")
+    private String prisonerDetailsPrisonersFullName;
+
+    @RequiredOnPage(value = 2, message = "Enter the prison number")
+    @JsonProperty("PRISONER_DETAILS_PRISON_NUMBER")
+    private String prisonerDetailsPrisonNumber;
+
+    @RequiredOnPage(value = 2, message = "Enter the NOMIS number")
+    @JsonProperty("PRISONER_DETAILS_NOMIS_NUMBER")
+    private String prisonerDetailsNomisNumber;
+
+    @RequiredOnPage(value = 2, message = "Enter the offence")
+    @JsonProperty("PRISONER_DETAILS_OFFENCE")
+    private String prisonerDetailsOffence;
+
+    @RequiredOnPage(value = 2, message = "Enter the sentence")
+    @JsonProperty("PRISONER_DETAILS_SENTENCE")
+    private String prisonerDetailsSentence;
+
+
+
+
+
+
+    // Page 3
 
     @RequiredOnPage(value = 3, message = "Enter how long you have managed the prisoner, and what contact you have had with them")
     @JsonProperty("PRISONER_CONTACT_DETAIL")

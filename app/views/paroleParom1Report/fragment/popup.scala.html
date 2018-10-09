@@ -29,7 +29,9 @@
             @CSRF.formField
 
             @commonFields(reportForm, encrypter)
-            @pageStatuses.keySet.drop(1).filter(_ != pageNumber).map(hiddenFieldsFor)
+            @page2Fields(reportForm, encrypter)
+
+            @pageStatuses.keySet.drop(2).filter(_ != pageNumber).map(hiddenFieldsFor)
 
             @if(!reportForm.allErrors().isEmpty) {
                 <div aria-labelledby="error-summary-title" class="govuk-error-summary" role="alert" tabindex="-1">
