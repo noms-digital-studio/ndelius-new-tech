@@ -45,6 +45,10 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("PRISONER_DETAILS_NOMIS_NUMBER")
     private String prisonerDetailsNomisNumber;
 
+    @RequiredOnPage(value = 2, message = "Select the current prison category")
+    @JsonProperty("PRISONER_DETAILS_PRISONERS_CATEGORY")
+    private String prisonerDetailsPrisonersCategory;
+
     @RequiredOnPage(value = 2, message = "Enter the offence")
     @JsonProperty("PRISONER_DETAILS_OFFENCE")
     private String prisonerDetailsOffence;
@@ -53,10 +57,52 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("PRISONER_DETAILS_SENTENCE")
     private String prisonerDetailsSentence;
 
+    @RequiredOnPage(value = 2, message = "Select the sentence type")
+    @JsonProperty("PRISONER_DETAILS_SENTENCE_TYPE")
+    private String prisonerDetailsSentenceType;
 
+    @RequiredOnPage(value = 2, message = "Enter the tariff length")
+    @JsonProperty("PRISONER_DETAILS_TARIFF_LENGTH")
+    private String prisonerDetailsTariffLength;
 
+    @JsonProperty("PRISONER_DETAILS_TARIFF_EXPIRY_DATE")
+    public String getPrisonerDetailsTariffExpiryDate() {
+        return formattedDateFromDateParts("prisonerDetailsTariffExpiryDate");
+    }
 
+    @RequiredDateOnPage(value = 2, message = "Enter the tariff expiry date",
+                                   incompleteMessage = "Enter the tariff expiry date and include a day, month and year",
+                                   invalidMessage = "Enter a real tariff expiry date ")
+    private String prisonerDetailsTariffExpiryDate;
+    private String prisonerDetailsTariffExpiryDate_day;
+    private String prisonerDetailsTariffExpiryDate_month;
+    private String prisonerDetailsTariffExpiryDate_year;
 
+    @JsonProperty("PRISONER_DETAILS_PAROLE_ELIGIBILITY_DATE")
+    public String getPrisonerDetailsParoleEligibilityDate() {
+        return formattedDateFromDateParts("prisonerDetailsParoleEligibilityDate");
+    }
+
+    @RequiredDateOnPage(value = 2, message = "Enter the parole eligibility date",
+        incompleteMessage = "Enter the parole eligibility date and include a day, month and year",
+        invalidMessage = "Enter a real parole eligibility date ")
+    private String prisonerDetailsParoleEligibilityDate;
+    private String prisonerDetailsParoleEligibilityDate_day;
+    private String prisonerDetailsParoleEligibilityDate_month;
+    private String prisonerDetailsParoleEligibilityDate_year;
+
+    @JsonProperty("PRISONER_DETAILS_AUTO_RELEASE_DATE")
+    public String getPrisonerDetailsAutoReleaseDate() {
+        return formattedDateFromDateParts("prisonerDetailsAutoReleaseDate");
+    }
+
+    @RequiredDateOnPage(value = 2, message = "Enter the automatic release date",
+        incompleteMessage = "Enter the automatic release date and include a day, month and year",
+        invalidMessage = "Enter a real automatic release date ")
+    private String prisonerDetailsAutoReleaseDate;
+    private String prisonerDetailsAutoReleaseDate_day;
+    private String prisonerDetailsAutoReleaseDate_month;
+    private String prisonerDetailsAutoReleaseDate_year;
 
     // Page 3
 

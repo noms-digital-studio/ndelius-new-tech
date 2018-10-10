@@ -29,7 +29,7 @@
 
             @if("male".equalsIgnoreCase(reportForm("gender").value)) {
                 @inputRadioGroup(
-                    reportForm("prisonerDetailsPrisonersCategoryMale"),
+                    reportForm("prisonerDetailsPrisonersCategory"),
                     options(
                         "a" -> "A",
                         "b" -> "B",
@@ -39,7 +39,7 @@
                 )
             } else {
                 @inputRadioGroup(
-                    reportForm("prisonerDetailsPrisonersCategoryFemale"),
+                    reportForm("prisonerDetailsPrisonersCategory"),
                     options(
                         "a" -> "A",
                         "restricted" -> "Restricted",
@@ -113,8 +113,6 @@
                 '_year -> reportForm("prisonerDetailsAutoReleaseDate_year").getValue.orElse(""))
 
         </div>
-
-
 
     </div>
 

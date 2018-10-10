@@ -1,5 +1,17 @@
 @import helper._
 
-@(reportForm: Form[_], encryptor: String => String)
+@(reportForm: Form[_])
 
-@inputHidden(reportForm("gender"), encryptor)
+@inputHidden(reportForm("prisonerDetailsPrisonInstitution"))
+@inputHidden(reportForm("prisonerDetailsPrisonersFullName"))
+@inputHidden(reportForm("prisonerDetailsPrisonNumber"))
+@inputHidden(reportForm("prisonerDetailsNomisNumber"))
+@inputHidden(reportForm("prisonerDetailsPrisonersCategory"))
+@inputHidden(reportForm("prisonerDetailsOffence"))
+@inputHidden(reportForm("prisonerDetailsSentence"))
+@inputHidden(reportForm("prisonerDetailsSentenceType"))
+@inputHidden(reportForm("prisonerDetailsTariffLength"))
+@inputHidden(reportForm("prisonerDetailsTariffExpiryDate"))
+@inputHidden(reportForm("prisonerDetailsTariffExpiryDate_day"))
+@inputHidden(reportForm("prisonerDetailsTariffExpiryDate_month"))
+@inputHidden(reportForm("prisonerDetailsTariffExpiryDate_year"))
