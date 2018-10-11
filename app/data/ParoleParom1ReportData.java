@@ -61,7 +61,9 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("PRISONER_DETAILS_SENTENCE_TYPE")
     private String prisonerDetailsSentenceType;
 
-    @RequiredOnPage(value = 2, message = "Enter the tariff length")
+    @RequiredOnPage(value = 2, message = "Enter the tariff length",
+                               onlyIfField="prisonerDetailsSentenceType",
+                               onlyIfFieldMatchValue="indeterminate")
     @JsonProperty("PRISONER_DETAILS_TARIFF_LENGTH")
     private String prisonerDetailsTariffLength;
 
@@ -72,7 +74,9 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
 
     @RequiredDateOnPage(value = 2, message = "Enter the tariff expiry date",
                                    incompleteMessage = "Enter the tariff expiry date and include a day, month and year",
-                                   invalidMessage = "Enter a real tariff expiry date ")
+                                   invalidMessage = "Enter a real tariff expiry date",
+                                   onlyIfField="prisonerDetailsSentenceType",
+                                   onlyIfFieldMatchValue="indeterminate")
     private String prisonerDetailsTariffExpiryDate;
     private String prisonerDetailsTariffExpiryDate_day;
     private String prisonerDetailsTariffExpiryDate_month;
@@ -84,8 +88,11 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     }
 
     @RequiredDateOnPage(value = 2, message = "Enter the parole eligibility date",
-        incompleteMessage = "Enter the parole eligibility date and include a day, month and year",
-        invalidMessage = "Enter a real parole eligibility date ")
+                                   incompleteMessage = "Enter the parole eligibility date and include a day, month and year",
+                                   invalidMessage = "Enter a real parole eligibility date",
+                                   onlyIfField="prisonerDetailsSentenceType",
+                                   onlyIfFieldMatchValue="determinate"
+    )
     private String prisonerDetailsParoleEligibilityDate;
     private String prisonerDetailsParoleEligibilityDate_day;
     private String prisonerDetailsParoleEligibilityDate_month;
@@ -97,8 +104,10 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     }
 
     @RequiredDateOnPage(value = 2, message = "Enter the automatic release date",
-        incompleteMessage = "Enter the automatic release date and include a day, month and year",
-        invalidMessage = "Enter a real automatic release date ")
+                                   incompleteMessage = "Enter the automatic release date and include a day, month and year",
+                                   invalidMessage = "Enter a real automatic release date",
+                                   onlyIfField="prisonerDetailsSentenceType",
+                                   onlyIfFieldMatchValue="determinate")
     private String prisonerDetailsAutoReleaseDate;
     private String prisonerDetailsAutoReleaseDate_day;
     private String prisonerDetailsAutoReleaseDate_month;
