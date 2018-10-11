@@ -1,6 +1,7 @@
 package data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import data.annotations.DateOnPage;
 import data.annotations.Encrypted;
 import data.annotations.OnPage;
 import data.annotations.RequiredDateOnPage;
@@ -87,12 +88,10 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
         return formattedDateFromDateParts("prisonerDetailsParoleEligibilityDate");
     }
 
-    @RequiredDateOnPage(value = 2, message = "Enter the parole eligibility date",
-                                   incompleteMessage = "Enter the parole eligibility date and include a day, month and year",
-                                   invalidMessage = "Enter a real parole eligibility date",
-                                   onlyIfField="prisonerDetailsSentenceType",
-                                   onlyIfFieldMatchValue="determinate"
-    )
+    @DateOnPage(value = 2, incompleteMessage = "Enter the parole eligibility date and include a day, month and year",
+                           invalidMessage = "Enter a real parole eligibility date",
+                           onlyIfField="prisonerDetailsSentenceType",
+                           onlyIfFieldMatchValue="determinate")
     private String prisonerDetailsParoleEligibilityDate;
     private String prisonerDetailsParoleEligibilityDate_day;
     private String prisonerDetailsParoleEligibilityDate_month;
@@ -103,11 +102,10 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
         return formattedDateFromDateParts("prisonerDetailsAutoReleaseDate");
     }
 
-    @RequiredDateOnPage(value = 2, message = "Enter the automatic release date",
-                                   incompleteMessage = "Enter the automatic release date and include a day, month and year",
-                                   invalidMessage = "Enter a real automatic release date",
-                                   onlyIfField="prisonerDetailsSentenceType",
-                                   onlyIfFieldMatchValue="determinate")
+    @DateOnPage(value = 2, incompleteMessage = "Enter the automatic release date and include a day, month and year",
+                           invalidMessage = "Enter a real automatic release date",
+                           onlyIfField="prisonerDetailsSentenceType",
+                           onlyIfFieldMatchValue="determinate")
     private String prisonerDetailsAutoReleaseDate;
     private String prisonerDetailsAutoReleaseDate_day;
     private String prisonerDetailsAutoReleaseDate_month;
