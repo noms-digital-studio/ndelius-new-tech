@@ -133,25 +133,21 @@ public class WizardData implements Validatable<List<ValidationError>> {
 
     private Stream<ValidationError> partialDateErrors(Map<String, Object> options) {
 
-        return dateFields().
+        return requiredDateFields().
                 filter(this::requiredDateFieldEnforced).
                 filter(field -> mustValidateField(options, field)).
                 filter(this::someDateFieldsAreEmpty).
-                map(field -> Optional.ofNullable(field.getAnnotation(RequiredDateOnPage.class))
-                    .map(annotation -> new ValidationError(field.getName(), annotation.incompleteMessage()))
-                    .orElseGet(() -> new ValidationError(field.getName(), field.getAnnotation(DateOnPage.class).incompleteMessage())));
+                map(field -> new ValidationError(field.getName(), field.getAnnotation(RequiredDateOnPage.class).incompleteMessage()));
     }
 
     private Stream<ValidationError> invalidDateErrors(Map<String, Object> options) {
 
-        return dateFields().
+        return requiredDateFields().
                 filter(this::requiredDateFieldEnforced).
                 filter(field -> mustValidateField(options, field)).
                 filter(field -> allDateFieldsAreSupplied(field) && composedDateBitsAreInvalid(field)).
-                map(field ->
-                    Optional.ofNullable(field.getAnnotation(RequiredDateOnPage.class))
-                        .map(annotation -> new ValidationError(field.getName(), annotation.invalidMessage()))
-                        .orElseGet(() -> new ValidationError(field.getName(), field.getAnnotation(DateOnPage.class).invalidMessage())));
+                map(field -> new ValidationError(field.getName(), field.getAnnotation(RequiredDateOnPage.class).invalidMessage()));
+
     }
 
     private boolean requiredMandatoryFieldEnforced(Field field) {
@@ -289,7 +285,7 @@ public class WizardData implements Validatable<List<ValidationError>> {
 
     private Stream<Field> dateFields() {
 
-        return Stream.concat(annotatedFields(RequiredDateOnPage.class), annotatedFields(DateOnPage.class));
+        return annotatedFields(DateOnPage.class);
     }
 
     private Stream<Field> requiredGroupFields() {
