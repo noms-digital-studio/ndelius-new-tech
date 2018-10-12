@@ -98,6 +98,8 @@ public class WizardData implements Validatable<List<ValidationError>> {
         return ImmutableList.of(
                 this::mandatoryErrors,
                 this::mandatoryDateErrors,
+                this::partialRequiredDateErrors,
+                this::invalidRequiredDateErrors,
                 this::partialDateErrors,
                 this::invalidDateErrors,
                 this::mandatoryGroupErrors
@@ -131,7 +133,7 @@ public class WizardData implements Validatable<List<ValidationError>> {
                 map(field -> new ValidationError(field.getName(), field.getAnnotation(RequiredDateOnPage.class).message()));
     }
 
-    private Stream<ValidationError> partialDateErrors(Map<String, Object> options) {
+    private Stream<ValidationError> partialRequiredDateErrors(Map<String, Object> options) {
 
         return requiredDateFields().
                 filter(this::requiredDateFieldEnforced).
@@ -140,7 +142,16 @@ public class WizardData implements Validatable<List<ValidationError>> {
                 map(field -> new ValidationError(field.getName(), field.getAnnotation(RequiredDateOnPage.class).incompleteMessage()));
     }
 
-    private Stream<ValidationError> invalidDateErrors(Map<String, Object> options) {
+    private Stream<ValidationError> partialDateErrors(Map<String, Object> options) {
+
+        return dateFields().
+                filter(this::dateFieldEnforced).
+                filter(field -> mustValidateField(options, field)).
+                filter(this::someDateFieldsAreEmpty).
+                map(field -> new ValidationError(field.getName(), field.getAnnotation(DateOnPage.class).incompleteMessage()));
+    }
+
+    private Stream<ValidationError> invalidRequiredDateErrors(Map<String, Object> options) {
 
         return requiredDateFields().
                 filter(this::requiredDateFieldEnforced).
@@ -150,12 +161,26 @@ public class WizardData implements Validatable<List<ValidationError>> {
 
     }
 
+    private Stream<ValidationError> invalidDateErrors(Map<String, Object> options) {
+
+        return dateFields().
+                filter(this::dateFieldEnforced).
+                filter(field -> mustValidateField(options, field)).
+                filter(field -> allDateFieldsAreSupplied(field) && composedDateBitsAreInvalid(field)).
+                map(field -> new ValidationError(field.getName(), field.getAnnotation(DateOnPage.class).invalidMessage()));
+
+    }
+
     private boolean requiredMandatoryFieldEnforced(Field field) {
         return requiredEnforced(field.getAnnotation(RequiredOnPage.class).onlyIfField(), field.getAnnotation(RequiredOnPage.class).onlyIfFieldMatchValue());
     }
 
     private boolean requiredDateFieldEnforced(Field field) {
         return requiredEnforced(field.getAnnotation(RequiredDateOnPage.class).onlyIfField(), field.getAnnotation(RequiredDateOnPage.class).onlyIfFieldMatchValue());
+    }
+
+    private boolean dateFieldEnforced(Field field) {
+        return requiredEnforced(field.getAnnotation(DateOnPage.class).onlyIfField(), field.getAnnotation(DateOnPage.class).onlyIfFieldMatchValue());
     }
 
     private boolean requiredEnforced(String onlyIfName, String onlyIfFieldMatchValue) {
