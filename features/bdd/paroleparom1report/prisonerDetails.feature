@@ -11,17 +11,14 @@ Feature: Parole Report
       | Prisoner`s full name                 | Kieron Dobson      |
       | Prison number                        | P98793-123         |
       | NOMIS number                         | N2124214-3423      |
-
-#      | Prisoner`s Category                  | A                  |
-#    And they enter the following information
-#      | Offence                              | Aggravated assault |
-#      | Sentence                             | 4 years            |
-#      | Sentence type                        | Indeterminate      |
-#      | Tariff Length                        | 5 years            |
-#      | Day                                  | 29                 |
-#      | Month                                | 6                  |
-#      | Year                                 | 2019               |
-
+    And they select the "A" option on the "Current prison category"
+    And they enter the following information
+      | Offence                              | Aggravated assault |
+      | Sentence                             | 4 years            |
+    And they select the "Indeterminate" option on the "Sentence type"
+    And they input the following information
+      | Tariff length                        | 5 years            |
+    And they enter the date "29/06/2019" for "Tariff expiry date"
     Then this information should be saved in the prisoner parole report
 
 #Scenario: Delius user wants to enter details for Male prisoner whom has Determinate sentence
