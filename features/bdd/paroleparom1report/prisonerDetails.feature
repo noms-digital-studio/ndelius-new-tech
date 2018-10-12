@@ -7,39 +7,37 @@ Feature: Parole Report
 
     Given that the delius user want to enter for Male prisoner who has Indeterminate sentence
     And they input the following information
-      | Prison or Young Offender Institution | Doncaster          |
-      | Prisoner`s full name                 | Kieron Dobson      |
-      | Prison number                        | P98793-123         |
-      | NOMIS number                         | N2124214-3423      |
+      | Prison or Young Offender Institution | Doncaster     |
+      | Prisoner`s full name                 | Kieron Dobson |
+      | Prison number                        | P98793-123    |
+      | NOMIS number                         | N2124214-3423 |
     And they select the "A" option on the "Current prison category"
     And they enter the following information
-      | Offence                              | Aggravated assault |
-      | Sentence                             | 4 years            |
+      | Offence  | Aggravated assault |
+      | Sentence | 4 years            |
     And they select the "Indeterminate" option on the "Sentence type"
     And they input the following information
-      | Tariff length                        | 5 years            |
+      | Tariff length | 5 years |
     And they enter the date "29/06/2019" for "Tariff expiry date"
     Then this information should be saved in the prisoner parole report
 
-#Scenario: Delius user wants to enter details for Male prisoner whom has Determinate sentence
-#
-#Given that the delius user want to enter for Male prisoner who has Determinate sentence
-#When  they enter the following information
-#
-#| Prison or Young Offender Institution                        | Doncaster                           |
-#| Prisoner's full name                                        | Kieron Dobson                       |
-#| Prison number                                               | P98793-123                          |
-#| NOMIS number                                                | N2124214-3423                       |
-#| Prisoner's Category                                         | C                                   |
-#| Offence                                                     | Aggravated assault                  |
-#| Sentence                                                    | 20 years                            |
-#| Sentence type                                               | Determinate                         |
-#| Automatic release date / non parole eligibility date Day    | 08                                  |
-#| Automatic release date / non parole eligibility date Month  | 11                                  |
-#| Automatic release date / non parole eligibility date Year   | 2031                                |
-#
-#Then this information should be saved in the report
-#
+  Scenario: Delius user wants to enter details for Male prisoner whom has Determinate sentence
+
+    Given that the delius user want to enter for Male prisoner who has Determinate sentence
+    And they input the following information
+      | Prison or Young Offender Institution | Doncaster     |
+      | Prisoner`s full name                 | Kieron Dobson |
+      | Prison number                        | P98793-123    |
+      | NOMIS number                         | N2124214-3423 |
+    And they select the "Closed" option on the "Current prison category"
+    And they enter the following information
+      | Offence  | Aggravated assault |
+      | Sentence | 20 years           |
+    And they select the "Determinate" option on the "Sentence type"
+    And they enter the date "08/11/2031" for "Parole eligibility date"
+    And they enter the date "09/12/2031" for "Automatic release date/non parole eligibility date"
+    Then this information should be saved in the prisoner parole report
+
 #
 #Scenario: Delius user wants to enter details for Female prisoner who has Indeterminate sentence
 #

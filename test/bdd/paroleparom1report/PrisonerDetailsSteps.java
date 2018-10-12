@@ -28,6 +28,11 @@ public class PrisonerDetailsSteps {
         // no page action required
     }
 
+    @Given("^that the delius user want to enter for Male prisoner who has Determinate sentence$")
+    public void thatTheDeliusUserWantToEnterForMalePrisonerWhoHasDeterminateSentence() throws Throwable {
+        // no page action required
+    }
+
     @And("^pause for a bit$")
     public void pauseForABit() throws Throwable {
         Thread.sleep(5000);   }
