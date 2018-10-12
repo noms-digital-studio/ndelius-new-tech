@@ -13,18 +13,18 @@
 
 @popup(reportForm, encrypter, "Prisoner details", 2) {
 
-    @inputText(reportForm("prisonerDetailsPrisonInstitution"), '_label -> "Prison or Young Offender Institution:", 'required -> "true")
+    @inputText(reportForm("prisonerDetailsPrisonInstitution"), '_label -> "Prison or Young Offender Institution", 'required -> "true")
 
-    @inputText(reportForm("prisonerDetailsPrisonersFullName"), '_label -> "Prisoner’s full name:", 'required -> "true")
+    @inputText(reportForm("prisonerDetailsPrisonersFullName"), '_label -> "Prisoner`s full name", 'required -> "true")
 
-    @inputText(reportForm("prisonerDetailsPrisonNumber"), '_label -> "Prison number:", 'required -> "true")
+    @inputText(reportForm("prisonerDetailsPrisonNumber"), '_label -> "Prison number", 'required -> "true")
 
-    @inputText(reportForm("prisonerDetailsNomisNumber"), '_label -> "NOMIS number:", 'required -> "true")
+    @inputText(reportForm("prisonerDetailsNomisNumber"), '_label -> "NOMIS number", 'required -> "true")
 
     <div class="govuk-form-group" data-module="radios" >
         <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
             <legend class="govuk-fieldset__legend govuk-label">
-                Current prison category:
+                Current prison category
             </legend>
 
             @if("male".equalsIgnoreCase(reportForm("gender").value)) {
@@ -53,21 +53,21 @@
 
     </div>
 
-    @textarea(reportForm("prisonerDetailsOffence"), '_label -> "Offence:", 'class -> "wide", 'required -> "true")
+    @textarea(reportForm("prisonerDetailsOffence"), '_label -> "Offence", 'class -> "wide", 'required -> "true")
 
-    @textarea(reportForm("prisonerDetailsSentence"), '_label -> "Sentence:", 'class -> "wide", 'required -> "true")
+    @textarea(reportForm("prisonerDetailsSentence"), '_label -> "Sentence", 'class -> "wide", 'required -> "true")
 
     <div class="govuk-form-group" data-module="radios">
         <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
             <legend class="govuk-fieldset__legend govuk-label">
-                Sentence type:
+                Sentence type
             </legend>
 
             @inputRadioGroup(
                 reportForm("prisonerDetailsSentenceType"),
                 options(
-                    "indeterminate" -> "Indeterminate:",
-                    "determinate" -> "Determinate:"
+                    "indeterminate" -> "Indeterminate",
+                    "determinate" -> "Determinate"
                 ),
                 Symbol("_inline") -> "true",
                 Symbol("data-aria-controls") -> "sentence-type"
@@ -80,7 +80,7 @@
 
             @inputText(
                 reportForm("prisonerDetailsTariffExpiryDate"),
-                '_label -> "Tariff expiry date:",
+                '_label -> "Tariff expiry date",
                 'required -> "true",
                 '_date -> "true",
                 '_form_hint -> "For example, 31 3 2018",
@@ -94,7 +94,7 @@
 
             @inputText(
                 reportForm("prisonerDetailsParoleEligibilityDate"),
-                '_label -> "Parole eligibility date:",
+                '_label -> "Parole eligibility date",
                 'required -> "true",
                 '_date -> "true",
                 '_form_hint -> "For example, 31 3 2018",
@@ -104,7 +104,7 @@
 
             @inputText(
                 reportForm("prisonerDetailsAutoReleaseDate"),
-                '_label -> "Automatic release date/non parole eligibility date:",
+                '_label -> "Automatic release date/non parole eligibility date",
                 'required -> "true",
                 '_date -> "true",
                 '_form_hint -> "For example, 31 3 2018",

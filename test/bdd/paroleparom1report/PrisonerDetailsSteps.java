@@ -18,4 +18,10 @@ public class PrisonerDetailsSteps {
     public void deliusUserCompletesThePageWithinTheParoleReport() throws Throwable {
         page.clickButton("Continue");
     }
+
+    @Given("^that the delius user want to enter for Male prisoner who has Indeterminate sentence$")
+    public void thatTheDeliusUserWantToEnterForMalePrisonerWhoHasIndeterminateSentence() throws Throwable {
+        // no page action required
+    }
+
 }
