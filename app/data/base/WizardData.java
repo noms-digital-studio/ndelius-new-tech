@@ -134,22 +134,24 @@ public class WizardData implements Validatable<List<ValidationError>> {
     private Stream<ValidationError> partialDateErrors(Map<String, Object> options) {
 
         return dateFields().
+                filter(this::requiredDateFieldEnforced).
                 filter(field -> mustValidateField(options, field)).
                 filter(this::someDateFieldsAreEmpty).
                 map(field -> Optional.ofNullable(field.getAnnotation(RequiredDateOnPage.class))
                     .map(annotation -> new ValidationError(field.getName(), annotation.incompleteMessage()))
-                    .orElse(new ValidationError(field.getName(), field.getAnnotation(DateOnPage.class).incompleteMessage())));
+                    .orElseGet(() -> new ValidationError(field.getName(), field.getAnnotation(DateOnPage.class).incompleteMessage())));
     }
 
     private Stream<ValidationError> invalidDateErrors(Map<String, Object> options) {
 
         return dateFields().
+                filter(this::requiredDateFieldEnforced).
                 filter(field -> mustValidateField(options, field)).
                 filter(field -> allDateFieldsAreSupplied(field) && composedDateBitsAreInvalid(field)).
                 map(field ->
                     Optional.ofNullable(field.getAnnotation(RequiredDateOnPage.class))
                         .map(annotation -> new ValidationError(field.getName(), annotation.invalidMessage()))
-                        .orElse(new ValidationError(field.getName(), field.getAnnotation(DateOnPage.class).invalidMessage())));
+                        .orElseGet(() -> new ValidationError(field.getName(), field.getAnnotation(DateOnPage.class).invalidMessage())));
     }
 
     private boolean requiredMandatoryFieldEnforced(Field field) {
