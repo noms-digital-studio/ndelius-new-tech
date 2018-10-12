@@ -34,7 +34,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("PRISONER_DETAILS_PRISON_INSTITUTION")
     private String prisonerDetailsPrisonInstitution;
 
-    @RequiredOnPage(value = 2, message = "Enter the prisoner’s full name")
+    @RequiredOnPage(value = 2, message = "Enter the prisoner's full name")
     @JsonProperty("PRISONER_DETAILS_PRISONERS_FULL_NAME")
     private String prisonerDetailsPrisonersFullName;
 

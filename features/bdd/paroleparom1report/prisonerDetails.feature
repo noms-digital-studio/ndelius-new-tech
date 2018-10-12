@@ -77,11 +77,11 @@ Feature: Parole Report
 #
 #Then this information should be saved in the report
 #
-#Scenario: Delius user wants to close the parole report
-#
-#Given that the Delius user wants to close the parole report
-#When  they select "close"
-#Then  they should be directed to the "Draft report" UI
+  Scenario: Delius user wants to close the parole report
+
+    When  they select the "Close" button
+    Then  the user should be directed to the "Draft report saved" UI
+
 #
 #Scenario: Delius user wants to continue writing the Parole report
 #
@@ -89,55 +89,46 @@ Feature: Parole Report
 #When  they select "continue"
 #Then  they should be directed to the "Offender manager: prisoner contact" UI
 #
-#Scenario: Delius user does not complete all the relevant fields on the UI for an offender whom has indeterminate sentence
-#
-#Given that the delius user does not complete all the relevant fields on the UI
-#When  they select "continue"
-#Then  the following information must be displayed
-#| Prison or Young Offender Institution  | Enter the prison or young offender Institution               |
-#| Prisoner's full name                  | Enter the prisoner’s full name                               |
-#| Prison number                         | Enter the prison number                                      |
-#| NOMIS number                          | Enter the NOMIS number                                       |
-#| Prisoner's Category                   | Select the current prison category                           |
-#| Offence                               | Enter the offence                                            |
-#| Sentence                              | Enter the sentence                                           |
-#| Sentence type                         | Select the sentence type                                     |
-#| Tariff Length                         | Enter the tariff length                                      |
-#| Day                                   | Enter the tariff expiry date                                 |
-#| Month                                 | Enter the tariff expiry date                                 |
-#| Year                                  | Enter the tariff expiry date                                 |
-#
-#
-#
-#Scenario: Delius user does not complete all the relevant fields on the UI for an offender whom has Determinate sentence
-#
-#Given that the delius user does not complete all the relevant fields on the UI
-#When  they select "continue"
-#Then  the following information must be displayed
-#| Prison or Young Offender Institution                        | Enter the prison or young offender Institution               |
-#| Prisoner's full name                                        | Enter the prisoner’s full name                               |
-#| Prison number                                               | Enter the prison number                                      |
-#| NOMIS number                                                | Enter the NOMIS number                                       |
-#| Prisoner's Category                                         | Select the current prison category                           |
-#| Offence                                                     | Enter the offence                                            |
-#| Sentence                                                    | Enter the sentence                                           |
-#| Sentence type                                               | Select the sentence type                                     |
-#
-#
-#Scenario: Delius user does not complete all the relevant fields on the UI for an offender whom has Indeterminate sentence
-#
-#Given that the delius user does not complete all the relevant fields on the UI
-#When  they select "continue"
-#Then  the following information must be displayed
-#| Prison or Young Offender Institution                        | Enter the prison or young offender Institution               |
-#| Prisoner's full name                                        | Enter the prisoner’s full name                               |
-#| Prison number                                               | Enter the prison number                                      |
-#| NOMIS number                                                | Enter the NOMIS number                                       |
-#| Prisoner's Category                                         | Select the current prison category                           |
-#| Offence                                                     | Enter the offence                                            |
-#| Sentence                                                    | Enter the sentence                                           |
-#| Sentence type                                               | Select the sentence type                                     |
-#| Tariff Length                                               | Enter the tariff length                                      |
-#| Day                                                         | Enter the tariff expiry date                                 |
-#| Month                                                       | Enter the tariff expiry date                                 |
-#| Year                                                        | Enter the tariff expiry date                                 |
+
+  Scenario: Delius user does not complete all the relevant fields on the UI including Sentence type
+
+    When  they select the "Continue" button
+    Then  the following error messages are displayed
+      | Prison or Young Offender Institution | Enter the prison or Young Offender Institution |
+      | Prisoner`s full name                 | Enter the prisoner's full name                 |
+      | Prison number                        | Enter the prison number                        |
+      | NOMIS number                         | Enter the NOMIS number                         |
+      | Current prison category              | Select the current prison category             |
+      | Offence                              | Enter the offence                              |
+      | Sentence                             | Enter the sentence                             |
+      | Sentence type                        | Select the sentence type                       |
+
+  Scenario: Delius user does not complete all the relevant fields on the UI for an offender whom has indeterminate sentence
+
+    Given they select the "Indeterminate" option on the "Sentence type"
+    When  they select the "Continue" button
+    Then  the following error messages are displayed
+      | Prison or Young Offender Institution | Enter the prison or Young Offender Institution |
+      | Prisoner`s full name                 | Enter the prisoner's full name                 |
+      | Prison number                        | Enter the prison number                        |
+      | NOMIS number                         | Enter the NOMIS number                         |
+      | Current prison category              | Select the current prison category             |
+      | Offence                              | Enter the offence                              |
+      | Sentence                             | Enter the sentence                             |
+      | Tariff length                        | Enter the tariff length                        |
+#      | Day                                  | Enter the tariff expiry date                   |
+#      | Month                                | Enter the tariff expiry date                   |
+#      | Year                                 | Enter the tariff expiry date                   |
+
+  Scenario: Delius user does not complete all the relevant fields on the UI for an offender whom has Determinate sentence
+
+    Given they select the "Determinate" option on the "Sentence type"
+    When  they select the "Continue" button
+    Then  the following error messages are displayed
+      | Prison or Young Offender Institution | Enter the prison or Young Offender Institution |
+      | Prisoner`s full name                 | Enter the prisoner's full name                 |
+      | Prison number                        | Enter the prison number                        |
+      | NOMIS number                         | Enter the NOMIS number                         |
+      | Current prison category              | Select the current prison category             |
+      | Offence                              | Enter the offence                              |
+      | Sentence                             | Enter the sentence                             |
