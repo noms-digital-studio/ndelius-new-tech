@@ -1,6 +1,5 @@
 package bdd.paroleparom1report;
 
-import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import views.pages.paroleparom1report.PrisonerDetailsPage;
 
@@ -26,6 +25,7 @@ public class PrisonerDetailsSteps {
 
     @Given("^Delius User completes the \"Prisoner details\" UI within the Parole Report$")
     public void deliusUserCompletesThePageWithinTheParoleReport() throws Throwable {
+        thatTheDeliusUserHasCompletedAllTheRelevantFieldsWithinTheUI();
         page.clickButton("Continue");
     }
 
@@ -49,13 +49,8 @@ public class PrisonerDetailsSteps {
         // no page action required
     }
 
-    @And("^pause for a bit$")
-    public void pauseForABit() throws Throwable {
-        Thread.sleep(5000);
-    }
-
-    @Given("^that the Delius user has completed all the relevant fields within the \"([^\"]*)\" UI$")
-    public void thatTheDeliusUserHasCompletedAllTheRelevantFieldsWithinTheUI(String arg0) throws Throwable {
+    @Given("^that the Delius user has completed all the relevant fields within the \"Prisoner details\" UI$")
+    public void thatTheDeliusUserHasCompletedAllTheRelevantFieldsWithinTheUI() throws Throwable {
         page.fillInput("Prison or Young Offender Institution", "Doncaster");
         page.fillInput("Prisoner`s full name", "Kieron Dobson ");
         page.fillInput("Prison number", "P98793-123");
