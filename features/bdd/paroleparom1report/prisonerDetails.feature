@@ -3,6 +3,12 @@ Feature: Parole Report
   Background: Delius user is on the "Prisoner details" UI within the Parole Report
     Given that the Delius user is on the "Prisoner details" page within the Parole Report
 
+  Scenario: Delius user wants to continue writing the Parole report
+
+    Given that the Delius user has completed all the relevant fields within the "Prisoner details" UI
+    When  they select the "Continue" button
+    Then  the user should be directed to the "Prisoner contact" UI
+
   Scenario: Delius user wants to enter details for Male prisoner whom has Indeterminate sentence
 
     Given that the delius user want to enter for Male prisoner who has Indeterminate sentence
@@ -38,20 +44,10 @@ Feature: Parole Report
     And they enter the date "09/12/2031" for "Automatic release date/non parole eligibility date"
     Then this information should be saved in the prisoner parole report
 
-
-#
   Scenario: Delius user wants to close the parole report
 
     When  they select the "Close" button
     Then  the user should be directed to the "Draft report saved" UI
-
-#
-#Scenario: Delius user wants to continue writing the Parole report
-#
-#Given that the Delius user has completed all the relevant fields within the "Prisoner details" UI
-#When  they select "continue"
-#Then  they should be directed to the "Offender manager: prisoner contact" UI
-#
 
   Scenario: Delius user does not complete all the relevant fields on the UI including Sentence type
 
@@ -79,9 +75,7 @@ Feature: Parole Report
       | Offence                              | Enter the offence                              |
       | Sentence                             | Enter the sentence                             |
       | Tariff length                        | Enter the tariff length                        |
-#      | Day                                  | Enter the tariff expiry date                   |
-#      | Month                                | Enter the tariff expiry date                   |
-#      | Year                                 | Enter the tariff expiry date                   |
+      | Tariff expiry date                   | Enter the tariff expiry date                   |
 
   Scenario: Delius user does not complete all the relevant fields on the UI for an offender whom has Determinate sentence
 

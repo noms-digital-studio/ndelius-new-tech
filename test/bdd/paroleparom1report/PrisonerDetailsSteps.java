@@ -51,5 +51,20 @@ public class PrisonerDetailsSteps {
 
     @And("^pause for a bit$")
     public void pauseForABit() throws Throwable {
-        Thread.sleep(5000);   }
+        Thread.sleep(5000);
+    }
+
+    @Given("^that the Delius user has completed all the relevant fields within the \"([^\"]*)\" UI$")
+    public void thatTheDeliusUserHasCompletedAllTheRelevantFieldsWithinTheUI(String arg0) throws Throwable {
+        page.fillInput("Prison or Young Offender Institution", "Doncaster");
+        page.fillInput("Prisoner`s full name", "Kieron Dobson ");
+        page.fillInput("Prison number", "P98793-123");
+        page.fillInput("NOMIS number", "N2124214-3423");
+        page.clickRadioButtonWithLabelWithinLegend("C", "Current prison category");
+        page.fillTextArea("Offence", "Aggravated assault");
+        page.fillTextArea("Sentence", "20 years");
+        page.clickRadioButtonWithLabelWithinLegend("Determinate", "Sentence type");
+        page.clickButton("Continue");
+    }
+
 }
