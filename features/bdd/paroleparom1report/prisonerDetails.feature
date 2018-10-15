@@ -29,7 +29,7 @@ Feature: Parole Report
       | Prisoner`s full name                 | Kieron Dobson |
       | Prison number                        | P98793-123    |
       | NOMIS number                         | N2124214-3423 |
-    And they select the "Closed" option on the "Current prison category"
+    And they select the "C" option on the "Current prison category"
     And they enter the following information
       | Offence  | Aggravated assault |
       | Sentence | 20 years           |
@@ -38,44 +38,7 @@ Feature: Parole Report
     And they enter the date "09/12/2031" for "Automatic release date/non parole eligibility date"
     Then this information should be saved in the prisoner parole report
 
-#
-#Scenario: Delius user wants to enter details for Female prisoner who has Indeterminate sentence
-#
-#Given that the delius user want to enter for Male prisoner who has Determinate sentence
-#When  they enter the following information
-#
-#| Prison or Young Offender Institution  | York                                |
-#| Prisoner's full name                  | Jane Doe                            |
-#| Prison number                         | P98793-123                          |
-#| NOMIS number                          | N2124214-3423                       |
-#| Prisoner's Category                   | Restricted                          |
-#| Offence                               | Aggravated assault                  |
-#| Sentence                              | 5 years                             |
-#| Sentence type                         | Determinate                         |
-#| Tariff Length                         | 5 years                             |
-#| Day                                   | 29                                  |
-#| Month                                 | 6                                   |
-#| Year                                  | 2019                                |
-#
-#
-#Scenario: Delius user wants to enter details for female prisoner whom has Determinate sentence
-#
-#Given that the delius user want to enter for Male prisoner who has Determinate sentence
-#When  they enter the following information
-#
-#| Prison or Young Offender Institution                        | Doncaster                           |
-#| Prisoner's full name                                        | Jane Doe                            |
-#| Prison number                                               | P98793-123                          |
-#| NOMIS number                                                | N2124214-3423                       |
-#| Prisoner's Category                                         | A                                   |
-#| Offence                                                     | Aggravated assault                  |
-#| Sentence                                                    | 20 years                            |
-#| Sentence type                                               | Determinate                         |
-#| Parole eligibility date Day                                 | 08                                  |
-#| Parole eligibility date Month                               | 12                                  |
-#| Parole eligibility date Year                                | 2021                                |
-#
-#Then this information should be saved in the report
+
 #
   Scenario: Delius user wants to close the parole report
 

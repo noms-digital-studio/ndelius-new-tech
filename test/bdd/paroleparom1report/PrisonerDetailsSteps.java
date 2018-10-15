@@ -18,6 +18,12 @@ public class PrisonerDetailsSteps {
         page.isAt(PRISONER_DETAILS.getPageHeader());
     }
 
+    @Given("^that the Delius user is on the \"Prisoner details\" page within the Parole Report for a female prisoner$")
+    public void thatTheDeliusUserIsOnThePageWithinTheParoleReportForFemale() throws Throwable {
+        page.navigateHereFemale();
+        page.isAt(PRISONER_DETAILS.getPageHeader());
+    }
+
     @Given("^Delius User completes the \"Prisoner details\" UI within the Parole Report$")
     public void deliusUserCompletesThePageWithinTheParoleReport() throws Throwable {
         page.clickButton("Continue");
@@ -30,6 +36,16 @@ public class PrisonerDetailsSteps {
 
     @Given("^that the delius user want to enter for Male prisoner who has Determinate sentence$")
     public void thatTheDeliusUserWantToEnterForMalePrisonerWhoHasDeterminateSentence() throws Throwable {
+        // no page action required
+    }
+
+    @Given("^that the delius user want to enter for Female prisoner who has Indeterminate sentence$")
+    public void thatTheDeliusUserWantToEnterForFemalePrisonerWhoHasIndeterminateSentence() throws Throwable {
+        // no page action required
+    }
+
+    @Given("^that the delius user want to enter for Female prisoner who has Determinate sentence$")
+    public void thatTheDeliusUserWantToEnterForFemalePrisonerWhoHasDeterminateSentence() throws Throwable {
         // no page action required
     }
 

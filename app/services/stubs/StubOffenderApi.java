@@ -23,8 +23,6 @@ import static play.libs.Json.toJson;
 
 public class StubOffenderApi implements OffenderApi {
 
-    private boolean genderFlag;
-
     @Override
     public CompletionStage<String> logon(String username) {
         // JWT Header/Body is {"alg":"HS512"}{"sub":"cn=fake.user,cn=Users,dc=moj,dc=com","uid":"fake.user","probationAreaCodes":["N02", "N01", "N03", "N04", "C01", "C16"],"exp":1523599298}
@@ -66,19 +64,27 @@ public class StubOffenderApi implements OffenderApi {
             throw new RuntimeException("getOffenderByCrn called with blank CRN");
         }
 
-        genderFlag = !genderFlag;
-
-        val offender = Offender.builder()
-            .firstName("Sam")
-            .surname("Jones")
-            .middleNames(ImmutableList.of("Henry", "James"))
-            .dateOfBirth("2000-06-22")
-            .otherIds(otherIds())
-            .contactDetails(contactDetails())
-            .gender(this.genderFlag ? "Male" : "Female")
-            .build();
-
-        return CompletableFuture.completedFuture(offender);
+        if (crn.equals("X54321")) {
+            return CompletableFuture.completedFuture(Offender.builder()
+                .firstName("Lucy")
+                .surname("Jones")
+                .middleNames(ImmutableList.of("Jane", "Suzi"))
+                .dateOfBirth("1980-12-01")
+                .otherIds(otherIds())
+                .contactDetails(contactDetails())
+                .gender("Female")
+                .build());
+        } else {
+            return CompletableFuture.completedFuture(Offender.builder()
+                .firstName("Sam")
+                .surname("Jones")
+                .middleNames(ImmutableList.of("Henry", "James"))
+                .dateOfBirth("2000-06-22")
+                .otherIds(otherIds())
+                .contactDetails(contactDetails())
+                .gender("Male")
+                .build());
+        }
     }
 
     @Override
