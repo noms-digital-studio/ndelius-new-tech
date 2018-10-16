@@ -155,67 +155,67 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
 
     // Page 7
 
-    @OnPage(7)
+    @RequiredGroupOnPage(value = 7, message = "Select underlying issues from the options below")
     @JsonProperty("ISSUE_ACCOMMODATION")
     private boolean issueAccommodation;
 
-    @RequiredOnPage(value = 7, message = "Enter a brief assessment for accommodation", onlyIfField = "issueAccommodation")
+    @OnPage(value = 7)
     @JsonProperty("ISSUE_ACCOMMODATION_DETAILS")
     private String issueAccommodationDetails;
 
-    @OnPage(7)
+    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
     @JsonProperty("ISSUE_EMPLOYMENT")
     private boolean issueEmployment;
 
-    @RequiredOnPage(value = 7, message = "Enter a brief assessment for employment", onlyIfField = "issueEmployment")
+    @OnPage(value = 7)
     @JsonProperty("ISSUE_EMPLOYMENT_DETAILS")
     private String issueEmploymentDetails;
 
-    @OnPage(7)
+    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
     @JsonProperty("ISSUE_FINANCE")
     private boolean issueFinance;
 
-    @RequiredOnPage(value = 7, message = "Enter a brief assessment for finance", onlyIfField = "issueFinance")
+    @OnPage(value = 7)
     @JsonProperty("ISSUE_FINANCE_DETAILS")
     private String issueFinanceDetails;
 
-    @OnPage(7)
+    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
     @JsonProperty("ISSUE_RELATIONSHIPS")
     private boolean issueRelationships;
 
-    @RequiredOnPage(value = 7, message = "Enter a brief assessment for relationships", onlyIfField = "issueRelationships")
+    @OnPage(value = 7)
     @JsonProperty("ISSUE_RELATIONSHIPS_DETAILS")
     private String issueRelationshipsDetails;
 
-    @OnPage(7)
+    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
     @JsonProperty("ISSUE_SUBSTANCE_MISUSE")
     private boolean issueSubstanceMisuse;
 
-    @RequiredOnPage(value = 7, message = "Enter a brief assessment for substance misuse", onlyIfField = "issueSubstanceMisuse")
+    @OnPage(value = 7)
     @JsonProperty("ISSUE_SUBSTANCE_MISUSE_DETAILS")
     private String issueSubstanceMisuseDetails;
 
-    @OnPage(7)
+    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
     @JsonProperty("ISSUE_HEALTH")
     private boolean issueHealth;
 
-    @RequiredOnPage(value = 7, message = "Enter a brief assessment for physical & mental health", onlyIfField = "issueHealth")
+    @OnPage(value = 7)
     @JsonProperty("ISSUE_HEALTH_DETAILS")
     private String issueHealthDetails;
 
-    @OnPage(7)
+    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
     @JsonProperty("ISSUE_BEHAVIOUR")
     private boolean issueBehaviour;
 
-    @RequiredOnPage(value = 7, message = "Enter a brief assessment for substance behaviour", onlyIfField = "issueBehaviour")
+    @OnPage(value = 7)
     @JsonProperty("ISSUE_BEHAVIOUR_DETAILS")
     private String issueBehaviourDetails;
 
-    @OnPage(7)
+    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
     @JsonProperty("ISSUE_OTHER")
     private boolean issueOther;
 
-    @RequiredOnPage(value = 7, message = "Enter a brief assessment for other issues", onlyIfField = "issueOther")
+    @OnPage(value = 7)
     @JsonProperty("ISSUE_OTHER_DETAILS")
     private String issueOtherDetails;
 
