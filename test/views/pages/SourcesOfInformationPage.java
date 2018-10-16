@@ -55,4 +55,8 @@ public class SourcesOfInformationPage extends FluentPage {
     private String checkBoxIdFromLabel(String optionLabel) {
         return $(xpath(String.format("//label[span[contains(.,'%s')]]", optionLabel))).attribute("for");
     }
+
+    public int countErrors(String errorMessage) {
+        return $(xpath(String.format("//span[contains(@class, 'error-message') and text()='%s']", errorMessage))).count();
+    }
 }

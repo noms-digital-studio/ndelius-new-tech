@@ -114,6 +114,15 @@ public class SourcesOfInformationWebTest extends WithIE8Browser {
     }
 
     @Test
+    public void selectingOtherAndNotCompletingShowsError() {
+        sourcesOfInformationPage.navigateHere();
+        sourcesOfInformationPage.tick("otherInformationSource");
+        sourcesOfInformationPage.attemptNext();
+
+        assertThat(sourcesOfInformationPage.countErrors("Enter the other information source details")).isEqualTo(1);
+    }
+
+    @Test
     public void existingReportWithNoSourcesHasNothingTicked() {
         when(documentStore.retrieveOriginalData(any(), any())).
                 thenReturn(existingReportWith(
