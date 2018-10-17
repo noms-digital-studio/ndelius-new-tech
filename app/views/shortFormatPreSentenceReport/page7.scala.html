@@ -84,7 +84,7 @@
                 @page5Fields(reportForm)
                 @page6Fields(reportForm)
 
-                <div class="form-group@if(reportForm.allErrors.stream.anyMatch(!_.key.contains("Details"))) { form-group-error}">
+                <div class="form-group@if(reportForm.allErrors.stream.anyMatch(_.key.contains("issue"))) { form-group-error}">
                 @checkboxDetailsField(reportForm, "issueAccommodation", "Accommodation", "Provide a brief assessment for accommodation", Some("Select underlying issues from the options below"))
                 @checkboxDetailsField(reportForm, "issueEmployment", "Employment, training and education", "Provide a brief assessment for employment")
                 @checkboxDetailsField(reportForm, "issueFinance", "Finance", "Provide a brief assessment for finance")
