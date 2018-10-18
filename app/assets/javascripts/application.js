@@ -126,6 +126,19 @@ function openPopup(url, name, top, left) {
         }
 
 
+        // Analytics for 'What to include' links on PAROM1
+        $('details').click(function() {
+            if (window.location.pathname.indexOf('paroleParom1Report') !== -1) {
+                var label = $(this).prev('.govuk-caption-xl').text() || $(this).prev('span').text() || $(this).parent().parent().find('legend').text();
+
+                gtag('event', $(this).attr('open') ? 'close' : 'open', {
+                    'event_category': 'PAROM1 - What to include',
+                    'event_label': $('h1').text() + ' > ' + label.trim()
+                });
+            }
+        });
+
+
          $('textarea').keyup(function () {
              var editor = $(this)
              saveAndUpdateTextLimits(editor, function() {
