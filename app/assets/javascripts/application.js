@@ -127,11 +127,12 @@ function openPopup(url, name, top, left) {
 
 
         // Analytics for 'What to include' links on PAROM1
-        $('details').click(function() {
+        $('summary').click(function() {
             if (window.location.pathname.indexOf('paroleParom1Report') !== -1) {
-                var label = $(this).prev('.govuk-caption-xl').text() || $(this).prev('span').prev('.form-label-bold').text() || $(this).prev('.form-label-bold').text() || $(this).parent().parent().find('legend').text();
+                var details = $(this).parent(),
+                    label = details.prev('.govuk-caption-xl').text() || details.prev('span').prev('.form-label-bold').text() || details.prev('.form-label-bold').text() || details.parent().parent().find('legend').text();
 
-                gtag('event', $(this).attr('open') ? 'close' : 'open', {
+                gtag('event', details.attr('open') ? 'close' : 'open', {
                     'event_category': 'PAROM1 - What to include',
                     'event_label': $('h1').text() + ' > ' + label.trim()
                 });
