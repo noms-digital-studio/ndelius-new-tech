@@ -28,65 +28,76 @@ Feature: Parole Report
       | prisonerDetailsPrisonersFullName | Jimmy Jammy Fizz   |
       | prisonerDetailsPrisonNumber      | P98793-123         |
       | prisonerDetailsNomisNumber       | M123456            |
-      | prisonerDetailsPrisonersCategory | A                  |
+      | prisonerDetailsPrisonersCategory | a                  |
       | prisonerDetailsOffence           | Aggravated assault |
       | prisonerDetailsSentence          | 4 years            |
-#      | prisonerDetailsSentenceType      | Indeterminate      |
+      | prisonerDetailsSentenceType      | indeterminate      |
       | prisonerDetailsTariffLength      | 5 years            |
       | prisonerDetailsTariffExpiryDate  | 29/06/2019         |
 
-#
-#  Scenario: Delius user wants to enter details for Male prisoner whom has Determinate sentence
-#
-#    Given that the delius user want to enter for Male prisoner who has Determinate sentence
-#    And they input the following information
-#      | Prison or Young Offender Institution | Doncaster     |
-#      | Prison number                        | P98793-123    |
-#    And they select the "C" option on the "Current prison category"
-#    And they enter the following information
-#      | Offence  | Aggravated assault |
-#      | Sentence | 20 years           |
-#    And they select the "Determinate" option on the "Sentence type"
-#    And they enter the date "08/11/2031" for "Parole eligibility date"
-#    And they enter the date "09/12/2031" for "Automatic release date/non parole eligibility date"
-#    Then this information should be saved in the prisoner parole report
-#
-#  Scenario: Delius user wants to close the parole report
-#
-#    When  they select the "Close" button
-#    Then  the user should be directed to the "Draft report saved" UI
-#
-#  Scenario: Delius user does not complete all the relevant fields on the UI including Sentence type
-#
-#    When  they select the "Continue" button
-#    Then  the following error messages are displayed
-#      | Prison or Young Offender Institution | Enter the prison or Young Offender Institution |
-#      | Prison number                        | Enter the prison number                        |
-#      | Current prison category              | Select the current prison category             |
-#      | Offence                              | Enter the offence                              |
-#      | Sentence                             | Enter the sentence                             |
-#      | Sentence type                        | Select the sentence type                       |
-#
-#  Scenario: Delius user does not complete all the relevant fields on the UI for an offender whom has indeterminate sentence
-#
-#    Given they select the "Indeterminate" option on the "Sentence type"
-#    When  they select the "Continue" button
-#    Then  the following error messages are displayed
-#      | Prison or Young Offender Institution | Enter the prison or Young Offender Institution |
-#      | Prison number                        | Enter the prison number                        |
-#      | Current prison category              | Select the current prison category             |
-#      | Offence                              | Enter the offence                              |
-#      | Sentence                             | Enter the sentence                             |
-#      | Tariff length                        | Enter the tariff length                        |
-#      | Tariff expiry date                   | Enter the tariff expiry date                   |
-#
-#  Scenario: Delius user does not complete all the relevant fields on the UI for an offender whom has Determinate sentence
-#
-#    Given they select the "Determinate" option on the "Sentence type"
-#    When  they select the "Continue" button
-#    Then  the following error messages are displayed
-#      | Prison or Young Offender Institution | Enter the prison or Young Offender Institution |
-#      | Prison number                        | Enter the prison number                        |
-#      | Current prison category              | Select the current prison category             |
-#      | Offence                              | Enter the offence                              |
-#      | Sentence                             | Enter the sentence                             |
+
+  Scenario: Delius user wants to enter details for Male prisoner whom has Determinate sentence
+
+    Given that the delius user want to enter for Male prisoner who has Determinate sentence
+    And they input the following information
+      | Prison or Young Offender Institution | Doncaster  |
+      | Prison number                        | P98793-123 |
+    And they select the "C" option on the "Current prison category"
+    And they enter the following information
+      | Offence  | Aggravated assault |
+      | Sentence | 20 years           |
+    And they select the "Determinate" option on the "Sentence type"
+    And they enter the date "08/11/2031" for "Parole eligibility date"
+    And they enter the date "09/12/2031" for "Automatic release date/non parole eligibility date"
+    Then the following information should be saved in the prisoner parole report
+      | prisonerDetailsPrisonInstitution     | Doncaster          |
+      | prisonerDetailsPrisonersFullName     | Jimmy Jammy Fizz   |
+      | prisonerDetailsPrisonNumber          | P98793-123         |
+      | prisonerDetailsNomisNumber           | M123456            |
+      | prisonerDetailsPrisonersCategory     | c                  |
+      | prisonerDetailsOffence               | Aggravated assault |
+      | prisonerDetailsSentence              | 20 years           |
+      | prisonerDetailsSentenceType          | determinate        |
+      | prisonerDetailsParoleEligibilityDate | 08/11/2031         |
+      | prisonerDetailsAutoReleaseDate       | 09/12/2031         |
+
+
+  Scenario: Delius user wants to close the parole report
+
+    When  they select the "Close" button
+    Then  the user should be directed to the "Draft report saved" UI
+
+  Scenario: Delius user does not complete all the relevant fields on the UI including Sentence type
+
+    When  they select the "Continue" button
+    Then  the following error messages are displayed
+      | Prison or Young Offender Institution | Enter the prison or Young Offender Institution |
+      | Prison number                        | Enter the prison number                        |
+      | Current prison category              | Select the current prison category             |
+      | Offence                              | Enter the offence                              |
+      | Sentence                             | Enter the sentence                             |
+      | Sentence type                        | Select the sentence type                       |
+
+  Scenario: Delius user does not complete all the relevant fields on the UI for an offender whom has indeterminate sentence
+
+    Given they select the "Indeterminate" option on the "Sentence type"
+    When  they select the "Continue" button
+    Then  the following error messages are displayed
+      | Prison or Young Offender Institution | Enter the prison or Young Offender Institution |
+      | Prison number                        | Enter the prison number                        |
+      | Current prison category              | Select the current prison category             |
+      | Offence                              | Enter the offence                              |
+      | Sentence                             | Enter the sentence                             |
+      | Tariff length                        | Enter the tariff length                        |
+      | Tariff expiry date                   | Enter the tariff expiry date                   |
+
+  Scenario: Delius user does not complete all the relevant fields on the UI for an offender whom has Determinate sentence
+
+    Given they select the "Determinate" option on the "Sentence type"
+    When  they select the "Continue" button
+    Then  the following error messages are displayed
+      | Prison or Young Offender Institution | Enter the prison or Young Offender Institution |
+      | Prison number                        | Enter the prison number                        |
+      | Current prison category              | Select the current prison category             |
+      | Offence                              | Enter the offence                              |
+      | Sentence                             | Enter the sentence                             |
