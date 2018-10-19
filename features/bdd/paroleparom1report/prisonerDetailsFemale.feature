@@ -8,9 +8,7 @@ Feature: Parole Report
     Given that the delius user want to enter for Female prisoner who has Indeterminate sentence
     And they input the following information
       | Prison or Young Offender Institution | York     |
-      | Prisoner`s full name                 | Jane Doe |
       | Prison number                        | P98793-123    |
-      | NOMIS number                         | N2124214-3423 |
     And they select the "Restricted" option on the "Current prison category"
     And they enter the following information
       | Offence  | Aggravated assault |
@@ -26,9 +24,7 @@ Feature: Parole Report
     Given that the delius user want to enter for Female prisoner who has Determinate sentence
     And they input the following information
       | Prison or Young Offender Institution | York     |
-      | Prisoner`s full name                 | Jane Doe |
       | Prison number                        | P98793-123    |
-      | NOMIS number                         | N2124214-3423 |
     And they select the "A" option on the "Current prison category"
     And they enter the following information
       | Offence  | Aggravated assault |
