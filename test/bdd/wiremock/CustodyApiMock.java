@@ -32,7 +32,7 @@ public class CustodyApiMock {
                                 okForContentType("application/json", loadResource("/nomsoffender/token.json"))));
 
         custodyApiWireMock.stubFor(
-                get(urlMatching("/custodyapi/api/offenders/nomsId/*"))
+                get(urlMatching("/custodyapi/api/offenders/nomsId/.*"))
                         .willReturn(
                                 okForContentType("application/json", loadResource("/nomsoffender/offender_G8020GG.json"))));
 
