@@ -266,7 +266,7 @@ public class NomisCustodyApiIntegrationTest  extends WithApplication {
          *       "bookingId": 4692,
          *       "activeFlag": true,
          *       "agencyLocation": {
-         *         "description": "GHOST HOLDING ESTABLISHMENT",
+         *         "description": "HMP Humber",
          */
         wireMock.stubFor(
                 get(urlMatching("/custodyapi/api/offenders/nomsId/.*"))
@@ -277,31 +277,7 @@ public class NomisCustodyApiIntegrationTest  extends WithApplication {
 
         val offender = prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
 
-        assertThat(offender.getInstitution().getDescription()).isEqualTo("GHOST HOLDING ESTABLISHMENT");
-    }
-
-    @Test
-    public void agencyLocationDescriptionUsedForInstitutionDescriptionEvenForInactiveBookings() {
-        /**
-         * Fragment:
-         *
-         *   "bookings": [
-         *     {
-         *       "bookingId": 4692,
-         *       "activeFlag": false,
-         *       "agencyLocation": {
-         *         "description": "GHOST HOLDING ESTABLISHMENT",
-         */
-        wireMock.stubFor(
-                get(urlMatching("/custodyapi/api/offenders/nomsId/.*"))
-                        .willReturn(
-                                okForContentType("application/json", loadResource("/nomsoffender/offender_noactive_booking.json"))));
-
-
-
-        val offender = prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
-
-        assertThat(offender.getInstitution().getDescription()).isEqualTo("GHOST HOLDING ESTABLISHMENT");
+        assertThat(offender.getInstitution().getDescription()).isEqualTo("HMP Humber");
     }
 
     @Override

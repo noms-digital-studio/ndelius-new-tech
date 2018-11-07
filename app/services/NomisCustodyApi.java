@@ -6,6 +6,8 @@ import com.typesafe.config.Config;
 import interfaces.HealthCheckResult;
 import interfaces.PrisonerApi;
 import interfaces.PrisonerApiToken;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Value;
 import lombok.val;
 import play.Logger;
@@ -37,6 +39,25 @@ public class NomisCustodyApi  implements PrisonerApi {
         private String imageViewType;
         private boolean activeFlag;
     }
+
+    @Data
+    @Builder(toBuilder = true)
+    static class AgencyLocation {
+        private String description;
+    }
+    @Data
+    @Builder(toBuilder = true)
+    static class Booking {
+        private AgencyLocation agencyLocation;
+        private int bookingSequence;
+        private boolean activeFlag;
+    }
+    @Data
+    @Builder(toBuilder = true)
+    static class OffenderEntity {
+        private List<Booking> bookings;
+    }
+
 
 
 
@@ -88,26 +109,8 @@ public class NomisCustodyApi  implements PrisonerApi {
                         .get()
                         .thenApply(checkForValidOffenceResponse)
                         .thenApply(WSResponse::getBody)
-                        .thenApply(body -> toOffender(readValue(body, OffenderEntity.class))));
+                        .thenApply(body -> OffenderTransformer.offenderOf(readValue(body, OffenderEntity.class))));
     }
-
-    private Offender toOffender(OffenderEntity offenderEntity) {
-        String institutionDescription = offenderEntity.getBookings()
-                .stream()
-                .filter(booking -> booking.getBookingSequence() == 1)
-                .findFirst()
-                .map(booking -> booking.getAgencyLocation().getDescription())
-                .orElseThrow(() -> new RuntimeException("No bookinging for offender"));
-        return Offender
-                .builder()
-                .institution(
-                        Institution
-                                .builder()
-                                .description(institutionDescription)
-                                .build())
-                .build();
-    }
-
 
     private WSResponse checkForValidResponse(WSResponse wsResponse, Supplier<String> notFoundMessage) {
         switch (wsResponse.getStatus()) {
@@ -164,18 +167,23 @@ public class NomisCustodyApi  implements PrisonerApi {
                 });
     }
 
-    @Value
-    static class AgencyLocation {
-        private String description;
-    }
-    @Value
-    static class Booking {
-        private AgencyLocation agencyLocation;
-        private int bookingSequence;
+    static class OffenderTransformer {
+        static Offender offenderOf(OffenderEntity offenderEntity) {
+            String institutionDescription = offenderEntity.getBookings()
+                    .stream()
+                    .filter(booking -> booking.getBookingSequence() == 1)
+                    .findFirst()
+                    .map(booking -> booking.getAgencyLocation().getDescription())
+                    .orElseThrow(() -> new RuntimeException("No current booking for offender found"));
+            return Offender
+                    .builder()
+                    .institution(
+                            Institution
+                                    .builder()
+                                    .description(institutionDescription)
+                                    .build())
+                    .build();
 
-    }
-    @Value
-    static class OffenderEntity {
-        private List<Booking> bookings;
+        }
     }
 }
