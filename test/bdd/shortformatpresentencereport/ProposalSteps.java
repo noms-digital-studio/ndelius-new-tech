@@ -16,4 +16,10 @@ public class ProposalSteps {
         page.navigateHere();
         page.isAt(PROPOSAL.getPageHeader());
     }
+
+    @Given("^Delius User completes the \"Proposal\" UI within the Short Format Pre-sentence Report$")
+    public void deliusUserCompletesThePageWithinTheReport() throws Throwable {
+        page.fillTextArea("Enter a proposed sentence", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
+        page.clickButton("Continue");
+    }
 }

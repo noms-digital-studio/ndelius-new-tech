@@ -16,4 +16,9 @@ public class SourcesOfInformationSteps {
         page.navigateHere();
         page.isAt(SOURCES_OF_INFORMATION.getPageHeader());
     }
+
+    @Given("^Delius User completes the \"Sources of information\" UI within the Short Format Pre-sentence Report")
+    public void deliusUserCompletesThePageWithinTheReport() throws Throwable {
+        page.clickButton("Continue");
+    }
 }

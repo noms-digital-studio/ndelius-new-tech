@@ -17,4 +17,9 @@ public class OffenderDetailsSteps {
         page.isAt(OFFENDER_DETAILS.getPageHeader());
     }
 
+    @Given("^Delius User completes the \"Offender details\" UI within the Short Format Pre-sentence Report")
+    public void deliusUserCompletesThePageWithinTheReport() throws Throwable {
+        page.clickButton("Continue");
+    }
+
 }

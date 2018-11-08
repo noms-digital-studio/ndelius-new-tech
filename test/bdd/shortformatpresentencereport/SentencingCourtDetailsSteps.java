@@ -16,4 +16,9 @@ public class SentencingCourtDetailsSteps {
         page.navigateHere();
         page.isAt(SENTENCING_COURT_DETAILS.getPageHeader());
     }
+
+    @Given("^Delius User completes the \"Sentencing court details\" UI within the Short Format Pre-sentence Report")
+    public void deliusUserCompletesThePageWithinTheReport() throws Throwable {
+        page.clickButton("Continue");
+    }
 }
