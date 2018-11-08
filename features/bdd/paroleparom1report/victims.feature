@@ -11,7 +11,7 @@ Feature:Parole Report - Victims
     And they enter the date "07/08/2018" for "On what date did you contact the VLO?"
     And  they enter the following information
       | Analyse the impact of the offence on the victims | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Egestas purus viverra accumsan in nisl nisi scelerisque eu. |
-    Then the following information should be saved in the prisoner parole report
+    Then the following information should be saved in the report
       | victimsEngagedInVCS | yes |
       | victimsSubmitVPS | no |
       | victimsImpactDetails | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Egestas purus viverra accumsan in nisl nisi scelerisque eu. |
