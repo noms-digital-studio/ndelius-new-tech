@@ -7,7 +7,6 @@ import interfaces.HealthCheckResult;
 import interfaces.PrisonerApi;
 import interfaces.PrisonerApiToken;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Value;
 import lombok.val;
 import play.Logger;
@@ -41,19 +40,19 @@ public class NomisCustodyApi  implements PrisonerApi {
         private boolean activeFlag;
     }
 
-    @Data
+    @Value
     @Builder(toBuilder = true)
     static class AgencyLocation {
         private String description;
     }
-    @Data
+    @Value
     @Builder(toBuilder = true)
     static class Booking {
         private AgencyLocation agencyLocation;
         private int bookingSequence;
         private boolean activeFlag;
     }
-    @Data
+    @Value
     @Builder(toBuilder = true)
     static class OffenderEntity {
         private List<Booking> bookings;
