@@ -27,7 +27,7 @@ Feature: Parole Report
       | prisonerDetailsPrisonNumber      | P98793-123         |
       | prisonerDetailsNomisNumber       | M123456            |
       | prisonerDetailsPrisonersCategory | a                  |
-      | prisonerDetailsOffence           | Sub cat desc (code123) - 08/11/2018 |
+      | prisonerDetailsOffence           | Stealing the limelight (code123) - 08/11/2018 |
       | prisonerDetailsSentence          | 4 years            |
       | prisonerDetailsSentenceType      | indeterminate      |
       | prisonerDetailsTariffLength      | 5 years            |
@@ -51,7 +51,7 @@ Feature: Parole Report
       | prisonerDetailsPrisonNumber          | P98793-123         |
       | prisonerDetailsNomisNumber           | M123456            |
       | prisonerDetailsPrisonersCategory     | c                  |
-      | prisonerDetailsOffence               | Sub cat desc (code123) - 08/11/2018 |
+      | prisonerDetailsOffence               | Stealing the limelight (code123) - 08/11/2018 |
       | prisonerDetailsSentence              | 20 years           |
       | prisonerDetailsSentenceType          | determinate        |
       | prisonerDetailsParoleEligibilityDate | 08/11/2031         |

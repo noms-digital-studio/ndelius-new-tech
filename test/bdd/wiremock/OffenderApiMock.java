@@ -49,6 +49,10 @@ public class OffenderApiMock {
                 get(urlEqualTo("/offenders/crn/X12345/institutionalReports/12345"))
                     .willReturn(ok().withBody(JsonHelper.stringify(anInstitutionalReport()))));
 
+        offenderApiWireMock.stubFor(
+                get(urlEqualTo("/offenders/crn/X54321/institutionalReports/54332"))
+                    .willReturn(ok().withBody(JsonHelper.stringify(anInstitutionalReport()))));
+
         return this;
     }
 
