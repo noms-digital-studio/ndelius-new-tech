@@ -3,6 +3,7 @@ package interfaces;
 import lombok.Builder;
 import lombok.Value;
 
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
 public interface PrisonerApi {
@@ -25,5 +26,5 @@ public interface PrisonerApi {
 
     CompletionStage<HealthCheckResult> isHealthy();
 
-    CompletionStage<Offender> getOffenderByNomsNumber(String nomsNumber);
+    CompletionStage<Optional<Offender>> getOffenderByNomsNumber(String nomsNumber);
 }

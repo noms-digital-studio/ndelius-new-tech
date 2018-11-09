@@ -74,7 +74,7 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
             val prisonerDetailsNomisNumber = params.get("prisonerDetailsNomisNumber");
             val prisonerFuture = Optional.ofNullable(prisonerDetailsNomisNumber)
                     .map(nomsNumber -> prisonerApi.getOffenderByNomsNumber(nomsNumber).toCompletableFuture())
-                    .orElseGet(() -> CompletableFuture.completedFuture(null));
+                    .orElseGet(() -> CompletableFuture.completedFuture(Optional.empty()));
 
             return CompletableFuture.allOf(prisonerFuture)
                     .thenApply(notUsed ->
@@ -84,8 +84,8 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
         });
     }
 
-    private Map<String, String> storeCustodyData(Map<String, String> params, PrisonerApi.Offender prisonOffender) {
-        Optional.ofNullable(prisonOffender).ifPresent(offender -> {
+    private Map<String, String> storeCustodyData(Map<String, String> params, Optional<PrisonerApi.Offender> maybeOffender) {
+        maybeOffender.ifPresent(offender -> {
             params.put("prisonerDetailsPrisonInstitution", offender.getInstitution().getDescription());
         });
         return params;

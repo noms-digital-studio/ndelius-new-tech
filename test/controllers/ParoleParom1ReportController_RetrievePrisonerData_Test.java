@@ -22,6 +22,7 @@ import play.test.WithApplication;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.OffsetDateTime;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
@@ -57,13 +58,13 @@ public class ParoleParom1ReportController_RetrievePrisonerData_Test  extends Wit
         given(pdfGenerator.generate(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
         given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithMultipleAddresses()));
-        given(prisonerApi.getOffenderByNomsNumber(any())).willReturn(CompletableFuture.completedFuture(offenderInPrison()));
+        given(prisonerApi.getOffenderByNomsNumber(any())).willReturn(CompletableFuture.completedFuture(Optional.of(offenderInPrison())));
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
     }
 
     @Test
     public void newReportsContainInstitutionName() {
-        given(prisonerApi.getOffenderByNomsNumber(any())).willReturn(CompletableFuture.completedFuture(offenderAtPrison("HMP Humber")));
+        given(prisonerApi.getOffenderByNomsNumber(any())).willReturn(CompletableFuture.completedFuture(Optional.of(offenderAtPrison("HMP Humber"))));
 
 
         val result = route(app, new Http.RequestBuilder().method(GET).uri("/report/paroleParom1Report?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D"));
@@ -74,7 +75,7 @@ public class ParoleParom1ReportController_RetrievePrisonerData_Test  extends Wit
     }
 
     @Test
-    public void newReportsWithNoNOMSNumberDoNotSetInstitution() {
+    public void newReportsWithNoNOMSNumberDoesNotSetInstitutionName() {
         given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoOtherIds()));
 
 
@@ -86,8 +87,20 @@ public class ParoleParom1ReportController_RetrievePrisonerData_Test  extends Wit
     }
 
     @Test
+    public void newReportsWithNoMatchingPrisonerDoesNotSetInstitutionName() {
+        given(prisonerApi.getOffenderByNomsNumber(any())).willReturn(CompletableFuture.completedFuture(Optional.empty()));
+
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/report/paroleParom1Report?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D"));
+
+        assertEquals(OK, result.status());
+        val content = Helpers.contentAsString(result);
+        assertThat(content).contains("name=\"prisonerDetailsPrisonInstitution\" value=\"\"");
+    }
+
+    @Test
     public void existingReportsHaveInstitutionNameUpdated() throws UnsupportedEncodingException {
-        given(prisonerApi.getOffenderByNomsNumber(any())).willReturn(CompletableFuture.completedFuture(offenderAtPrison("HMP Humber")));
+        given(prisonerApi.getOffenderByNomsNumber(any())).willReturn(CompletableFuture.completedFuture(Optional.of(offenderAtPrison("HMP Humber"))));
         given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(
                 () -> new DocumentStore.OriginalData(
                         AlfrescoDocumentBuilder.standardDocument().withValuesItem("prisonerDetailsPrisonInstitution", "HMP Manchester").userData(), OffsetDateTime.now())));
