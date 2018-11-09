@@ -18,4 +18,21 @@ public class InstitutionalReportHelpers {
                 .build())
             .build();
     }
+
+    public static OffenderApi.InstitutionalReport anInstitutionalReportWithOffence(String desc, String code, String date) {
+        return OffenderApi.InstitutionalReport.builder()
+            .conviction(OffenderApi.Conviction.builder()
+                .mainOffence(OffenderApi.Offence.builder()
+                    .offenceId("123")
+                    .mainOffence(true)
+                    .offenceDate(date + "T00:00")
+                    .detail(OffenderApi.OffenceDetail.builder()
+                        .subCategoryDescription(desc)
+                        .code(code)
+                        .build())
+                    .build())
+                .build())
+            .build();
+    }
+
 }
