@@ -57,6 +57,25 @@ public class NomisCustodyApi_OffenderTransformerTest {
     }
 
     @Test
+    public void bookingNumberUsedForPrisonNumber() {
+
+        val offenderEntity =
+                aOffenderEntity()
+                        .toBuilder()
+                        .bookings(ImmutableList.of(
+                                aBooking(1)
+                                        .toBuilder()
+                                        .bookingId(4815)
+                                        .build()))
+                        .build();
+
+        val offender = offenderOf(offenderEntity);
+
+        assertThat(offender.getMostRecentPrisonerNumber()).isEqualTo("4815");
+    }
+
+
+    @Test
     public void exceptionWhenNoCurrentBooking() {
 
         val offenderEntity =
