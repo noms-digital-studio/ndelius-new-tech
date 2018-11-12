@@ -59,6 +59,14 @@ Feature: Short Format Pre-sentence Report - Offender assessment
       | Caring responsibilities                                 | Some caring responsibilities text |
 
     Then the following information should be saved in the report
+      | issueAccommodation            | true                              |
+      | issueEmployment               | true                              |
+      | issueFinance                  | true                              |
+      | issueRelationships            | true                              |
+      | issueSubstanceMisuse          | true                              |
+      | issueHealth                   | true                              |
+      | issueBehaviour                | true                              |
+      | issueOther                    | true                              |
       | issueAccommodationDetails     | Some accommodation text           |
       | issueEmploymentDetails        | Some employment text              |
       | issueFinanceDetails           | Some finance text                 |
