@@ -22,7 +22,7 @@ Feature: Parole Report
     Then the following information should be saved in the prisoner parole report
       | prisonerDetailsPrisonInstitution | HMP Humber         |
       | prisonerDetailsPrisonersFullName | Jimmy Jammy Fizz   |
-      | prisonerDetailsPrisonNumber      | 4692               |
+      | prisonerDetailsPrisonNumber      | LH5058             |
       | prisonerDetailsNomisNumber       | M123456            |
       | prisonerDetailsPrisonersCategory | a                  |
       | prisonerDetailsOffence           | Stealing the limelight (code123) - 08/11/2018 |
@@ -44,7 +44,7 @@ Feature: Parole Report
     Then the following information should be saved in the prisoner parole report
       | prisonerDetailsPrisonInstitution     | HMP Humber         |
       | prisonerDetailsPrisonersFullName     | Jimmy Jammy Fizz   |
-      | prisonerDetailsPrisonNumber          | 4692               |
+      | prisonerDetailsPrisonNumber          | LH5058             |
       | prisonerDetailsNomisNumber           | M123456            |
       | prisonerDetailsPrisonersCategory     | c                  |
       | prisonerDetailsOffence               | Stealing the limelight (code123) - 08/11/2018 |

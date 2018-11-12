@@ -66,12 +66,13 @@ public class NomisCustodyApi_OffenderTransformerTest {
                                 aBooking(1)
                                         .toBuilder()
                                         .bookingId(4815)
+                                        .bookingNo("D88666")
                                         .build()))
                         .build();
 
         val offender = offenderOf(offenderEntity);
 
-        assertThat(offender.getMostRecentPrisonerNumber()).isEqualTo("4815");
+        assertThat(offender.getMostRecentPrisonerNumber()).isEqualTo("D88666");
     }
 
 

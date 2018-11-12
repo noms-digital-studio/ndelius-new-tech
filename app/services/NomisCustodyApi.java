@@ -51,6 +51,7 @@ public class NomisCustodyApi  implements PrisonerApi {
         private AgencyLocation agencyLocation;
         private long bookingSequence;
         private long bookingId;
+        private String bookingNo;
         private boolean activeFlag;
     }
     @Value
@@ -190,14 +191,14 @@ public class NomisCustodyApi  implements PrisonerApi {
 
     static class OffenderTransformer {
         static Offender offenderOf(OffenderEntity offenderEntity) {
-            Booking mostRecentBooking = offenderEntity.getBookings()
+            val mostRecentBooking = offenderEntity.getBookings()
                     .stream()
                     .filter(booking -> booking.getBookingSequence() == 1)
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("No current booking for offender found"));
             return Offender
                     .builder()
-                    .mostRecentPrisonerNumber(String.valueOf(mostRecentBooking.getBookingId()))
+                    .mostRecentPrisonerNumber(String.valueOf(mostRecentBooking.getBookingNo()))
                     .institution(
                             Institution
                                     .builder()
