@@ -29,6 +29,20 @@ Feature: Short Format Pre-sentence Report - Risk assessment
     And they select "What to include" hyperlink within the radio group
     Then the UI should expand to show additional content within a radio group to the end user
 
+  Scenario: Delius user completes all options on the "Risk assessment" UI
+
+    Given they select the radio button with id "previousSupervisionResponse_Good"
+    When they enter the following information
+      | Likelihood of further offending                                | Some likelihood of further offending text            |
+      | Risk of serious harm                                           | Some risk of serious harm text                       |
+      | Add additional details on previous supervision (if applicable) | Some additional details on previous supervision text |
+
+    Then the following information should be saved in the report
+      | likelihoodOfReOffending       | Some likelihood of further offending text            |
+      | riskOfSeriousHarm             | Some risk of serious harm text                       |
+      | previousSupervisionResponse   | Good                                                 |
+      | additionalPreviousSupervision | Some additional details on previous supervision text |
+
   Scenario: Delius user wants to continue writing the Short Format Pre-sentence Report
 
     Given Delius User completes the "Risk assessment" UI within the Short Format Pre-sentence Report

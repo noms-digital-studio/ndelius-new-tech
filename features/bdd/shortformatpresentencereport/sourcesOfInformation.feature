@@ -8,7 +8,37 @@ Feature: Short Format Pre-sentence Report - Sources of information
     Given that the "Other (please specify below)" is ticked
     When they select the "Continue" button
     Then  the following error messages are displayed
-      | Other Source(s) of Information | Enter the other information source details |
+      | Other source(s) of information | Enter the other information source details |
+
+  Scenario: Delius user completes all options on the "Offender assessment" UI
+
+    Given that the "Interview" is ticked
+    And that the "Service records" is ticked
+    And that the "CPS summary" is ticked
+    And that the "Previous OASys assessments" is ticked
+    And that the "Previous convictions" is ticked
+    And that the "Victim statement" is ticked
+    And that the "Safeguarding checks" is ticked
+    And that the "Police information" is ticked
+    And that the "Sentencing guidelines" is ticked
+    And that the "Domestic abuse call out information" is ticked
+    And that the "Other (please specify below)" is ticked
+    When they enter the following information
+      | Other source(s) of information | Some other sources of information text |
+
+    Then the following information should be saved in the report
+      | interviewInformationSource            | true                                   |
+      | serviceRecordsInformationSource       | true                                   |
+      | cpsSummaryInformationSource           | true                                   |
+      | oasysAssessmentsInformationSource     | true                                   |
+      | previousConvictionsInformationSource  | true                                   |
+      | victimStatementInformationSource      | true                                   |
+      | childrenServicesInformationSource     | true                                   |
+      | policeInformationSource               | true                                   |
+      | sentencingGuidelinesInformationSource | true                                   |
+      | domesticAbuseInformationSource        | true                                   |
+      | otherInformationSource                | true                                   |
+      | otherInformationDetails               | Some other sources of information text |
 
   Scenario: Delius user wants to continue writing the Short Format Pre-sentence Report
 
