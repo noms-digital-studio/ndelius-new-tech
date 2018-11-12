@@ -2,8 +2,7 @@ Feature:Parole Report - Victims
 
   Background:
     Given that the Delius user is on the "Victims" page within the Parole Report
-
-
+    
   Scenario: Delius user wants to enter details of the victims in the parole Report
 
     When they select the "Yes" option on the "Are the victims engaged in the Victim Contact Scheme (VCS)?"
@@ -26,7 +25,6 @@ Feature:Parole Report - Victims
       | On what date did you contact the VLO? | Enter the date you contacted the VLO |
       | Are the victims engaged in the Victim Contact Scheme (VCS)? | Specify if the victims are engaged with the VCS |
       | Do the victims wish to submit a Victim Personal Statement (VPS)? | Specify if the victims wish to submit a VPS |
-
 
   Scenario: Delius user wants to close the report
 
