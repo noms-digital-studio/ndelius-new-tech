@@ -1,0 +1,31 @@
+{
+  "institutionalReportId": 999,
+  "offenderId": 1,
+  "conviction": {
+    "convictionId": 4,
+    "active": true,
+    "convictionDate": "2018-03-01",
+    "offences": [
+      {
+        "offenceId": "M2500217270",
+        "mainOffence": true,
+        "detail": {
+          "code": "00102",
+          "description": "High treason - 06200",
+          "mainCategoryCode": "062",
+          "mainCategoryDescription": "High treason",
+          "mainCategoryAbbreviation": "High treason",
+          "ogrsOffenceCategory": "Other offence",
+          "subCategoryCode": "00",
+          "subCategoryDescription": "Fraud subcategory description",
+          "form20Code": "12"
+        },
+        "offenceDate": "2018-11-02T00:00:00",
+        "offenceCount": 1,
+        "offenderId": 1,
+        "createdDatetime": "2018-07-04T10:12:05",
+        "lastUpdatedDatetime": "2018-07-04T10:12:05"
+      }
+    ]
+  }
+}

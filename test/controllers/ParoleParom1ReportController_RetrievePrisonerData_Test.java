@@ -35,10 +35,12 @@ import static play.inject.Bindings.bind;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.GET;
 import static play.test.Helpers.route;
+import static utils.InstitutionalReportHelpers.anInstitutionalReport;
 import static utils.OffenderHelper.anOffenderWithMultipleAddresses;
 import static utils.OffenderHelper.anOffenderWithNoOtherIds;
 import static utils.PrisonerHelper.offenderAtPrison;
 import static utils.PrisonerHelper.offenderInPrison;
+import static utils.PrisonerHelper.offenderWithMostRecentPrisonerNumber;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ParoleParom1ReportController_RetrievePrisonerData_Test  extends WithApplication {
@@ -58,6 +60,7 @@ public class ParoleParom1ReportController_RetrievePrisonerData_Test  extends Wit
         given(pdfGenerator.generate(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
         given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithMultipleAddresses()));
+        given(offenderApi.getInstitutionalReport(any(), any(), any())).willReturn(CompletableFuture.completedFuture(anInstitutionalReport()));
         given(prisonerApi.getOffenderByNomsNumber(any())).willReturn(CompletableFuture.completedFuture(Optional.of(offenderInPrison())));
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
     }
@@ -105,14 +108,49 @@ public class ParoleParom1ReportController_RetrievePrisonerData_Test  extends Wit
                 () -> new DocumentStore.OriginalData(
                         AlfrescoDocumentBuilder.standardDocument().withValuesItem("prisonerDetailsPrisonInstitution", "HMP Manchester").userData(), OffsetDateTime.now())));
 
-        val documentId = URLEncoder.encode(encryptor.apply("12345"), "UTF-8");
-        val onBehalfOfUser = URLEncoder.encode(encryptor.apply("JohnSmithNPS"), "UTF-8");
-
-        val result = route(app, new Http.RequestBuilder().method(GET).uri(String.format("/report/paroleParom1Report?documentId=%s&onBehalfOfUser=%s&user=lJqZBRO%%2F1B0XeiD2PhQtJg%%3D%%3D&t=T2DufYh%%2B%%2F%%2F64Ub6iNtHDGg%%3D%%3D", documentId, onBehalfOfUser)));
+        val result = route(app, new Http.RequestBuilder().method(GET).uri(String.format("/report/paroleParom1Report?documentId=%s&onBehalfOfUser=%s&user=lJqZBRO%%2F1B0XeiD2PhQtJg%%3D%%3D&t=T2DufYh%%2B%%2F%%2F64Ub6iNtHDGg%%3D%%3D", URLEncoder.encode(encryptor.apply("12345"), "UTF-8"), URLEncoder.encode(encryptor.apply("JohnSmithNPS"), "UTF-8"))));
 
         val content = Helpers.contentAsString(result);
         assertThat(content).contains("name=\"prisonerDetailsPrisonInstitution\" value=\"HMP Humber\"");
     }
+
+    @Test
+    public void newReportsContainPrisonNumber() {
+        given(prisonerApi.getOffenderByNomsNumber(any())).willReturn(CompletableFuture.completedFuture(Optional.of(offenderWithMostRecentPrisonerNumber("987654"))));
+
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/report/paroleParom1Report?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D"));
+
+        val content = Helpers.contentAsString(result);
+        assertThat(content).contains("name=\"prisonerDetailsPrisonNumber\" value=\"987654\"");
+    }
+
+    @Test
+    public void existingReportsHavePrisonNumberUpdated() throws UnsupportedEncodingException {
+        given(prisonerApi.getOffenderByNomsNumber(any())).willReturn(CompletableFuture.completedFuture(Optional.of(offenderWithMostRecentPrisonerNumber("987654"))));
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(
+                () -> new DocumentStore.OriginalData(
+                        AlfrescoDocumentBuilder.standardDocument().withValuesItem("prisonerDetailsPrisonNumber", "99999").userData(), OffsetDateTime.now())));
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri(String.format("/report/paroleParom1Report?documentId=%s&onBehalfOfUser=%s&user=lJqZBRO%%2F1B0XeiD2PhQtJg%%3D%%3D&t=T2DufYh%%2B%%2F%%2F64Ub6iNtHDGg%%3D%%3D", URLEncoder.encode(encryptor.apply("12345"), "UTF-8"), URLEncoder.encode(encryptor.apply("JohnSmithNPS"), "UTF-8"))));
+
+        val content = Helpers.contentAsString(result);
+        assertThat(content).contains("name=\"prisonerDetailsPrisonNumber\" value=\"987654\"");
+    }
+
+    @Test
+    public void newReportsWithNoMatchingPrisonerDoesNotSetPrisonNumber() {
+        given(prisonerApi.getOffenderByNomsNumber(any())).willReturn(CompletableFuture.completedFuture(Optional.empty()));
+
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/report/paroleParom1Report?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D"));
+
+        assertEquals(OK, result.status());
+        val content = Helpers.contentAsString(result);
+        assertThat(content).contains("name=\"prisonerDetailsPrisonNumber\" value=\"\"");
+    }
+
+
 
 
     @Override

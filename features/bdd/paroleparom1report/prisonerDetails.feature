@@ -12,11 +12,8 @@ Feature: Parole Report
   Scenario: Delius user wants to enter details for Male prisoner whom has Indeterminate sentence
 
     Given that the delius user want to enter for Male prisoner who has Indeterminate sentence
-    And they input the following information
-      | Prison number                        | P98793-123 |
     And they select the "A" option on the "Current prison category"
     And they enter the following information
-      | Offence  | Aggravated assault |
       | Sentence | 4 years            |
     And they select the "Indeterminate" option on the "Sentence type"
     And they input the following information
@@ -25,10 +22,10 @@ Feature: Parole Report
     Then the following information should be saved in the report
       | prisonerDetailsPrisonInstitution | HMP Humber         |
       | prisonerDetailsPrisonersFullName | Jimmy Jammy Fizz   |
-      | prisonerDetailsPrisonNumber      | P98793-123         |
+      | prisonerDetailsPrisonNumber      | LH5058             |
       | prisonerDetailsNomisNumber       | M123456            |
       | prisonerDetailsPrisonersCategory | a                  |
-      | prisonerDetailsOffence           | Aggravated assault |
+      | prisonerDetailsOffence           | Stealing the limelight (code123) - 08/11/2018 |
       | prisonerDetailsSentence          | 4 years            |
       | prisonerDetailsSentenceType      | indeterminate      |
       | prisonerDetailsTariffLength      | 5 years            |
@@ -38,11 +35,8 @@ Feature: Parole Report
   Scenario: Delius user wants to enter details for Male prisoner whom has Determinate sentence
 
     Given that the delius user want to enter for Male prisoner who has Determinate sentence
-    And they input the following information
-      | Prison number                        | P98793-123 |
     And they select the "C" option on the "Current prison category"
     And they enter the following information
-      | Offence  | Aggravated assault |
       | Sentence | 20 years           |
     And they select the "Determinate" option on the "Sentence type"
     And they enter the date "08/11/2031" for "Parole eligibility date"
@@ -50,10 +44,10 @@ Feature: Parole Report
     Then the following information should be saved in the report
       | prisonerDetailsPrisonInstitution     | HMP Humber         |
       | prisonerDetailsPrisonersFullName     | Jimmy Jammy Fizz   |
-      | prisonerDetailsPrisonNumber          | P98793-123         |
+      | prisonerDetailsPrisonNumber          | LH5058             |
       | prisonerDetailsNomisNumber           | M123456            |
       | prisonerDetailsPrisonersCategory     | c                  |
-      | prisonerDetailsOffence               | Aggravated assault |
+      | prisonerDetailsOffence               | Stealing the limelight (code123) - 08/11/2018 |
       | prisonerDetailsSentence              | 20 years           |
       | prisonerDetailsSentenceType          | determinate        |
       | prisonerDetailsParoleEligibilityDate | 08/11/2031         |
@@ -67,9 +61,10 @@ Feature: Parole Report
 
   Scenario: Delius user does not complete all the relevant fields on the UI including Sentence type
 
+    Given they enter the following information
+      | Offence  | |
     When  they select the "Continue" button
     Then  the following error messages are displayed
-      | Prison number                        | Enter the prison number                        |
       | Current prison category              | Select the current prison category             |
       | Offence                              | Enter the offence                              |
       | Sentence                             | Enter the sentence                             |
@@ -78,9 +73,10 @@ Feature: Parole Report
   Scenario: Delius user does not complete all the relevant fields on the UI for an offender whom has indeterminate sentence
 
     Given they select the "Indeterminate" option on the "Sentence type"
+    And they enter the following information
+      | Offence  | |
     When  they select the "Continue" button
     Then  the following error messages are displayed
-      | Prison number                        | Enter the prison number                        |
       | Current prison category              | Select the current prison category             |
       | Offence                              | Enter the offence                              |
       | Sentence                             | Enter the sentence                             |
@@ -90,9 +86,10 @@ Feature: Parole Report
   Scenario: Delius user does not complete all the relevant fields on the UI for an offender whom has Determinate sentence
 
     Given they select the "Determinate" option on the "Sentence type"
+    And they enter the following information
+      | Offence  | |
     When  they select the "Continue" button
     Then  the following error messages are displayed
-      | Prison number                        | Enter the prison number                        |
       | Current prison category              | Select the current prison category             |
       | Offence                              | Enter the offence                              |
       | Sentence                             | Enter the sentence                             |
