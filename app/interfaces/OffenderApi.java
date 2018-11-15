@@ -185,6 +185,14 @@ public interface OffenderApi {
                     detail.getSubCategoryDescription(),
                     detail.getCode()));
         }
+
+        public String offenceShortDescription() {
+            return Optional.ofNullable(offenceDate)
+                .map(ignored -> String.format("%s - %s",
+                    detail.getSubCategoryDescription(),
+                    formatDateTime(offenceDate)))
+                .orElse(detail.getSubCategoryDescription());
+        }
     }
 
     @Value
@@ -209,10 +217,28 @@ public interface OffenderApi {
     class Conviction {
         private List<Offence> offences;
 
-        public Optional<Offence> getMainOffence() {
+        public String mainOffenceDescription() {
             return offences.stream()
                 .filter(offence -> offence.mainOffence)
-                .findFirst();
+                .findFirst()
+                .map(Offence::offenceShortDescription)
+                .orElse("");
+        }
+
+        public List<String> additionalOffenceDescriptions() {
+             return offences.stream()
+                 .filter(offence -> !offence.mainOffence)
+                 .sorted((o1, o2) -> o2.offenceDate.compareTo(o1.offenceDate))
+                 .map(Offence::offenceShortDescription)
+                 .collect(toList());
+        }
+
+        public String allOffenceDescriptions() {
+            val descriptions = ImmutableList.<String>builder()
+                .add(mainOffenceDescription())
+                .addAll(additionalOffenceDescriptions()).build();
+
+            return joinList("\n", descriptions);
         }
     }
 
