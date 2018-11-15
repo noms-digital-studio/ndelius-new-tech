@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Value;
 import lombok.val;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -228,7 +229,7 @@ public interface OffenderApi {
         public List<String> additionalOffenceDescriptions() {
              return offences.stream()
                  .filter(offence -> !offence.mainOffence)
-                 .sorted((o1, o2) -> o2.offenceDate.compareTo(o1.offenceDate))
+                 .sorted(Comparator.comparing(Offence::getOffenceDate).reversed())
                  .map(Offence::offenceShortDescription)
                  .collect(toList());
         }
