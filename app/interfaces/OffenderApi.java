@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
 import static helpers.DateTimeHelper.formatDateTime;
+import static helpers.FluentHelper.not;
 import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
@@ -160,7 +161,7 @@ public interface OffenderApi {
 
         public String otherOffenceDescriptionsForIds(List<String> otherOffenceIds) {
             return items.stream()
-                .filter(offence -> !offence.mainOffence)
+                .filter(not(Offence::getMainOffence))
                 .filter(offence -> Optional.ofNullable(offence.getOffenceId()).isPresent())
                 .filter(offence -> otherOffenceIds.contains(offence.getOffenceId()))
                 .map(Offence::offenceDescription)
@@ -228,7 +229,7 @@ public interface OffenderApi {
 
         public List<String> additionalOffenceDescriptions() {
              return offences.stream()
-                 .filter(offence -> !offence.mainOffence)
+                 .filter(not(Offence::getMainOffence))
                  .sorted(Comparator.comparing(Offence::getOffenceDate).reversed())
                  .map(Offence::offenceShortDescription)
                  .collect(toList());
