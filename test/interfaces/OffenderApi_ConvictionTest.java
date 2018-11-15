@@ -44,7 +44,7 @@ public class OffenderApi_ConvictionTest {
             .offences(offences)
             .build();
 
-        assertThat(conviction.allOffenceDescriptions()).isEqualTo("Main - 24/12/2016\nAdditional two - 01/08/2018\nAdditional one - 01/07/2017");
+        assertThat(conviction.allOffenceDescriptions()).isEqualTo("Main - 24/12/2016<br>Additional two - 01/08/2018<br>Additional one - 01/07/2017");
     }
 
 

@@ -238,7 +238,7 @@ public interface OffenderApi {
                 .add(mainOffenceDescription())
                 .addAll(additionalOffenceDescriptions()).build();
 
-            return joinList("\n", descriptions);
+            return joinList("<br>", descriptions);
         }
     }
 

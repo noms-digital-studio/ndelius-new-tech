@@ -19,7 +19,7 @@ Feature: Parole Report
       | prisonerDetailsPrisonNumber      | LH5058             |
       | prisonerDetailsNomisNumber       | F123456            |
       | prisonerDetailsPrisonersCategory | restricted         |
-      | prisonerDetailsOffence           | Stealing the limelight - 08/11/2018 Interrupting - 07/07/2017 Jumping the queue - 06/06/2016 |
+      | prisonerDetailsOffence           | Stealing the limelight - 08/11/2018<br>Interrupting - 07/07/2017<br>Jumping the queue - 06/06/2016 |
       | prisonerDetailsSentence          | 5 years            |
       | prisonerDetailsSentenceType      | indeterminate      |
       | prisonerDetailsTariffLength      | 5 years            |
@@ -39,7 +39,7 @@ Feature: Parole Report
       | prisonerDetailsPrisonNumber          | LH5058             |
       | prisonerDetailsNomisNumber           | F123456            |
       | prisonerDetailsPrisonersCategory     | a                  |
-      | prisonerDetailsOffence               | Stealing the limelight - 08/11/2018 Interrupting - 07/07/2017 Jumping the queue - 06/06/2016 |
+      | prisonerDetailsOffence               | Stealing the limelight - 08/11/2018<br>Interrupting - 07/07/2017<br>Jumping the queue - 06/06/2016 |
       | prisonerDetailsSentence              | 20 years           |
       | prisonerDetailsSentenceType          | determinate        |
       | prisonerDetailsParoleEligibilityDate | 08/12/2021         |
