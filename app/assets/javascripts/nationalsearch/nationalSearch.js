@@ -1,3 +1,5 @@
+import React from 'react'
+import ReactDOM from 'react-dom'
 import OffenderSearchPage from './containers/offenderSearchPageContainer';
 
 import HelpPage from './components/helpPage';

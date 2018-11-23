@@ -1,3 +1,4 @@
+import React from 'react'
 import {Component} from 'react'
 import GovUkPhaseBanner from './govukPhaseBanner';
 import PropTypes from 'prop-types'
