@@ -35,7 +35,9 @@ public class GlobalSteps {
     private Map<String, String> fieldNameToValues;
     private String whatToIncludeFieldLabel;
 
-    private static int SAVE_THROTTLE_TIME_SECONDS = 5;private Date getTestDate(String date) {
+    private static int SAVE_THROTTLE_TIME_SECONDS = 5;
+
+    private Date getTestDate(String date) {
         Date today = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(today);
@@ -74,7 +76,7 @@ public class GlobalSteps {
     }
 
     @And("^the user must not see the \"([^\"]*)\" button$")
-    public void theUserMustNotSeeTheButton(String buttonName)  {
+    public void theUserMustNotSeeTheButton(String buttonName) {
         assertThat(page.verifyButton(buttonName)).isFalse();
     }
 
@@ -125,6 +127,7 @@ public class GlobalSteps {
         page.fillInputInSectionWithLegend(legend, "Month", new SimpleDateFormat("MM").format(date));
         page.fillInputInSectionWithLegend(legend, "Year", new SimpleDateFormat("yyyy").format(date));
     }
+
     private Map<String, String> toNameValues(Map<String, String> labelTextMap) {
         return labelTextMap.keySet().stream().map(label -> new SimpleEntry<>(nameFromLabel(label), labelTextMap.get(label))).collect(toMap(SimpleEntry::getKey, SimpleEntry::getValue));
     }
@@ -145,19 +148,21 @@ public class GlobalSteps {
                 alfrescoStoreMock.verifySavedDocumentContainsValues(fieldNameToValuesTable.asMap(String.class, String.class)));
     }
 
-
     @Given("^the user does not any enter any characters in the free text fields on the page$")
     public void theUserDoesNotAnyEnterAnyCharactersInTheFreeTextFieldsOnThePage() {
         // no page action required
     }
+
     @Given("^that the user does not select an option on the page$")
     public void thatTheUserDoesNotSelectAnOptionOnThePage() {
         // no page action required
     }
+
     @Given("^that the user enters no information on the page$")
     public void thatTheUserEntersNoInformationOnThePage() {
         // no page action required
     }
+
     @When("^they don't enter text into the \"([^\"]*)\"$")
     public void theyDonTEnterTextIntoThe(String label) {
         // no page action required
@@ -176,13 +181,13 @@ public class GlobalSteps {
     }
 
     @When("^they select the radio button with id \"([^\"]*)\"$")
-    public void theySelectTheOptionWithTheId(String id)  {
+    public void theySelectTheOptionWithTheId(String id) {
         page.clickElementWithId(id);
     }
 
 
     @When("^they select the \"([^\"]*)\" option on the \"([^\"]*)\"$")
-    public void theySelectTheOptionOnThe(String label, String legend)  {
+    public void theySelectTheOptionOnThe(String label, String legend) {
         page.clickRadioButtonWithLabelWithinLegend(label, legend);
     }
 
