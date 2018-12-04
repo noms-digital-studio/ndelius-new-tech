@@ -10,7 +10,7 @@ const OffenderSearch = ({searchTerm, probationAreasFilter, search, searchType}) 
 
     return (
         <form className="padding-left-right" onSubmit={(event) => onSubmit(event)}>
-            <label htmlFor="searchTerms" className='visually-hidden' id='search-description'>Results will be updated as you type</label>
+            <label htmlFor="searchTerms" className='visually-hidden'>Results will be updated as you type</label>
             <input id="searchTerms" name="searchTerms" type="search" tabIndex="1" role='searchbox'
                    autoFocus={true} className="form-control national-search"
                    placeholder="Any combination of names, dates of birth, ID numbers, towns and postcodes"
