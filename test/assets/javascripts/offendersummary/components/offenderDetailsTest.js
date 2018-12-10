@@ -63,8 +63,11 @@ describe('Offender Details component', () => {
                 emailAddresses: []
             };
 
-            it('contains no fixed abode', () => {
+            beforeEach(() => {
                 wrapper = shallow(<OffenderDetails contactDetails={ contactDetails }/>);
+            });
+
+            it('contains no fixed abode', () => {
                 expect(wrapper.text()).to.contain('No fixed abode');
             });
         });
@@ -78,8 +81,11 @@ describe('Offender Details component', () => {
                 emailAddresses: []
             };
 
-            it('contains no main address', () => {
+            beforeEach(() => {
                 wrapper = shallow(<OffenderDetails contactDetails={ contactDetails }/>);
+            });
+
+            it('contains no main address', () => {
                 expect(wrapper.text()).to.contain('No main address');
             });
         });
