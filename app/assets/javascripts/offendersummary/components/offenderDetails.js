@@ -1,26 +1,68 @@
 import React from 'react';
 import * as PropTypes from 'prop-types';
 
-const OffenderDetails = ({ contactDetails }) => {
+const OffenderDetails = ({ offenderDetails }) => {
 
-    const mainAddress = contactDetails.addresses.find((address) => {
+    const mainAddress = offenderDetails.contactDetails.addresses.find((address) => {
         return address.status && address.status.code === 'M';
     });
 
-    const telephoneNumber = contactDetails.phoneNumbers.find((number) => {
-        return number.type && number.type === 'TELEPHONE';
+    const telephoneNumber = offenderDetails.contactDetails.phoneNumbers.find((number) => {
+        return number.type === 'TELEPHONE';
     });
 
-    const mobileNumber = contactDetails.phoneNumbers.find((number) => {
-        return number.type && number.type === 'MOBILE';
+    const mobileNumber = offenderDetails.contactDetails.phoneNumbers.find((number) => {
+        console.warn('MOBILE:', number);
+        return number.type === 'MOBILE';
     });
+
+    const requiresInterpreter = () => {
+        const required = offenderDetails.offenderProfile.offenderLanguages.requiresInterpreter;
+        return typeof required === 'boolean' ? required ? 'Yes' : 'No' : 'Unknown';
+    };
 
     return (
         <div>
+
+            <table className="govuk-table moj-table moj-table--split-rows" role="presentation">
+                <tbody>
+                <tr>
+                    <th width="50%">Aliases</th>
+                    <td className="qa-aliases">{ offenderDetails.offenderAliases.length > 0 && 'Yes (' + offenderDetails.offenderAliases.length + ')' || 'No' }</td>
+                    <td className="qa-aliases-link" style={ { textAlign: 'right' } } width="100">{ offenderDetails.offenderAliases.length > 0 && (<a href="javascript:void(0);">View all</a>) }</td>
+                </tr>
+                <tr>
+                    <th>Gender</th>
+                    <td className="qa-gender" colSpan="2">{ offenderDetails.gender || 'Unknown' }</td>
+                </tr>
+                <tr>
+                    <th>NI Number</th>
+                    <td className="qa-ni-number" colSpan="2">{ offenderDetails.otherIds.niNumber || 'Unknown' }</td>
+                </tr>
+                <tr>
+                    <th>Nationality</th>
+                    <td className="qa-nationality" colSpan="2">{ offenderDetails.offenderProfile.nationality || 'Unknown' }</td>
+                </tr>
+                <tr>
+                    <th>Ethnicity</th>
+                    <td className="qa-ethnicity" colSpan="2">{ offenderDetails.offenderProfile.ethnicity || 'Unknown' }</td>
+                </tr>
+                <tr>
+                    <th>Interpreter required</th>
+                    <td className="qa-interpreter" colSpan="2">{ requiresInterpreter() }</td>
+                </tr>
+                <tr>
+                    <th>Disability status</th>
+                    <td className="qa-disability" colSpan="2"> -- </td>
+                </tr>
+                </tbody>
+            </table>
+
             <details className="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0" role="group">
                 <summary className="govuk-details__summary" role="button"
                          aria-controls="offender-details-main-address"
-                         aria-expanded="true"><span className="govuk-details__summary-text">Contact details</span></summary>
+                         aria-expanded="true"><span className="govuk-details__summary-text">Contact details</span>
+                </summary>
                 <div className="govuk-details__text moj-details__text--no-border" id="offender-details-main-address"
                      aria-hidden="false">
                     <table className="govuk-table moj-table moj-table--split-rows" role="presentation">
@@ -31,7 +73,7 @@ const OffenderDetails = ({ contactDetails }) => {
                         </tr>
                         <tr>
                             <th>Email</th>
-                            <td className="qa-email">{ contactDetails.emailAddresses[0] || 'Unknown' }</td>
+                            <td className="qa-email">{ offenderDetails.contactDetails.emailAddresses[0] || 'Unknown' }</td>
                         </tr>
                         <tr>
                             <th>Mobile</th>
@@ -45,7 +87,8 @@ const OffenderDetails = ({ contactDetails }) => {
             <details className="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0" role="group">
                 <summary className="govuk-details__summary" role="button"
                          aria-controls="offender-details-main-address"
-                         aria-expanded="true"><span className="govuk-details__summary-text">Main address</span></summary>
+                         aria-expanded="true"><span className="govuk-details__summary-text">Main address</span>
+                </summary>
                 <div className="govuk-details__text moj-details__text--no-border" id="offender-details-main-address"
                      aria-hidden="false">
                     { mainAddress && !mainAddress.noFixedAbode && (
@@ -84,27 +127,52 @@ const OffenderDetails = ({ contactDetails }) => {
 };
 
 OffenderDetails.propTypes = {
-    contactDetails: PropTypes.shape({
-        addresses: PropTypes.arrayOf(PropTypes.shape({
-            addressNumber: PropTypes.string,
-            buildingName: PropTypes.string,
-            county: PropTypes.string,
-            from: PropTypes.string,
-            noFixedAbode: PropTypes.bool.isRequired,
-            postcode: PropTypes.string,
-            status: PropTypes.shape({
-                code: PropTypes.string,
-                description: PropTypes.string
-            }),
-            streetName: PropTypes.string,
-            telephoneNumber: PropTypes.string,
-            town: PropTypes.string
-        })).isRequired,
-        emailAddresses: PropTypes.arrayOf(PropTypes.string).isRequired,
-        phoneNumbers: PropTypes.arrayOf(PropTypes.shape({
-            number: PropTypes.string,
-            type: PropTypes.string
-        })).isRequired
+    offenderDetails: PropTypes.shape({
+        offenderAliases: PropTypes.arrayOf(PropTypes.shape(
+            {
+                dateOfBirth: PropTypes.string,
+                firstName: PropTypes.string,
+                surname: PropTypes.string,
+                gender: PropTypes.string,
+            }
+        )),
+        offenderProfile: PropTypes.shape(
+            {
+                ethnicity: PropTypes.string,
+                nationality: PropTypes.string,
+                offenderLanguages: PropTypes.shape(
+                    {
+                        requiresInterpreter: PropTypes.bool
+                    }
+                )
+            }
+        ),
+        gender: PropTypes.string.isRequired,
+        otherIds: PropTypes.shape({
+            niNumber: PropTypes.string
+        }),
+        contactDetails: PropTypes.shape({
+            addresses: PropTypes.arrayOf(PropTypes.shape({
+                addressNumber: PropTypes.string,
+                buildingName: PropTypes.string,
+                county: PropTypes.string,
+                from: PropTypes.string,
+                noFixedAbode: PropTypes.bool.isRequired,
+                postcode: PropTypes.string,
+                status: PropTypes.shape({
+                    code: PropTypes.string,
+                    description: PropTypes.string
+                }),
+                streetName: PropTypes.string,
+                telephoneNumber: PropTypes.string,
+                town: PropTypes.string
+            })).isRequired,
+            emailAddresses: PropTypes.arrayOf(PropTypes.string).isRequired,
+            phoneNumbers: PropTypes.arrayOf(PropTypes.shape({
+                number: PropTypes.string,
+                type: PropTypes.string
+            })).isRequired
+        }).isRequired
     }).isRequired
 };
 
