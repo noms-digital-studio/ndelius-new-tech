@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { shallow } from 'enzyme';
+import { render } from 'enzyme';
 import OffenderDetails from './offenderDetails';
 
 describe('Offender Details component', () => {
@@ -65,7 +65,7 @@ describe('Offender Details component', () => {
         context('when all offender details are recorded', () => {
 
             beforeEach(() => {
-                wrapper = shallow(<OffenderDetails offenderDetails={ offenderDetails }/>);
+                wrapper = render(<OffenderDetails offenderDetails={ offenderDetails }/>);
             });
 
             it('contains alias flag and number', () => {
@@ -92,7 +92,7 @@ describe('Offender Details component', () => {
 
             beforeEach(() => {
                 offenderDetails.offenderAliases = [];
-                wrapper = shallow(<OffenderDetails offenderDetails={ offenderDetails }/>);
+                wrapper = render(<OffenderDetails offenderDetails={ offenderDetails }/>);
             });
 
             it('contains no alias flag', () => {
@@ -104,7 +104,7 @@ describe('Offender Details component', () => {
 
             beforeEach(() => {
                 offenderDetails.gender = '';
-                wrapper = shallow(<OffenderDetails offenderDetails={ offenderDetails }/>);
+                wrapper = render(<OffenderDetails offenderDetails={ offenderDetails }/>);
             });
 
             it('contains unknown gender', () => {
@@ -116,7 +116,7 @@ describe('Offender Details component', () => {
 
             beforeEach(() => {
                 offenderDetails.otherIds.niNumber = '';
-                wrapper = shallow(<OffenderDetails offenderDetails={ offenderDetails }/>);
+                wrapper = render(<OffenderDetails offenderDetails={ offenderDetails }/>);
             });
 
             it('contains unknown NI Number', () => {
@@ -128,7 +128,7 @@ describe('Offender Details component', () => {
 
             beforeEach(() => {
                 offenderDetails.offenderProfile.nationality = '';
-                wrapper = shallow(<OffenderDetails offenderDetails={ offenderDetails }/>);
+                wrapper = render(<OffenderDetails offenderDetails={ offenderDetails }/>);
             });
 
             it('contains unknown Nationality', () => {
@@ -140,7 +140,7 @@ describe('Offender Details component', () => {
 
             beforeEach(() => {
                 offenderDetails.offenderProfile.ethnicity = '';
-                wrapper = shallow(<OffenderDetails offenderDetails={ offenderDetails }/>);
+                wrapper = render(<OffenderDetails offenderDetails={ offenderDetails }/>);
             });
 
             it('contains unknown Ethnicity', () => {
@@ -152,7 +152,7 @@ describe('Offender Details component', () => {
 
             beforeEach(() => {
                 offenderDetails.offenderProfile.offenderLanguages.requiresInterpreter = void 0;
-                wrapper = shallow(<OffenderDetails offenderDetails={ offenderDetails }/>);
+                wrapper = render(<OffenderDetails offenderDetails={ offenderDetails }/>);
             });
 
             it('contains unknown interpreter requirement', () => {
@@ -164,7 +164,7 @@ describe('Offender Details component', () => {
 
             beforeEach(() => {
                 offenderDetails.offenderProfile.offenderLanguages.requiresInterpreter = false;
-                wrapper = shallow(<OffenderDetails offenderDetails={ offenderDetails }/>);
+                wrapper = render(<OffenderDetails offenderDetails={ offenderDetails }/>);
             });
 
             it('contains no interpreter requirement', () => {
@@ -198,7 +198,7 @@ describe('Offender Details component', () => {
                     ]
                 };
 
-                wrapper = shallow(<OffenderDetails offenderDetails={ offenderDetails }/>);
+                wrapper = render(<OffenderDetails offenderDetails={ offenderDetails }/>);
             });
 
             it('contains telephone number', () => {
@@ -232,7 +232,7 @@ describe('Offender Details component', () => {
                     ]
                 };
 
-                wrapper = shallow(<OffenderDetails offenderDetails={ offenderDetails }/>);
+                wrapper = render(<OffenderDetails offenderDetails={ offenderDetails }/>);
             });
 
             it('does not contain email address', () => {
@@ -257,7 +257,7 @@ describe('Offender Details component', () => {
                 };
 
 
-                wrapper = shallow(<OffenderDetails offenderDetails={ offenderDetails }/>);
+                wrapper = render(<OffenderDetails offenderDetails={ offenderDetails }/>);
             });
 
             it('does not contain telephone number', () => {
@@ -281,7 +281,7 @@ describe('Offender Details component', () => {
                     ]
                 };
 
-                wrapper = shallow(<OffenderDetails offenderDetails={ offenderDetails }/>);
+                wrapper = render(<OffenderDetails offenderDetails={ offenderDetails }/>);
             });
 
             it('does not contain mobile number', () => {
@@ -316,7 +316,7 @@ describe('Offender Details component', () => {
                     phoneNumbers: []
                 };
 
-                wrapper = shallow(<OffenderDetails offenderDetails={ offenderDetails }/>);
+                wrapper = render(<OffenderDetails offenderDetails={ offenderDetails }/>);
             });
 
             it('contains address number and building name', () => {
@@ -352,7 +352,7 @@ describe('Offender Details component', () => {
                     phoneNumbers: []
                 };
 
-                wrapper = shallow(<OffenderDetails offenderDetails={ offenderDetails }/>);
+                wrapper = render(<OffenderDetails offenderDetails={ offenderDetails }/>);
             });
 
             it('contains no fixed abode', () => {
@@ -371,7 +371,7 @@ describe('Offender Details component', () => {
                     phoneNumbers: []
                 };
 
-                wrapper = shallow(<OffenderDetails offenderDetails={ offenderDetails }/>);
+                wrapper = render(<OffenderDetails offenderDetails={ offenderDetails }/>);
             });
 
             it('contains no main address', () => {
