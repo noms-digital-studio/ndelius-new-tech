@@ -5,7 +5,7 @@ import OffenderDetails from './offenderDetails';
 describe('Offender Details component', () => {
 
     let wrapper;
-    let offenderDetails = {};
+    let offenderDetails;
 
     beforeEach(() => {
         offenderDetails = {
@@ -49,7 +49,7 @@ describe('Offender Details component', () => {
                 niNumber: 'AB123456C'
             },
             offenderProfile: {
-                ethnicity: 'Caucasian',
+                ethnicity: 'White British',
                 nationality: 'British',
                 offenderLanguages: {
                     requiresInterpreter: true
@@ -81,7 +81,7 @@ describe('Offender Details component', () => {
                 expect(wrapper.text()).to.contain('NationalityBritish');
             });
             it('contains ethnicity', () => {
-                expect(wrapper.text()).to.contain('EthnicityCaucasian');
+                expect(wrapper.text()).to.contain('EthnicityWhite British');
             });
             it('contains interpreter requirement', () => {
                 expect(wrapper.text()).to.contain('Interpreter requiredYes');
