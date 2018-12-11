@@ -4,21 +4,33 @@ import Accordion from './shared/accordion';
 
 const OffenderDetails = ({ offenderDetails }) => {
 
-    const mainAddress = offenderDetails.contactDetails.addresses.find((address) => {
-        return address.status && address.status.code === 'M';
-    });
+    let mainAddress;
+    let telephoneNumber;
+    let mobileNumber;
 
-    const telephoneNumber = offenderDetails.contactDetails.phoneNumbers.find((number) => {
-        return number.type === 'TELEPHONE';
-    });
-
-    const mobileNumber = offenderDetails.contactDetails.phoneNumbers.find((number) => {
-        return number.type === 'MOBILE';
-    });
+    if (offenderDetails.hasOwnProperty('contactDetails')) {
+        if (offenderDetails.contactDetails.hasOwnProperty('addresses')) {
+            mainAddress = offenderDetails.contactDetails.addresses.find((address) => {
+                return address.status && address.status.code === 'M';
+            });
+        }
+        if (offenderDetails.contactDetails.hasOwnProperty('phoneNumbers')) {
+            telephoneNumber = offenderDetails.contactDetails.phoneNumbers.find((number) => {
+                return number.type === 'TELEPHONE';
+            });
+            mobileNumber = offenderDetails.contactDetails.phoneNumbers.find((number) => {
+                return number.type === 'MOBILE';
+            });
+        }
+    }
 
     const requiresInterpreter = () => {
-        const required = offenderDetails.offenderProfile.offenderLanguages.requiresInterpreter;
-        return typeof required === 'boolean' ? required ? 'Yes' : 'No' : 'Unknown';
+        if (offenderDetails.hasOwnProperty('offenderProfile') &&
+            offenderDetails.offenderProfile.hasOwnProperty('offenderLanguages') &&
+            offenderDetails.offenderProfile.offenderLanguages.hasOwnProperty('requiresInterpreter')) {
+            return offenderDetails.offenderProfile.offenderLanguages.requiresInterpreter ? 'Yes' : 'No';
+        }
+        return 'Unknown';
     };
 
     return (
@@ -39,17 +51,18 @@ const OffenderDetails = ({ offenderDetails }) => {
                     </tr>
                     <tr>
                         <th>NI Number</th>
-                        <td className="qa-ni-number" colSpan="2">{ offenderDetails.otherIds.niNumber || 'Unknown' }</td>
+                        <td className="qa-ni-number"
+                            colSpan="2">{ offenderDetails.otherIds && offenderDetails.otherIds.niNumber || 'Unknown' }</td>
                     </tr>
                     <tr>
                         <th>Nationality</th>
                         <td className="qa-nationality"
-                            colSpan="2">{ offenderDetails.offenderProfile.nationality || 'Unknown' }</td>
+                            colSpan="2">{ offenderDetails.offenderProfile && offenderDetails.offenderProfile.nationality || 'Unknown' }</td>
                     </tr>
                     <tr>
                         <th>Ethnicity</th>
                         <td className="qa-ethnicity"
-                            colSpan="2">{ offenderDetails.offenderProfile.ethnicity || 'Unknown' }</td>
+                            colSpan="2">{ offenderDetails.offenderProfile && offenderDetails.offenderProfile.ethnicity || 'Unknown' }</td>
                     </tr>
                     <tr>
                         <th>Interpreter required</th>
@@ -77,7 +90,7 @@ const OffenderDetails = ({ offenderDetails }) => {
                             </tr>
                             <tr>
                                 <th>Email</th>
-                                <td className="qa-email">{ offenderDetails.contactDetails.emailAddresses[0] || 'Unknown' }</td>
+                                <td className="qa-email">{ offenderDetails.contactDetails && offenderDetails.contactDetails.emailAddresses[0] || 'Unknown' }</td>
                             </tr>
                             <tr>
                                 <th>Mobile</th>
@@ -133,26 +146,23 @@ const OffenderDetails = ({ offenderDetails }) => {
 
 OffenderDetails.propTypes = {
     offenderDetails: PropTypes.shape({
-        offenderAliases: PropTypes.arrayOf(PropTypes.shape(
-            {
+        offenderAliases: PropTypes.arrayOf(PropTypes.shape({
                 dateOfBirth: PropTypes.string,
                 firstName: PropTypes.string,
                 surname: PropTypes.string,
                 gender: PropTypes.string
             }
         )),
-        offenderProfile: PropTypes.shape(
-            {
+        offenderProfile: PropTypes.shape({
                 ethnicity: PropTypes.string,
                 nationality: PropTypes.string,
-                offenderLanguages: PropTypes.shape(
-                    {
+                offenderLanguages: PropTypes.shape({
                         requiresInterpreter: PropTypes.bool
                     }
                 )
             }
         ),
-        gender: PropTypes.string.isRequired,
+        gender: PropTypes.string,
         otherIds: PropTypes.shape({
             niNumber: PropTypes.string
         }),
@@ -162,7 +172,7 @@ OffenderDetails.propTypes = {
                 buildingName: PropTypes.string,
                 county: PropTypes.string,
                 from: PropTypes.string,
-                noFixedAbode: PropTypes.bool.isRequired,
+                noFixedAbode: PropTypes.bool,
                 postcode: PropTypes.string,
                 status: PropTypes.shape({
                     code: PropTypes.string,
@@ -171,14 +181,14 @@ OffenderDetails.propTypes = {
                 streetName: PropTypes.string,
                 telephoneNumber: PropTypes.string,
                 town: PropTypes.string
-            })).isRequired,
-            emailAddresses: PropTypes.arrayOf(PropTypes.string).isRequired,
+            })),
+            emailAddresses: PropTypes.arrayOf(PropTypes.string),
             phoneNumbers: PropTypes.arrayOf(PropTypes.shape({
                 number: PropTypes.string,
                 type: PropTypes.string
-            })).isRequired
-        }).isRequired
-    }).isRequired
+            }))
+        })
+    })
 };
 
 export default OffenderDetails;
