@@ -27,7 +27,7 @@ const OffenderDetails = ({ offenderDetails }) => {
     const requiresInterpreter = () => {
         if (offenderDetails.hasOwnProperty('offenderProfile') &&
             offenderDetails.offenderProfile.hasOwnProperty('offenderLanguages') &&
-            offenderDetails.offenderProfile.offenderLanguages.hasOwnProperty('requiresInterpreter')) {
+            typeof offenderDetails.offenderProfile.offenderLanguages.requiresInterpreter === 'boolean') {
             return offenderDetails.offenderProfile.offenderLanguages.requiresInterpreter ? 'Yes' : 'No';
         }
         return 'Unknown';
