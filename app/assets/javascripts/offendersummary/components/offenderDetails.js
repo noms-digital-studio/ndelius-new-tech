@@ -77,10 +77,10 @@ const OffenderDetails = ({ offenderDetails }) => {
 
                 <details className="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0" role="group">
                     <summary className="govuk-details__summary" role="button"
-                             aria-controls="offender-details-main-address"
+                             aria-controls="offender-details-contact-details"
                              aria-expanded="true"><span className="govuk-details__summary-text">Contact details</span>
                     </summary>
-                    <div className="govuk-details__text moj-details__text--no-border" id="offender-details-main-address"
+                    <div className="govuk-details__text moj-details__text--no-border" id="offender-details-contact-details"
                          aria-hidden="false">
                         <table className="govuk-table moj-table moj-table--split-rows" role="presentation">
                             <tbody>
