@@ -23,7 +23,7 @@ class Accordion extends Component {
                         className="qa-accordion-label govuk-heading-xl govuk-!-margin-bottom-0 moj-accordion__toggle" aria-hidden="true"
                         style={ { lineHeight: 0.7 } }>{ this.state.isOpen ? (<Fragment>&ndash;</Fragment>) : '+' }</span>
                     </a>
-                    <div className={ 'qa-accordion-content govuk-!-margin-top-4' + (this.state.isOpen ? '' : ' govuk-visually-hidden') }>
+                    <div className={ 'qa-accordion-content govuk-!-margin-top-4' + (this.state.isOpen ? '' : ' govuk-visually-hidden') } aria-hidden={!this.state.isOpen}>
                         <div className="moj-inside-panel">
                             { this.props.content }
                         </div>
