@@ -144,6 +144,6 @@ public class ReportPage extends FluentPage {
 
     public void clickAccordionWithLabel(String text) {
         val parent = $(By.className("moj-accordion"));
-        parent.find(xpath(String.format(".//h2[contains(.,'%s')]", text))).click();
+        parent.find(xpath(String.format(".//a[contains(.,'%s')]", text))).click();
     }
 }

@@ -9,17 +9,21 @@ class Accordion extends Component {
     }
 
     render() {
+
+        let accordionID = 'moj-accordion-' + this.props.label.toLowerCase().split(' ').join('-').trim();
+
         return (
             <Fragment>
                 <div className="moj-accordion">
-                    <h2 className="govuk-heading-m govuk-!-margin-0 moj-!-color-blue moj-util-clickable"
-                        onClick={ () => {
+                    <a className="govuk-link govuk-link--no-visited-state moj-link--no-underline govuk-heading-m govuk-!-margin-0" href="#"
+                        aria-controls={ accordionID } onClick={ (e) => {
+                            e.preventDefault();
                             this.setState({ isOpen: !this.state.isOpen });
                         } }>{ this.props.label }<span
                         className="qa-accordion-label govuk-heading-xl govuk-!-margin-bottom-0 moj-accordion__toggle"
                         style={ { lineHeight: 0.7 } }>{ this.state.isOpen ? (<Fragment>&ndash;</Fragment>) : '+' }</span>
-                    </h2>
-                    <div className={ 'qa-accordion-content govuk-!-margin-top-4' + (this.state.isOpen ? '' : ' govuk-visually-hidden') }>
+                    </a>
+                    <div id={ accordionID } aria-expanded={ this.state.isOpen } className={ 'qa-accordion-content govuk-!-margin-top-4' + (this.state.isOpen ? '' : ' govuk-visually-hidden') }>
                         <div className="moj-inside-panel">
                             { this.props.content }
                         </div>
