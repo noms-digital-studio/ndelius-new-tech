@@ -14,16 +14,16 @@ class Accordion extends Component {
 
         return (
             <Fragment>
-                <div className="moj-accordion">
-                    <a className="govuk-link govuk-link--no-visited-state moj-link--no-underline govuk-heading-m govuk-!-margin-0" href="#"
-                        aria-controls={ accordionID } onClick={ (e) => {
+                <div id={accordionID} className="moj-accordion">
+                    <a className="govuk-link govuk-link--no-visited-state moj-link--no-underline govuk-heading-m govuk-!-margin-0" href="#" role="button"
+                       aria-expanded={ this.state.isOpen } onClick={ (e) => {
                             e.preventDefault();
                             this.setState({ isOpen: !this.state.isOpen });
                         } }>{ this.props.label }<span
-                        className="qa-accordion-label govuk-heading-xl govuk-!-margin-bottom-0 moj-accordion__toggle"
+                        className="qa-accordion-label govuk-heading-xl govuk-!-margin-bottom-0 moj-accordion__toggle" aria-hidden="true"
                         style={ { lineHeight: 0.7 } }>{ this.state.isOpen ? (<Fragment>&ndash;</Fragment>) : '+' }</span>
                     </a>
-                    <div id={ accordionID } aria-expanded={ this.state.isOpen } className={ 'qa-accordion-content govuk-!-margin-top-4' + (this.state.isOpen ? '' : ' govuk-visually-hidden') }>
+                    <div className={ 'qa-accordion-content govuk-!-margin-top-4' + (this.state.isOpen ? '' : ' govuk-visually-hidden') }>
                         <div className="moj-inside-panel">
                             { this.props.content }
                         </div>
