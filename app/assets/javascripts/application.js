@@ -166,7 +166,7 @@ function openPopup(url, name, top, left) {
         /**
          * Navigation items
          */
-        $('.nav-item').click(function (e) {
+        $('.nav-item, .moj-subnav__link').click(function (e) {
 
             e.preventDefault();
 
