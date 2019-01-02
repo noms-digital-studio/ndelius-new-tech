@@ -19,7 +19,7 @@
 
 @popup(reportForm, encrypter, "Offence details", 4) {
 
-    @textarea(reportForm("mainOffence"), '_label -> "Main offence and date", 'class -> "moj-textarea--prefilled", 'required -> "true")
+    @textarea(reportForm("mainOffence"), '_label -> "Main offence and date", 'class -> "moj-textarea--prefilled")
 
     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0" />
 
@@ -27,6 +27,6 @@
 
     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0" />
 
-    @textarea(reportForm("offenceSummary"), '_label -> "Brief summary of the offence", '_hint -> summaryHint, 'required -> "true")
+    @textarea(reportForm("offenceSummary"), '_label -> "Brief summary of the offence", '_hint -> summaryHint)
 
 }

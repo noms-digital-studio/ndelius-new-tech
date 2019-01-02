@@ -14,8 +14,8 @@
 
 @popup(reportForm, encrypter, "Sentencing court details", 3) {
 
-    @inputText(reportForm("court"), '_label -> "Court", 'required -> "true", 'class -> "wide")
-    @inputText(reportForm("localJusticeArea"), '_label -> "Local justice area", 'required -> "true", 'class -> "wide")
-    @inputText(reportForm("dateOfHearing"), '_label -> "Date of hearing", '_help -> "For example: 28/06/2017", 'class -> "date-picker", 'required -> "true")
+    @inputText(reportForm("court"), '_label -> "Court")
+    @inputText(reportForm("localJusticeArea"), '_label -> "Local justice area")
+    @inputText(reportForm("dateOfHearing"), '_label -> "Date of hearing", '_help -> "For example: 28/06/2017", 'class -> "date-picker")
 
 }

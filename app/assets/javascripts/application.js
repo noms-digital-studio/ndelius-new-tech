@@ -27,6 +27,11 @@ function openPopup(url, name, top, left) {
             GOVUK.stickAtTopWhenScrolling.init();
         }
 
+        // Init GOVUKFrontend
+        if (window.hasOwnProperty('GOVUKFrontend')) {
+            window.GOVUKFrontend.initAll();
+        }
+
         // Feedback links
         $('#feedbackForm,#footerFeedbackForm').click(function (e) {
             e.preventDefault();
@@ -123,10 +128,10 @@ function openPopup(url, name, top, left) {
                 messageTarget = $('#' + editor.attr('id') + '-count');
 
             if (limit && current > 0) {
-                messageHolder.removeClass('js-hidden');
+                messageHolder.removeClass('govuk-visually-hidden');
                 messageTarget.text(limit + ' recommended characters, you have used ' + current);
             } else {
-                messageHolder.addClass('js-hidden');
+                messageHolder.addClass('govuk-visually-hidden');
             }
 
         }

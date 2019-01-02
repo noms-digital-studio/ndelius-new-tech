@@ -1,14 +1,11 @@
 @import data._
 @import helper._
-@import shortFormatPreSentenceReport.hiddenInputs._
 @import play.Environment
 @import com.typesafe.config.Config
 @import data.viewModel.PageStatus
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
-@import menu._
 @import fragment._
-
 
 @(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
 
@@ -45,20 +42,25 @@
         </div>
     </details>
 
-        <div class="govuk-form-group@if(reportForm.allErrors.stream.anyMatch(_.key.contains("issue"))) { govuk-form-group--error}">
-        @checkboxDetailsField(reportForm, "issueAccommodation", "Accommodation", "Provide a brief assessment for accommodation", Some("Select underlying issues from the options below"))
-        @checkboxDetailsField(reportForm, "issueEmployment", "Employment, training and education", "Provide a brief assessment for employment")
-        @checkboxDetailsField(reportForm, "issueFinance", "Finance", "Provide a brief assessment for finance")
-        @checkboxDetailsField(reportForm, "issueRelationships", "Relationships", "Provide a brief assessment for relationships")
-        @checkboxDetailsField(reportForm, "issueSubstanceMisuse", "Substance misuse", "Provide a brief assessment for substance misuse")
-        @checkboxDetailsField(reportForm, "issueHealth", "Physical & mental health", "Provide a brief assessment for physical & mental health")
-        @checkboxDetailsField(reportForm, "issueBehaviour", "Thinking & behaviour", "Provide a brief assessment for behaviour")
-        @checkboxDetailsField(reportForm, "issueOther", "Other (Please specify below)", "Provide a brief assessment of other issues")
-        </div>
+    <div class="govuk-form-group@if(reportForm.allErrors.stream.anyMatch(_.key.contains("issue"))) { govuk-form-group--error}">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-label">Select the relevant options</legend>
+            <div class="govuk-checkboxes" data-module="checkboxes">
+                @checkboxDetailsField(reportForm, "issueAccommodation", "Accommodation", "Provide a brief assessment for accommodation", Some("Select underlying issues from the options below"))
+                @checkboxDetailsField(reportForm, "issueEmployment", "Employment, training and education", "Provide a brief assessment for employment")
+                @checkboxDetailsField(reportForm, "issueFinance", "Finance", "Provide a brief assessment for finance")
+                @checkboxDetailsField(reportForm, "issueRelationships", "Relationships", "Provide a brief assessment for relationships")
+                @checkboxDetailsField(reportForm, "issueSubstanceMisuse", "Substance misuse", "Provide a brief assessment for substance misuse")
+                @checkboxDetailsField(reportForm, "issueHealth", "Physical & mental health", "Provide a brief assessment for physical & mental health")
+                @checkboxDetailsField(reportForm, "issueBehaviour", "Thinking & behaviour", "Provide a brief assessment for behaviour")
+                @checkboxDetailsField(reportForm, "issueOther", "Other (Please specify below)", "Provide a brief assessment of other issues")
+            </div>
+        </fieldset>
+    </div>
 
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" data-module="radios">
             <fieldset class="govuk-fieldset">
                 <legend class="govuk-fieldset__legend govuk-label">
                     Is there evidence of the offender experiencing trauma?
@@ -71,21 +73,18 @@
                         "no" -> "No"
                     ),
                     Symbol("_inline") -> "true",
-                    Symbol("_conditional") -> "true",
-                    Symbol("data-target") -> "experienceTrauma-details",
-                    Symbol("data-ignore") -> "no"
+                    Symbol("data-aria-controls") -> "experience-trauma"
                 )
             </fieldset>
 
-            <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="experienceTrauma-details">
-            @textarea(reportForm("experienceTraumaDetails"), '_label -> "Experience of trauma", '_hint -> traumaGuidance, 'class -> "wide")
+            <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="experience-trauma-yes">
+            @textarea(reportForm("experienceTraumaDetails"), '_label -> "Experience of trauma", '_hint -> traumaGuidance)
             </div>
         </div>
 
-
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" data-module="radios">
             <fieldset class="govuk-fieldset">
                 <legend class="govuk-fieldset__legend govuk-label">
                     Does the offender have caring responsibilities for children or adults, or have they ever had caring responsibilities for children or adults?
@@ -98,14 +97,12 @@
                         "no" -> "No"
                     ),
                     Symbol("_inline") -> "true",
-                    Symbol("_conditional") -> "true",
-                    Symbol("data-target") -> "caringResponsibilities-details",
-                    Symbol("data-ignore") -> "no"
+                    Symbol("data-aria-controls") -> "caring-responsibilities"
                 )
             </fieldset>
 
-            <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="caringResponsibilities-details">
-            @textarea(reportForm("caringResponsibilitiesDetails"), '_label -> "Caring responsibilities", '_hint -> caringResponsibilitiesGuidance, 'class -> "wide")
+            <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="caring-responsibilities-yes">
+            @textarea(reportForm("caringResponsibilitiesDetails"), '_label -> "Caring responsibilities", '_hint -> caringResponsibilitiesGuidance)
             </div>
         </div>
 }
