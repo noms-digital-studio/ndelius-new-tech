@@ -1,9 +1,6 @@
 // Quill specific styling that is compatible with both major versions of govuk stylesheets
 
 .govuk-form-group {
-  .ql-container.ql-snow {
-    border: none;
-  }
 
   .ql-editor:focus {
 
@@ -20,7 +17,7 @@
   }
 
   .ql-toolbar {
-    visibility: hidden;
+
     @if global-variable-exists(gutter-one-third) {
       margin-bottom: $gutter-one-third;
     }

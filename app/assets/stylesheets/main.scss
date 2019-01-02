@@ -49,3 +49,11 @@
   float: left;
   @include govuk-clearfix();
 }
+
+.moj-textarea {
+  margin-bottom: 0 !important;
+}
+
+.ql-toolbar.ql-snow {
+  margin-bottom: 0;
+}

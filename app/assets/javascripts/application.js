@@ -351,6 +351,9 @@ function openPopup(url, name, top, left) {
             var toolbar = $(id).prev();
             toolbar.before($(id));
 
+            // Include class to hide toolbar by default
+            $(id).next().addClass('govuk-visually-hidden');
+
             function addTooltipsToToolbar() {
                 toolbar.find('button').addClass('tooltip').addClass('moj-tooltip');
                 var tips = [
@@ -373,10 +376,10 @@ function openPopup(url, name, top, left) {
             // show/hide toolbar with focus change
             editor.on('selection-change', function (range) {
                 if (range) {
-                    $(id).next().css('visibility', 'visible');
+                    $(id).next().removeClass('govuk-visually-hidden');
                     ensureCaretInView();
                 } else {
-                    $(id).next().css('visibility', 'hidden');
+                    $(id).next().addClass('govuk-visually-hidden');
                 }
             });
 
@@ -413,7 +416,6 @@ function openPopup(url, name, top, left) {
             toolbar.find('svg').attr('focusable', 'false');
 
             addTooltipsToToolbar();
-
         }
 
 
