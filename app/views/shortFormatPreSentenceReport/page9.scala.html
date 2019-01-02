@@ -29,7 +29,7 @@
                 @checkbox(reportForm("domesticAbuseInformationSource"), '_label -> "Domestic abuse call out information")
                 @checkbox(reportForm("otherInformationSource"), '_label -> "Other (please specify below)", Symbol("data-aria-controls") -> "other-sources")
 
-                <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="other-sources">
+                <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden govuk-!-margin-top-2" id="other-sources">
                 @textarea(reportForm("otherInformationDetails"), '_label -> "Other source(s) of information")
                 </div>
             </div>

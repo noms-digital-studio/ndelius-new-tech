@@ -30,6 +30,39 @@ function openPopup(url, name, top, left) {
         // Init GOVUKFrontend
         if (window.hasOwnProperty('GOVUKFrontend')) {
             window.GOVUKFrontend.initAll();
+
+            // @TODO: If this is to be a pattern, refine and include in the MOJ Pattern Library
+            document.querySelectorAll('[data-module="progressive-radios"]').forEach(function ($module) {
+
+                var $inputs = $module.querySelectorAll('input[type="radio"]');
+                $inputs.forEach(function ($input) {
+                    var controls = $input.getAttribute('data-aria-controls');
+                    controls = controls ? controls.substr(0, controls.lastIndexOf('-')) + '-progressive' : '';
+
+                    // Check if input controls anything and content exists.
+                    if (!controls || !$module.querySelector('#' + controls)) {
+                        return;
+                    }
+
+                    $input.setAttribute('data-aria-controls', controls);
+                    $input.removeAttribute('_');
+                    $input.addEventListener('click', function() {
+                        activate(controls);
+                    });
+
+                    if ($input.checked) {
+                        activate(controls);
+                    }
+                });
+
+                function activate($id) {
+                    $module.querySelector('#' + $id).classList.toggle('govuk-radios__conditional--hidden', false);
+
+                    $inputs.forEach(function ($input) {
+                        $input.setAttribute('aria-expanded', $input.checked);
+                    });
+                }
+            });
         }
 
         // Feedback links
