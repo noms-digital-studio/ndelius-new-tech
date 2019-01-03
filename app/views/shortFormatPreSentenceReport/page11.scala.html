@@ -18,5 +18,14 @@
     @inputText(reportForm("courtOfficePhoneNumber"), '_label -> "Court office phone number")
     @inputText(reportForm("counterSignature"), '_label -> "Counter signature (if applicable)")
     @readOnlyField(reportForm("startDate"), "Start date", encrypter)
-    @inputText(reportForm("reportDate"), '_label -> "Completion date", '_help -> "For example: 28/06/2017", 'class -> "date-picker")
+
+    @inputText(
+        reportForm("reportDate"),
+        '_label -> "Completion date",
+        'required -> "true",
+        '_date -> "true",
+        '_form_hint -> "For example, 31 3 1980",
+        '_day -> reportForm("reportDate_day").getValue.orElse(""),
+        '_month -> reportForm("reportDate_month").getValue.orElse(""),
+        '_year -> reportForm("reportDate_year").getValue.orElse(""))
 }

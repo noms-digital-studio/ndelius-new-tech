@@ -16,6 +16,15 @@
 
     @inputText(reportForm("court"), '_label -> "Court")
     @inputText(reportForm("localJusticeArea"), '_label -> "Local justice area")
-    @inputText(reportForm("dateOfHearing"), '_label -> "Date of hearing", '_help -> "For example: 28/06/2017", 'class -> "date-picker")
+
+    @inputText(
+        reportForm("dateOfHearing"),
+        '_label -> "Date of hearing",
+        'required -> "true",
+        '_date -> "true",
+        '_form_hint -> "For example, 31 3 1980",
+        '_day -> reportForm("dateOfHearing_day").getValue.orElse(""),
+        '_month -> reportForm("dateOfHearing_month").getValue.orElse(""),
+        '_year -> reportForm("dateOfHearing_year").getValue.orElse(""))
 
 }
