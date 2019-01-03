@@ -66,12 +66,13 @@ public class OffenderSummaryPage extends FluentPage {
 
         val row = $(".qa-offender-registrations tbody tr").index(registrationTableRow.getRowNumber());
         val riskTag = row.find(".moj-risk-tag").first().getElement();
+        val statusColor = colourToRGB(registrationTableRow.getStatusColour());
 
-        return riskTag.getCssValue("color").equals(colourToRGB(registrationTableRow.getStatusColour())) &&
-                riskTag.getCssValue("border-left-color").equals(colourToRGB(registrationTableRow.getStatusColour())) &&
-                riskTag.getCssValue("border-top-color").equals(colourToRGB(registrationTableRow.getStatusColour())) &&
-                riskTag.getCssValue("border-right-color").equals(colourToRGB(registrationTableRow.getStatusColour())) &&
-                riskTag.getCssValue("border-bottom-color").equals(colourToRGB(registrationTableRow.getStatusColour())) &&
+        return riskTag.getCssValue("color").equals(statusColor) &&
+                riskTag.getCssValue("border-left-color").equals(statusColor) &&
+                riskTag.getCssValue("border-top-color").equals(statusColor) &&
+                riskTag.getCssValue("border-right-color").equals(statusColor) &&
+                riskTag.getCssValue("border-bottom-color").equals(statusColor) &&
                 row.text().contains(String.format("%s %s %s %s", registrationTableRow.getType(), registrationTableRow.getStatusWord().toLowerCase(), registrationTableRow.getDescription(), registrationTableRow.getDate()));
     }
 
