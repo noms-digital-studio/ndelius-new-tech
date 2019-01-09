@@ -234,8 +234,8 @@ function openPopup(url, name, top, left) {
         });
 
         function trackViewDraft() {
-            gtag('event', 'draft', {
-                'event_category': isSfr ? 'SFR' : 'PAROM1',
+            gtag('event', 'click', {
+                'event_category': (isSfr ? 'SFR' : 'PAROM1') + ' - View draft',
                 'event_label': 'Page: ' + $('h1').text()
             });
         }
