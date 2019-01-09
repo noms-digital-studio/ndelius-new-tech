@@ -3,6 +3,8 @@
 @import "calendar";
 @import "quill";
 
+@import 'app/offender-header';
+
 .new-window {
   @include govuk-font(16);
   span {

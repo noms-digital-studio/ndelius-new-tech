@@ -30,13 +30,7 @@ class OffenderSummaryPage extends Component {
                 { !fetching && !error &&
                 <div>
 
-                    <div className="govuk-grid-row govuk-!-margin-top-3">
-                        <div className="govuk-grid-column-one-half">
-                            <OffenderIdentity/>
-                        </div>
-                        <div className="govuk-grid-column-one-half">&nbsp;</div>
-                    </div>
-
+                    <OffenderIdentity/>
                     <Registrations/>
                     <Convictions/>
                     <OffenderDetails/>
