@@ -25,7 +25,7 @@ class OffenderSummaryPage extends Component {
     render() {
         const { fetching, error } = this.props;
         return (
-            <div>
+            <div className="qa-main-content">
                 <GovUkPhaseBanner/>
                 { !fetching && !error &&
                 <div>
