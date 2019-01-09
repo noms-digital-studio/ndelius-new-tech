@@ -50,6 +50,13 @@
 .app-float-left {
   float: left;
   @include govuk-clearfix();
+
+  &.app-float-left__not-narrow {
+    @include govuk-media-query(mobile, tablet) {
+      display: block;
+      float: none;
+    }
+  }
 }
 
 .moj-textarea {
