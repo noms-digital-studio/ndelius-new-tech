@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import * as PropTypes from 'prop-types';
 import GovUkPhaseBanner from './govukPhaseBanner';
 import ErrorMessage from './errorMessage';
@@ -25,10 +25,10 @@ class OffenderSummaryPage extends Component {
     render() {
         const { fetching, error } = this.props;
         return (
-            <div className="qa-main-content">
+            <Fragment>
                 <GovUkPhaseBanner/>
                 { !fetching && !error &&
-                <div>
+                <div className="qa-main-content">
 
                     <OffenderIdentity/>
                     <Registrations/>
@@ -42,7 +42,7 @@ class OffenderSummaryPage extends Component {
                 <ErrorMessage
                     message="Unfortunately, we cannot display you the offender's information at the moment. Please try again later."/>
                 }
-            </div>
+            </Fragment>
         );
     }
 }

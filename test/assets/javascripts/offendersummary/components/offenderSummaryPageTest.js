@@ -59,7 +59,7 @@ describe('OffenderSummaryPage component', () => {
             })
 
             it('no main content is displayed', () => {
-                expect(page.find('.qa-main-content).exists()).to.be.false
+                expect(page.find('.qa-main-content').exists()).to.be.false
             })
             it('error is displayed', () => {
                 expect(page.find('ErrorMessage').exists()).to.be.true
