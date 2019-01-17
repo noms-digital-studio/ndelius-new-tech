@@ -92,15 +92,15 @@ Feature: Parole Report
       | Offence                              | Enter the offence                              |
       | Sentence                             | Enter the sentence                             |
 
-  Scenario: Delius user enters dates in the past for Parole Eligibility and Automatic release date / non parole eligibility date
+  Scenario: Delius user enters dates before the conviction date for Parole Eligibility and Automatic release date / non parole eligibility date
 
     Given they select the "Determinate" option on the "Sentence type"
-    And they enter the date "YESTERDAY" for "Parole eligibility date"
-    And they enter the date "YESTERDAY" for "Automatic release date/non parole eligibility date"
+    And they enter the date "OVER_6_MONTHS_AGO" for "Parole eligibility date"
+    And they enter the date "OVER_6_MONTHS_AGO" for "Automatic release date/non parole eligibility date"
     When  they select the "Continue" button
     Then  the following error messages are displayed
-      | Parole eligibility date | The parole eligibility date must be in the future |
-      | Automatic release date/non parole eligibility date | The automatic release date/non parole eligibility date must be in the future |
+      | Parole eligibility date | The parole eligibility date must be after the conviction date |
+      | Automatic release date/non parole eligibility date | The automatic release date/non parole eligibility date must be after the conviction date |
 
   Scenario: Delius user enters a date before the conviction date for Tariff expiry
 
