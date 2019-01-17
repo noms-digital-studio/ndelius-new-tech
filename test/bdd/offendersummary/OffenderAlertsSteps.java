@@ -44,8 +44,6 @@ public class OffenderAlertsSteps {
     @Then("^they should see a \"([^\"]*)\" RoSH registration alert$")
     public void theyShouldSeeVeryHighRoshRegistrationAlert(String type) {
 
-        assertThat(page.isElementRendered(".qa-alert-rosh")).isTrue();
-
         String elementText = page.getElementText(".qa-alert-rosh");
 
         switch(type) {
