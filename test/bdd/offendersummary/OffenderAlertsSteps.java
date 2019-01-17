@@ -51,20 +51,21 @@ public class OffenderAlertsSteps {
         switch(type) {
             case "very high":
                 assertThat(elementText).isEqualTo("very high risk of serious harm");
-                assertThat(page.hasRegistrationAlertColor("Red")).isTrue();
                 break;
             case "high":
                 assertThat(elementText).isEqualTo("high risk of serious harm");
-                assertThat(page.hasRegistrationAlertColor("Red")).isTrue();
                 break;
             case "medium":
                 assertThat(elementText).isEqualTo("medium risk of serious harm");
-                assertThat(page.hasRegistrationAlertColor("Amber")).isTrue();
                 break;
             case "low":
                 assertThat(elementText).isEqualTo("low risk of serious harm");
-                assertThat(page.hasRegistrationAlertColor("Green")).isTrue();
                 break;
         }
+    }
+
+    @Then("^the RoSH registration alert should be \"([^\"]*)\"$")
+    public void theRoshAlertShouldBeTheCorrectColor(String color) {
+        assertThat(page.hasRegistrationAlertColor(color)).isTrue();
     }
 }
