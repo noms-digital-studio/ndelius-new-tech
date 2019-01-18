@@ -61,7 +61,7 @@ public class OffenderSummaryPage extends FluentPage {
                 encrypt(String.format("%d", Instant.now().toEpochMilli()))
         ));
 
-        control.await().until($(By.className("qa-offender-identity")));
+        control.await().until($(By.className("qa-offender-identity"))).size(1);
 
         return this;
     }
