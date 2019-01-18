@@ -6,6 +6,7 @@ import OffenderIdentity from '../containers/offenderIdentityContainer'
 import OffenderCards from '../containers/offenderCardsContainer'
 import OffenderDetails from '../containers/offenderDetailsContainer'
 import Registrations from '../containers/registrationsContainer'
+import SeriousRegistrations from '../containers/seriousRegistrationsContainer'
 import Convictions from '../containers/convictionsContainer'
 import Notes from '../containers/notesContainer'
 import OffenderManager from '../containers/offenderManagerContainer'
@@ -30,6 +31,7 @@ class OffenderSummaryPage extends Component {
 
           <OffenderIdentity/>
           <OffenderCards/>
+          <SeriousRegistrations/>
           <Registrations/>
           <Convictions/>
           <OffenderManager/>
