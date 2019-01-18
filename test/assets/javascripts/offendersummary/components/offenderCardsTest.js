@@ -73,7 +73,7 @@ describe('OffenderCards component', () => {
       })
 
       it('Should display no events', () => {
-        expect(wrapper.find('.qa-events').text()).to.equal('0 events')
+        expect(wrapper.find('.qa-card-events').text()).to.equal('0 events')
       })
 
     })
@@ -94,11 +94,11 @@ describe('OffenderCards component', () => {
       })
 
       it('Should display the number of events and active events', () => {
-        expect(wrapper.find('.qa-events').text()).to.equal('2 events (0 active)')
+        expect(wrapper.find('.qa-card-events').text()).to.equal('2 events (0 active)')
       })
 
       it('Should not display any event data', () => {
-        expect(wrapper.find('.qa-active-event').exists()).equal(false)
+        expect(wrapper.find('.qa-card-active-event').exists()).equal(false)
       })
 
     })
@@ -128,15 +128,15 @@ describe('OffenderCards component', () => {
       })
 
       it('Should display the number of events and active events', () => {
-        expect(wrapper.find('.qa-events').text()).to.equal('3 events (2 active)')
+        expect(wrapper.find('.qa-card-events').text()).to.equal('3 events (2 active)')
       })
 
       it('Should display the latest active event data', () => {
-        expect(wrapper.find('.qa-active-event').exists()).equal(true)
+        expect(wrapper.find('.qa-card-active-event').exists()).equal(true)
       })
 
       it('Should display the latest active event description', () => {
-        expect(wrapper.find('.qa-active-event').text()).to.equal('Last active event: ORA Community Order (12 Months)')
+        expect(wrapper.find('.qa-card-active-event').text()).to.equal('Last active event: ORA Community Order (12 Months)')
       })
 
     })
@@ -171,15 +171,15 @@ describe('OffenderCards component', () => {
       })
 
       it('Should display offender status as not current', () => {
-        expect(wrapper.find('.qa-current-status').text()).to.equal('Not current')
+        expect(wrapper.find('.qa-card-current-status').text()).to.equal('Not current')
       })
 
       it('Should NOT display the provider details', () => {
-        expect(wrapper.find('.qa-provider').exists()).equal(false)
+        expect(wrapper.find('.qa-card-provider').exists()).equal(false)
       })
 
       it('Should NOT display the offender manager details', () => {
-        expect(wrapper.find('.qa-offender-manager').exists()).equal(false)
+        expect(wrapper.find('.qa-card-offender-manager').exists()).equal(false)
       })
 
     })
@@ -202,15 +202,15 @@ describe('OffenderCards component', () => {
       })
 
       it('Should display offender status as current offender', () => {
-        expect(wrapper.find('.qa-current-status').text()).to.equal('Current offender')
+        expect(wrapper.find('.qa-card-current-status').text()).to.equal('Current offender')
       })
 
       it('Should NOT display the provider details', () => {
-        expect(wrapper.find('.qa-provider').exists()).equal(false)
+        expect(wrapper.find('.qa-card-provider').exists()).equal(false)
       })
 
       it('Should NOT display the offender manager details', () => {
-        expect(wrapper.find('.qa-offender-manager').exists()).equal(false)
+        expect(wrapper.find('.qa-card-offender-manager').exists()).equal(false)
       })
 
     })
@@ -241,15 +241,15 @@ describe('OffenderCards component', () => {
       })
 
       it('Should display offender status as current offender', () => {
-        expect(wrapper.find('.qa-current-status').text()).to.equal('Current offender')
+        expect(wrapper.find('.qa-card-current-status').text()).to.equal('Current offender')
       })
 
       it('Should display the provider details', () => {
-        expect(wrapper.find('.qa-provider').text()).to.equal('Provider: NPS North West')
+        expect(wrapper.find('.qa-card-provider').text()).to.equal('Provider: NPS North West')
       })
 
       it('Should NOT display the offender manager details', () => {
-        expect(wrapper.find('.qa-offender-manager').text()).to.equal('Offender manager: Smith, John')
+        expect(wrapper.find('.qa-card-offender-manager').text()).to.equal('Offender manager: Smith, John')
       })
 
     })
