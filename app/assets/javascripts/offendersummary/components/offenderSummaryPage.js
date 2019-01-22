@@ -3,6 +3,7 @@ import * as PropTypes from 'prop-types'
 import GovUkPhaseBanner from './govukPhaseBanner'
 import ErrorMessage from './errorMessage'
 import OffenderIdentity from '../containers/offenderIdentityContainer'
+import OffenderCards from '../containers/offenderCardsContainer'
 import OffenderDetails from '../containers/offenderDetailsContainer'
 import Registrations from '../containers/registrationsContainer'
 import SeriousRegistrations from '../containers/seriousRegistrationsContainer'
@@ -47,6 +48,7 @@ class OffenderSummaryPage extends Component {
         <div className="qa-main-content">
 
           <OffenderIdentity/>
+          <OffenderCards/>
           <SeriousRegistrations/>
           <div className="govuk-accordion" data-module="accordion" id="accordion-offender-summary">
             <Registrations/>

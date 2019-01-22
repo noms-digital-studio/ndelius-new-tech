@@ -6,7 +6,7 @@ Scenario: Kieron Robinson is not on any registers and warnings list within Deliu
   Given that the Kieron Robinson is not on any registers and warning lists within Delius
   And they navigate to the offender summary page
   When they expand the "Registers and warnings" accordion
-  Then  they should see the following alert and registration text "no data"
+  Then  they should see the following alert and registration text "No active registers and warnings recorded"
 
 Scenario: Offender is on the "Low" RoSH Register in Delius
   Given that the following alert and registration information is saved for an offender in Delius

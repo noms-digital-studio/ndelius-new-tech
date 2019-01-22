@@ -6,7 +6,7 @@ Feature: Offender Summary: Events
     Given that the offender has no events saved within Delius
     And they navigate to the offender summary page
     And they expand the "Events" accordion
-    Then  they should see the following event text "no data"
+    Then  they should see the following event text "No events recorded"
 
   Scenario: Offender has three events saved within Delius
     Given that the offender has the following event information saved in Delius

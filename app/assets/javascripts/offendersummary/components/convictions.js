@@ -1,9 +1,9 @@
-import React, {Component, Fragment} from 'react';
-import * as PropTypes from 'prop-types';
-import Accordion from './shared/accordion';
+import React, { Component, Fragment } from 'react'
+import * as PropTypes from 'prop-types'
+import Accordion from './shared/accordion'
 import ErrorMessage from './errorMessage'
-import moment from 'moment'
-import {dateFromISO} from '../../helpers/formatters'
+import { dateFromISO } from '../../helpers/formatters'
+import { convictionDescription, convictionSorter, mainOffenceDescription } from '../../helpers/convictionsHelper'
 
 class Convictions extends Component {
     constructor(props) {
@@ -24,7 +24,7 @@ class Convictions extends Component {
                     {!fetching && !error &&
                     <div className="moj-inside-panel qa-offender-convictions">
                         {convictions.length === 0 &&
-                        <div><p className="govuk-body moj-!-text-align-center">No data</p></div>
+                        <div><p className="govuk-body moj-!-text-align-center">No events recorded</p></div>
                         }
                         {convictions.length > 0 &&
                         <table className="govuk-table moj-table moj-table--split-rows govuk-!-margin-0" role="presentation">
@@ -54,10 +54,6 @@ class Convictions extends Component {
     }
 }
 
-const convictionSorter = (first, second) => {
-    return moment(second.referralDate, 'YYYY-MM-DD').diff(moment(first.referralDate, 'YYYY-MM-DD'))
-}
-
 const renderConviction = conviction => {
     return (
         <Fragment key={conviction.convictionId}>
@@ -78,16 +74,6 @@ const renderConviction = conviction => {
         </Fragment>
     );
 }
-
-const mainOffenceDescription = conviction => {
-    return conviction.offences.filter(offence => offence.mainOffence).map(offence => `${offence.detail.description}`)
-}
-
-const convictionDescription = conviction => {
-    return conviction.sentence && `${conviction.sentence.description} (${conviction.sentence.originalLength} ${conviction.sentence.originalLengthUnits})`
-        || conviction.latestCourtAppearanceOutcome.description
-}
-
 
 Convictions.propTypes = {
     getOffenderConvictions: PropTypes.func,
