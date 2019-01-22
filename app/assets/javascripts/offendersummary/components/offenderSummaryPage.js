@@ -9,13 +9,16 @@ import SeriousRegistrations from '../containers/seriousRegistrationsContainer'
 import Convictions from '../containers/convictionsContainer'
 import Notes from '../containers/notesContainer'
 import OffenderManager from '../containers/offenderManagerContainer'
-
 import { nodeListForEach } from 'govuk-frontend/common'
-import Accordion from 'govuk-frontend/components/accordion/accordion'
 
 class OffenderSummaryPage extends Component {
+
   constructor (props) {
     super(props)
+
+    this.state = {
+      hasRendered: false
+    }
   }
 
   componentWillMount () {
@@ -23,17 +26,20 @@ class OffenderSummaryPage extends Component {
     getOffenderDetails()
   }
 
-  componentDidMount () {
-    setTimeout(() => {
-      const $accordions = document.querySelectorAll('[data-module="accordion"]')
-      nodeListForEach($accordions, function ($accordion) {
-        new Accordion($accordion).init()
-      })
-    }, 5000)
-  }
-
   render () {
     const {fetching, error} = this.props
+
+    if (!fetching && !error) {
+      setTimeout(() => {
+        const $accordions = document.querySelectorAll('[data-module="accordion"]')
+        if ($accordions) {
+          nodeListForEach($accordions, ($accordion) => {
+            new window.GOVUKFrontend.Accordion($accordion).init()
+          })
+        }
+      })
+    }
+
     return (
       <Fragment>
         <GovUkPhaseBanner/>
