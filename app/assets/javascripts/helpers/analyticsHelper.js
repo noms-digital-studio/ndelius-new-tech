@@ -6,7 +6,7 @@ const TOGGLE_ATTRIBUTE_NAME = 'data-open'
  * @param category
  * @param label
  */
-const trackEvent = (event, category, label) => {
+function trackEvent (event, category, label) {
   if (gtag) {
     console.info('TRACK:', event, category, label)
     gtag('event', event, {
