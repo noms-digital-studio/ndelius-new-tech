@@ -50,16 +50,12 @@ const updateOpenCloseAllAccordionsElementBasedOnAccordionState = () => {
  * Configure the accordion attributes based on initial state - we can use the aria-expanded attribute set by GOV.UK Accordion reliably here
  */
 const configureInitialAccordionState = () => {
-
   const checkAndConfigureIfElementExpanded = $element => {
     const isExpanded = $element.getAttribute('aria-expanded') === 'true'
     toggleElementFlag($element, !isExpanded)
   }
   checkAndConfigureIfElementExpanded(openAllButton())
-
-  nodeListForEach(allAccordionButtons(), $accordion => {
-    checkAndConfigureIfElementExpanded($accordion)
-  })
+  nodeListForEach(allAccordionButtons(), $accordion => checkAndConfigureIfElementExpanded($accordion))
 }
 
 /**
@@ -69,9 +65,7 @@ const configureOpenCloseAllAccordionsElement = () =>
   openAllButton().addEventListener('click', event => {
     const isOpen = checkAndConfigureElementOpen(event.target)
     trackEvent(isOpen ? 'close-all' : 'open-all', 'Offender summary > Accordion', 'Open/Close all')
-    nodeListForEach(allAccordionButtons(), $accordion => {
-      toggleElementFlag($accordion, isOpen)
-    })
+    nodeListForEach(allAccordionButtons(), $accordion => toggleElementFlag($accordion, isOpen))
   })
 
 /**
