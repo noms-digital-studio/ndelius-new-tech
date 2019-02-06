@@ -7,9 +7,7 @@ const TOGGLE_ATTRIBUTE_NAME = 'data-open'
  * @param label
  */
 const trackEvent = (event, category, label) => {
-  if (gtag) {
-    gtag('event', event, {'event_category': category, 'event_label': label})
-  }
+  gtag && gtag('event', event, {'event_category': category, 'event_label': label})
 }
 
 /**
