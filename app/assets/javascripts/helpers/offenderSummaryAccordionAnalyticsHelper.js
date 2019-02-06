@@ -21,7 +21,7 @@ import {
  * Get NodeList of accordion button elements
  * @return {NodeListOf<Element>}
  */
-function allAccordionButtons () {
+const allAccordionButtons = () => {
   return document.querySelectorAll('.govuk-accordion__section-button')
 }
 
@@ -29,16 +29,16 @@ function allAccordionButtons () {
  * Get Open/Close all button element
  * @return {Element}
  */
-function openAllButton () {
+const openAllButton = () => {
   return document.querySelector('.govuk-accordion__open-all')
 }
 
 /**
  * Walk through the individual accordion elements and toggle attribute on Open/Close all button element accordingly
  */
-function updateOpenCloseAllAccordionsElementBasedOnAccordionState () {
+const updateOpenCloseAllAccordionsElementBasedOnAccordionState = () => {
   let allOpen = true
-  nodeListForEach(allAccordionButtons(), ($accordion) => {
+  nodeListForEach(allAccordionButtons(), $accordion => {
     if (!elementHasToggleAttribute($accordion)) {
       allOpen = false
     }
@@ -49,15 +49,15 @@ function updateOpenCloseAllAccordionsElementBasedOnAccordionState () {
 /**
  * Configure the accordion attributes based on initial state - we can use the aria-expanded attribute set by GOV.UK Accordion reliably here
  */
-function configureInitialAccordionState () {
+const configureInitialAccordionState = () => {
 
-  const checkAndConfigureIfElementExpanded = ($element) => {
+  const checkAndConfigureIfElementExpanded = $element => {
     const isExpanded = $element.getAttribute('aria-expanded') === 'true'
     toggleElementFlag($element, !isExpanded)
   }
   checkAndConfigureIfElementExpanded(openAllButton())
 
-  nodeListForEach(allAccordionButtons(), ($accordion) => {
+  nodeListForEach(allAccordionButtons(), $accordion => {
     checkAndConfigureIfElementExpanded($accordion)
   })
 }
@@ -65,33 +65,31 @@ function configureInitialAccordionState () {
 /**
  * Configure Open/Close all button actions
  */
-function configureOpenCloseAllAccordionsElement () {
-  openAllButton().addEventListener('click', (event) => {
+const configureOpenCloseAllAccordionsElement = () =>
+  openAllButton().addEventListener('click', event => {
     const isOpen = checkAndConfigureElementOpen(event.target)
     trackEvent(isOpen ? 'close-all' : 'open-all', 'Offender summary > Accordion', 'Open/Close all')
-    nodeListForEach(allAccordionButtons(), ($accordion) => {
+    nodeListForEach(allAccordionButtons(), $accordion => {
       toggleElementFlag($accordion, isOpen)
     })
   })
-}
 
 /**
  * Configure individual accordion buttons actions
  */
-function configureIndividualAccordionElements () {
-  nodeListForEach(allAccordionButtons(), ($accordion) => {
-    $accordion.addEventListener('click', (event) => {
+const configureIndividualAccordionElements = () =>
+  nodeListForEach(allAccordionButtons(), $accordion => {
+    $accordion.addEventListener('click', event => {
       const $button = event.target
       trackEvent(checkAndConfigureElementOpen($button) ? 'close' : 'open', 'Offender summary > Accordion', $button.textContent)
       updateOpenCloseAllAccordionsElementBasedOnAccordionState()
     })
   })
-}
 
 /**
  * Main offender summary page accordion config
  */
-function configureOffenderSummaryAccordionTracking () {
+const configureOffenderSummaryAccordionTracking = () => {
   configureInitialAccordionState()
   configureOpenCloseAllAccordionsElement()
   configureIndividualAccordionElements()

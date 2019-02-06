@@ -10,6 +10,9 @@ describe('PersonalCircumstances component', () => {
                 Details: stub()
             }
         }
+        global.document = {
+            querySelector: stub()
+        }
         global.window.GOVUKFrontend.Details.prototype.init = stub()
     })
 
@@ -48,7 +51,7 @@ describe('PersonalCircumstances component', () => {
             expect(global.window.GOVUKFrontend.Details.prototype.init ).to.be.calledOnce
         })
     })
-    
+
     describe('rendering PersonalCircumstances', () => {
         let wrapper
 
