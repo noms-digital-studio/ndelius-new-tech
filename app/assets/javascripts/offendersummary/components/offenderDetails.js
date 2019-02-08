@@ -18,7 +18,7 @@ class OffenderDetails extends Component {
     }
 
     render() {
-        const {offenderDetails} = this.props;
+        const {offenderDetails, viewOffenderAliases, viewOffenderAddresses} = this.props;
         let mainAddress;
         let telephoneNumber;
         let mobileNumber;
@@ -73,7 +73,7 @@ class OffenderDetails extends Component {
                             <td className="qa-aliases">{ offenderDetails.offenderAliases && offenderDetails.offenderAliases.length > 0 && 'Yes (' + offenderDetails.offenderAliases.length + ')' || 'No' }</td>
                             <td className="qa-aliases-link" style={ { textAlign: 'right', width: '100px' } }>
                                 { offenderDetails.offenderAliases && offenderDetails.offenderAliases.length > 0 && (
-                                    <a href="javascript:void(0);">View all</a>) }
+                                    <a href="javascript:void(0);" className='qa-view-offender-aliases' onClick={() => viewOffenderAliases(offenderDetails.offenderId)}>View all</a>) }
                             </td>
                         </tr>
                         {middleNames() && (
@@ -158,6 +158,9 @@ class OffenderDetails extends Component {
                                 </tr>
                                 </tbody>
                             </table>
+                            <p className="govuk-body app-align-right">
+                              <a className="govuk-link govuk-link--no-visited-state qa-view-offender-addresses" href="javascript:void(0);" onClick={() => viewOffenderAddresses(offenderDetails.offenderId)}>View address history</a>
+                            </p>
                         </div>
                     </details>
 
@@ -168,7 +171,10 @@ class OffenderDetails extends Component {
 }
 
 OffenderDetails.propTypes = {
+    viewOffenderAliases: PropTypes.func.isRequired,
+    viewOffenderAddresses: PropTypes.func.isRequired,
     offenderDetails: PropTypes.shape({
+        offenderId: PropTypes.number.isRequired,
         offenderAliases: PropTypes.arrayOf(PropTypes.shape({
                 dateOfBirth: PropTypes.string,
                 firstName: PropTypes.string,
