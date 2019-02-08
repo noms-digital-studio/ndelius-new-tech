@@ -128,6 +128,7 @@ export const getOffenderPersonalCircumstances = () => dispatch => {
 }
 
 export const viewOffenderAliases = offenderId => dispatch => {
+  trackEvent('delius-link', 'Offender summary > Offender details', 'View aliases');
   dispatch(navigateToViewOffenderAliases(offenderId))
 }
 
