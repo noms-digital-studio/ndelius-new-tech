@@ -66,7 +66,7 @@ class OffenderDetails extends Component {
         return (
             <Accordion label="Offender details" id="4">
                 <Fragment>
-                    <table className="govuk-table moj-table moj-table--split-rows" role="presentation">
+                    <table className="govuk-table moj-table moj-table--split-rows">
                         <tbody>
                         <tr>
                             <th style={ { width: '50%' } }>Aliases</th>
@@ -121,7 +121,7 @@ class OffenderDetails extends Component {
                         <div className="govuk-details__text moj-details__text--no-border"
                              id="offender-details-contact-details"
                              aria-hidden="false">
-                            <table className="govuk-table moj-table moj-table--split-rows" role="presentation">
+                            <table className="govuk-table moj-table moj-table--split-rows">
                                 <tbody>
                                 <tr>
                                     <th style={ { width: '50%' } }>Telephone</th>
