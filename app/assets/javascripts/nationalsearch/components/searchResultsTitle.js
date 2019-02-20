@@ -7,8 +7,9 @@ const SearchResultsTitle = ({pageNumber, pageSize, total, resultsReceived}) => {
   }
 
   return (
-    <h2 aria-live='polite'
-        className="heading-medium margin-top medium search-results-title">{ renderHeader(pageNumber, pageSize, total) }</h2>
+    <h2 aria-live='polite' className="heading-medium margin-top medium search-results-title">
+      { renderHeader(pageNumber, pageSize, total) }
+    </h2>
   )
 }
 

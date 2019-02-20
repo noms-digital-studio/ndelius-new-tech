@@ -54,7 +54,6 @@ export const chartOptions = props => {
       }
     }
   }
-
 }
 
 AnalyticsBarChart.propTypes = {
