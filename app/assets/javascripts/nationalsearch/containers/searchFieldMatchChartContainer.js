@@ -16,4 +16,3 @@ export const labelMapper = data => Object.getOwnPropertyNames(data).map(name => 
   }
   return names[names.length - 1]
 })
-

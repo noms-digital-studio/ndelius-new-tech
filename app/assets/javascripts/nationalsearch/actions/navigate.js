@@ -48,5 +48,3 @@ export const addNewOffender = () => (
     dispatch({type: ADD_NEW_OFFENDER})
   }
 )
-
-

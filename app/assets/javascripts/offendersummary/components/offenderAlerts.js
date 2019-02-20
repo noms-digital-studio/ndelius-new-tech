@@ -72,3 +72,4 @@ OffenderAlerts.propTypes = {
 }
 
 export default OffenderAlerts
+

@@ -25,4 +25,3 @@ export const extractMyProbationAreas = (byProbationArea, myProbationAreas) => {
   const create = (myAreaCode) => ({code: myAreaCode, description: myProbationAreas[myAreaCode], count: 0})
   return sort(Object.getOwnPropertyNames(myProbationAreas).map(myAreaCode => find(myAreaCode) || create(myAreaCode)), alphabeticalOnProperty('description'))
 }
-

@@ -29,4 +29,3 @@ const isNotInAggregation = (code, byProbationArea) => byProbationArea.filter(are
 
 export const removeMyProbationAreas = (byProbationArea, myProbationAreas, probationAreasFilter) =>
   sort(addZeroResultsSelectedAreas(byProbationArea, probationAreasFilter).filter(area => !myProbationAreas[area.code]), alphabeticalOnProperty('description'))
-

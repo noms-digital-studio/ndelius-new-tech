@@ -76,4 +76,3 @@ const removeFromLocalStorage = () =>
     .then(() => { }).catch(err => window.console && console.log(err))
 
 export default localStorage
-

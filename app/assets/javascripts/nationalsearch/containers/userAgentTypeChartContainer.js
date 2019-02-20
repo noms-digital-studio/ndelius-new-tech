@@ -7,4 +7,3 @@ export default connect(
     fetching: state.analytics.fetching
   }), () => ({})
 )(analyticsBarChart)
-

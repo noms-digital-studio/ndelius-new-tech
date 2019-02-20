@@ -9,4 +9,3 @@ export const removeIn = (object, property) => {
   delete copyOf[property]
   return copyOf
 }
-

@@ -42,7 +42,6 @@ class FeatureSwitchPage extends Component {
     cookies.set('featureOffenderSummary', enabled)
     this.setState({offenderSummary: enabled})
   }
-
 }
 
 FeatureSwitchPage.propTypes = {

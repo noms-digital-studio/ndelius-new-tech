@@ -5,4 +5,3 @@ export default connect(state => ({
   numberToCountData: state.analytics.durationBetweenStartEndSearch,
   fetching: state.analytics.fetching
 }), () => ({}))(analyticsLineChart)
-

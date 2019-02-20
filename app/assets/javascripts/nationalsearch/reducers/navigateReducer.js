@@ -16,4 +16,3 @@ const navigate = (state = {shouldClose: false}, action) => {
 }
 
 export default navigate
-

@@ -117,4 +117,3 @@ const analytics = (state = {
 }
 
 export default analytics
-
