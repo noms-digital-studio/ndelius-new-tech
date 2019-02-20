@@ -1,7 +1,7 @@
 import React from 'react'
 import * as PropTypes from 'prop-types'
 
-const FrameNavigation = ({ navigate }) => {
+const FrameNavigation = ({navigate}) => {
   if (navigate.shouldClose) {
     const message = toMessage(navigate)
     // eslint-disable-next-line no-undef
@@ -14,10 +14,10 @@ const FrameNavigation = ({ navigate }) => {
       }
     }
   }
-  return (<span />)
+  return (<span/>)
 }
 
-const toMessage = ({ action, data = null }) =>
+const toMessage = ({action, data = null}) =>
   JSON.stringify({
     action,
     data

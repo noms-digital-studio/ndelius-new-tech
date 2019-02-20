@@ -42,7 +42,8 @@ const OffenderCards = ({offenderConvictions, offenderManager, offenderId, transf
           ) }
           { !activeCount &&
           <p className="govuk-body govuk-!-margin-0 moj-!-color-white">
-            <a className="moj-!-color-white" href="javascript:void(0);" onClick={() => transferInactiveOffender(offenderId)}>Transfer in</a>
+            <a className="moj-!-color-white" href="javascript:void(0);"
+               onClick={ () => transferInactiveOffender(offenderId) }>Transfer in</a>
           </p>
           }
         </div>

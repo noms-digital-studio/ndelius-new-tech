@@ -9,7 +9,4 @@ const mapStateToProps = state => ({
   offenderManager: state.offenderSummary.offenderDetails.offenderManagers
     && findActiveOffenderManager(state.offenderSummary.offenderDetails.offenderManagers)
 })
-export default connect(
-  mapStateToProps,
-  { transferInactiveOffender }
-)(offenderCards)
+export default connect(mapStateToProps, {transferInactiveOffender})(offenderCards)

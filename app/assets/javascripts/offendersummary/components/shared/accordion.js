@@ -8,9 +8,7 @@ class Accordion extends Component {
   }
 
   render () {
-
     let id = this.props.id
-
     return (
       <div className="govuk-accordion__section">
         <div className="govuk-accordion__section-header">
