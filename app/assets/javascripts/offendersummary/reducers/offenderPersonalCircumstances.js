@@ -3,7 +3,7 @@ import {
   RECEIVE_OFFENDER_PERSONAL_CIRCUMSTANCES
 } from '../constants/ActionTypes'
 
-const offenderPersonalCircumstances = (state = {fetching: true, loadError: false, circumstances: []}, action) => {
+const offenderPersonalCircumstances = (state = { fetching: true, loadError: false, circumstances: [] }, action) => {
   switch (action.type) {
     case RECEIVE_OFFENDER_PERSONAL_CIRCUMSTANCES:
       return {

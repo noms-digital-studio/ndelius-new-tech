@@ -36,27 +36,27 @@ class AnalyticsPage extends Component {
   render () {
     return (
       <div>
-        <GovUkPhaseBanner basicVersion={ true }/>
-        <h1 className="heading-xlarge no-margin-bottom">National Search Analytics</h1>
-        <div className="grid-row margin-top">
-          <div className="column-two-thirds">
-            <UniqueVisitsCounts description='Unique visits'/>
-            <AllVisitsCounts description='All visits'/>
-            <AllSearchesCounts description='All searches'/>
+        <GovUkPhaseBanner basicVersion={true} />
+        <h1 className='heading-xlarge no-margin-bottom'>National Search Analytics</h1>
+        <div className='grid-row margin-top'>
+          <div className='column-two-thirds'>
+            <UniqueVisitsCounts description='Unique visits' />
+            <AllVisitsCounts description='All visits' />
+            <AllSearchesCounts description='All searches' />
             <TopPagesRankingChart description='Offender details clicks - ranking within top 2 pages'
-                                  label='Clicks per rank within page'/>
-            <PageRankingChart description='Offender details clicks - ranking across pages' label='Clicks per page'/>
-            <SearchOutcomeChart description='Search visit outcome' label='Outcome'/>
+                                  label='Clicks per rank within page' />
+            <PageRankingChart description='Offender details clicks - ranking across pages' label='Clicks per page' />
+            <SearchOutcomeChart description='Search visit outcome' label='Outcome' />
             <DurationBetweenStartEndSearchChart description='Duration to find offender'
-                                                label='From search to clicking offender' xAxesLabel='Up to minutes'/>
-            <SearchFieldMatchChart description='Top field matches' label='Search term'/>
-            <FilterCountsChart description='Final search in session filter' label='Filter usage'/>
-            <UserAgentTypeChart description='Browser types' label='Browser'/>
-            <SearchTypeCountsChart description='Type of search' label='Search type'/>
+                                                label='From search to clicking offender' xAxesLabel='Up to minutes' />
+            <SearchFieldMatchChart description='Top field matches' label='Search term' />
+            <FilterCountsChart description='Final search in session filter' label='Filter usage' />
+            <UserAgentTypeChart description='Browser types' label='Browser' />
+            <SearchTypeCountsChart description='Type of search' label='Search type' />
           </div>
-          <div className="column-one-third">
-            <NavigationPanel/>
-            <input className="button margin-top" type="button" value="Refresh" onClick={ () => this.onClickRefresh() }/>
+          <div className='column-one-third'>
+            <NavigationPanel />
+            <input className='button margin-top' type='button' value='Refresh' onClick={() => this.onClickRefresh()} />
           </div>
         </div>
       </div>)
@@ -64,21 +64,21 @@ class AnalyticsPage extends Component {
 }
 
 const fetch = props => {
-  const {fetchVisitCounts, currentTimeRange} = props
+  const { fetchVisitCounts, currentTimeRange } = props
   fetchVisitCounts(currentTimeRange)
 }
 
 const NavigationPanel = () => (
-  <nav className="js-stick-at-top-when-scrolling">
-    <div className="nav-header"/>
-    <h3 className="heading-medium no-margin-top no-margin-bottom">Analytics for</h3>
-    <TimeRangeLink timeRange={ LAST_HOUR }>Last hour</TimeRangeLink><br/>
-    <TimeRangeLink timeRange={ TODAY }>Today</TimeRangeLink><br/>
-    <TimeRangeLink timeRange={ THIS_WEEK }>This week</TimeRangeLink><br/>
-    <TimeRangeLink timeRange={ LAST_SEVEN_DAYS }>Last 7 days</TimeRangeLink><br/>
-    <TimeRangeLink timeRange={ LAST_THIRTY_DAYS }>Last 30 days</TimeRangeLink><br/>
-    <TimeRangeLink timeRange={ THIS_YEAR }>This year</TimeRangeLink><br/>
-    <TimeRangeLink timeRange={ ALL }>All time</TimeRangeLink><br/>
+  <nav className='js-stick-at-top-when-scrolling'>
+    <div className='nav-header' />
+    <h3 className='heading-medium no-margin-top no-margin-bottom'>Analytics for</h3>
+    <TimeRangeLink timeRange={LAST_HOUR}>Last hour</TimeRangeLink><br />
+    <TimeRangeLink timeRange={TODAY}>Today</TimeRangeLink><br />
+    <TimeRangeLink timeRange={THIS_WEEK}>This week</TimeRangeLink><br />
+    <TimeRangeLink timeRange={LAST_SEVEN_DAYS}>Last 7 days</TimeRangeLink><br />
+    <TimeRangeLink timeRange={LAST_THIRTY_DAYS}>Last 30 days</TimeRangeLink><br />
+    <TimeRangeLink timeRange={THIS_YEAR}>This year</TimeRangeLink><br />
+    <TimeRangeLink timeRange={ALL}>All time</TimeRangeLink><br />
     <Link to='/satisfaction'>Satisfaction counts</Link>
   </nav>
 )

@@ -22,6 +22,6 @@ export default connect(
 
 export const extractMyProbationAreas = (byProbationArea, myProbationAreas) => {
   const find = (myAreaCode) => byProbationArea.filter(area => area.code === myAreaCode).shift()
-  const create = (myAreaCode) => ({code: myAreaCode, description: myProbationAreas[myAreaCode], count: 0})
+  const create = (myAreaCode) => ({ code: myAreaCode, description: myProbationAreas[myAreaCode], count: 0 })
   return sort(Object.getOwnPropertyNames(myProbationAreas).map(myAreaCode => find(myAreaCode) || create(myAreaCode)), alphabeticalOnProperty('description'))
 }

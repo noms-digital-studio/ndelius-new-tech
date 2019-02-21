@@ -4,4 +4,4 @@ import analyticsTimeRangeLink from '../components/analyticsTimeRangeLink'
 
 export default connect(state => ({
   currentTimeRange: state.analytics.timeRange
-}), dispatch => ({changeTimeRange: (timeRange) => dispatch(changeTimeRange(timeRange))}))(analyticsTimeRangeLink)
+}), dispatch => ({ changeTimeRange: (timeRange) => dispatch(changeTimeRange(timeRange)) }))(analyticsTimeRangeLink)

@@ -1,16 +1,15 @@
 import React, { Fragment } from 'react'
 import * as PropTypes from 'prop-types'
 
-const SeriousRegistrations = ({registrations}) => {
-
+const SeriousRegistrations = ({ registrations }) => {
   return (
     <Fragment>
-      { hasAnySeriousRegistrations(registrations) &&
+      {hasAnySeriousRegistrations(registrations) &&
       <div
-        className="govuk-warning-text moj-warning-text moj-warning-text--critical govuk-!-margin-bottom-3 qa-offender-serious-registrations">
-        <span aria-hidden="true" className="govuk-warning-text__icon">!</span>
-        <strong className="govuk-warning-text__text">
-          <span className="govuk-warning-text__assistive">Warning</span>This offender has serious registrations
+        className='govuk-warning-text moj-warning-text moj-warning-text--critical govuk-!-margin-bottom-3 qa-offender-serious-registrations'>
+        <span aria-hidden='true' className='govuk-warning-text__icon'>!</span>
+        <strong className='govuk-warning-text__text'>
+          <span className='govuk-warning-text__assistive'>Warning</span>This offender has serious registrations
         </strong>
       </div>
       }

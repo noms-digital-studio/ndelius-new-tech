@@ -99,24 +99,20 @@ const myProbationAreas = () => {
   return window.probationAreas || {}
 }
 
-const mapResults = (results = [], searchTerm, pageNumber) =>
-  results.map(
-    (offenderDetails, index) => ({
-        ...offenderDetails,
-        rankIndex: toRankIndex(index, pageNumber),
-        aliases: offenderAliasesWithUnwantedFieldsRemoved(offenderDetails).map((alias) => {
-          return {
-            ...alias
-          }
-        }),
-        addresses: offenderAddressesWithUnwantedFieldsRemoved(offenderDetails).map((address) => {
-          return {
-            ...address
-          }
-        })
-      }
-    )
-  )
+const mapResults = (results = [], searchTerm, pageNumber) => results.map((offenderDetails, index) => ({
+  ...offenderDetails,
+  rankIndex: toRankIndex(index, pageNumber),
+  aliases: offenderAliasesWithUnwantedFieldsRemoved(offenderDetails).map((alias) => {
+    return {
+      ...alias
+    }
+  }),
+  addresses: offenderAddressesWithUnwantedFieldsRemoved(offenderDetails).map((address) => {
+    return {
+      ...address
+    }
+  })
+}))
 
 const toRankIndex = (index, pageNumber) => ((pageNumber - 1) * PAGE_SIZE) + index + 1
 const offenderAliasesWithUnwantedFieldsRemoved = (offenderDetails) => {

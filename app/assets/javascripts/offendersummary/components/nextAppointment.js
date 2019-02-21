@@ -7,26 +7,22 @@ import { dateFromISO } from '../../helpers/formatters'
 import { standardOpenCloseElementTracking } from '../../helpers/analyticsHelper'
 
 class NextAppointment extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   componentWillMount () {
-    const {getNextAppointment} = this.props
+    const { getNextAppointment } = this.props
     getNextAppointment()
   }
 
   render () {
-    const {fetching, error, appointment, noNextAppointment} = this.props
+    const { fetching, error, appointment, noNextAppointment } = this.props
 
     return (
       <Fragment>
-        { !fetching && !error &&
-        <AppointmentDetail appointment={ appointment } noNextAppointment={ noNextAppointment }/>
+        {!fetching && !error &&
+        <AppointmentDetail appointment={appointment} noNextAppointment={noNextAppointment} />
         }
-        { !fetching && error &&
+        {!fetching && error &&
         <ErrorMessage
-          message="Unfortunately, we cannot display you the offender's next appointment at the moment. Please try again later."/>
+          message="Unfortunately, we cannot display you the offender's next appointment at the moment. Please try again later." />
         }
       </Fragment>)
   }
@@ -35,10 +31,8 @@ class NextAppointment extends Component {
 export class AppointmentDetail extends Component {
   constructor (props) {
     super(props)
-
     this.details = null
-
-    this.setDetailsRef = element => this.details = element
+    this.setDetailsRef = element => { this.details = element }
   }
 
   componentDidMount () {
@@ -47,49 +41,49 @@ export class AppointmentDetail extends Component {
   }
 
   render () {
-    const {appointment, noNextAppointment} = this.props
+    const { appointment, noNextAppointment } = this.props
 
     return (
-      <details className="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0 qa-next-appointment"
-               ref={ this.setDetailsRef }>
-        <summary className="govuk-details__summary js-analytics-next-appointment"
-                 aria-controls="details-content-appointment" aria-expanded="false">
-          <span className="govuk-details__summary-text"> Next appointment details </span>
+      <details className='govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0 qa-next-appointment'
+               ref={this.setDetailsRef}>
+        <summary className='govuk-details__summary js-analytics-next-appointment'
+                 aria-controls='details-content-appointment' aria-expanded='false'>
+          <span className='govuk-details__summary-text'> Next appointment details </span>
         </summary>
-        <div className="govuk-details__text moj-details__text--no-border" id="details-content-appointment"
-             aria-hidden="true">
-          { noNextAppointment &&
-          <div><p className="govuk-body moj-!-text-align-center">No next appointment recorded</p></div> }
-          { !noNextAppointment &&
-          <table className="govuk-table moj-table moj-table--split-rows">
+        <div className='govuk-details__text moj-details__text--no-border' id='details-content-appointment'
+             aria-hidden='true'>
+          {noNextAppointment &&
+          <div><p className='govuk-body moj-!-text-align-center'>No next appointment recorded</p></div>}
+          {!noNextAppointment &&
+          <table className='govuk-table moj-table moj-table--split-rows'>
             <tbody>
             <tr>
               <th>Contact type</th>
-              <td>{ appointment.appointmentType.description || 'Unknown' }</td>
+              <td>{appointment.appointmentType.description || 'Unknown'}</td>
             </tr>
             <tr>
               <th>Date</th>
-              <td>{ dateFromISO(appointment.appointmentDate) || 'Unknown' }</td>
+              <td>{dateFromISO(appointment.appointmentDate) || 'Unknown'}</td>
             </tr>
             <tr>
               <th>Start time</th>
-              <td>{ appointment.appointmentStartTime && moment(appointment.appointmentStartTime, 'H:mm:ss').format('H:mm') || 'Unknown' }</td>
+              <td>{(appointment.appointmentStartTime && moment(appointment.appointmentStartTime, 'H:mm:ss').format('H:mm')) || 'Unknown'}</td>
             </tr>
             <tr>
               <th>Location</th>
-              <td>{ appointment.officeLocation && appointment.officeLocation.description || 'Unknown' }</td>
+              <td>{(appointment.officeLocation && appointment.officeLocation.description) || 'Unknown'}</td>
             </tr>
             <tr>
               <th>Provider</th>
-              <td>{ appointment.probationArea && appointment.probationArea.description || 'Unknown' }</td>
+              <td>{(appointment.probationArea && appointment.probationArea.description) || 'Unknown'}</td>
             </tr>
             <tr>
               <th>Team</th>
-              <td>{ appointment.team && appointment.team.description || 'Unknown' }</td>
+              <td>{(appointment.team && appointment.team.description) || 'Unknown'}</td>
             </tr>
             <tr>
               <th>Officer</th>
-              <td>{ appointment.staff && staff(appointment.staff) || 'Unknown' }</td>
+              <td>{(appointment.staff && staff(appointment.staff)) || 'Unknown'}</td>
             </tr>
             </tbody>
           </table>

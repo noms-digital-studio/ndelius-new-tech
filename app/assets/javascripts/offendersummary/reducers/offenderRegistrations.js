@@ -1,6 +1,6 @@
 import { OFFENDER_REGISTRATIONS_LOAD_ERROR, RECEIVE_OFFENDER_REGISTRATIONS } from '../constants/ActionTypes'
 
-const offenderRegistrations = (state = {fetching: true, loadError: false, registrations: []}, action) => {
+const offenderRegistrations = (state = { fetching: true, loadError: false, registrations: [] }, action) => {
   switch (action.type) {
     case RECEIVE_OFFENDER_REGISTRATIONS:
       return {

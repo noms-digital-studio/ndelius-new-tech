@@ -10,7 +10,7 @@ class Filter extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    const {search, searchTerm, currentFilter} = this.props
+    const { search, searchTerm, currentFilter } = this.props
 
     if (!equal(currentFilter, nextProps.currentFilter)) {
       search(searchTerm, nextProps.searchType, nextProps.currentFilter)
@@ -18,12 +18,12 @@ class Filter extends Component {
   }
 
   toggleExpanded () {
-    this.setState({expanded: !this.state.expanded})
+    this.setState({ expanded: !this.state.expanded })
   }
 
   render () {
-    const {filterValues, currentFilter, addToFilter, removeFromFilter, title, name} = this.props
-    const {expanded} = this.state
+    const { filterValues, currentFilter, addToFilter, removeFromFilter, title, name } = this.props
+    const { expanded } = this.state
     const toggleFilter = (code, description) => {
       if (currentFilter.indexOf(code) > -1) {
         removeFromFilter(code)
@@ -37,27 +37,27 @@ class Filter extends Component {
 
     return (
       <div className='js-stick-at-top-when-scrolling'>
-        { shouldDisplayFilter(filterValues) &&
+        {shouldDisplayFilter(filterValues) &&
         <div className='filter'>
-          <button tabIndex="3" onClick={ () => this.toggleExpanded() } type="button" aria-expanded={ expanded }
-                  aria-controls={ `filters-${name}` } className={ expanded ? 'open' : 'closed' }>
-            <span id='provider-select-label' className='bold-small'>{ title }</span>
-            <span id='selected' className='font-xsmall'>{ countSelected() } selected</span>
+          <button tabIndex='3' onClick={() => this.toggleExpanded()} type='button' aria-expanded={expanded}
+                  aria-controls={`filters-${name}`} className={expanded ? 'open' : 'closed'}>
+            <span id='provider-select-label' className='bold-small'>{title}</span>
+            <span id='selected' className='font-xsmall'>{countSelected()} selected</span>
           </button>
-          <div role='group' aria-labelledby='provider-select-label' id={ `filters-${name}` }
-               className={ expanded ? 'open filter-container' : 'closed filter-container' }>
+          <div role='group' aria-labelledby='provider-select-label' id={`filters-${name}`}
+               className={expanded ? 'open filter-container' : 'closed filter-container'}>
             <div>
-              { filterValues.map(filterValue => (
-                <label key={ filterValue.code } htmlFor={ filterValue.code } className='font-xsmall'>
-                  <input className='filter-option' tabIndex="3" type='checkbox' value={ filterValue.code }
-                         id={ filterValue.code }
-                         checked={ currentFilter.indexOf(filterValue.code) > -1 }
-                         onChange={ () => toggleFilter(filterValue.code, filterValue.description) }
+              {filterValues.map(filterValue => (
+                <label key={filterValue.code} htmlFor={filterValue.code} className='font-xsmall'>
+                  <input className='filter-option' tabIndex='3' type='checkbox' value={filterValue.code}
+                         id={filterValue.code}
+                         checked={currentFilter.indexOf(filterValue.code) > -1}
+                         onChange={() => toggleFilter(filterValue.code, filterValue.description)}
                          aria-controls='live-offender-results'
                   />
-                  <span>{ filterValue.description } ({ filterValue.count })</span>
+                  <span>{filterValue.description} ({filterValue.count})</span>
                 </label>
-              )) }
+              ))}
             </div>
           </div>
         </div>

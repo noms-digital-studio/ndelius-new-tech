@@ -11,5 +11,5 @@ const mapStateToProps = state => ({
 })
 export default connect(
   mapStateToProps,
-  {getNextAppointment}
+  { getNextAppointment }
 )(nextAppointment)

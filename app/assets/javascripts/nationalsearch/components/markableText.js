@@ -3,32 +3,32 @@ import PropTypes from 'prop-types'
 import { flatMap } from '../../helpers/streams'
 import moment from 'moment'
 
-const MarkableText = ({text, searchTerm, isDate, highlight, highlightFieldName, allowSingleCharacter = false}) => {
+const MarkableText = ({ text, searchTerm, isDate, highlight, highlightFieldName, allowSingleCharacter = false }) => {
   if (Array.isArray(highlightFieldName)) {
     if (matchesAnyHighlightedField(highlight, highlightFieldName)) {
       return drawHighlightedText(text, searchTerm, isDate, allowSingleCharacter)
     }
-    return <span>{ text }</span>
+    return <span>{text}</span>
   }
   if (matchesHighlightedField(highlight, highlightFieldName)) {
     return drawHighlightedText(text, searchTerm, isDate, allowSingleCharacter)
   }
-  return <span>{ text }</span>
+  return <span>{text}</span>
 }
 
-const Text = ({text, highlight}) => {
+const Text = ({ text, highlight }) => {
   return (
-    <span className={ highlight ? 'mark' : '' }>{ text }</span>
+    <span className={highlight ? 'mark' : ''}>{text}</span>
   )
 }
 
 const drawHighlightedText = function (text, searchTerm, isDate, allowSingleCharacter) {
   const chunks = toHighlightList(text, searchTerm, isDate, allowSingleCharacter)
   return (
-    <span>{ chunks.map((chunk, index) => {
+    <span>{chunks.map((chunk, index) => {
       const fragment = text.substr(chunk.start, chunk.end - chunk.start)
-      return (<Text key={ index } text={ fragment } highlight={ chunk.highlight }/>)
-    }) }
+      return (<Text key={index} text={fragment} highlight={chunk.highlight} />)
+    })}
     </span>
   )
 }
@@ -87,9 +87,9 @@ MarkableText.propTypes = {
 
 /**
  * Creates an array of chunk objects representing both higlightable and non highlightable pieces of text that match each search word.
- * @return Array of "chunks" (where a Chunk is { start:number, end:number, highlight:boolean })
+ * @return Array of 'chunks' (where a Chunk is { start:number, end:number, highlight:boolean })
  */
-const findAll = ({autoEscape, caseSensitive = false, searchWords, textToHighlight}) => (
+const findAll = ({ autoEscape, caseSensitive = false, searchWords, textToHighlight }) => (
   fillInChunks({
     chunksToHighlight: combineChunks({
       chunks: findChunks({
@@ -107,7 +107,7 @@ const findAll = ({autoEscape, caseSensitive = false, searchWords, textToHighligh
  * Takes an array of {start:number, end:number} objects and combines chunks that overlap into single chunks.
  * @return {start:number, end:number}[]
  */
-const combineChunks = ({chunks}) => {
+const combineChunks = ({ chunks }) => {
   chunks = chunks
     .sort((first, second) => first.start - second.start)
     .reduce((processedChunks, nextChunk) => {
@@ -121,7 +121,7 @@ const combineChunks = ({chunks}) => {
           // It may be the case that prevChunk completely surrounds nextChunk, so take the
           // largest of the end indeces.
           const endIndex = Math.max(prevChunk.end, nextChunk.end)
-          processedChunks.push({start: prevChunk.start, end: endIndex})
+          processedChunks.push({ start: prevChunk.start, end: endIndex })
         } else {
           processedChunks.push(prevChunk, nextChunk)
         }
@@ -134,14 +134,13 @@ const combineChunks = ({chunks}) => {
 
 /**
  * Examine text for any matches.
- * If we find matches, add them to the returned array as a "chunk" object ({start:number, end:number}).
+ * If we find matches, add them to the returned array as a 'chunk' object ({start:number, end:number}).
  * @return {start:number, end:number}[]
  */
-const findChunks = ({autoEscape, caseSensitive, searchWords, textToHighlight}) => {
+const findChunks = ({ autoEscape, caseSensitive, searchWords, textToHighlight }) => {
   return searchWords
     .filter(searchWord => searchWord) // Remove empty words
     .reduce((chunks, searchWord) => {
-
       if (autoEscape) {
         searchWord = escapeRegExpFn(searchWord)
       }
@@ -154,12 +153,12 @@ const findChunks = ({autoEscape, caseSensitive, searchWords, textToHighlight}) =
         let end = regex.lastIndex
         // We do not return zero-length matches
         if (end > start) {
-          chunks.push({start, end})
+          chunks.push({ start, end })
         }
 
         // Prevent browsers like Firefox from getting stuck in an infinite loop
         // See http://www.regexguru.com/2008/04/watch-out-for-zero-length-matches/
-        if (match.index == regex.lastIndex) {
+        if (match.index === regex.lastIndex) {
           regex.lastIndex++
         }
       }
@@ -175,7 +174,7 @@ const findChunks = ({autoEscape, caseSensitive, searchWords, textToHighlight}) =
  * @param totalLength number
  * @return {start:number, end:number, highlight:boolean}[]
  */
-const fillInChunks = ({chunksToHighlight, totalLength}) => {
+const fillInChunks = ({ chunksToHighlight, totalLength }) => {
   const allChunks = []
   const append = (start, end, highlight) => {
     if (end - start > 0) {
@@ -202,7 +201,7 @@ const fillInChunks = ({chunksToHighlight, totalLength}) => {
 }
 
 function escapeRegExpFn (str) {
-  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
+  return str.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&')
 }
 
 export default MarkableText

@@ -9,28 +9,28 @@ import SearchTypeSelector from '../containers/searchTypeSelectorContainer'
 
 import PropTypes from 'prop-types'
 
-const OffenderSearchResults = ({results}) => (
-  <div className="key-content" aria-live="polite">
+const OffenderSearchResults = ({ results }) => (
+  <div className='key-content' aria-live='polite'>
     <div className='padded mobile-pad' id='offender-results'>
 
-      <SearchResultsTitle/>
+      <SearchResultsTitle />
 
       <div className='grid-row'>
         <div className='column-one-third'>
 
-          <SearchTypeSelector/>
-          <MyAreasFilter/>
-          <OtherAreasFilter/>
+          <SearchTypeSelector />
+          <MyAreasFilter />
+          <OtherAreasFilter />
 
         </div>
         <div className='column-two-thirds'>
 
           <ul id='live-offender-results'>
-            { results.map(offenderSummary => (
+            {results.map(offenderSummary => (
               renderSummary(offenderSummary)
-            )) }
+            ))}
           </ul>
-          <PageSelection/>
+          <PageSelection />
 
         </div>
       </div>
@@ -44,9 +44,9 @@ OffenderSearchResults.propTypes = {
 
 const renderSummary = offenderSummary => {
   if (offenderSummary.accessDenied) {
-    return <RestrictedOffenderSearchSummary offenderSummary={ offenderSummary } key={ offenderSummary.offenderId }/>
+    return <RestrictedOffenderSearchSummary offenderSummary={offenderSummary} key={offenderSummary.offenderId} />
   }
-  return <OffenderSearchSummary offenderSummary={ offenderSummary } key={ offenderSummary.offenderId }/>
+  return <OffenderSearchSummary offenderSummary={offenderSummary} key={offenderSummary.offenderId} />
 }
 
 export default OffenderSearchResults

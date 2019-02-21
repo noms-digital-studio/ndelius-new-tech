@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const AnalyticsTimeRangeLink = ({changeTimeRange, currentTimeRange, timeRange, children}) => (
+const AnalyticsTimeRangeLink = ({ changeTimeRange, currentTimeRange, timeRange, children }) => (
   <span>
-        <a tabIndex={ 1 } href='javascript:' style={ {fontWeight: toFontWeight(timeRange, currentTimeRange)} }
-           className="clickable" onClick={ () => changeTimeRange(timeRange) }>{ children }</a>
+        <a tabIndex={1} href='javascript:' style={{ fontWeight: toFontWeight(timeRange, currentTimeRange) }}
+           className='clickable' onClick={() => changeTimeRange(timeRange)}>{children}</a>
     </span>
 )
 

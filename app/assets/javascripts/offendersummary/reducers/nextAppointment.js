@@ -4,7 +4,7 @@ import {
   RECEIVE_NO_NEXT_APPOINTMENT
 } from '../constants/ActionTypes'
 
-const nextAppointment = (state = {fetching: true, loadError: false, noNextAppointment: false}, action) => {
+const nextAppointment = (state = { fetching: true, loadError: false, noNextAppointment: false }, action) => {
   switch (action.type) {
     case RECEIVE_NEXT_APPOINTMENT:
       return {

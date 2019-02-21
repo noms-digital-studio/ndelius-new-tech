@@ -2,6 +2,12 @@
   "private": true,
   "standard": {
     "globals": [
+      "_",
+      "$",
+      "gtag",
+      "virtualPageLoad",
+      "Chart",
+      "fetch",
       "describe",
       "context",
       "before",

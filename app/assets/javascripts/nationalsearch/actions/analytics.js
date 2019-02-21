@@ -22,67 +22,62 @@ export const LAST_THIRTY_DAYS = 'LAST_THIRTY_DAYS'
 export const THIS_YEAR = 'THIS_YEAR'
 export const ALL = 'ALL'
 
-const filterCounts = data => ({type: FILTER_COUNTS, filterCounts: {...data}})
-const uniqueUserVisits = data => ({type: UNIQUE_USER_VISITS, uniqueUserVisits: data})
-const allVisits = data => ({type: ALL_VISITS, allVisits: data})
-const allSearches = data => ({type: ALL_SEARCHES, allSearches: data})
-const rankGrouping = data => ({type: RANK_GROUPING, rankGrouping: {...data}})
-const eventOutcome = data => ({type: EVENT_OUTCOME, eventOutcome: {...data}})
+const filterCounts = data => ({ type: FILTER_COUNTS, filterCounts: { ...data } })
+const uniqueUserVisits = data => ({ type: UNIQUE_USER_VISITS, uniqueUserVisits: data })
+const allVisits = data => ({ type: ALL_VISITS, allVisits: data })
+const allSearches = data => ({ type: ALL_SEARCHES, allSearches: data })
+const rankGrouping = data => ({ type: RANK_GROUPING, rankGrouping: { ...data } })
+const eventOutcome = data => ({ type: EVENT_OUTCOME, eventOutcome: { ...data } })
 const durationBetweenStartEndSearch = data => ({
   type: DURATION_BETWEEN_START_END_SEARCH,
-  durationBetweenStartEndSearch: {...data}
+  durationBetweenStartEndSearch: { ...data }
 })
-const searchFieldMatch = data => ({type: SEARCH_FIELD_MATCH, searchFieldMatch: {...data}})
-const satisfactionCounts = data => ({type: SATISFACTION_COUNTS, ...data})
-const changingYear = yearNumber => ({type: CHANGE_YEAR, yearNumber})
-const userAgentTypeCounts = data => ({type: USER_AGENT_TYPE_COUNTS, userAgentTypeCounts: {...data}})
-const searchTypeCounts = data => ({type: SEARCH_TYPE_COUNTS, searchTypeCounts: {...data}})
+const searchFieldMatch = data => ({ type: SEARCH_FIELD_MATCH, searchFieldMatch: { ...data } })
+const satisfactionCounts = data => ({ type: SATISFACTION_COUNTS, ...data })
+const changingYear = yearNumber => ({ type: CHANGE_YEAR, yearNumber })
+const userAgentTypeCounts = data => ({ type: USER_AGENT_TYPE_COUNTS, userAgentTypeCounts: { ...data } })
+const searchTypeCounts = data => ({ type: SEARCH_TYPE_COUNTS, searchTypeCounts: { ...data } })
 
-export const changeTimeRange = timeRange => ({type: TIME_RANGE, timeRange})
+export const changeTimeRange = timeRange => ({ type: TIME_RANGE, timeRange })
 
-export const fetchVisitCounts = timeRange => (
-  dispatch => {
-    $.getJSON(`analytics/uniqueUserVisits${timeRangeToDateParameters(timeRange)}`, data => {
-      dispatch(uniqueUserVisits(data))
-    })
-    $.getJSON(`analytics/allVisits${timeRangeToDateParameters(timeRange)}`, data => {
-      dispatch(allVisits(data))
-    })
-    $.getJSON(`analytics/allSearches${timeRangeToDateParameters(timeRange)}`, data => {
-      dispatch(allSearches(data))
-    })
-    $.getJSON(`analytics/rankGrouping${timeRangeToDateParameters(timeRange)}`, data => {
-      dispatch(rankGrouping(data))
-    })
-    $.getJSON(`analytics/eventOutcome${timeRangeToDateParameters(timeRange)}`, data => {
-      dispatch(eventOutcome(data))
-    })
-    $.getJSON(`analytics/durationBetweenStartEndSearch${timeRangeToDateParameters(timeRange)}`, data => {
-      dispatch(durationBetweenStartEndSearch(data))
-    })
-    $.getJSON(`analytics/searchFieldMatch${timeRangeToDateParameters(timeRange)}`, data => {
-      dispatch(searchFieldMatch(data))
-    })
-    $.getJSON(`analytics/filterCounts${timeRangeToDateParameters(timeRange)}`, data => {
-      dispatch(filterCounts(data))
-    })
-    $.getJSON(`analytics/userAgentTypeCounts${timeRangeToDateParameters(timeRange)}`, data => {
-      dispatch(userAgentTypeCounts(data))
-    })
-    $.getJSON(`analytics/searchTypeCounts${timeRangeToDateParameters(timeRange)}`, data => {
-      dispatch(searchTypeCounts(data))
-    })
+export const fetchVisitCounts = timeRange => dispatch => {
+  $.getJSON(`analytics/uniqueUserVisits${timeRangeToDateParameters(timeRange)}`, data => {
+    dispatch(uniqueUserVisits(data))
+  })
+  $.getJSON(`analytics/allVisits${timeRangeToDateParameters(timeRange)}`, data => {
+    dispatch(allVisits(data))
+  })
+  $.getJSON(`analytics/allSearches${timeRangeToDateParameters(timeRange)}`, data => {
+    dispatch(allSearches(data))
+  })
+  $.getJSON(`analytics/rankGrouping${timeRangeToDateParameters(timeRange)}`, data => {
+    dispatch(rankGrouping(data))
+  })
+  $.getJSON(`analytics/eventOutcome${timeRangeToDateParameters(timeRange)}`, data => {
+    dispatch(eventOutcome(data))
+  })
+  $.getJSON(`analytics/durationBetweenStartEndSearch${timeRangeToDateParameters(timeRange)}`, data => {
+    dispatch(durationBetweenStartEndSearch(data))
+  })
+  $.getJSON(`analytics/searchFieldMatch${timeRangeToDateParameters(timeRange)}`, data => {
+    dispatch(searchFieldMatch(data))
+  })
+  $.getJSON(`analytics/filterCounts${timeRangeToDateParameters(timeRange)}`, data => {
+    dispatch(filterCounts(data))
+  })
+  $.getJSON(`analytics/userAgentTypeCounts${timeRangeToDateParameters(timeRange)}`, data => {
+    dispatch(userAgentTypeCounts(data))
+  })
+  $.getJSON(`analytics/searchTypeCounts${timeRangeToDateParameters(timeRange)}`, data => {
+    dispatch(searchTypeCounts(data))
+  })
+}
 
-  }
-)
-
-export const fetchSatisfactionCounts = () => (
-  dispatch => {
-    $.getJSON(`analytics/satisfaction`, data => {
-      dispatch(satisfactionCounts(data))
-    })
-  }
-)
+export const fetchSatisfactionCounts = () => dispatch => {
+  $.getJSON(`analytics/satisfaction`, data => {
+    dispatch(satisfactionCounts(data))
+  })
+}
 
 const timeRangeToDateParameters = timeRange => {
   const from = timeRangeToISODateTime(moment().utc(), timeRange)
@@ -90,9 +85,7 @@ const timeRangeToDateParameters = timeRange => {
   return from ? `?from=${from}` : ''
 }
 
-export const changeYear = (year) => (
-  dispatch => dispatch(changingYear(year))
-)
+export const changeYear = (year) => dispatch => dispatch(changingYear(year))
 
 export const timeRangeToISODateTime = (now, timeRange) => {
   switch (timeRange) {
@@ -111,5 +104,4 @@ export const timeRangeToISODateTime = (now, timeRange) => {
     default:
       return ''
   }
-
 }

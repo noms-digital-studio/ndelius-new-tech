@@ -18,11 +18,10 @@ const toPairList = rankGrouping => Object.getOwnPropertyNames(rankGrouping).map(
 }))
 
 const groupByPage = (pairs) => (pairs.reduce((grouped, item) => {
-    const key = toPage(item.rankIndex)
-    grouped[key] = grouped[key] || 0
-    grouped[key] = grouped[key] + item.count
-    return grouped
-  }, {})
-)
+  const key = toPage(item.rankIndex)
+  grouped[key] = grouped[key] || 0
+  grouped[key] = grouped[key] + item.count
+  return grouped
+}, {}))
 
 const toPage = rankIndex => Math.floor((rankIndex - 1) / PAGE_SIZE) + 1

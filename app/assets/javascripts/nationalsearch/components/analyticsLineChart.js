@@ -2,24 +2,20 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 class AnalyticsLineChart extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   render () {
-    const {description} = this.props
+    const { description } = this.props
     return (
-      <div style={ {
+      <div style={{
         float: 'left',
         margin: '10px',
         backgroundColor: '#f8f8f8',
         padding: '10px',
         minWidth: '440px',
         minHeight: '300px'
-      } }>
-        <p style={ {fontSize: '16px', textAlign: 'center', margin: '10px'} }>{ description }</p>
+      }}>
+        <p style={{ fontSize: '16px', textAlign: 'center', margin: '10px' }}>{description}</p>
 
-        <canvas ref={ (canvas) => { this.canvas = canvas } }/>
+        <canvas ref={(canvas) => { this.canvas = canvas }} />
       </div>
     )
   }
@@ -34,7 +30,7 @@ class AnalyticsLineChart extends Component {
 }
 
 export const chartOptions = props => {
-  const {label, numberToCountData, xAxesLabel} = props
+  const { label, numberToCountData, xAxesLabel } = props
   const defaultLabelMapper = data => Object.getOwnPropertyNames(data)
   const labelMapper = props.labelMapper || defaultLabelMapper
 
@@ -66,7 +62,6 @@ export const chartOptions = props => {
       }
     }
   }
-
 }
 
 AnalyticsLineChart.propTypes = {

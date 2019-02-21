@@ -6,10 +6,8 @@ import { standardOpenCloseElementTracking } from '../../helpers/analyticsHelper'
 class OffenderDetails extends Component {
   constructor (props) {
     super(props)
-
     this.details = null
-
-    this.setDetailsRef = element => this.details = element
+    this.setDetailsRef = element => { this.details = element }
   }
 
   componentDidMount () {
@@ -18,7 +16,7 @@ class OffenderDetails extends Component {
   }
 
   render () {
-    const {offenderDetails, viewOffenderAliases, viewOffenderAddresses} = this.props
+    const { offenderDetails, viewOffenderAliases, viewOffenderAddresses } = this.props
     let mainAddress
     let telephoneNumber
     let mobileNumber
@@ -59,112 +57,111 @@ class OffenderDetails extends Component {
     }
     const middleNames = () => {
       return offenderDetails.middleNames && offenderDetails.middleNames.join(', ')
-
     }
 
     return (
-      <Accordion label="Offender details" id="4">
+      <Accordion label='Offender details' id='4'>
         <Fragment>
-          <table className="govuk-table moj-table moj-table--split-rows">
+          <table className='govuk-table moj-table moj-table--split-rows'>
             <tbody>
             <tr>
-              <th style={ {width: '50%'} }>Aliases</th>
+              <th style={{ width: '50%' }}>Aliases</th>
               <td
-                className="qa-aliases">{ offenderDetails.offenderAliases && offenderDetails.offenderAliases.length > 0 && 'Yes (' + offenderDetails.offenderAliases.length + ')' || 'No' }</td>
-              <td className="qa-aliases-link" style={ {textAlign: 'right', width: '100px'} }>
-                { offenderDetails.offenderAliases && offenderDetails.offenderAliases.length > 0 && (
-                  <a href="javascript:void(0);" className='qa-view-offender-aliases'
-                     onClick={ () => viewOffenderAliases(offenderDetails.offenderId) }>View</a>) }
+                className='qa-aliases'>{(offenderDetails.offenderAliases && offenderDetails.offenderAliases.length > 0 && 'Yes (' + offenderDetails.offenderAliases.length + ')') || 'No'}</td>
+              <td className='qa-aliases-link' style={{ textAlign: 'right', width: '100px' }}>
+                {offenderDetails.offenderAliases && offenderDetails.offenderAliases.length > 0 && (
+                  <a href='javascript:void(0);' className='qa-view-offender-aliases'
+                     onClick={() => viewOffenderAliases(offenderDetails.offenderId)}>View</a>)}
               </td>
             </tr>
-            { middleNames() && (
+            {middleNames() && (
               <tr>
                 <th>Middle names</th>
-                <td className="qa-middle-names" colSpan="2">{ middleNames() }</td>
+                <td className='qa-middle-names' colSpan='2'>{middleNames()}</td>
               </tr>
             )
             }
             <tr>
               <th>Gender</th>
-              <td className="qa-gender" colSpan="2">{ offenderDetails.gender || 'Unknown' }</td>
+              <td className='qa-gender' colSpan='2'>{offenderDetails.gender || 'Unknown'}</td>
             </tr>
             <tr>
               <th>NI Number</th>
-              <td className="qa-ni-number"
-                  colSpan="2">{ offenderDetails.otherIds && offenderDetails.otherIds.niNumber || 'Unknown' }</td>
+              <td className='qa-ni-number'
+                  colSpan='2'>{(offenderDetails.otherIds && offenderDetails.otherIds.niNumber) || 'Unknown'}</td>
             </tr>
             <tr>
               <th>Nationality</th>
-              <td className="qa-nationality"
-                  colSpan="2">{ offenderDetails.offenderProfile && offenderDetails.offenderProfile.nationality || 'Unknown' }</td>
+              <td className='qa-nationality'
+                  colSpan='2'>{(offenderDetails.offenderProfile && offenderDetails.offenderProfile.nationality) || 'Unknown'}</td>
             </tr>
             <tr>
               <th>Ethnicity</th>
-              <td className="qa-ethnicity"
-                  colSpan="2">{ offenderDetails.offenderProfile && offenderDetails.offenderProfile.ethnicity || 'Unknown' }</td>
+              <td className='qa-ethnicity'
+                  colSpan='2'>{(offenderDetails.offenderProfile && offenderDetails.offenderProfile.ethnicity) || 'Unknown'}</td>
             </tr>
             <tr>
               <th>Interpreter required</th>
-              <td className="qa-interpreter" colSpan="2">{ requiresInterpreter() }</td>
+              <td className='qa-interpreter' colSpan='2'>{requiresInterpreter()}</td>
             </tr>
             <tr>
               <th>Disability status</th>
-              <td className="qa-disability" colSpan="2">{ disabilities() }</td>
+              <td className='qa-disability' colSpan='2'>{disabilities()}</td>
             </tr>
             </tbody>
           </table>
 
-          <details className="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0" ref={ this.setDetailsRef }>
-            <summary className="govuk-details__summary js-analytics-contact-details"
-                     aria-controls="offender-details-contact-details" aria-expanded="false">
-              <span className="govuk-details__summary-text">Contact details</span>
+          <details className='govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0' ref={this.setDetailsRef}>
+            <summary className='govuk-details__summary js-analytics-contact-details'
+                     aria-controls='offender-details-contact-details' aria-expanded='false'>
+              <span className='govuk-details__summary-text'>Contact details</span>
             </summary>
-            <div className="govuk-details__text moj-details__text--no-border" id="offender-details-contact-details"
-                 aria-hidden="true">
-              <table className="govuk-table moj-table moj-table--split-rows">
+            <div className='govuk-details__text moj-details__text--no-border' id='offender-details-contact-details'
+                 aria-hidden='true'>
+              <table className='govuk-table moj-table moj-table--split-rows'>
                 <tbody>
                 <tr>
-                  <th style={ {width: '50%'} }>Telephone</th>
-                  <td className="qa-telephone">{ telephoneNumber && telephoneNumber.number || 'Unknown' }</td>
+                  <th style={{ width: '50%' }}>Telephone</th>
+                  <td className='qa-telephone'>{(telephoneNumber && telephoneNumber.number) || 'Unknown'}</td>
                 </tr>
                 <tr>
                   <th>Email</th>
                   <td
-                    className="qa-email">{ offenderDetails.contactDetails && offenderDetails.contactDetails.emailAddresses && offenderDetails.contactDetails.emailAddresses[0] || 'Unknown' }</td>
+                    className='qa-email'>{(offenderDetails.contactDetails && offenderDetails.contactDetails.emailAddresses && offenderDetails.contactDetails.emailAddresses[0]) || 'Unknown'}</td>
                 </tr>
                 <tr>
                   <th>Mobile</th>
-                  <td className="qa-mobile">{ mobileNumber && mobileNumber.number || 'Unknown' }</td>
+                  <td className='qa-mobile'>{(mobileNumber && mobileNumber.number) || 'Unknown'}</td>
                 </tr>
                 <tr>
                   <th>Main address</th>
                   <td>
-                    { mainAddress && !mainAddress.noFixedAbode && (
+                    {mainAddress && !mainAddress.noFixedAbode && (
                       <Fragment>
-                        { mainAddress.buildingName && (
-                          <span className="qa-main-address-1">{ mainAddress.buildingName }<br/></span>) }
+                        {mainAddress.buildingName && (
+                          <span className='qa-main-address-1'>{mainAddress.buildingName}<br /></span>)}
                         <span
-                          className="qa-main-address-2">{ mainAddress.addressNumber && (mainAddress.addressNumber + ' ') }{ mainAddress.streetName }</span><br/>
-                        { mainAddress.district && (
-                          <span className="qa-main-address-3">{ mainAddress.district }<br/></span>) }
-                        <span className="qa-main-address-4">{ mainAddress.town }</span><br/>
-                        <span className="qa-main-address-5">{ mainAddress.county }</span><br/>
-                        <span className="qa-main-address-6">{ mainAddress.postcode }</span>
+                          className='qa-main-address-2'>{mainAddress.addressNumber && (mainAddress.addressNumber + ' ')}{mainAddress.streetName}</span><br />
+                        {mainAddress.district && (
+                          <span className='qa-main-address-3'>{mainAddress.district}<br /></span>)}
+                        <span className='qa-main-address-4'>{mainAddress.town}</span><br />
+                        <span className='qa-main-address-5'>{mainAddress.county}</span><br />
+                        <span className='qa-main-address-6'>{mainAddress.postcode}</span>
                       </Fragment>
-                    ) }
-                    { mainAddress && mainAddress.noFixedAbode && (
-                      <span className="qa-main-address-nfa">No fixed abode</span>
-                    ) }
-                    { !mainAddress && (
-                      <span className="qa-main-address-none">No main address</span>
-                    ) }
+                    )}
+                    {mainAddress && mainAddress.noFixedAbode && (
+                      <span className='qa-main-address-nfa'>No fixed abode</span>
+                    )}
+                    {!mainAddress && (
+                      <span className='qa-main-address-none'>No main address</span>
+                    )}
                   </td>
                 </tr>
                 </tbody>
               </table>
-              <p className="govuk-body app-align-right">
-                <a className="govuk-link govuk-link--no-visited-state qa-view-offender-addresses"
-                   href="javascript:void(0);" onClick={ () => viewOffenderAddresses(offenderDetails.offenderId) }>View
+              <p className='govuk-body app-align-right'>
+                <a className='govuk-link govuk-link--no-visited-state qa-view-offender-addresses'
+                   href='javascript:void(0);' onClick={() => viewOffenderAddresses(offenderDetails.offenderId)}>View
                   address history</a>
               </p>
             </div>

@@ -7,55 +7,55 @@ import PersonalCircumstances from '../containers/personalCircumstancesContainer'
 import { staff } from '../../helpers/offenderManagerHelper'
 import { dateFromISO } from '../../helpers/formatters'
 
-const OffenderManager = ({fetching, error, offenderManager}) => {
+const OffenderManager = ({ fetching, error, offenderManager }) => {
   return (
-    <Accordion label='Offender manager' id="3">
+    <Accordion label='Offender manager' id='3'>
       <Fragment>
-        { !fetching && !error &&
-        <div className="moj-inside-panel qa-offender-manager">
-          <table className="govuk-table moj-table moj-table--split-rows">
+        {!fetching && !error &&
+        <div className='moj-inside-panel qa-offender-manager'>
+          <table className='govuk-table moj-table moj-table--split-rows'>
             <tbody>
             <tr>
               <th>Provider</th>
-              <td>{ offenderManager.probationArea.description }</td>
+              <td>{offenderManager.probationArea.description}</td>
             </tr>
             <tr>
               <th>Cluster</th>
-              <td>{ offenderManager.team && offenderManager.team.borough && offenderManager.team.borough.description || 'Unknown' }</td>
+              <td>{(offenderManager.team && offenderManager.team.borough && offenderManager.team.borough.description) || 'Unknown'}</td>
             </tr>
             <tr>
               <th>LDU</th>
-              <td>{ offenderManager.team && offenderManager.team.district && offenderManager.team.district.description || 'Unknown' }</td>
+              <td>{(offenderManager.team && offenderManager.team.district && offenderManager.team.district.description) || 'Unknown'}</td>
             </tr>
             <tr>
               <th>Team</th>
-              <td>{ offenderManager.team && offenderManager.team.description || 'Unknown' }</td>
+              <td>{(offenderManager.team && offenderManager.team.description) || 'Unknown'}</td>
             </tr>
             <tr>
               <th>Officer</th>
-              <td>{ staff(offenderManager.staff) }</td>
+              <td>{staff(offenderManager.staff)}</td>
             </tr>
             <tr>
               <th>Team telephone</th>
-              <td>{ offenderManager.team && offenderManager.team.telephone || 'Unknown' }</td>
+              <td>{(offenderManager.team && offenderManager.team.telephone) || 'Unknown'}</td>
             </tr>
             <tr>
               <th>Date allocated</th>
-              <td>{ offenderManager.fromDate && dateFromISO(offenderManager.fromDate) || 'Unknown' }</td>
+              <td>{(offenderManager.fromDate && dateFromISO(offenderManager.fromDate)) || 'Unknown'}</td>
             </tr>
             <tr>
               <th>Reason for allocation</th>
-              <td>{ offenderManager.allocationReason && offenderManager.allocationReason.description || 'Unknown' }</td>
+              <td>{(offenderManager.allocationReason && offenderManager.allocationReason.description) || 'Unknown'}</td>
             </tr>
             </tbody>
           </table>
-          <PersonalCircumstances/>
-          <NextAppointment/>
+          <PersonalCircumstances />
+          <NextAppointment />
         </div>
         }
-        { !fetching && error &&
+        {!fetching && error &&
         <ErrorMessage
-          message="Unfortunately, we cannot display you the offender's registrations at the moment. Please try again later."/>
+          message="Unfortunately, we cannot display you the offender's registrations at the moment. Please try again later." />
         }
 
       </Fragment>

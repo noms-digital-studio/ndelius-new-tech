@@ -7,18 +7,18 @@ class AnalyticsBarChart extends Component {
   }
 
   render () {
-    const {description} = this.props
+    const { description } = this.props
     return (
-      <div style={ {
+      <div style={{
         float: 'left',
         margin: '10px',
         backgroundColor: '#f8f8f8',
         padding: '10px',
         minWidth: '440px',
         minHeight: '300px'
-      } }>
-        <p style={ {fontSize: '16px', textAlign: 'center', margin: '10px'} }>{ description }</p>
-        <canvas ref={ (canvas) => { this.canvas = canvas } }/>
+      }}>
+        <p style={{ fontSize: '16px', textAlign: 'center', margin: '10px' }}>{description}</p>
+        <canvas ref={(canvas) => { this.canvas = canvas }} />
       </div>
     )
   }
@@ -32,7 +32,7 @@ class AnalyticsBarChart extends Component {
 }
 
 export const chartOptions = props => {
-  const {label, numberToCountData} = props
+  const { label, numberToCountData } = props
 
   return {
     type: 'bar',

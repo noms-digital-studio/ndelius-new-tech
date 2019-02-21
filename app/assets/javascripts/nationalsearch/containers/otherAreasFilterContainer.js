@@ -22,7 +22,7 @@ export default connect(
 const addZeroResultsSelectedAreas = (byProbationArea, probationAreasFilter) =>
   Object.getOwnPropertyNames(probationAreasFilter)
     .filter(code => isNotInAggregation(code, byProbationArea))
-    .map(code => ({code, description: probationAreasFilter[code], count: 0}))
+    .map(code => ({ code, description: probationAreasFilter[code], count: 0 }))
     .concat(byProbationArea)
 
 const isNotInAggregation = (code, byProbationArea) => byProbationArea.filter(area => area.code === code).length === 0

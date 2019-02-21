@@ -11,5 +11,5 @@ const mapStateToProps = state => ({
 })
 export default connect(
   mapStateToProps,
-  {getOffenderConvictions, showMoreConvictions, viewOffenderEvent}
+  { getOffenderConvictions, showMoreConvictions, viewOffenderEvent }
 )(convictions)

@@ -5,53 +5,48 @@ import ErrorMessage from './errorMessage'
 import { dateFromISO } from '../../helpers/formatters'
 
 class Registrations extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   componentWillMount () {
-    const {getOffenderRegistrations} = this.props
+    const { getOffenderRegistrations } = this.props
     getOffenderRegistrations()
   }
 
   render () {
-    const {fetching, error, registrations, offenderId, viewOffenderRegistrations} = this.props
+    const { fetching, error, registrations, offenderId, viewOffenderRegistrations } = this.props
 
     return (
-      <Accordion label={ `Active registers and warnings (${registrations.length})` } id="1">
+      <Accordion label={`Active registers and warnings (${registrations.length})`} id='1'>
         <Fragment>
-          { !fetching && !error &&
-          <div className="moj-inside-panel qa-offender-registrations">
-            { registrations.length === 0 &&
-            <div><p className="govuk-body moj-!-text-align-center qa-no-registrations-message">No active registers and
+          {!fetching && !error &&
+          <div className='moj-inside-panel qa-offender-registrations'>
+            {registrations.length === 0 &&
+            <div><p className='govuk-body moj-!-text-align-center qa-no-registrations-message'>No active registers and
               warnings recorded</p></div>
             }
-            { registrations.length > 0 &&
-            <table className="govuk-table moj-table moj-table--split-rows">
+            {registrations.length > 0 &&
+            <table className='govuk-table moj-table moj-table--split-rows'>
               <thead>
               <tr>
-                <th style={ {width: '220px'} }>Type</th>
-                <th style={ {width: '130px'} }>Status</th>
+                <th style={{ width: '220px' }}>Type</th>
+                <th style={{ width: '130px' }}>Status</th>
                 <th>Description</th>
-                <th style={ {width: '130px'} }>Registration date</th>
+                <th style={{ width: '130px' }}>Registration date</th>
               </tr>
               </thead>
               <tbody>
-              { registrations.sort(registrationSorter).map(renderRegistration) }
+              {registrations.sort(registrationSorter).map(renderRegistration)}
               </tbody>
             </table>
             }
-            <p className="govuk-body app-align-right">
-              <a className="govuk-link govuk-link--no-visited-state" href="javascript:void(0);"
-                 onClick={ () => viewOffenderRegistrations(offenderId) }>Edit registers and warnings</a>
+            <p className='govuk-body app-align-right'>
+              <a className='govuk-link govuk-link--no-visited-state' href='javascript:void(0);'
+                 onClick={() => viewOffenderRegistrations(offenderId)}>Edit registers and warnings</a>
             </p>
           </div>
           }
-          { !fetching && error &&
+          {!fetching && error &&
           <ErrorMessage
-            message="Unfortunately, we cannot display you the offender's registrations at the moment. Please try again later."/>
+            message="Unfortunately, we cannot display you the offender's registrations at the moment. Please try again later." />
           }
-
         </Fragment>
       </Accordion>
     )
@@ -76,14 +71,13 @@ const alertLevelComparison = (first, second) => {
 
 const renderRegistration = registration => {
   return (
-    <tr key={ registration.registrationId }>
-      <td><span className="govuk-body">{ registration.register.description }</span></td>
-      <td><span className={ `moj-risk-tag ${alertLevelClass(registration)}` }>{ alertLevelText(registration) }</span>
+    <tr key={registration.registrationId}>
+      <td><span className='govuk-body'>{registration.register.description}</span></td>
+      <td><span className={`moj-risk-tag ${alertLevelClass(registration)}`}>{alertLevelText(registration)}</span>
       </td>
-      <td>{ registration.type.description }</td>
-      <td>{ dateFromISO(registration.startDate) }</td>
+      <td>{registration.type.description}</td>
+      <td>{dateFromISO(registration.startDate)}</td>
     </tr>
-
   )
 }
 
@@ -114,7 +108,6 @@ const alertLevelText = registration => {
       return 'low'
     default:
       return 'warning'
-
   }
 }
 
@@ -124,11 +117,10 @@ const alertLevelClass = registration => {
       return 'moj-risk-tag--high'
     case AMBER:
       return 'moj-risk-tag--medium'
-    case  GREEN:
+    case GREEN:
       return 'moj-risk-tag--low'
     default:
       return ''
-
   }
 }
 
@@ -154,7 +146,6 @@ Registrations.propTypes = {
 
       }.isRequired
     ))
-
 }
 
 export default Registrations

@@ -4,4 +4,4 @@ import analyticsPage from '../components/analyticsPage'
 
 export default connect(state => ({
   currentTimeRange: state.analytics.timeRange
-}), dispatch => ({fetchVisitCounts: (timeRange) => dispatch(fetchVisitCounts(timeRange))}))(analyticsPage)
+}), dispatch => ({ fetchVisitCounts: (timeRange) => dispatch(fetchVisitCounts(timeRange)) }))(analyticsPage)

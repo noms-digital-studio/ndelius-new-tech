@@ -21,15 +21,15 @@ const searchResults = (searchTerm, results, pageNumber) => ({
   pageNumber
 })
 
-const clearResults = () => ({type: CLEAR_RESULTS})
+const clearResults = () => ({ type: CLEAR_RESULTS })
 const addAreaFilter = (probationAreaCode, probationAreaDescription) => ({
   type: ADD_AREA_FILTER,
   probationAreaCode,
   probationAreaDescription
 })
-const removeAreaFilter = probationAreaCode => ({type: REMOVE_AREA_FILTER, probationAreaCode})
+const removeAreaFilter = probationAreaCode => ({ type: REMOVE_AREA_FILTER, probationAreaCode })
 const searchTypeChanged = searchType => {
-  return {type: SEARCH_TYPE_CHANGED, searchType}
+  return { type: SEARCH_TYPE_CHANGED, searchType }
 }
 
 const performSearch = _.debounce((dispatch, searchTerm, probationAreasFilter, pageNumber, searchType) => {
@@ -45,7 +45,6 @@ const performSearch = _.debounce((dispatch, searchTerm, probationAreasFilter, pa
   }
 
   $.getJSON(`searchOffender/${encodedSearchTerm}?pageSize=${PAGE_SIZE}&pageNumber=${pageNumber}&areasFilter=${toAreaFilter()}&searchType=${searchType}`, data => {
-
     if (typeof gtag === 'function') {
       gtag('event', 'search-results(type:' + searchType + ')(page:' + pageNumber + ')', {
         'event_category': 'search',
@@ -60,18 +59,16 @@ const performSearch = _.debounce((dispatch, searchTerm, probationAreasFilter, pa
   })
 }, 500)
 
-const search = (searchTerm, searchType, probationAreasFilter = [], pageNumber = 1) => (
-  dispatch => {
-    if (searchTerm === '') {
-      dispatch(clearResults())
-    } else {
-      dispatch(requestSearch(searchTerm))
-      performSearch(dispatch, searchTerm, probationAreasFilter, pageNumber, searchType)
-    }
+const search = (searchTerm, searchType, probationAreasFilter = [], pageNumber = 1) => dispatch => {
+  if (searchTerm === '') {
+    dispatch(clearResults())
+  } else {
+    dispatch(requestSearch(searchTerm))
+    performSearch(dispatch, searchTerm, probationAreasFilter, pageNumber, searchType)
   }
-)
+}
 
-const noSavedSearch = () => ({type: NO_SAVED_SEARCH})
-const savedSearch = (searchTerm, probationAreasFilter) => ({type: SAVED_SEARCH, searchTerm, probationAreasFilter})
+const noSavedSearch = () => ({ type: NO_SAVED_SEARCH })
+const savedSearch = (searchTerm, probationAreasFilter) => ({ type: SAVED_SEARCH, searchTerm, probationAreasFilter })
 
 export { search, noSavedSearch, savedSearch, addAreaFilter, removeAreaFilter, searchTypeChanged }

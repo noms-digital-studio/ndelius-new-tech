@@ -6,56 +6,52 @@ import { Link } from 'react-router-dom'
 import { range } from '../../helpers/streams'
 
 class SatisfactionPage extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   componentWillMount () {
     fetch(this.props)
     const interval = setInterval(() => fetch(this.props), 60000)
-    if (interval.unref) {interval.unref()} // when running in mocha/node unref so test doesn't hang
+    if (interval.unref) { interval.unref() } // when running in mocha/node unref so test doesn't hang
   }
 
   render () {
     return (
       <div>
-        <GovUkPhaseBanner basicVersion={ true }/>
-        <h1 className="heading-xlarge no-margin-bottom">National Search Satisfaction</h1>
-        <div className="grid-row margin-top">
+        <GovUkPhaseBanner basicVersion={true} />
+        <h1 className='heading-xlarge no-margin-bottom'>National Search Satisfaction</h1>
+        <div className='grid-row margin-top'>
 
-          <div className="column-two-thirds">
-            <div style={ {
+          <div className='column-two-thirds'>
+            <div style={{
               float: 'left',
               margin: '10px',
               backgroundColor: '#cccccc',
               padding: '10px',
               minWidth: '600px',
               minHeight: '300px'
-            } }>
-              <p id='description' style={ {fontSize: '16px', textAlign: 'center', margin: '10px'} }>Weekly Satisfaction
+            }}>
+              <p id='description' style={{ fontSize: '16px', textAlign: 'center', margin: '10px' }}>Weekly Satisfaction
                 Counts</p>
-              <canvas style={ {backgroundColor: '#cccccc'} } ref={ (canvas) => { this.canvas = canvas } }/>
+              <canvas style={{ backgroundColor: '#cccccc' }} ref={(canvas) => { this.canvas = canvas }} />
             </div>
 
           </div>
-          <div className="column-one-third">
-            <nav className="js-stick-at-top-when-scrolling">
-              <div className="nav-header"/>
-              <h3 className="heading-medium no-margin-top no-margin-bottom">Links for</h3>
-              <a tabIndex={ 1 } href='javascript:' style={ {fontWeight: toFontWeight(this.props.yearNumber, '2018')} }
-                 className="clickable" onClick={ () => this.props.changeYear('2018') }>2018</a><br/>
-              <a tabIndex={ 2 } href='javascript:' style={ {fontWeight: toFontWeight(this.props.yearNumber, '2019')} }
-                 className="clickable" onClick={ () => this.props.changeYear('2019') }>2019</a><br/>
-              <a tabIndex={ 3 } href='javascript:' style={ {fontWeight: toFontWeight(this.props.yearNumber, '2020')} }
-                 className="clickable" onClick={ () => this.props.changeYear('2020') }>2020</a><br/>
-              <a tabIndex={ 4 } href='javascript:' style={ {fontWeight: toFontWeight(this.props.yearNumber, '2021')} }
-                 className="clickable" onClick={ () => this.props.changeYear('2021') }>2021</a><br/>
-              <a tabIndex={ 5 } href='javascript:' style={ {fontWeight: toFontWeight(this.props.yearNumber, '2022')} }
-                 className="clickable" onClick={ () => this.props.changeYear('2022') }>2022</a><br/>
-              <a href="../feedback/nationalSearch">National search feedback</a><br/>
+          <div className='column-one-third'>
+            <nav className='js-stick-at-top-when-scrolling'>
+              <div className='nav-header' />
+              <h3 className='heading-medium no-margin-top no-margin-bottom'>Links for</h3>
+              <a tabIndex={1} href='javascript:' style={{ fontWeight: toFontWeight(this.props.yearNumber, '2018') }}
+                 className='clickable' onClick={() => this.props.changeYear('2018')}>2018</a><br />
+              <a tabIndex={2} href='javascript:' style={{ fontWeight: toFontWeight(this.props.yearNumber, '2019') }}
+                 className='clickable' onClick={() => this.props.changeYear('2019')}>2019</a><br />
+              <a tabIndex={3} href='javascript:' style={{ fontWeight: toFontWeight(this.props.yearNumber, '2020') }}
+                 className='clickable' onClick={() => this.props.changeYear('2020')}>2020</a><br />
+              <a tabIndex={4} href='javascript:' style={{ fontWeight: toFontWeight(this.props.yearNumber, '2021') }}
+                 className='clickable' onClick={() => this.props.changeYear('2021')}>2021</a><br />
+              <a tabIndex={5} href='javascript:' style={{ fontWeight: toFontWeight(this.props.yearNumber, '2022') }}
+                 className='clickable' onClick={() => this.props.changeYear('2022')}>2022</a><br />
+              <a href='../feedback/nationalSearch'>National search feedback</a><br />
               <Link to='/analytics'>National search analytics</Link>
             </nav>
-            <input className="button margin-top" type="button" value="Refresh" onClick={ () => fetch(this.props) }/>
+            <input className='button margin-top' type='button' value='Refresh' onClick={() => fetch(this.props)} />
           </div>
 
         </div>
@@ -69,7 +65,6 @@ class SatisfactionPage extends Component {
 
     this.chart = new Chart(this.canvas.getContext('2d'), chartOptions(this.props.satisfactionCounts, this.props.yearNumber))
   }
-
 }
 
 const convertCountsToMap = function (countsForRating) {
@@ -86,9 +81,7 @@ export const ratingData = function (countsForRating, currentWeekNumber, yearNumb
 
   return range(currentWeekNumber)
     .reduce((result, weekNumber) => {
-      const key = yearNumber
-        + '-'
-        + (weekNumber - 1) // MongoDB $week numbers start at 0 unlike moment.js which starts at 1
+      const key = yearNumber + '-' + (weekNumber - 1) // MongoDB $week numbers start at 0 unlike moment.js which starts at 1
       result.push(countsAsMap[key] || 0)
       return result
     }, [])
@@ -170,7 +163,7 @@ const chartOptions = (satisfactionCounts, yearNumber) => {
 }
 
 const fetch = props => {
-  const {fetchSatisfactionCounts} = props
+  const { fetchSatisfactionCounts } = props
   fetchSatisfactionCounts()
 }
 

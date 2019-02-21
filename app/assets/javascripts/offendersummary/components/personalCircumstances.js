@@ -13,7 +13,7 @@ class PersonalCircumstances extends Component {
   }
 
   componentWillMount () {
-    const {getOffenderPersonalCircumstances} = this.props
+    const { getOffenderPersonalCircumstances } = this.props
     getOffenderPersonalCircumstances()
   }
 
@@ -23,24 +23,24 @@ class PersonalCircumstances extends Component {
   }
 
   render () {
-    const {fetching, error, circumstances, viewOffenderPersonalCircumstances, offenderId} = this.props
+    const { fetching, error, circumstances, viewOffenderPersonalCircumstances, offenderId } = this.props
 
     return (
-      <details className="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0" ref={ this.setDetailsRef }>
-        <summary className="govuk-details__summary js-analytics-personal-circumstances"
-                 aria-controls="details-content-circumstances" aria-expanded="false">
-          <span className="govuk-details__summary-text">Personal circumstances</span>
+      <details className='govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0' ref={this.setDetailsRef}>
+        <summary className='govuk-details__summary js-analytics-personal-circumstances'
+                 aria-controls='details-content-circumstances' aria-expanded='false'>
+          <span className='govuk-details__summary-text'>Personal circumstances</span>
         </summary>
-        <div className="govuk-details__text moj-details__text--no-border" id="details-content-circumstances"
-             aria-hidden="true">
-          { !fetching && !error &&
-          <div className="moj-inside-panel qa-offender-personal-circumstances">
-            { circumstances.length === 0 &&
-            <div><p className="govuk-body moj-!-text-align-center qa-no-pc-recorded-message">No personal circumstance
+        <div className='govuk-details__text moj-details__text--no-border' id='details-content-circumstances'
+             aria-hidden='true'>
+          {!fetching && !error &&
+          <div className='moj-inside-panel qa-offender-personal-circumstances'>
+            {circumstances.length === 0 &&
+            <div><p className='govuk-body moj-!-text-align-center qa-no-pc-recorded-message'>No personal circumstance
               recorded</p></div>
             }
-            { circumstances.length > 0 &&
-            <table className="govuk-table moj-table moj-table--split-rows">
+            {circumstances.length > 0 &&
+            <table className='govuk-table moj-table moj-table--split-rows'>
               <thead>
               <tr>
                 <th>Type</th>
@@ -49,21 +49,20 @@ class PersonalCircumstances extends Component {
               </tr>
               </thead>
               <tbody>
-              { circumstances.sort(circumstanceSorter).map(renderCircumstance) }
+              {circumstances.sort(circumstanceSorter).map(renderCircumstance)}
               </tbody>
             </table>
             }
-            <p className="govuk-body app-align-right">
-              <a className="govuk-link govuk-link--no-visited-state" href="javascript:void(0);"
-                 onClick={ () => viewOffenderPersonalCircumstances(offenderId) }>View more personal circumstances</a>
+            <p className='govuk-body app-align-right'>
+              <a className='govuk-link govuk-link--no-visited-state' href='javascript:void(0);'
+                 onClick={() => viewOffenderPersonalCircumstances(offenderId)}>View more personal circumstances</a>
             </p>
           </div>
           }
-          { !fetching && error &&
+          {!fetching && error &&
           <ErrorMessage
-            message="Unfortunately, we cannot display you the offender's personal circumstances at the moment. Please try again later."/>
+            message="Unfortunately, we cannot display you the offender's personal circumstances at the moment. Please try again later." />
           }
-
         </div>
       </details>
     )
@@ -72,10 +71,10 @@ class PersonalCircumstances extends Component {
 
 const renderCircumstance = circumstance => {
   return (
-    <tr key={ circumstance.personalCircumstanceId }>
-      <td>{ circumstance.personalCircumstanceType.description }</td>
-      <td>{ circumstance.personalCircumstanceSubType.description }</td>
-      <td>{ dateFromISO(circumstance.startDate) }</td>
+    <tr key={circumstance.personalCircumstanceId}>
+      <td>{circumstance.personalCircumstanceType.description}</td>
+      <td>{circumstance.personalCircumstanceSubType.description}</td>
+      <td>{dateFromISO(circumstance.startDate)}</td>
     </tr>
   )
 }
@@ -104,7 +103,6 @@ PersonalCircumstances.propTypes = {
         personalCircumstanceId: PropTypes.number.isRequired
       }.isRequired
     ))
-
 }
 
 export default PersonalCircumstances
