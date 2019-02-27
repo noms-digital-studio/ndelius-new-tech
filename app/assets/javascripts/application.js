@@ -75,7 +75,7 @@ function openPopup (url, name, top, left) {
 
     // Empty the error message list and repopulate with correct ordered list
     $('.govuk-error-summary__list').empty()
-    $('.govuk-error-message:not(.js-hidden)').each(function (index, element) {
+    $('.govuk-error-message:not(.govuk-visually-hidden)').each(function (index, element) {
       $('.govuk-error-summary__list').append('<li><a href="#' + $('[id*="-error"]', $(element).parent()).attr('id') + '" class="error-message">' + $(element).text() + '</a></li>')
     })
 
@@ -87,7 +87,7 @@ function openPopup (url, name, top, left) {
       var saveIcon = $('#save_indicator'),
         spinner = $('.spinner, .moj-auto-save__spinner', saveIcon)
 
-      saveIcon.removeClass('js-hidden')
+      saveIcon.removeClass('govuk-visually-hidden')
       spinner.removeClass('error')
       spinner.addClass('active')
     }
@@ -104,14 +104,14 @@ function openPopup (url, name, top, left) {
         formGroup = $(elem).closest('.form-group')
 
       if (error) {
-        saveIcon.addClass('js-hidden')
+        saveIcon.addClass('govuk-visually-hidden')
         spinner.removeClass('active')
-        errorMessage.removeClass('js-hidden')
+        errorMessage.removeClass('govuk-visually-hidden')
         formGroup.addClass('form-group-autosave-error')
       } else {
         // remove all autosave errors on this page
         $('.form-group-autosave-error').removeClass('form-group-autosave-error')
-        $('.autosave-error-message').addClass('js-hidden')
+        $('.autosave-error-message').addClass('govuk-visually-hidden')
         spinner.removeClass('active')
       }
     }
@@ -192,8 +192,9 @@ function openPopup (url, name, top, left) {
 
     /**
      * Navigation items
+     * Includes side menu and links from cancelled and completed report pages
      */
-    $('.nav-item, .moj-subnav__link').click(function (e) {
+    $('.js-nav-item, .moj-subnav__link').click(function (e) {
       e.preventDefault()
       var target = $(this).data('target')
       if (target && !$(this).hasClass('active')) {
