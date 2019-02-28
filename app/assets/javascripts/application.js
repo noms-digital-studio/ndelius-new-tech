@@ -291,7 +291,6 @@ function openPopup (url, name, top, left) {
       editor.after('<input type="hidden" name="' + areaAttributes.name + '" value=""/>')
       editor.addClass('text-area-editor')
       return areaAttributes
-
     }
 
     function convertToEditor (textArea) {
@@ -414,20 +413,6 @@ function openPopup (url, name, top, left) {
 
     var elementSelector = '.ql-editor,input[type!=hidden],textarea'
     $('form:first').find(elementSelector).first().focus()
-
-    // disable back button as a browser back button else report data can easily be lost
-    $(window).keydown(function (event) {
-      if (event.which == '8'
-        && event.target.type != 'text'
-        && event.target.type != 'file'
-        && event.target.type != 'number'
-        && event.target.tagName != 'TEXTAREA'
-        && event.target.className != 'ql-editor') {
-        event.preventDefault()
-        return false
-      }
-    })
-
   });
 
   (function (global) {
