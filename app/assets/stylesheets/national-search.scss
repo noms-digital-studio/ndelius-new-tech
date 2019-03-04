@@ -1,10 +1,3 @@
-@import "react";
-@import "measurements";
-@import "conditionals";
-@import "typography";
-@import "grid_layout";
-@import "colours/palette";
-
 $offender-image-width: 120px;
 $offender-image-height: 150px;
 
@@ -48,7 +41,7 @@ a.clickable {
 }
 
 .offenderDetailsRow {
-  margin-bottom: $gutter;
+  margin-bottom: 10px;
 }
 
 .offender-summary {
@@ -57,22 +50,12 @@ a.clickable {
   min-height: $offender-image-height;
   margin-bottom: 0;
   padding-bottom: 0;
-
-  @include media(mobile) {
-    min-height: auto;
-  }
-  @include grid-column(3/4);
-
 }
 
 .offenderImageContainer {
-  @include grid-column(1/4);
-  max-width: $offender-image-width + $gutter;
+  max-width: $offender-image-width + 10px;
   padding-left: 0;
   display: none;
-  @include media(desktop) {
-    display: block;
-  }
 }
 
 .offenderImage {
@@ -81,7 +64,7 @@ a.clickable {
 }
 
 .offender-summary-title {
-  @include bold-27();
+
 }
 
 textarea.form-control {
@@ -95,13 +78,9 @@ textarea.form-control {
 }
 
 .key-content {
-  @extend %site-width-container;
   &.search {
     padding: 20px 0;
     min-height: 155px;
-    @include media(void, 845px) {
-      min-height: 0;
-    }
   }
   .padded {
     padding-top: 20px;
@@ -124,27 +103,12 @@ textarea.form-control {
   right: 0;
   background: black;
   padding: 15px 20px 20px 20px;
-  @include media(void, 845px) {
-    position: relative;
-    top: 20px;
-    padding: 15px 15px 15px 30px;
-    display: block;
-    left: -30px;
-    width: 100vw;
-  }
-  @include media(mobile) {
-    left: -20px;
-  }
 }
 
 .national-search-add {
   position: absolute;
   top: 35px;
   right: 0;
-  @include media(void, 845px) {
-    position: relative;
-    top: -10px;
-  }
 }
 
 .phase-banner-boxed {
@@ -152,25 +116,13 @@ textarea.form-control {
 }
 
 .search-results-title {
-  color: $grey-2;
+  color: grey;
   font-weight: normal;
 }
 
 div.filter {
-  background-color: $grey-3;
-  margin-bottom: $gutter;
-
-   @include media(desktop){
-     ::-webkit-scrollbar {
-       -webkit-appearance: none;
-       width: 7px;
-     }
-     ::-webkit-scrollbar-thumb {
-       border-radius: 4px;
-       background-color: rgba(0,0,0,.5);
-       -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
-     }
-   }
+  background-color: grey;
+  margin-bottom: 10px;
 
   button {
     z-index: 100;
@@ -183,7 +135,7 @@ div.filter {
     margin-bottom: -1px;
     padding: 5px 8px;
     background: url(../images/accordion-arrow.png) no-repeat right 5px;
-    background-color: $grey-3;
+    background-color: grey;
   }
 
   button.closed {
@@ -193,33 +145,29 @@ div.filter {
     background-position: right -50px;
   }
   .filter-container {
-    border: $grey-3 5px solid;
-    background-color: $white;
+    border: grey 5px solid;
+    background-color: white;
     max-height: 20vh;
 
-    @include media(mobile){
-      height: auto;
-      max-height: none;
-    }
     position: relative;
     overflow-y: auto;
     overflow-x: hidden;
     label {
       display: block;
-      padding: $gutter-one-quarter $gutter-one-quarter $gutter-one-quarter $gutter;
+      padding: 10px;
       cursor: pointer;
-      border-bottom: 1px $grey-2 solid;
+      border-bottom: 1px grey solid;
     }
 
     label:hover {
-      background-color: $grey-4;
+      background-color: grey;
     }
 
     .filter-option {
       float: left;
       width: 20px;
       height: 20px;
-      margin-left: -$gutter-two-thirds;
+      margin-left: -10px;
     }
 
   }
@@ -239,6 +187,6 @@ div.filter {
     top: 2px;
     border-style: solid;
     border-width: 6px 8px 6px 0;
-    border-color: transparent $govuk-blue transparent transparent;
+    border-color: transparent blue transparent transparent;
   }
 }

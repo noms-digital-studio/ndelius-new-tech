@@ -8,17 +8,19 @@ import { officer, provider } from '../../helpers/offenderManagerHelper'
 
 const OffenderSearchSummary = ({ offenderSummary, searchTerm }) => (
   <li id={`offenderSummary${offenderSummary.offenderId}`}>
-    <div className='offenderDetailsRow clearfix'>
-      <div className='offenderImageContainer'>
+    <div className='govuk-grid-row'>
+      <div className='govuk-grid-column-one-quarter'>
         {offenderSummary.oneTimeNomisRef &&
         <img alt={`Image of ${offenderSummary.firstName} ${offenderSummary.surname}`} className='offenderImage'
-             src={`offender/oneTimeNomisRef/${encodeURIComponent(offenderSummary.oneTimeNomisRef)}/image`} />}
+             src={`offender/oneTimeNomisRef/${encodeURIComponent(offenderSummary.oneTimeNomisRef)}/image`} width='120'
+             height='150' />}
         {!offenderSummary.oneTimeNomisRef &&
-        <img alt='No offender image available' className='offenderImage' src='assets/images/NoPhoto@2x.png' />}
+        <img alt='No offender image available' className='offenderImage' src='assets/images/NoPhoto@2x.png' width='120'
+             height='150' />}
       </div>
 
-      <div role='group' className='panel panel-border-narrow offender-summary'>
-        <div className='offenderTextBlock'>
+      <div role='group' className='govuk-grid-column-three-quarters'>
+        <div className='govuk-inset-text govuk-!-margin-top-0 govuk-!-padding-top-0'>
           <p>
             <OffenderSummaryTitle {...offenderSummary} tabIndex='1' />
           </p>
@@ -54,7 +56,7 @@ const OffenderSearchSummary = ({ offenderSummary, searchTerm }) => (
             <span id={`pncNumber-label-${offenderSummary.offenderId}`}>PNC:&nbsp;</span>
             <span id={`pncNumber-${offenderSummary.offenderId}`}
                   aria-labelledby={`pncNumber-label-${offenderSummary.offenderId}`}
-                  className='margin-right mark'>{offenderSummary.otherIds.pncNumber}</span>
+                  className='margin-right app-mark'>{offenderSummary.otherIds.pncNumber}</span>
           </p>
           }
           {matchesHighlightedField(offenderSummary.highlight, 'otherIds.nomsNumber') &&
