@@ -6,6 +6,7 @@ import lombok.ToString;
 import lombok.val;
 import org.fluentlenium.core.FluentPage;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import play.test.TestBrowser;
 
 import javax.inject.Inject;
@@ -62,7 +63,14 @@ public class OffenderSummaryPage extends FluentPage {
                 encrypt(String.format("%d", Instant.now().toEpochMilli()))
         ));
 
-        control.await().atMost(10, TimeUnit.SECONDS).until($(By.className("qa-main-content"))).size(1);
+        try {
+            control.await().atMost(10, TimeUnit.SECONDS).until($(By.className("qa-main-content"))).size(1);
+        }
+        catch(TimeoutException exception) {
+            control.takeHtmlDump();
+            control.takeScreenShot();
+            throw exception;
+        }
 
         return this;
     }
