@@ -62,7 +62,6 @@ public class OffenderSummaryPage extends FluentPage {
                 encrypt(String.format("%d", Instant.now().toEpochMilli()))
         ));
 
-        //$("html").first().html(); // hack fix for bug whereby the selector below fails unless we get the innerHtml for the page first
         control.await().atMost(10, TimeUnit.SECONDS).until($(By.cssSelector(".qa-main-content")).first()).displayed();
 
         return this;
