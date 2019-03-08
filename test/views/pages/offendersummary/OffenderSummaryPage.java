@@ -67,12 +67,10 @@ public class OffenderSummaryPage extends FluentPage {
         System.err.println("**** About to wait for qa-main-content");
         System.err.println(LocalDateTime.now());
         try {
-            control.takeHtmlDump();
             control.await().atMost(10, TimeUnit.SECONDS).until($(By.className("qa-main-content"))).size(1);
         } finally {
             System.err.println(LocalDateTime.now());
             System.err.println("**** Finished waiting for qa-main-content");
-            control.takeHtmlDump();
         }
 
         return this;
