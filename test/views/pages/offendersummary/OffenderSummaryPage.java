@@ -4,15 +4,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 import lombok.val;
-import org.fluentlenium.configuration.ConfigurationProperties;
 import org.fluentlenium.core.FluentPage;
 import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
 import play.test.TestBrowser;
 
 import javax.inject.Inject;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
 import static views.pages.ParameterEncrypt.encrypt;
@@ -65,7 +62,7 @@ public class OffenderSummaryPage extends FluentPage {
                 encrypt(String.format("%d", Instant.now().toEpochMilli()))
         ));
 
-        control.await().atMost(10, TimeUnit.SECONDS).until($(By.cssSelector("html[innerHTML]"))).present();
+        $("html").first().html(); // hack fix for bug whereby the selector below fails unless we get the innerHtml for the page first
         control.await().atMost(10, TimeUnit.SECONDS).until($(By.cssSelector(".qa-main-content"))).size(1);
 
         return this;
