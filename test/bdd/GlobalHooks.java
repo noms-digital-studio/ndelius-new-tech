@@ -42,12 +42,6 @@ public class GlobalHooks extends WithChromeBrowser {
         custodyApiMock.start().stubDefaults();
 
         createBrowser();
-
-        theTestBrowser.setHtmlDumpMode(ConfigurationProperties.TriggerMode.AUTOMATIC_ON_FAIL);
-        theTestBrowser.setScreenshotMode(ConfigurationProperties.TriggerMode.AUTOMATIC_ON_FAIL);
-        theTestBrowser.setHtmlDumpPath("./target/test-reports/");
-        theTestBrowser.setScreenshotPath("./target/test-reports/");
-
     }
 
     @After

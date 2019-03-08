@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 import lombok.val;
+import org.fluentlenium.configuration.ConfigurationProperties;
 import org.fluentlenium.core.FluentPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
@@ -67,7 +68,10 @@ public class OffenderSummaryPage extends FluentPage {
         System.err.println("**** About to wait for qa-main-content");
         System.err.println(LocalDateTime.now());
         try {
-            control.await().atMost(10, TimeUnit.SECONDS).until($(By.className("qa-main-content"))).size(1);
+            control.await().atMost(10, TimeUnit.SECONDS).until($(By.cssSelector(".qa-main-content"))).size(1);
+        } catch (TimeoutException e) {
+            control.takeHtmlDump();
+            throw e;
         } finally {
             System.err.println(LocalDateTime.now());
             System.err.println("**** Finished waiting for qa-main-content");
