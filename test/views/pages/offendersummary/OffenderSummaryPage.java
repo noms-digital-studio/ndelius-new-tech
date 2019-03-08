@@ -65,17 +65,8 @@ public class OffenderSummaryPage extends FluentPage {
                 encrypt(String.format("%d", Instant.now().toEpochMilli()))
         ));
 
-        System.err.println("**** About to wait for qa-main-content");
-        System.err.println(LocalDateTime.now());
-        try {
-            control.await().atMost(10, TimeUnit.SECONDS).until($(By.cssSelector(".qa-main-content"))).size(1);
-        } catch (TimeoutException e) {
-            control.takeHtmlDump();
-            throw e;
-        } finally {
-            System.err.println(LocalDateTime.now());
-            System.err.println("**** Finished waiting for qa-main-content");
-        }
+        control.takeHtmlDump();
+        control.await().atMost(10, TimeUnit.SECONDS).until($(By.cssSelector(".qa-main-content"))).size(1);
 
         return this;
     }
