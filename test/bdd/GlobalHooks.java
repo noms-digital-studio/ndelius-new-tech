@@ -9,6 +9,7 @@ import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import interfaces.AnalyticsStore;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.fluentlenium.configuration.ConfigurationProperties;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.test.TestBrowser;
@@ -41,6 +42,12 @@ public class GlobalHooks extends WithChromeBrowser {
         custodyApiMock.start().stubDefaults();
 
         createBrowser();
+
+        theTestBrowser.setHtmlDumpMode(ConfigurationProperties.TriggerMode.AUTOMATIC_ON_FAIL);
+        theTestBrowser.setScreenshotMode(ConfigurationProperties.TriggerMode.AUTOMATIC_ON_FAIL);
+        theTestBrowser.setHtmlDumpPath("./target/test-reports/");
+        theTestBrowser.setScreenshotPath("./target/test-reports/");
+
     }
 
     @After
