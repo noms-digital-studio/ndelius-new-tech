@@ -11,6 +11,7 @@ import play.test.TestBrowser;
 
 import javax.inject.Inject;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
 import static views.pages.ParameterEncrypt.encrypt;
@@ -63,7 +64,16 @@ public class OffenderSummaryPage extends FluentPage {
                 encrypt(String.format("%d", Instant.now().toEpochMilli()))
         ));
 
-        control.await().atMost(10, TimeUnit.SECONDS).until($(By.className("qa-main-content"))).size(1);
+        System.err.println("**** About to wait for qa-main-content");
+        System.err.println(LocalDateTime.now());
+        try {
+            control.takeHtmlDump();
+            control.await().atMost(10, TimeUnit.SECONDS).until($(By.className("qa-main-content"))).size(1);
+        } finally {
+            System.err.println(LocalDateTime.now());
+            System.err.println("**** Finished waiting for qa-main-content");
+            control.takeHtmlDump();
+        }
 
         return this;
     }
