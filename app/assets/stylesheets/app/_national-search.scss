@@ -87,3 +87,69 @@
 .app-mark {
   background-color: mix(govuk-colour("yellow"), white, 25);
 }
+
+.app-risk-icon {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin: 0;
+  padding: 0;
+
+  &.app-risk-icon--green {
+    background: govuk-colour("light-green");
+  }
+
+  &.app-risk-icon--amber {
+    background: govuk-colour("yellow");
+  }
+
+  &.app-risk-icon--red {
+    background: govuk-colour("bright-red");
+  }
+}
+
+
+.app-icon {
+  display: inline-block;
+
+  &.app-icon__prev-arrow {
+    width: 20px;
+    height: 20px;
+    margin-right: 3px;
+    background: url("../images/icon-prev-arrow.gif") no-repeat bottom;
+    background-size: contain;
+  }
+}
+
+.app-search-hint-middle {
+  padding: 25px 50px 0 70px;
+}
+
+.app-search-hint {
+  position: relative;
+  border: 1px solid;
+  border-right: none;
+  background: govuk-colour("grey-3");
+  padding: 15px 30px 15px 15px;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    right: -26px;
+    width: 26px;
+    height: 53px;
+    background: url("../images/search-help-border.png") no-repeat;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    width: 50px;
+    height: 52px;
+    background: url("../images/icon-search-help.png") no-repeat;
+  }
+}

@@ -24,7 +24,7 @@ const OffenderSearchPage = ({ firstTimeIn, showWelcomeBanner, reloadRecentSearch
 
         <GovUkPhaseBanner />
 
-        <div className='moj-interrupt govuk-!-padding-5 govuk-!-margin-bottom-0 app-position-relative' style={{'min-height': '148px'}}>
+        <div className='moj-interrupt govuk-!-padding-5 govuk-!-margin-bottom-0 app-position-relative' style={{'minHeight': '148px'}}>
 
           <h1 className='govuk-heading-l moj-!-color-white govuk-!-margin-bottom-2'>Search for an offender</h1>
 

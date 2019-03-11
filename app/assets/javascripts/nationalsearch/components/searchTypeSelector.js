@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 const searchTypeSelector = ({ searchType, searchTypeChanged, search, searchTerm, probationAreasFilter }) => (
 
-  <div className='govuk-form-group'>
+  <div className='govuk-form-group govuk-!-margin-top-4'>
     <fieldset className='govuk-fieldset'>
       <legend className='govuk-fieldset__legend'>Match all terms</legend>
       <div className='govuk-radios govuk-!-margin-top-2 govuk-radios--inline'>
