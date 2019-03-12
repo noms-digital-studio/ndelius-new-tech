@@ -10,7 +10,7 @@ const RestrictedOffenderSearchSummary = ({ offenderSummary, showOffenderDetails 
     </div>
     <div role='group' className='govuk-grid-column-three-quarters govuk-!-margin-0'>
       <p>
-        <a className='heading-large no-underline offender-summary-title' tabIndex='1' title='Restricted access'
+        <a className='govuk-link govuk-heading-m govuk-link--no-visited-state' tabIndex='1' title='Restricted access'
            onClick={() => showOffenderDetails(offenderSummary.offenderId, offenderSummary.rankIndex, {})}>
           <span>Restricted access</span>
         </a>
