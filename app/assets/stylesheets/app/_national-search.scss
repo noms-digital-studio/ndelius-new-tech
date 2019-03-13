@@ -13,25 +13,29 @@
     cursor: pointer;
     padding: govuk-spacing(2);
     background: govuk-colour("grey-3") url(../images/accordion-arrow.png) no-repeat;
-  }
 
-  button.closed {
-    background-position: right -5px;
-  }
+    &.open {
+      background-position: right -50px;
+    }
 
-  button.open {
-    background-position: right -50px;
+    &.closed {
+      background-position: right -5px;
+    }
   }
 
   .filter-container {
     border: govuk-colour("grey-3") 5px solid;
     border-top: 0;
-    background-color: govuk-colour('white');
+    background-color: govuk-colour("white");
     max-height: 20vh;
 
     position: relative;
     overflow-y: auto;
     overflow-x: hidden;
+
+    &.closed {
+      display: none;
+    }
 
     label {
       @include govuk-font($size: 16);
@@ -39,10 +43,10 @@
       padding: govuk-spacing(2) govuk-spacing(4);
       cursor: pointer;
       border-bottom: 1px govuk-colour("grey-3") solid;
-    }
 
-    label:hover {
-      background-color: govuk-colour("grey-4");
+      &:hover {
+        background-color: govuk-colour("grey-4");
+      }
     }
 
     .filter-option {
@@ -51,10 +55,6 @@
       height: 20px;
       margin-left: -10px;
     }
-  }
-
-  .filter-container.closed {
-    display: none;
   }
 }
 
@@ -72,7 +72,7 @@
   position: absolute;
   bottom: 0;
   right: 0;
-  background: govuk-colour('black');
+  background: govuk-colour("black");
   padding: 15px 20px 20px 20px;
   @include govuk-media-query(mobile, tablet) {
     position: relative;
@@ -108,7 +108,6 @@
     background: govuk-colour("bright-red");
   }
 }
-
 
 .app-icon {
   display: inline-block;
