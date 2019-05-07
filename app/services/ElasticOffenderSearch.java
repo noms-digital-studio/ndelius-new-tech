@@ -79,16 +79,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
     @Override
     public CompletionStage<Map<String, Object>> search(String bearerToken, List<String> probationAreasFilter, String searchTerm, int pageSize, int pageNumber, QUERY_TYPE queryType) {
 
-        final Function<List<ObjectNode>, CompletableFuture[]> restrictResults = results -> results.stream().map(resultNode -> {
-
-            val offenderId = resultNode.get("offenderId").asLong();
-            val restricted = toBoolean(resultNode, "currentExclusion") || toBoolean(resultNode, "currentRestriction");
-
-            val accessCheck = restricted ? offenderApi.canAccess(bearerToken, offenderId) : CompletableFuture.completedFuture(true);
-
-            return accessCheck.thenApply(canAccess -> canAccess ? resultNode : restrictedView(resultNode));
-
-        }).map(CompletionStage::toCompletableFuture).toArray(CompletableFuture[]::new);
+        val restrictResults = checkOffenderRestrictions(bearerToken);
 
         final Function<SearchResponse, CompletionStage<Map<String, Object>>> processResponse = response -> {
 
@@ -161,9 +152,9 @@ public class ElasticOffenderSearch implements OffenderSearch {
             if (noMatches(response)) {
                 return CompletableFuture.completedFuture(MatchedOffenders.noMatch());
             } else if (duplicateMatches(response)) {
-                return allDuplicates(response).thenApply(MatchedOffenders::duplicateLowConfidence);
+                return allDuplicates(bearerToken, response).thenApply(MatchedOffenders::duplicateLowConfidence);
             }
-            return singleOffender(response).thenApply(MatchedOffenders::mediumConfidence);
+            return singleOffender(bearerToken, response).thenApply(MatchedOffenders::mediumConfidence);
         };
 
         final Function<SearchResponse, CompletionStage<MatchedOffenders>> processNameDateOfBirthResponse = response -> {
@@ -178,7 +169,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
                                 .orElseGet(() -> MatchedOffenders.duplicateHighConfidence(toOffenderObjectNodes(response))));
             }
 
-            return singleOffender(response).thenApply(MatchedOffenders::highConfidence);
+            return singleOffender(bearerToken, response).thenApply(MatchedOffenders::highConfidence);
         };
 
         final Function<SearchResponse, CompletionStage<MatchedOffenders>> processPNCSurnameResponse = response -> {
@@ -195,7 +186,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
                                 .orElseGet(() -> MatchedOffenders.duplicateVeryHighConfidence(toOffenderObjectNodes(response))));
             }
 
-            return singleOffender(response).thenApply(MatchedOffenders::veryHighConfidence);
+            return singleOffender(bearerToken, response).thenApply(MatchedOffenders::veryHighConfidence);
         };
 
 
@@ -219,12 +210,31 @@ public class ElasticOffenderSearch implements OffenderSearch {
         return response.getHits().totalHits == 0;
     }
 
-    private CompletionStage<ObjectNode> singleOffender(SearchResponse response) {
-        return CompletableFuture.completedFuture(toObjectNode(response.getHits().getHits()[0]));
+    private CompletionStage<ObjectNode> singleOffender(String bearerToken, SearchResponse response) {
+        return restrictViewOfAnyRestrictedOffenders(bearerToken, toOffenderObjectNodes(response)).thenApply(allNodes -> allNodes.get(0));
     }
 
-    private CompletionStage<List<ObjectNode>> allDuplicates(SearchResponse response) {
-        return CompletableFuture.completedFuture(toOffenderObjectNodes(response));
+    private CompletionStage<List<ObjectNode>> allDuplicates(String bearerToken, SearchResponse response) {
+        return restrictViewOfAnyRestrictedOffenders(bearerToken, toOffenderObjectNodes(response));
+    }
+
+    private CompletionStage<List<ObjectNode>> restrictViewOfAnyRestrictedOffenders(String bearerToken, List<ObjectNode> offenderNodes) {
+        val processingResults = checkOffenderRestrictions(bearerToken).apply(offenderNodes);
+
+        return CompletableFuture.allOf(processingResults).thenApply(ignoredVoid -> Arrays.stream(processingResults).map(result -> (ObjectNode)result.toCompletableFuture().join()).collect(toList()));
+    }
+
+    private Function<List<ObjectNode>, CompletableFuture[]> checkOffenderRestrictions(String bearerToken) {
+        return results -> results.stream().map(resultNode -> {
+
+            val offenderId = resultNode.get("offenderId").asLong();
+            val restricted = toBoolean(resultNode, "currentExclusion") || toBoolean(resultNode, "currentRestriction");
+
+            val accessCheck = restricted ? offenderApi.canAccess(bearerToken, offenderId) : CompletableFuture.completedFuture(true);
+
+            return accessCheck.thenApply(canAccess -> canAccess ? resultNode : restrictedView(resultNode));
+
+        }).map(CompletionStage::toCompletableFuture).toArray(CompletableFuture[]::new);
     }
 
     private List<ObjectNode> toOffenderObjectNodes(SearchResponse response) {

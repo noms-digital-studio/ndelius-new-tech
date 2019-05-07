@@ -34,6 +34,15 @@ public class MatchedDefendants {
     }
 
     private static MatchedDefendant toMatchedDefendant(ObjectNode offenderNode) {
+        if (offenderNode.hasNonNull("accessDenied") && offenderNode.get("accessDenied").asBoolean()) {
+            return MatchedDefendant
+                    .builder()
+                    .crn(offenderNode.get("otherIds").get("crn").asText())
+                    .surname("*** restricted ***")
+                    .firstName("*** restricted ***")
+                    .build();
+
+        }
         return MatchedDefendant
                 .builder()
                 .crn(offenderNode.get("otherIds").get("crn").asText())
