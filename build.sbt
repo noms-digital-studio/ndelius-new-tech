@@ -20,6 +20,8 @@ lazy val root = (project in file(".")).enablePlugins(PlayJava, SbtWeb, SbtJsEngi
 JsEngineKeys.engineType := JsEngineKeys.EngineType.Node
 MochaKeys.requires += "setup.js"
 
+resolvers ++= Seq("Spring Release Repository" at "http://repo.spring.io/plugins-release")
+
 scalaVersion := "2.12.2"
 pipelineStages := Seq(digest)
 libraryDependencies ++= Seq(
@@ -47,7 +49,10 @@ libraryDependencies ++= Seq(
   "org.seleniumhq.selenium" % "selenium-chrome-driver" % "3.4.0" % "test",
   "info.cukes" % "cucumber-guice" % "1.1.5" % "test",
   "info.cukes" % "cucumber-java" % "1.2.2" % "test",
-  "info.cukes" % "cucumber-junit" % "1.2.2" % "test"
+  "info.cukes" % "cucumber-junit" % "1.2.2" % "test",
+
+  "net.java.dev.jna" % "jna" % "4.1.0",
+  "dk.dren" % "hunspell" % "1.3.2"
 )
 
 excludeDependencies ++= Seq(

@@ -9,6 +9,7 @@ import 'tinymce/plugins/spellchecker'
 import { autoSaveProgress } from '../helpers/saveProgressHelper'
 import { debounce } from '../utilities/debounce'
 import { nodeListForEach } from '../utilities/nodeListForEach'
+import { trackEvent } from '../../helpers/analyticsHelper'
 
 /**
  *
@@ -136,25 +137,29 @@ function updateTooltips ($editor) {
 }
 
 function autoClickSpellchecker($editor) {
-  const spellCheckButton = document.querySelector('[title="Spellcheck"]')
+  const spellCheckButton = $editor.getContainer().querySelector('[title="Spellcheck"]')
   if(spellCheckButton.getAttribute("aria-pressed") == "true") {
     $editor.execCommand('mceSpellCheck')
     $editor.execCommand('mceSpellCheck')
-    //spellCheckButton.click()
-    //spellCheckButton.click()
   }
 }
 
 function addClickHandlerToSpellCheck($editor) {
-  const spellCheckButton = document.querySelector('[title="Spellcheck"]')
-  spellCheckButton.addEventListener('click', function () {
-    if(spellCheckButton.getAttribute("aria-pressed") == "false") {
-      $editor.getBody().setAttribute('spellcheck', 'false')
-    } else {
-      $editor.getBody().setAttribute('spellcheck', 'true')
-    }
+  const spellCheckButton = $editor.getContainer().querySelector('[title="Spellcheck"]')
+  if(spellCheckButton.getAttribute('hasListener') != 'true' && spellCheckButton != null) {
+    spellCheckButton.addEventListener('click', () => handleSpellCheckClick(spellCheckButton, $editor))
+    spellCheckButton.setAttribute("hasListener", 'true')
+  }
+}
 
-  })
+function handleSpellCheckClick(spellCheckButton, $editor) {
+  if (spellCheckButton.getAttribute("aria-pressed") == "false") {
+    $editor.getBody().setAttribute('spellcheck', 'false')
+    trackEvent('spellcheck - on', "spellcheck", $editor.id)
+  } else {
+    $editor.getBody().setAttribute('spellcheck', 'true')
+    trackEvent('spellcheck - off', "spellcheck", $editor.id)
+  }
 }
 
 /**
@@ -171,7 +176,7 @@ const initTextAreas = () => {
     allow_conditional_comments: true,
     selector: '.govuk-textarea:not(.moj-textarea--classic)',
     plugins: 'autoresize lists paste help spellchecker',
-    toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist',
+    toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist | spellchecker',
     width: '100%',
     min_height: 145,
     valid_elements: 'p,p[style],span[style],ul,ol,li,li[style],strong/b,em/i,br',
@@ -223,7 +228,7 @@ const initTextAreas = () => {
     spellchecker_callback: function (method, text, success, failure) {
       if (method === "spellcheck") {
         tinymce.util.JSONRequest.sendRPC({
-          url: "http://localhost:8090/",
+          url: "/spellcheck",
           params: {
             words: text.match(this.getWordCharPattern())
           },
