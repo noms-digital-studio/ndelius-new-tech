@@ -50,8 +50,7 @@ libraryDependencies ++= Seq(
   "info.cukes" % "cucumber-guice" % "1.1.5" % "test",
   "info.cukes" % "cucumber-java" % "1.2.2" % "test",
   "info.cukes" % "cucumber-junit" % "1.2.2" % "test",
-
-  "net.java.dev.jna" % "jna" % "4.1.0",
+  
   "dk.dren" % "hunspell" % "1.3.2"
 )
 
