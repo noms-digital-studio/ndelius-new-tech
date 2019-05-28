@@ -28,11 +28,8 @@ public class TinyMCESpellCheckerController extends Controller {
     public Result findSpellings() {
         val wordsRequested = wordsRequestedForm.bindFromRequest().get();
         Optional<Params> params = Optional.ofNullable(wordsRequested.getParams());
-        if(params.isPresent()) {
-            String[] words = params.get().getWords().toArray(new String[0]);
-            return play.mvc.Results.ok(spellcheckService.getSpellcheckSuggestionsString(words));
-        } else {
-            return play.mvc.Results.ok("{ }");
-        }
+        return params
+                .map(result -> ok(spellcheckService.getSpellcheckSuggestionsString(params.get().getWords().toArray(new String[0]))))
+                .orElse(ok("{ }"));
     }
 }

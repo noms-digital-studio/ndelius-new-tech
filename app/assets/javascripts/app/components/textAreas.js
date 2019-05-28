@@ -162,6 +162,13 @@ function handleSpellCheckClick(spellCheckButton, $editor) {
   }
 }
 
+function enableSpellChecker($editor) {
+  const spellCheckButton = $editor.getContainer().querySelector('[title="Spellcheck"]')
+  if(spellCheckButton.getAttribute("aria-pressed") == "false") {
+    $editor.execCommand('mceSpellCheck')
+  }
+}
+
 /**
  *
  */
@@ -206,6 +213,7 @@ const initTextAreas = () => {
         showToolbar($editor)
         removePlaceholder($editor)
         addClickHandlerToSpellCheck($editor)
+        enableSpellChecker($editor)
       })
       $editor.on('blur', () => {
         toggleFocusRectangle($editor)
@@ -232,10 +240,10 @@ const initTextAreas = () => {
           params: {
             words: text.match(this.getWordCharPattern())
           },
-          success: function (result) {
+          success: result => {
             success(result);
           },
-          error: function (error, xhr) {
+          error: (error, xhr) => {
             failure("Spellcheck error:" + xhr.status);
           }
         });

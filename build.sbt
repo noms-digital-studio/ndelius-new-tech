@@ -50,7 +50,7 @@ libraryDependencies ++= Seq(
   "info.cukes" % "cucumber-guice" % "1.1.5" % "test",
   "info.cukes" % "cucumber-java" % "1.2.2" % "test",
   "info.cukes" % "cucumber-junit" % "1.2.2" % "test",
-  
+
   "dk.dren" % "hunspell" % "1.3.2"
 )
 
@@ -74,6 +74,7 @@ fullClasspath in assembly += Attributed.blank(PlayKeys.playPackageAssets.value)
 
 assemblyMergeStrategy in assembly := {
   case playWs if playWs.contains("play/api/libs/ws/package") || playWs.endsWith("reference-overrides.conf") => MergeStrategy.last
+  case PathList(ps @ _*) if ps.contains("jna") => MergeStrategy.first
   case other => (assemblyMergeStrategy in assembly).value(other)
 }
 
