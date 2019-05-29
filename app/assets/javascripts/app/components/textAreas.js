@@ -9,37 +9,10 @@ import { autoSaveProgress } from '../helpers/saveProgressHelper'
 import { debounce } from '../utilities/debounce'
 import { nodeListForEach } from '../utilities/nodeListForEach'
 
-/**
- *
- * @param $editor
- */
-function configureEditor ($editor) {
-  const container = $editor.getContainer().querySelector('.tox-editor-container')
-  const toolbar = container.querySelector('.tox-toolbar')
-  toolbar.classList.add('govuk-visually-hidden')
-  container.appendChild(toolbar)
-
-  if ($editor.getElement().classList.contains('moj-textarea--prefilled')) {
-    container.classList.add('tox-editor-container--prefilled')
-  }
-}
-
-/**
- *
- * @param $editor
- */
-function showToolbar ($editor) {
-  const toolbar = $editor.getContainer().querySelector('.tox-toolbar')
-  toolbar.classList.remove('govuk-visually-hidden')
-}
-
-/**
- *
- * @param $editor
- */
-function hideToolbar ($editor) {
-  const toolbar = $editor.getContainer().querySelector('.tox-toolbar')
-  toolbar.classList.add('govuk-visually-hidden')
+function attachToolbar($editor) {
+  const $toolbar = document.getElementById('tinymce-toolbar')
+  const $container = $editor.getElement().parentElement
+  $container.appendChild($toolbar)
 }
 
 /**
@@ -48,7 +21,7 @@ function hideToolbar ($editor) {
  */
 function addPlaceholder ($editor) {
   if (!$editor.getContent({ format: 'text' }).trim().length) {
-    $editor.getContainer().classList.add('tox-tinymce--placeholder')
+    $editor.getElement().classList.add('tox-tinymce--placeholder')
   }
 }
 
@@ -57,7 +30,7 @@ function addPlaceholder ($editor) {
  * @param $editor
  */
 function removePlaceholder ($editor) {
-  $editor.getContainer().classList.remove('tox-tinymce--placeholder')
+  $editor.getElement().classList.remove('tox-tinymce--placeholder')
 }
 
 /**
@@ -65,7 +38,7 @@ function removePlaceholder ($editor) {
  * @param $editor
  */
 function updateFormElement ($editor) {
-  $editor.getElement().value = $editor.getContent()
+  document.getElementById($editor.getElement().dataset.id).value = $editor.getContent()
 }
 
 /**
@@ -73,8 +46,9 @@ function updateFormElement ($editor) {
  * @param $editor
  */
 function updateTextLimits ($editor) {
-  const messageHolder = document.getElementById(`${ $editor.id }-countHolder`)
-  const messageTarget = document.getElementById(`${ $editor.id }-count`)
+  const elementId = $editor.getElement().dataset.id
+  const messageHolder = document.getElementById(`${ elementId }-countHolder`)
+  const messageTarget = document.getElementById(`${ elementId }-count`)
 
   if (!messageHolder || !messageTarget) {
     return
@@ -89,14 +63,6 @@ function updateTextLimits ($editor) {
   } else {
     messageHolder.classList.add('govuk-visually-hidden')
   }
-}
-
-/**
- *
- * @param $editor
- */
-function toggleFocusRectangle ($editor) {
-  $editor.getContainer().querySelector('.tox-editor-container').classList.toggle('tox-tinymce--focus-rect')
 }
 
 /**
@@ -142,16 +108,17 @@ const initTextAreas = () => {
   const localPath = window.localPath || '/'
 
   tinymce.init({
-    branding: false,
     menubar: false,
+    inline: true,
     browser_spellcheck: true,
     allow_conditional_comments: true,
-    selector: '.govuk-textarea:not(.moj-textarea--classic)',
+    fixed_toolbar_container: '#tinymce-toolbar',
+    selector: '.moj-rich-text-editor:not(.moj-textarea--classic)',
     plugins: 'autoresize lists paste help',
-    toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist',
     width: '100%',
     min_height: 145,
     valid_elements: 'p,p[style],span[style],ul,ol,li,li[style],strong/b,em/i,br',
+    toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist',
     valid_classes: {
       'p': '',
       'span': ''
@@ -167,19 +134,15 @@ const initTextAreas = () => {
     skin_url: 'assets/skins/ui/oxide',
     setup: $editor => {
       $editor.on('init', () => {
-        configureEditor($editor)
         addPlaceholder($editor)
         updateFormElement($editor)
       })
       $editor.on('focus', () => {
+        attachToolbar($editor)
         updateTooltips($editor)
-        toggleFocusRectangle($editor)
-        showToolbar($editor)
         removePlaceholder($editor)
       })
       $editor.on('blur', () => {
-        toggleFocusRectangle($editor)
-        hideToolbar($editor)
         addPlaceholder($editor)
         updateFormElement($editor)
         autoSaveProgress($editor.getElement())
