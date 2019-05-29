@@ -187,11 +187,11 @@ const initTextAreas = () => {
       $editor.on('blur', () => {
         addPlaceholder($editor)
         updateFormElement($editor)
-        autoSaveProgress($editor.getElement())
+        autoSaveProgress($editor.getElement().dataset.id)
       })
       $editor.on('keyup', debounce(() => {
         updateFormElement($editor)
-        autoSaveProgress($editor.getElement())
+        autoSaveProgress($editor.getElement().dataset.id)
       }, 5000))
       $editor.on('keyup', debounce(() => {
         // autoClickSpellchecker($editor)
