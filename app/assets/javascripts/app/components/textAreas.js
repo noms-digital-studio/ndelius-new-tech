@@ -108,14 +108,14 @@ function updateTooltips ($editor) {
 
 function autoClickSpellchecker ($editor) {
   const spellCheckButton = $editor.getElement().parentElement.querySelector('[title="Spellcheck"]')
-  if (spellCheckButton && spellCheckButton.getAttribute('aria-pressed') === 'true') {
+  if (spellCheckButton.getAttribute('aria-pressed') === 'true') {
     $editor.execCommand('mceSpellCheck')
     $editor.execCommand('mceSpellCheck')
   }
 }
 
 function addClickHandlerToSpellCheck ($editor) {
-  const spellCheckButton = $editor.getContainer().querySelector('[title="Spellcheck"]')
+  const spellCheckButton = $editor.getElement().parentElement.querySelector('[title="Spellcheck"]')
   if (spellCheckButton && spellCheckButton.getAttribute('hasListener') !== 'true') {
     spellCheckButton.addEventListener('click', () => handleSpellCheckClick(spellCheckButton, $editor))
     spellCheckButton.setAttribute('hasListener', 'true')
@@ -123,7 +123,7 @@ function addClickHandlerToSpellCheck ($editor) {
 }
 
 function handleSpellCheckClick (spellCheckButton, $editor) {
-  if (spellCheckButton.getAttribute('aria-pressed') === 'false') {
+  if (spellCheckButton.getAttribute('aria-pressed') == 'false') {
     $editor.getBody().setAttribute('spellcheck', 'false')
     trackEvent('spellcheck - on', 'spellcheck', $editor.id)
   } else {
@@ -134,7 +134,7 @@ function handleSpellCheckClick (spellCheckButton, $editor) {
 
 function enableSpellChecker ($editor) {
   const spellCheckButton = $editor.getElement().parentElement.querySelector('[title="Spellcheck"]')
-  if (spellCheckButton.getAttribute('aria-pressed') === 'false') {
+  if (spellCheckButton && spellCheckButton.getAttribute('aria-pressed') === 'false') {
     $editor.execCommand('mceSpellCheck')
   }
 }
@@ -182,7 +182,7 @@ const initTextAreas = () => {
         updateTooltips($editor)
         removePlaceholder($editor)
         // addClickHandlerToSpellCheck($editor)
-        enableSpellChecker($editor)
+        // enableSpellChecker($editor)
       })
       $editor.on('blur', () => {
         addPlaceholder($editor)
@@ -194,16 +194,13 @@ const initTextAreas = () => {
         autoSaveProgress($editor.getElement())
       }, 5000))
       $editor.on('keyup', debounce(() => {
-        autoClickSpellchecker($editor)
+        // autoClickSpellchecker($editor)
       }, 1000))
       $editor.on('input', () => {
         updateTextLimits($editor)
       })
     },
     spellchecker_callback: function (method, text, success, failure) {
-
-      console.info('CALLBACK SPELLY:', method)
-
       if (method === 'spellcheck') {
         tinymce.util.JSONRequest.sendRPC({
           url: '/spellcheck',
