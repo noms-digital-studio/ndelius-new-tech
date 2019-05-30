@@ -123,13 +123,9 @@ function addClickHandlerToSpellCheck ($editor) {
 }
 
 function handleSpellCheckClick (spellCheckButton, $editor) {
-  if (spellCheckButton.getAttribute('aria-pressed') == 'false') {
-    $editor.getBody().setAttribute('spellcheck', 'false')
-    trackEvent('spellcheck - on', 'spellcheck', $editor.id)
-  } else {
-    $editor.getBody().setAttribute('spellcheck', 'true')
-    trackEvent('spellcheck - off', 'spellcheck', $editor.id)
-  }
+  const ariaPressed = spellCheckButton.getAttribute('aria-pressed')
+  $editor.getBody().setAttribute('spellcheck', ariaPressed)
+  trackEvent(`spellcheck - ${ ariaPressed === 'false' ? 'on' : 'off' }`, 'spellcheck', $editor.id)
 }
 
 function enableSpellChecker ($editor) {
@@ -181,8 +177,8 @@ const initTextAreas = () => {
         attachToolbar($editor)
         updateTooltips($editor)
         removePlaceholder($editor)
-        // addClickHandlerToSpellCheck($editor)
-        // enableSpellChecker($editor)
+        addClickHandlerToSpellCheck($editor)
+        enableSpellChecker($editor)
       })
       $editor.on('blur', () => {
         addPlaceholder($editor)
@@ -194,7 +190,7 @@ const initTextAreas = () => {
         autoSaveProgress($editor.getElement().dataset.id)
       }, 5000))
       $editor.on('keyup', debounce(() => {
-        // autoClickSpellchecker($editor)
+        autoClickSpellchecker($editor)
       }, 1000))
       $editor.on('input', () => {
         updateTextLimits($editor)
