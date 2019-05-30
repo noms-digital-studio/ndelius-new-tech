@@ -181,10 +181,12 @@ const initTextAreas = () => {
         updateTooltips($editor)
         removePlaceholder($editor)
       })
+      /*
       $editor.on('focus', debounce(() => {
         addClickHandlerToSpellCheck($editor)
         enableSpellChecker($editor)
       }), 50)
+      */
       $editor.on('blur', () => {
         addPlaceholder($editor)
         updateFormElement($editor)
@@ -194,9 +196,11 @@ const initTextAreas = () => {
         updateFormElement($editor)
         autoSaveProgress($editor.getElement().dataset.id)
       }, 5000))
+      /*
       $editor.on('keyup', debounce(() => {
         autoClickSpellchecker($editor)
       }, 1000))
+      */
       $editor.on('input', () => {
         updateTextLimits($editor)
       })
