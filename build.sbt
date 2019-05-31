@@ -20,8 +20,6 @@ lazy val root = (project in file(".")).enablePlugins(PlayJava, SbtWeb, SbtJsEngi
 JsEngineKeys.engineType := JsEngineKeys.EngineType.Node
 MochaKeys.requires += "setup.js"
 
-resolvers ++= Seq("Spring Release Repository" at "http://repo.spring.io/plugins-release")
-
 scalaVersion := "2.12.2"
 pipelineStages := Seq(digest)
 libraryDependencies ++= Seq(
@@ -51,7 +49,7 @@ libraryDependencies ++= Seq(
   "info.cukes" % "cucumber-java" % "1.2.2" % "test",
   "info.cukes" % "cucumber-junit" % "1.2.2" % "test",
 
-  "dk.dren" % "hunspell" % "1.3.2"
+  ("org.languagetool" % "language-en" % "4.5").exclude("com.typesafe.akka", "akka-actor_2.11")
 )
 
 excludeDependencies ++= Seq(
@@ -75,6 +73,7 @@ fullClasspath in assembly += Attributed.blank(PlayKeys.playPackageAssets.value)
 assemblyMergeStrategy in assembly := {
   case playWs if playWs.contains("play/api/libs/ws/package") || playWs.endsWith("reference-overrides.conf") => MergeStrategy.last
   case PathList(ps @ _*) if ps.contains("jna") => MergeStrategy.first
+  case PathList(ps @ _*) if ps.contains("minlog") => MergeStrategy.first
   case other => (assemblyMergeStrategy in assembly).value(other)
 }
 
