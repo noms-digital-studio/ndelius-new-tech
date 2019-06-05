@@ -189,8 +189,8 @@ const initTextAreas = () => {
       })
       $editor.on('focus', debounce(() => {
         addClickHandlerToSpellCheck($editor)
-        enableSpellChecker($editor)
-      }), 100)
+        //enableSpellChecker($editor)
+      }), 50)
       $editor.on('blur', () => {
         addPlaceholder($editor)
         updateFormElement($editor)
@@ -202,7 +202,7 @@ const initTextAreas = () => {
       }, 5000))
       $editor.on('keyup', debounce(() => {
         autoClickSpellchecker($editor)
-      }, 1000))
+      }, 100))
       $editor.on('input', () => {
         updateTextLimits($editor)
       })
