@@ -9,6 +9,7 @@ import play.test.TestBrowser;
 
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static org.openqa.selenium.By.*;
 import static org.openqa.selenium.By.id;
@@ -42,8 +43,8 @@ public class ReportPage extends FluentPage {
     public void fillTextAreaById(String id, String text) {
         control.executeScript(String.format("tinymce.get('%s-tinymce').fire('focus')", id));
         control.executeScript(String.format("tinymce.get('%s-tinymce').setContent('%s')", id, text.replace("'", "\\'")));
-        control.executeScript(String.format("tinymce.get('%s-tinymce').fire('keyup')", id));
         handleSpellingMistakes(id, text);
+        control.executeScript(String.format("tinymce.get('%s-tinymce').fire('keyup')", id));
         control.executeScript(String.format("tinymce.get('%s-tinymce').fire('blur')", id));
     }
 
@@ -59,6 +60,7 @@ public class ReportPage extends FluentPage {
         boolean present = $(className(modalClassName)).present();
         if(present) {
             $(className(modalClassName)).click();
+            control.await().explicitlyFor(1000, TimeUnit.MILLISECONDS);
         }
     }
 
