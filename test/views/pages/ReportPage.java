@@ -60,7 +60,7 @@ public class ReportPage extends FluentPage {
         boolean present = $(className(modalClassName)).present();
         if(present) {
             $(className(modalClassName)).click();
-            control.await().explicitlyFor(1000, TimeUnit.MILLISECONDS);
+            control.await().explicitlyFor(2000, TimeUnit.MILLISECONDS);
         }
     }
 
