@@ -43,8 +43,8 @@ public class ReportPage extends FluentPage {
         control.executeScript(String.format("tinymce.get('%s-tinymce').fire('focus')", id));
         control.executeScript(String.format("tinymce.get('%s-tinymce').setContent('%s')", id, text.replace("'", "\\'")));
         control.executeScript(String.format("tinymce.get('%s-tinymce').fire('keyup')", id));
-        control.executeScript(String.format("tinymce.get('%s-tinymce').fire('blur')", id));
         handleSpellingMistakes(id, text);
+        control.executeScript(String.format("tinymce.get('%s-tinymce').fire('blur')", id));
     }
 
     private void handleSpellingMistakes(String id, String text) {
