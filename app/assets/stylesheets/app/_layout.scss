@@ -4,25 +4,35 @@
 }
 
 .moj-width-container {
+  box-sizing: border-box;
   position: absolute;
   width: 100%;
   height: 100%;
-  padding-right: 0;
+  padding: 0;
   margin-right: 0;
 }
 
 .moj-scroll-container {
+  box-sizing: border-box;
   position: relative;
   width: 100%;
-  height: calc(100% - 145px);
+  height: calc(100% - 90px);
+  padding: 0 govuk-spacing(4);
   overflow-x: hidden;
   overflow-y: scroll;
-
-  padding-right: $govuk-gutter-half;
 
   @include govuk-media-query($from: tablet) {
     padding-right: $govuk-gutter;
   }
+}
+
+.app-grid-column-nav {
+  max-width: 295px;
+}
+
+.app-grid-column-content {
+  width: calc(100% - 295px);
+  max-width: 1200px;
 }
 
 .govuk-width-container {
