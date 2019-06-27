@@ -3,6 +3,10 @@
   @include govuk-clearfix();
 }
 
+.govuk-width-container {
+  max-width: $govuk-page-width !important;
+}
+
 .moj-width-container {
   box-sizing: border-box;
   position: absolute;
@@ -10,6 +14,10 @@
   height: 100%;
   padding: 0;
   margin-right: 0;
+}
+
+.app-max-width-container {
+  max-width: calc(295px + 1200px);
 }
 
 .moj-scroll-container {
@@ -28,11 +36,19 @@
 
 .app-grid-column-nav {
   max-width: 295px;
+
+  @include govuk-media-query(mobile, tablet) {
+    max-width: 100%;
+  }
 }
 
 .app-grid-column-content {
   width: calc(100% - 295px);
   max-width: 1200px;
+
+  @include govuk-media-query(mobile, tablet) {
+    width: 100%;
+  }
 }
 
 .govuk-width-container {
