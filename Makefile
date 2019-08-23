@@ -22,7 +22,7 @@ sbt-clean:
 sbt-assembly: build_dir = $(shell pwd)
 sbt-assembly:
 	$(Info Running sbt assembly task)
-	docker run --rm -e CIRCLE_BUILD_NUM=${jenkins_build} -v $(build_dir):/home/circleci/build -w /home/circleci/build $(sbt_builder_image) bash -c "sudo npm install; sudo chmod -R 0777 /home/circleci/build; sbt -v 'set test in assembly := {}' 'set target in assembly := file(\"/home/circleci/build/target/scala-2.12/\")' assembly; chmod -R 0777 project/ target/"
+	docker run --rm -e CIRCLE_BUILD_NUM=${jenkins_build} -v $(build_dir):/home/circleci/build -w /home/circleci/build $(sbt_builder_image) bash -c "sudo npm install; sudo chmod -R 0777 /home/circleci/build; sbt -v 'set test in assembly := {}' 'set target in assembly := file(\"/home/circleci/build/target/scala-2.12/\")' assembly; sudo chmod -R 0777 project/ target/"
 
 ecr-login:
 	$(shell aws ecr get-login --no-include-email --region ${aws_region})
