@@ -352,9 +352,9 @@ workflows:
             container=newtechweb,name=NOMIS_API_BASE_URL,             value=https://api-dev.prison.service.justice.gov.uk/
           requires:
             - deploy_to_dev
-#          filters:
-#            branches:
-#              only: master
+          filters:
+            branches:
+              only: master
       - request-pre-prod-approval:
           type: approval
           requires:
