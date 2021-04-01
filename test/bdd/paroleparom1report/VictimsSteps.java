@@ -44,6 +44,7 @@ public class VictimsSteps {
         page.fillInputInSectionWithLegend("On what date did you contact the VLO?", "Year", new SimpleDateFormat("yyyy").format(date));
         page.clickRadioButtonWithLabelWithinLegend("Yes", "Are the victims engaged in the Victim Contact Scheme (VCS)?");
         page.clickRadioButtonWithLabelWithinLegend("Yes", "Do the victims wish to submit a Victim Personal Statement (VPS)?");
+        page.clickRadioButtonWithLabelWithinLegend("Yes", "Do the victims wish to attend an oral hearing?");
         page.clickButton("Continue");
     }
 }
