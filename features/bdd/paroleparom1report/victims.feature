@@ -17,10 +17,10 @@ Feature:Parole Report - Victims
 
     Then the following information should be saved in the report
 
-      | victimsEngagedInVCS   | yes                                                                                                                                                                                     |
-      | victimsSubmitVPS      | no                                                                                                                                                                                      |
+      | victimsEngagedInVCS   | yes                                                       |
+      | victimsSubmitVPS      | no                                                        |
       | victimsImpactDetails  | Some analysis of the impact of the offence on the victims |
-      | victimsOralHearing    | no
+      | victimsOralHearing    | no                                                        |
 
   Scenario: Delius user wants to leave the "Victims" page without entering any details into the "Analyse the impact of the offence on the victims" field
 
