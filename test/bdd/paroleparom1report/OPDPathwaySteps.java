@@ -33,7 +33,6 @@ public class OPDPathwaySteps {
         page.fillInputInSectionWithLegend("Date of OPD screening", "Month", new SimpleDateFormat("MM").format(date));
         page.fillInputInSectionWithLegend("Date of OPD screening", "Year", new SimpleDateFormat("yyyy").format(date));
         page.clickRadioButtonWithLabelWithinLegend("Yes", "Has the prisoner been screened into the OPD pathway (OPD criteria met)?");
-        page.clickRadioButtonWithLabelWithinLegend("Yes", "Have you received consultation or a formulation?");
         page.clickButton("Continue");
     }
 }

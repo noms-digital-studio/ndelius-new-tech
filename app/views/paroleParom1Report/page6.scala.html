@@ -53,27 +53,5 @@
             )
         </fieldset>
 
-        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="opd-pathway-details-yes">
-
-            <div class="form-group" data-module="radios">
-                <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
-                    <legend class="govuk-fieldset__legend govuk-label">
-                        Have you received consultation or a formulation?
-                    </legend>
-
-                    @inputRadioGroup(
-                        reportForm("consultationOrFormulation"),
-                        options(
-                            "yes" -> "Yes",
-                            "no" -> "No"
-                        ),
-                        Symbol("_inline") -> "true"
-                    )
-                </fieldset>
-
-            </div>
-
-        </div>
-
     </div>
 }

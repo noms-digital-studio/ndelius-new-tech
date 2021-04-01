@@ -246,12 +246,6 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     private String opdScreenedDate_month;
     private String opdScreenedDate_year;
 
-    @RequiredOnPage(value = 6, message = "Specify whether you have you received consultation or a formulation",
-            onlyIfField = "consideredForOPDPathwayServices",
-            onlyIfFieldMatchValue = "yes")
-    @JsonProperty("OPD_CONSULTATION_OR_FORMULATION")
-    private String consultationOrFormulation;
-
     // Page 7 - Behaviour in prison
     @RequiredOnPage(value = 7, message = "Enter details of the prisoner's behaviour in prison")
     @JsonProperty("BEHAVIOUR_DETAIL")
