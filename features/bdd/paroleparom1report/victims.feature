@@ -78,7 +78,7 @@ Feature:Parole Report - Victims
     When they select the "No" option on the "Do the victims wish to submit a Victim Personal Statement (VPS)?"
     Then the screen should hide additional VPS content to the user
 
-  Scenario: Delius user selects "Don't know" to 'Do the victims wish to submit a Victim Personal Statement'
+  Scenario: Delius user selects "Don`t know" to 'Do the victims wish to submit a Victim Personal Statement'
 
-    When they select the "Don't know" option on the "Do the victims wish to submit a Victim Personal Statement (VPS)?"
+    When they select the "Don`t know" option on the "Do the victims wish to submit a Victim Personal Statement (VPS)?"
     Then the screen should hide additional VPS content to the user
