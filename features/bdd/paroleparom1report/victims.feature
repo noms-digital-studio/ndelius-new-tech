@@ -9,6 +9,7 @@ Feature:Parole Report - Victims
 
     When they select the "Yes" option on the "Are the victims engaged in the Victim Contact Scheme (VCS)?"
     And they select the "No" option on the "Do the victims wish to submit a Victim Personal Statement (VPS)?"
+    And they select the "No" option on the "Do the victims wish to attend an oral hearing?"
     And they enter the date "YESTERDAY" for "On what date did you contact the VLO?"
     And  they enter the following information
 
@@ -19,6 +20,7 @@ Feature:Parole Report - Victims
       | victimsEngagedInVCS   | yes                                                                                                                                                                                     |
       | victimsSubmitVPS      | no                                                                                                                                                                                      |
       | victimsImpactDetails  | Some analysis of the impact of the offence on the victims |
+      | victimsOralHearing    | no
 
   Scenario: Delius user wants to leave the "Victims" page without entering any details into the "Analyse the impact of the offence on the victims" field
 
@@ -30,6 +32,7 @@ Feature:Parole Report - Victims
       | On what date did you contact the VLO?                            | Enter the date you contacted the VLO                            |
       | Are the victims engaged in the Victim Contact Scheme (VCS)?      | Specify if the victims are engaged with the VCS                 |
       | Do the victims wish to submit a Victim Personal Statement (VPS)? | Specify if the victims wish to submit a VPS                     |
+      | Do the victims wish to attend an oral hearing?                   | Specify if the victims wish to attend  an oral hearing          |
 
   Scenario: Delius User enters the VLO contact date which is more than 1 year ago
 
@@ -56,6 +59,7 @@ Feature:Parole Report - Victims
 
     Given they select the "No" option on the "Are the victims engaged in the Victim Contact Scheme (VCS)?"
     And they select the "No" option on the "Do the victims wish to submit a Victim Personal Statement (VPS)?"
+    And they select the "No" option on the "Do the victims wish to attend an oral hearing?"
     And they enter the date "YESTERDAY" for "On what date did you contact the VLO?"
     And  they enter the following information
 
