@@ -32,7 +32,7 @@ Feature:Parole Report - Victims
       | On what date did you contact the VLO?                            | Enter the date you contacted the VLO                            |
       | Are the victims engaged in the Victim Contact Scheme (VCS)?      | Specify if the victims are engaged with the VCS                 |
       | Do the victims wish to submit a Victim Personal Statement (VPS)? | Specify if the victims wish to submit a VPS                     |
-      | Do the victims wish to attend an oral hearing?                   | Specify if the victims wish to attend  an oral hearing          |
+      | Do the victims wish to attend an oral hearing?                   | Specify if the victims wish to attend an oral hearing          |
 
   Scenario: Delius User enters the VLO contact date which is more than 1 year ago
 
@@ -78,7 +78,7 @@ Feature:Parole Report - Victims
     When they select the "No" option on the "Do the victims wish to submit a Victim Personal Statement (VPS)?"
     Then the screen should hide additional VPS content to the user
 
-  Scenario: Delius user selects "Don`t know" to 'Do the victims wish to submit a Victim Personal Statement'
+  Scenario: Delius user selects "Don't know" to 'Do the victims wish to submit a Victim Personal Statement'
 
-    When they select the "Don`t know" option on the "Do the victims wish to submit a Victim Personal Statement (VPS)?"
+    When they select the "Don't know" option on the "Do the victims wish to submit a Victim Personal Statement (VPS)?"
     Then the screen should hide additional VPS content to the user
