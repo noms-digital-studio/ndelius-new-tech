@@ -217,6 +217,10 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("VICTIMS_SUBMIT_VPS")
     private String victimsSubmitVPS;
 
+    @RequiredOnPage(value = 5, message = "Specify if the victims wish to attend an oral hearing")
+    @JsonProperty("VICTIMS_ORAL_HEARING")
+    private String victimsOralHearing;
+
 
     // Page 6 - OPD pathway
 

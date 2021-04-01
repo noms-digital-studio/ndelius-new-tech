@@ -66,7 +66,8 @@
                 reportForm("victimsEngagedInVCS"),
                 options(
                     "yes" -> "Yes",
-                    "no" -> "No"
+                    "no" -> "No",
+                    "unknown" -> "Don`t know"
                 ),
                 Symbol("_inline") -> "true"
             )
@@ -93,6 +94,24 @@
         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="vps-advice-yes">
             <p class="govuk-body">The VPS should be submitted with this report if possible</p>
         </div>
+    </div>
+
+    <div class="govuk-form-group" data-module="radios" >
+        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Do the victims wish to attend an oral hearing?
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("victimsOralHearing"),
+                options(
+                    "yes" -> "Yes",
+                    "no" -> "No",
+                    "unknown" -> "Don`t know"
+                ),
+                Symbol("_inline") -> "true"
+            )
+        </fieldset>
     </div>
 
 }
