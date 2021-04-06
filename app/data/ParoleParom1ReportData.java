@@ -591,7 +591,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("SIGNATURE_NAME")
     private String signatureName;
 
-    @RequiredOnPage(value = 23, message = "Enter the NPS division and LDU")
+    @RequiredOnPage(value = 23, message = "Enter the NPS division and PDU")
     @JsonProperty("SIGNATURE_DIVISION")
     private String signatureDivision;
 

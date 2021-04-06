@@ -72,7 +72,7 @@ Feature: Parole Report - Signature & date
     When they select the "Submit" button
     Then the following error messages are displayed
       | Name                           | Enter the report author                  |
-      | NPS Division and LDU           | Enter the NPS division and LDU           |
+      | NPS Division and PDU           | Enter the NPS division and PDU           |
       | Office address                 | Enter the office address                 |
       | Email address                  | Enter the email address                  |
       | Telephone number and extension | Enter the telephone number and extension |
@@ -89,7 +89,7 @@ Feature: Parole Report - Signature & date
 
     When they input the following information
       | Name                 | Jane Doe           |
-      | NPS Division and LDU | Stafford, Midlands |
+      | NPS Division and PDU | Stafford, Midlands |
     And they enter the following information into a classic TextArea
       | Office address | 4 Lichfield Road, Stafford ST17 4JX |
     And they input the following information
@@ -109,7 +109,7 @@ Feature: Parole Report - Signature & date
 
     When they input the following information
       | Name                 | Jane Doe           |
-      | NPS Division and LDU | Stafford, Midlands |
+      | NPS Division and PDU | Stafford, Midlands |
     And they enter the following information into a classic TextArea
       | Office address | 4 Lichfield Road, Stafford ST17 4JX |
     And they input the following information
@@ -133,7 +133,7 @@ Feature: Parole Report - Signature & date
 
     When they input the following information
       | Name                 | Jane Doe                            |
-      | NPS Division and LDU | Stafford, Midlands                  |
+      | NPS Division and PDU | Stafford, Midlands                  |
       | Office address       | 4 Lichfield Road, Stafford ST17 4JX |
     And they enter the following information into a classic TextArea
       | Email address | jane.doe@nps.gov.uk |
@@ -147,7 +147,7 @@ Feature: Parole Report - Signature & date
 
     When they input the following information
       | Name                 | Jane Doe           |
-      | NPS Division and LDU | Stafford, Midlands |
+      | NPS Division and PDU | Stafford, Midlands |
     And they enter the following information into a classic TextArea
       | Office address | 4 Lichfield Road, Stafford ST17 4JX |
     And they input the following information
