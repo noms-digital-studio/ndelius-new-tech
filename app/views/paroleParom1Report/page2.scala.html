@@ -13,6 +13,11 @@
 
 @popup(reportForm, encrypter, "Prisoner details", 2) {
 
+    <div class="moj-interrupt govuk-!-margin-top-0">
+        <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 moj-!-color-white">Please note:</p>
+        <p class="govuk-body-s govuk-!-margin-bottom-0 moj-!-color-white">If there is any information included that has non-disclosure issues attached to them, please refer to PI14/2016 for guidance and advice as to how to proceed. This information must then be provided under a separate cover and marked “<strong>NOT FOR DISCLOSURE TO THE OFFENDER</strong>”.</p>
+    </div>
+
     @readOnlyField(reportForm("prisonerDetailsPrisonersFullName"), "Prisoner`s full name")
 
     @readOnlyField(reportForm("prisonerDetailsPrisonInstitution"), "Prison or Young Offender Institution")
