@@ -528,6 +528,10 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     private String supervisionPlanDetail;
 
     // Page 19 - Recommendation
+    @RequiredOnPage(value = 19, message = "You must confirm that you have had sight of the On/post Tariff Parole Custody Report and liaised with the Prison Offender Manager and their views around the assessment and recommendation have been taken into account in this report.")
+    @JsonProperty("PRISON_LIAISON")
+    private String prisonLiaisonConfirm;
+
     @RequiredOnPage(value = 19, message = "Enter your recommendation")
     @JsonProperty("_RECOMMENDATION_")
     private String recommendation;

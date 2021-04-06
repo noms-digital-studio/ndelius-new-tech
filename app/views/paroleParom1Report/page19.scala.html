@@ -29,5 +29,25 @@
 }
 
 @popup(reportForm, encrypter, "Recommendation", 19) {
+
+    <div class="govuk-warning-text moj-warning-text">
+        <span aria-hidden="true" class="govuk-warning-text__icon">!</span>
+        <strong class="govuk-warning-text__text">
+            <span class="govuk-warning-text__assistive">Warning</span>
+            It is a mandatory action to liaise with the Prison Offender Manager and ensure their views are incorporated into the recommendation.
+        </strong>
+    </div>
+
+    <div class="govuk-form-group @if(!reportForm.errors("prisonLiaisonConfirm").isEmpty) { govuk-form-group--error}">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-label govuk-visually-hidden">Prison Liaison</legend>
+            <div class="govuk-checkboxes" data-module="checkboxes">
+                @checkbox(reportForm("prisonLiaisonConfirm"), '_label -> "I confirm that I have had sight of the On/post Tariff Parole Custody Report and liaised with the Prison Offender Manager and their views around the assessment and recommendation have been taken into account in this report.")
+            </div>
+        </fieldset>
+    </div>
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+
     @textarea(reportForm("recommendation"), '_label -> "What is your recommendation?", '_hint -> recommendationHint, 'class -> "wide")
 }
