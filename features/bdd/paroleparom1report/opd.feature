@@ -33,19 +33,11 @@ Feature: Parole report - OPD Pathway
     When  they select the "Continue" button
     Then  the user should be directed to the "Behaviour in prison" UI
 
-  Scenario: Delius user specifies that the prisoner has been screened but does not specify whether they have received consultation or a formulation
-
-    Given they enter the date "YESTERDAY" for "Date of OPD screening"
-    And they select the "Yes" option on the "Has the prisoner been screened into the OPD pathway (OPD criteria met)?"
-    When they select the "Continue" button
-    Then  the following error messages are displayed
-      | Have you received consultation or a formulation? | Specify whether you have you received consultation or a formulation |
 
   Scenario: Delius user specifies that the prisoner has been screened and wants to continue completing the parole report
 
     Given they enter the date "YESTERDAY" for "Date of OPD screening"
     And they select the "Yes" option on the "Has the prisoner been screened into the OPD pathway (OPD criteria met)?"
-    And they select the "Yes" option on the "Have you received consultation or a formulation?"
     When they select the "Continue" button
     Then the user should be directed to the "Behaviour in prison" UI
 
