@@ -8,6 +8,8 @@ Feature: Parole Report
 
     Given they select the "Yes" option on the "Has a OASys Sexual re-offending Predictor (Contact) (OSP/C) assessment been completed?"
     And they select the radio button with id "riskAssessmentOasysOspcScore_very_high"
+    And they select the "Yes" option on the "Has a OASys Sexual re-offending Predictor (Indecent Images) (OSP/I) assessment been completed?"
+    And they select the radio button with id "riskAssessmentOasysOspiScore_high"
     And they select the "Yes" option on the "Has a Spousal Assault Risk Assessment (SARA) been completed?"
     And they select the radio button with id "riskAssessmentSpousalAssaultScore_high"
     And they input the following information based on ID
@@ -18,6 +20,7 @@ Feature: Parole Report
     Then the following information should be saved in the report
       | riskAssessmentOasysOspcAssessmentCompleted      | yes       |
       | riskAssessmentOasysOspcScore                    | very_high |
+      | riskAssessmentOasysOspiScore                    | high |
       | riskAssessmentSpousalAssaultAssessmentCompleted | yes       |
       | riskAssessmentSpousalAssaultScore               | high      |
 
@@ -30,6 +33,8 @@ Feature: Parole Report
 
     Given they select the "Yes" option on the "Has a OASys Sexual re-offending Predictor (Contact) (OSP/C) assessment been completed?"
     And they select the radio button with id "riskAssessmentOasysOspcScore_very_high"
+    And they select the "Yes" option on the "Has a OASys Sexual re-offending Predictor (Indecent Images) (OSP/I) assessment been completed?"
+    And they select the radio button with id "riskAssessmentOasysOspiScore_high"
     And they select the "Yes" option on the "Has a Spousal Assault Risk Assessment (SARA) been completed?"
     And they select the radio button with id "riskAssessmentSpousalAssaultScore_high"
     And they input the following information based on ID
