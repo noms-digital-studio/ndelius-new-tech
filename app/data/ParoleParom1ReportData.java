@@ -533,7 +533,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     private String recommendation;
 
     // Page 20 - Oral hearing
-    @RequiredOnPage(value = 20, message = "Enter the oral hearing considerations")
+    @RequiredOnPage(value = 20, message = "Enter the member case assessment and oral hearing considerations")
     @JsonProperty("ORAL_HEARING")
     private String oralHearing;
 

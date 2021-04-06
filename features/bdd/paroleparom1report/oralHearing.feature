@@ -9,7 +9,7 @@ Feature: Parole Report
     Given the user does not any enter any characters in the free text fields on the page
     When they select the "Continue" button
     Then  the following error messages are displayed
-      | Oral hearing considerations | Enter the oral hearing considerations |
+      | Member case assessment and oral hearing considerations | Enter the member case assessment and oral hearing considerations |
 
   Scenario: Delius users wants more information to what they should include in the offender's parole report
 
@@ -20,7 +20,7 @@ Feature: Parole Report
   Scenario: Delius user wants to continue writing the parole report
 
     Given they enter the following information
-      | Oral hearing considerations | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
+      | Member case assessment and oral hearing considerations | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
     When they select the "Continue" button
     Then the user should be directed to the "Sources" UI
 
