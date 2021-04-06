@@ -567,6 +567,10 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     private boolean sourcesProbationCaseRecord;
 
     @RequiredGroupOnPage(value = 21, errorWhenInvalid = false)
+    @JsonProperty("SOURCES_TARIFF")
+    private boolean sourcesTariff;
+
+    @RequiredGroupOnPage(value = 21, errorWhenInvalid = false)
     @JsonProperty("SOURCES_OTHER")
     private boolean sourcesOther;
 

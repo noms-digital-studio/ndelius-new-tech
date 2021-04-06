@@ -23,6 +23,7 @@ public class SourcesSteps {
         page.clickCheckboxWithLabel("Probation case records (nDelius)");
         page.clickCheckboxWithLabel("Previous parole reports");
         page.clickCheckboxWithLabel("Pre-sentence report");
+        page.clickCheckboxWithLabel("On/post Tariff Parole Custody Report");
         page.clickCheckboxWithLabel("Other");
         page.fillTextArea("Detail any other case documents you have used", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
         page.fillTextArea("List all of the reports, assessments and directions you have used for this PAROM 1", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
