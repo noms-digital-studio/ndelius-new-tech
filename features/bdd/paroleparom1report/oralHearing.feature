@@ -13,7 +13,7 @@ Feature: Parole Report
 
   Scenario: Delius users wants more information to what they should include in the offender's parole report
 
-    Given that the Delius user is unclear to what information they need to add to the "Oral hearing considerations" free text field
+    Given that the Delius user is unclear to what information they need to add to the "Member case assessment and oral hearing considerations" free text field
     When  they select "What to include" hyperlink
     Then  the UI should expand to show additional content to the end user
 
