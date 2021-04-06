@@ -13,8 +13,8 @@ Feature: Parole Report - Remmendation
 
   Scenario: User wants to continuing writing the parole report
 
-    Given  they enter the following information
-    And that the "I confirm that I have had sight of the On/post Tariff Parole Custody Report and liaised with the Prison Offender Manager and their views around the assessment and recommendation have been taken into account in this report." is ticked
+    Given that the "I confirm that I have had sight of the On/post Tariff Parole Custody Report and liaised with the Prison Offender Manager and their views around the assessment and recommendation have been taken into account in this report." is ticked
+    And  they enter the following information
       | What is your recommendation? | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
     When  they select the "Continue" button
     Then  the user should be directed to the "Oral hearing" UI
