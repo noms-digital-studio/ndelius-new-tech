@@ -380,13 +380,21 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
         }).orElse("");
     }
 
-    @RequiredOnPage(value = 11, message = "Specify if a Risk Matrix 2000 has been completed")
-    @JsonProperty("RISK_ASSESSMENT_MATRIX2000_COMPLETED")
-    private String riskAssessmentMatrix2000AssessmentCompleted;
+    @RequiredOnPage(value = 11, message = "Specify if a OASys Sexual re-offending Predictor (Contact) (OSP/C) has been completed")
+    @JsonProperty("RISK_ASSESSMENT_OASYS_OSPC_COMPLETED")
+    private String riskAssessmentOasysOspcAssessmentCompleted;
 
-    @RequiredOnPage(value = 11, message = "Select the Risk Matrix 2000 score", onlyIfField = "riskAssessmentMatrix2000AssessmentCompleted", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("RISK_ASSESSMENT_MATRIX2000_SCORE")
-    private String riskAssessmentMatrix2000Score;
+    @RequiredOnPage(value = 11, message = "Select the OASys Sexual re-offending Predictor (Contact) (OSP/C) score", onlyIfField = "riskAssessmentOasysOspcAssessmentCompleted", onlyIfFieldMatchValue = "yes")
+    @JsonProperty("RISK_ASSESSMENT_OASYS_OSPC_SCORE")
+    private String riskAssessmentOasysOspcScore;
+
+    @RequiredOnPage(value = 11, message = "Specify if a OASys Sexual re-offending Predictor (Indecent Images) (OSP/I) has been completed")
+    @JsonProperty("RISK_ASSESSMENT_OASYS_OSPI_COMPLETED")
+    private String riskAssessmentOasysOspiAssessmentCompleted;
+
+    @RequiredOnPage(value = 11, message = "Select the OASys Sexual re-offending Predictor (Indecent Images) (OSP/I) score", onlyIfField = "riskAssessmentOasysOspiAssessmentCompleted", onlyIfFieldMatchValue = "yes")
+    @JsonProperty("RISK_ASSESSMENT_OASYS_OSPI_SCORE")
+    private String riskAssessmentOasysOspiScore;
 
     @RequiredOnPage(value = 11, message = "Specify if a SARA has been completed")
     @JsonProperty("RISK_ASSESSMENT_SARA_COMPLETED")
