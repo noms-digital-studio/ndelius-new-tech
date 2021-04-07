@@ -2,7 +2,7 @@
 Feature: Parole Report - Sources UI
 
   Background:
-  Given Delius user is on the "Sources" UI within the Parole Report
+    Given Delius user is on the "Sources" UI within the Parole Report
 
   Scenario: Delius user wants to enter information regarding the sources that they have used for the Parole Report
 
@@ -10,19 +10,20 @@ Feature: Parole Report - Sources UI
     And   that the "Previous convictions" is ticked
     And they select the "Yes" option on the "Has any information not been made available to you, or are there any limitations to the sources?"
     When  they enter the following information
-      | List all of the reports, assessments and directions you have used for this PAROM 1  | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
-      | Provide an explanation                                                              | Pharetra pharetra massa massa ultricies mi. Aenean euismod elementum nisi quis eleifend quam adipiscing vitae proin.        |
+      | List all of the reports, assessments and directions you have used for this PAROM 1 | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
+      | Provide an explanation                                                             | Pharetra pharetra massa massa ultricies mi. Aenean euismod elementum nisi quis eleifend quam adipiscing vitae proin.        |
     Then this information should be saved in the report
     And the following information should be saved in the report
-      | sourcesPreviousConvictions        | true  |
-      | sourcesCPSDocuments               | false |
-      | sourcesJudgesComments             | true  |
-      | sourcesParoleDossier              | false |
-      | sourcesProbationCaseRecord        | false |
-      | sourcesPreviousParoleReports      | false |
-      | sourcesPreSentenceReport          | false |
-      | sourcesOther                      | false |
-      | sourceLimitations                 | yes   |
+      | sourcesPreviousConvictions   | true  |
+      | sourcesCPSDocuments          | false |
+      | sourcesJudgesComments        | true  |
+      | sourcesParoleDossier         | false |
+      | sourcesProbationCaseRecord   | false |
+      | sourcesPreviousParoleReports | false |
+      | sourcesPreSentenceReport     | false |
+      | sourcesTariff                | false |
+      | sourcesOther                 | false |
+      | sourceLimitations            | yes   |
 
   Scenario: Delius user selects "Other" options for case documents
 
@@ -67,7 +68,7 @@ Feature: Parole Report - Sources UI
     Given that the "Judges comments" is ticked
     And they select the "Yes" option on the "Has any information not been made available to you, or are there any limitations to the sources?"
     And  they enter the following information
-      | List all of the reports, assessments and directions you have used for this PAROM 1  | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
-      | Provide an explanation                                                              | Pharetra pharetra massa massa ultricies mi. Aenean euismod elementum nisi quis eleifend quam adipiscing vitae proin.        |
+      | List all of the reports, assessments and directions you have used for this PAROM 1 | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
+      | Provide an explanation                                                             | Pharetra pharetra massa massa ultricies mi. Aenean euismod elementum nisi quis eleifend quam adipiscing vitae proin.        |
     When  they select the "Continue" button
     Then  the user should be directed to the "Check your report" UI
