@@ -2,13 +2,8 @@
 
 @(reportForm: Form[_])
 
-    @inputHidden(reportForm("riskAssessmentRSRScore"))
-    @inputHidden(reportForm("riskAssessmentOGRS3ReoffendingProbability"))
-    @inputHidden(reportForm("riskAssessmentOGPReoffendingProbability"))
-    @inputHidden(reportForm("riskAssessmentOVPReoffendingProbability"))
-    @inputHidden(reportForm("riskAssessmentOasysOspcAssessmentCompleted"))
-    @inputHidden(reportForm("riskAssessmentOasysOspcScore"))
-    @inputHidden(reportForm("riskAssessmentOasysOspiAssessmentCompleted"))
-    @inputHidden(reportForm("riskAssessmentOasysOspiScore"))
-    @inputHidden(reportForm("riskAssessmentSpousalAssaultAssessmentCompleted"))
-    @inputHidden(reportForm("riskAssessmentSpousalAssaultScore"))
+@inputHidden(reportForm("roshCommunityPublic"))
+@inputHidden(reportForm("roshCommunityKnownAdult"))
+@inputHidden(reportForm("roshCommunityChildren"))
+@inputHidden(reportForm("roshCommunityPrisoners"))
+@inputHidden(reportForm("roshCommunityStaff"))

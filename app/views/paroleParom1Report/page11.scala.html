@@ -11,144 +11,98 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@popup(reportForm, encrypter, "Current risk assessment scores", 11) {
+@popup(reportForm, encrypter, "Current RoSH: community", 11) {
 
-    <p class="govuk-caption-xl govuk-!-margin-top-0 govuk-!-margin-bottom-6">Enter the prisoner’s current risk assessment scores. Once you have entered the scores, the levels will be calculated and displayed on your report.</p>
-
-    @inputText(
-        reportForm("riskAssessmentRSRScore"),
-        '_label -> "Dynamic risk of serious recidivism (RSR) score",
-        'required -> "true",
-        '_number -> "true",
-        '_form_hint -> "0.00 format eg 6.32 or 4.78")
-    @inputText(
-        reportForm("riskAssessmentOGRS3ReoffendingProbability"),
-        '_label -> "OGRS3 probability of proven reoffending (year 2)",
-        'required -> "true",
-        '_number -> "true",
-        '_form_hint -> "For example, 23")
-    @inputText(
-        reportForm("riskAssessmentOGPReoffendingProbability"),
-        '_label -> "OGP probability of proven non-violent type reoffending (year 2)",
-        'required -> "true",
-        '_number -> "true",
-        '_form_hint -> "For example, 23")
-
-    @inputText(
-        reportForm("riskAssessmentOVPReoffendingProbability"),
-        '_label -> "OVP probability of proven violent type reoffending (year 2)",
-        'required -> "true",
-        '_number -> "true",
-        '_form_hint -> "For example, 23")
+    <p class="govuk-caption-xl govuk-!-margin-top-0 govuk-!-margin-bottom-4">Select the prisoner’s current RoSH in the community</p>
 
     <div class="form-group" data-module="radios">
         <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
             <legend class="govuk-fieldset__legend govuk-label">
-                Has a OASys Sexual re-offending Predictor (Contact) (OSP/C) assessment been completed?
+                Public
             </legend>
 
             @inputRadioGroup(
-                reportForm("riskAssessmentOasysOspcAssessmentCompleted"),
+                reportForm("roshCommunityPublic"),
                 options(
-                    "yes" -> "Yes",
-                    "no" -> "No"
-                ),
-                Symbol("data-aria-controls") -> "OasysOspc",
-                Symbol("_inline") -> "true"
+                    "low" -> "Low",
+                    "medium" -> "Medium",
+                    "high" -> "High",
+                    "very_high" -> "Very high"
+                )
             )
         </fieldset>
-
-        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="OasysOspc-yes">
-            <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
-                <legend class="govuk-fieldset__legend govuk-label">
-                    OASys Sexual re-offending Predictor (Contact) (OSP/C)
-                </legend>
-
-                @inputRadioGroup(
-                    reportForm("riskAssessmentOasysOspcScore"),
-                    options(
-                        "low" -> "Low",
-                        "medium" -> "Medium",
-                        "high" -> "High",
-                        "very_high" -> "Very high"
-                    )
-                )
-            </fieldset>
-
-        </div>
     </div>
 
     <div class="form-group govuk-!-margin-top-6" data-module="radios">
         <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
             <legend class="govuk-fieldset__legend govuk-label">
-                Has a OASys Sexual re-offending Predictor (Indecent Images) (OSP/I) assessment been completed?
+                Known adult
             </legend>
 
             @inputRadioGroup(
-                reportForm("riskAssessmentOasysOspiAssessmentCompleted"),
+                reportForm("roshCommunityKnownAdult"),
                 options(
-                    "yes" -> "Yes",
-                    "no" -> "No"
-                ),
-                Symbol("data-aria-controls") -> "OasysOspi",
-                Symbol("_inline") -> "true"
+                    "low" -> "Low",
+                    "medium" -> "Medium",
+                    "high" -> "High",
+                    "very_high" -> "Very high"
+                )
             )
         </fieldset>
-
-        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="OasysOspi-yes">
-            <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
-                <legend class="govuk-fieldset__legend govuk-label">
-                    OASys Sexual re-offending Predictor (Indecent Images) (OSP/I)
-                </legend>
-
-                @inputRadioGroup(
-                    reportForm("riskAssessmentOasysOspiScore"),
-                    options(
-                        "low" -> "Low",
-                        "medium" -> "Medium",
-                        "high" -> "High"
-                    )
-                )
-            </fieldset>
-
-        </div>
     </div>
 
     <div class="form-group govuk-!-margin-top-6" data-module="radios">
         <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
             <legend class="govuk-fieldset__legend govuk-label">
-                Has a Spousal Assault Risk Assessment (SARA) been completed?
+                Children
             </legend>
 
             @inputRadioGroup(
-                reportForm("riskAssessmentSpousalAssaultAssessmentCompleted"),
+                reportForm("roshCommunityChildren"),
                 options(
-                    "yes" -> "Yes",
-                    "no" -> "No"
-                ),
-                Symbol("data-aria-controls") -> "sara",
-                Symbol("_inline") -> "true"
+                    "low" -> "Low",
+                    "medium" -> "Medium",
+                    "high" -> "High",
+                    "very_high" -> "Very high"
+                )
             )
         </fieldset>
-
-        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="sara-yes">
-            <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
-                <legend class="govuk-fieldset__legend govuk-label">
-                    Spousal Assault Risk Assessment (SARA)
-                </legend>
-
-                @inputRadioGroup(
-                    reportForm("riskAssessmentSpousalAssaultScore"),
-                    options(
-                        "low" -> "Low",
-                        "medium" -> "Medium",
-                        "high" -> "High"
-                    )
-                )
-            </fieldset>
-
-        </div>
     </div>
 
+    <div class="form-group govuk-!-margin-top-6" data-module="radios">
+        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Prisoners
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("roshCommunityPrisoners"),
+                options(
+                    "low" -> "Low",
+                    "medium" -> "Medium",
+                    "high" -> "High",
+                    "very_high" -> "Very high"
+                )
+            )
+        </fieldset>
+    </div>
+
+    <div class="form-group govuk-!-margin-top-6" data-module="radios">
+        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Staff
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("roshCommunityStaff"),
+                options(
+                    "low" -> "Low",
+                    "medium" -> "Medium",
+                    "high" -> "High",
+                    "very_high" -> "Very high"
+                )
+            )
+        </fieldset>
+    </div>
 
 }

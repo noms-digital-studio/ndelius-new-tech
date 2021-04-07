@@ -221,7 +221,6 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("VICTIMS_ORAL_HEARING")
     private String victimsOralHearing;
 
-
     // Page 6 - OPD pathway
 
     @RequiredOnPage(value = 6, message = "Specify if the prisoner has been screened into the OPD pathway (OPD criteria met)")
@@ -246,30 +245,25 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     private String opdScreenedDate_month;
     private String opdScreenedDate_year;
 
-    // Page 7 - Behaviour in prison
-    @RequiredOnPage(value = 7, message = "Enter details of the prisoner's behaviour in prison")
-    @JsonProperty("BEHAVIOUR_DETAIL")
-    private String behaviourDetail;
+    // Page 7 - Interventions
 
-    @RequiredOnPage(value = 7, message = "Enter the RoTL summary")
-    @JsonProperty("ROTL_SUMMARY")
-    private String rotlSummary;
-
-    @RequiredOnPage(value = 8, message = "Detail the interventions the prisoner has completed")
+    @RequiredOnPage(value = 7, message = "Detail the interventions the prisoner has completed")
     @JsonProperty("INTERVENTIONS_DETAIL")
     private String interventionsDetail;
 
-    @RequiredOnPage(value = 8, message = "Enter the interventions analysis")
+    @RequiredOnPage(value = 7, message = "Enter the interventions analysis")
     @JsonProperty("INTERVENTIONS_SUMMARY")
     private String interventionsSummary;
 
-    // Page 9 - Current sentence plan and response
-    @RequiredOnPage(value = 9, message = "Enter the prison sentence plan and include their response")
+    // Page 8 - Current sentence plan and response
+
+    @RequiredOnPage(value = 8, message = "Enter the prison sentence plan and include their response")
     @JsonProperty("SENTENCE_PLAN")
     private String sentencePlan;
 
-    // Page 10 - MAPPA
-    @RequiredOnPage(value = 10, message = "Specify if the prisoner is eligible for MAPPA")
+    // Page 9 - MAPPA
+
+    @RequiredOnPage(value = 9, message = "Specify if the prisoner is eligible for MAPPA")
     @JsonProperty("ELIGIBLE_FOR_MAPPA")
     private String eligibleForMappa;
 
@@ -278,7 +272,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
         return formattedDateFromDateParts("mappaScreenedDate");
     }
 
-    @RequiredDateOnPage(value = 10,
+    @RequiredDateOnPage(value = 9,
             message = "Enter the date when the prisoner was screened for MAPPA",
             incompleteMessage = "Enter the date when the prisoner was screened for MAPPA and include a day, month and year",
             invalidMessage = "Enter a real date when the prisoner was screened for MAPPA",
@@ -293,17 +287,17 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     private String mappaScreenedDate_month;
     private String mappaScreenedDate_year;
 
-    @RequiredOnPage(value = 10, message = "Select the prisoner's current MAPPA category", onlyIfField = "eligibleForMappa", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 9, message = "Select the prisoner's current MAPPA category", onlyIfField = "eligibleForMappa", onlyIfFieldMatchValue = "yes")
     @JsonProperty("MAPPA_CATEGORY")
     private String mappaCategory;
 
-    @RequiredOnPage(value = 10, message = "Select the prisoner's current MAPPA level", onlyIfField = "eligibleForMappa", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 9, message = "Select the prisoner's current MAPPA level", onlyIfField = "eligibleForMappa", onlyIfFieldMatchValue = "yes")
     @JsonProperty("MAPPA_LEVEL")
     private String mappaLevel;
 
-    // Page 11 - Current risk assessment scores
+    // Page 10 - Current risk assessment scores
 
-    @RequiredOnPage(value = 11, message = "Enter the RSR score")
+    @RequiredOnPage(value = 10, message = "Enter the RSR score")
     @JsonProperty("RISK_ASSESSMENT_RSR_SCORE")
     private String riskAssessmentRSRScore;
 
@@ -320,7 +314,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
         }).orElse("");
     }
 
-    @RequiredOnPage(value = 11, message = "Enter the OGRS3 score")
+    @RequiredOnPage(value = 10, message = "Enter the OGRS3 score")
     @JsonProperty("RISK_ASSESSMENT_OGRS3_SCORE")
     private String riskAssessmentOGRS3ReoffendingProbability;
 
@@ -340,7 +334,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
         }).orElse("");
     }
 
-    @RequiredOnPage(value = 11, message = "Enter the OGP score")
+    @RequiredOnPage(value = 10, message = "Enter the OGP score")
     @JsonProperty("RISK_ASSESSMENT_OGP_SCORE")
     private String riskAssessmentOGPReoffendingProbability;
 
@@ -360,7 +354,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
         }).orElse("");
     }
 
-    @RequiredOnPage(value = 11, message = "Enter the OVP score")
+    @RequiredOnPage(value = 10, message = "Enter the OVP score")
     @JsonProperty("RISK_ASSESSMENT_OVP_SCORE")
     private String riskAssessmentOVPReoffendingProbability;
 
@@ -380,254 +374,267 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
         }).orElse("");
     }
 
-    @RequiredOnPage(value = 11, message = "Specify if a OASys Sexual re-offending Predictor (Contact) (OSP/C) has been completed")
+    @RequiredOnPage(value = 10, message = "Specify if a OASys Sexual re-offending Predictor (Contact) (OSP/C) has been completed")
     @JsonProperty("RISK_ASSESSMENT_OASYS_OSPC_COMPLETED")
     private String riskAssessmentOasysOspcAssessmentCompleted;
 
-    @RequiredOnPage(value = 11, message = "Select the OASys Sexual re-offending Predictor (Contact) (OSP/C) score", onlyIfField = "riskAssessmentOasysOspcAssessmentCompleted", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 10, message = "Select the OASys Sexual re-offending Predictor (Contact) (OSP/C) score", onlyIfField = "riskAssessmentOasysOspcAssessmentCompleted", onlyIfFieldMatchValue = "yes")
     @JsonProperty("RISK_ASSESSMENT_OASYS_OSPC_SCORE")
     private String riskAssessmentOasysOspcScore;
 
-    @RequiredOnPage(value = 11, message = "Specify if a OASys Sexual re-offending Predictor (Indecent Images) (OSP/I) has been completed")
+    @RequiredOnPage(value = 10, message = "Specify if a OASys Sexual re-offending Predictor (Indecent Images) (OSP/I) has been completed")
     @JsonProperty("RISK_ASSESSMENT_OASYS_OSPI_COMPLETED")
     private String riskAssessmentOasysOspiAssessmentCompleted;
 
-    @RequiredOnPage(value = 11, message = "Select the OASys Sexual re-offending Predictor (Indecent Images) (OSP/I) score", onlyIfField = "riskAssessmentOasysOspiAssessmentCompleted", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 10, message = "Select the OASys Sexual re-offending Predictor (Indecent Images) (OSP/I) score", onlyIfField = "riskAssessmentOasysOspiAssessmentCompleted", onlyIfFieldMatchValue = "yes")
     @JsonProperty("RISK_ASSESSMENT_OASYS_OSPI_SCORE")
     private String riskAssessmentOasysOspiScore;
 
-    @RequiredOnPage(value = 11, message = "Specify if a SARA has been completed")
+    @RequiredOnPage(value = 10, message = "Specify if a SARA has been completed")
     @JsonProperty("RISK_ASSESSMENT_SARA_COMPLETED")
     private String riskAssessmentSpousalAssaultAssessmentCompleted;
 
-    @RequiredOnPage(value = 11, message = "Select the SARA score", onlyIfField = "riskAssessmentSpousalAssaultAssessmentCompleted", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 10, message = "Select the SARA score", onlyIfField = "riskAssessmentSpousalAssaultAssessmentCompleted", onlyIfFieldMatchValue = "yes")
     @JsonProperty("RISK_ASSESSMENT_SARA_SCORE")
     private String riskAssessmentSpousalAssaultScore;
 
-    // Page 12 - Current RoSH: community
-    @RequiredOnPage(value = 12, message = "Select the risk to the public")
+    // Page 11 - Current RoSH: community
+
+    @RequiredOnPage(value = 11, message = "Select the risk to the public")
     @JsonProperty("ROSH_COMMUNITY_PUBLIC")
     private String roshCommunityPublic;
 
-    @RequiredOnPage(value = 12, message = "Select the risk to any known adult")
+    @RequiredOnPage(value = 11, message = "Select the risk to any known adult")
     @JsonProperty("ROSH_COMMUNITY_KNOWN_ADULT")
     private String roshCommunityKnownAdult;
 
-    @RequiredOnPage(value = 12, message = "Select the risk to children")
+    @RequiredOnPage(value = 11, message = "Select the risk to children")
     @JsonProperty("ROSH_COMMUNITY_CHILDREN")
     private String roshCommunityChildren;
 
-    @RequiredOnPage(value = 12, message = "Select the risk to prisoners")
+    @RequiredOnPage(value = 11, message = "Select the risk to prisoners")
     @JsonProperty("ROSH_COMMUNITY_PRISONERS")
     private String roshCommunityPrisoners;
 
-    @RequiredOnPage(value = 12, message = "Select the risk to staff")
+    @RequiredOnPage(value = 11, message = "Select the risk to staff")
     @JsonProperty("ROSH_COMMUNITY_STAFF")
     private String roshCommunityStaff;
 
-    // Page 13 - Current RoSH: community
-    @RequiredOnPage(value = 13, message = "Select the risk to the public")
+    // Page 12 - Current RoSH: community
+
+    @RequiredOnPage(value = 12, message = "Select the risk to the public")
     @JsonProperty("ROSH_CUSTODY_PUBLIC")
     private String roshCustodyPublic;
 
-    @RequiredOnPage(value = 13, message = "Select the risk to any known adult")
+    @RequiredOnPage(value = 12, message = "Select the risk to any known adult")
     @JsonProperty("ROSH_CUSTODY_KNOWN_ADULT")
     private String roshCustodyKnownAdult;
 
-    @RequiredOnPage(value = 13, message = "Select the risk to children")
+    @RequiredOnPage(value = 12, message = "Select the risk to children")
     @JsonProperty("ROSH_CUSTODY_CHILDREN")
     private String roshCustodyChildren;
 
-    @RequiredOnPage(value = 13, message = "Select the risk to prisoners")
+    @RequiredOnPage(value = 12, message = "Select the risk to prisoners")
     @JsonProperty("ROSH_CUSTODY_PRISONERS")
     private String roshCustodyPrisoners;
 
-    @RequiredOnPage(value = 13, message = "Select the risk to staff")
+    @RequiredOnPage(value = 12, message = "Select the risk to staff")
     @JsonProperty("ROSH_CUSTODY_STAFF")
     private String roshCustodyStaff;
 
-    // Page 14 - Risk to the prisoner
-    @RequiredOnPage(value = 14, message = "Specify if the prisoner poses a risk of self harm in the community")
+    // Page 13 - Risk to the prisoner
+
+    @RequiredOnPage(value = 13, message = "Specify if the prisoner poses a risk of self harm in the community")
     @JsonProperty("SELF_HARM_COMMUNITY")
     private String selfHarmCommunity;
 
-    @RequiredOnPage(value = 14, message = "Specify if the prisoner poses a risk of self harm in custody")
+    @RequiredOnPage(value = 13, message = "Specify if the prisoner poses a risk of self harm in custody")
     @JsonProperty("SELF_HARM_CUSTODY")
     private String selfHarmCustody;
 
-    @RequiredOnPage(value = 14, message = "Specify if the prisoner is at risk of serious harm from others in the community")
+    @RequiredOnPage(value = 13, message = "Specify if the prisoner is at risk of serious harm from others in the community")
     @JsonProperty("OTHERS_HARM_COMMUNITY")
     private String othersHarmCommunity;
 
-    @RequiredOnPage(value = 14, message = "Specify if the prisoner is at risk of serious harm from others in custody")
+    @RequiredOnPage(value = 13, message = "Specify if the prisoner is at risk of serious harm from others in custody")
     @JsonProperty("OTHERS_HARM_CUSTODY")
     private String othersHarmCustody;
 
-    // Page 15 - RoSH analysis
-    @RequiredOnPage(value = 15, message = "Enter the nature of the risk of serious harm")
+    // Page 14 - RoSH analysis
+
+    @RequiredOnPage(value = 14, message = "Enter the nature of the risk of serious harm")
     @JsonProperty("NATURE_OF_RISK")
     private String natureOfRisk;
 
-    @RequiredOnPage(value = 15, message = "Enter the factors that might increase the risk of serious harm")
+    @RequiredOnPage(value = 14, message = "Enter the factors that might increase the risk of serious harm")
     @JsonProperty("INCREASE_FACTORS")
     private String increaseFactors;
 
-    @RequiredOnPage(value = 15, message = "Enter the factors that might decrease the risk of serious harm")
+    @RequiredOnPage(value = 14, message = "Enter the factors that might decrease the risk of serious harm")
     @JsonProperty("DECREASE_FACTORS")
     private String decreaseFactors;
 
-    @RequiredOnPage(value = 15, message = "Enter your analysis of the likelihood of further offending")
+    @RequiredOnPage(value = 14, message = "Enter your analysis of the likelihood of further offending")
     @JsonProperty("LIKELIHOOD_FURTHER_OFFENDING")
     private String likelihoodFurtherOffending;
 
-    @RequiredOnPage(value = 15, message = "Specify if the prisoner poses a risk of absconding")
+    @RequiredOnPage(value = 14, message = "Specify if the prisoner poses a risk of absconding")
     @JsonProperty("RISK_OF_ABSCONDING")
     private String riskOfAbsconding;
 
-    @RequiredOnPage(value = 15, message = "Enter the details of the absconding risk", onlyIfField = "riskOfAbsconding", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 14, message = "Enter the details of the absconding risk", onlyIfField = "riskOfAbsconding", onlyIfFieldMatchValue = "yes")
     @JsonProperty("RISK_OF_ABSCONDING_DETAILS")
     private String riskOfAbscondingDetails;
 
-    // Page 16 - Risk Management Plan (RMP)
-    @RequiredOnPage(value = 16, message = "Specify if the prisoner requires a community RMP")
+    // Page 15 - Risk Management Plan (RMP)
+
+    @RequiredOnPage(value = 15, message = "Specify if the prisoner requires a community RMP")
     @JsonProperty("RISK_MANAGEMENT_PLAN_REQUIRED")
     private String riskManagementPlanRequired;
 
-    @RequiredOnPage(value = 16, message = "Enter the current situation", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 15, message = "Enter the current situation", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
     @JsonProperty("RMP_CURRENT_SITUATION")
     private String currentSituation;
 
-    @RequiredOnPage(value = 16, message = "Enter the supervision", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 15, message = "Enter the supervision", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
     @JsonProperty("RMP_SUPERVISION")
     private String supervision;
 
-    @RequiredOnPage(value = 16, message = "Enter the monitoring / control", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 15, message = "Enter the monitoring / control", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
     @JsonProperty("RMP_MONITORING_CONTROL")
     private String monitoringControl;
 
-    @RequiredOnPage(value = 16, message = "Enter the interventions / treatment", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 15, message = "Enter the interventions / treatment", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
     @JsonProperty("RMP_INTERVENTIONS_TREATMENT")
     private String interventionsTreatment;
 
-    @RequiredOnPage(value = 16, message = "Enter the victim safety planning", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 15, message = "Enter the victim safety planning", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
     @JsonProperty("RMP_VICTIM_SAFETY_PLANNING")
     private String victimSafetyPlanning;
 
-    @RequiredOnPage(value = 16, message = "Enter the contingency plan", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 15, message = "Enter the contingency plan", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
     @JsonProperty("RMP_CONTINGENCY_PLAN")
     private String contingencyPlan;
 
-    // Page 17 - Resettlement plan for release
-    @RequiredOnPage(value = 17, message = "Specify if the prisoner requires a resettlement plan for release")
+    // Page 16 - Resettlement plan for release
+
+    @RequiredOnPage(value = 16, message = "Specify if the prisoner requires a resettlement plan for release")
     @JsonProperty("RESETTLEMENT_PLAN")
     private String resettlementPlan;
 
-    @RequiredOnPage(value = 17, message = "Enter the resettlement plan for release", onlyIfField = "resettlementPlan", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 16, message = "Enter the resettlement plan for release", onlyIfField = "resettlementPlan", onlyIfFieldMatchValue = "yes")
     @JsonProperty("RESETTLEMENT_PLAN_DETAIL")
     private String resettlementPlanDetail;
 
-    // Page 18 - Supervision plan for release
-    @RequiredOnPage(value = 18, message = "Specify if the prisoner requires a supervision plan for release")
+    // Page 17 - Supervision plan for release
+
+    @RequiredOnPage(value = 17, message = "Specify if the prisoner requires a supervision plan for release")
     @JsonProperty("SUPERVISION_PLAN_REQUIRED")
     private String supervisionPlanRequired;
 
-    @RequiredOnPage(value = 18, message = "Enter the supervision plan for release", onlyIfField = "supervisionPlanRequired", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 17, message = "Enter the supervision plan for release", onlyIfField = "supervisionPlanRequired", onlyIfFieldMatchValue = "yes")
     @JsonProperty("SUPERVISION_PLAN_DETAIL")
     private String supervisionPlanDetail;
 
-    // Page 19 - Recommendation
-    @RequiredOnPage(value = 19, message = "You must confirm that you have had sight of the On/post Tariff Parole Custody Report and liaised with the Prison Offender Manager and their views around the assessment and recommendation have been taken into account in this report.")
+    // Page 18 - Recommendation
+
+    @RequiredOnPage(value = 18, message = "You must confirm that you have had sight of the On/post Tariff Parole Custody Report and liaised with the Prison Offender Manager and their views around the assessment and recommendation have been taken into account in this report.")
     @JsonProperty("PRISON_LIAISON")
     private String prisonLiaisonConfirm;
 
-    @RequiredOnPage(value = 19, message = "Enter your recommendation")
+    @RequiredOnPage(value = 18, message = "Enter your recommendation")
     @JsonProperty("_RECOMMENDATION_")
     private String recommendation;
 
-    // Page 20 - Oral hearing
-    @RequiredOnPage(value = 20, message = "Enter the member case assessment and oral hearing considerations")
+    // Page 19 - Oral hearing
+
+    @RequiredOnPage(value = 19, message = "Enter the member case assessment and oral hearing considerations")
     @JsonProperty("ORAL_HEARING")
     private String oralHearing;
 
-    // Page 21 - Sources
-    @RequiredGroupOnPage(value = 21, message = "Select the case documents you have used")
+    // Page 20 - Sources
+
+    @RequiredGroupOnPage(value = 20, message = "Select the case documents you have used")
     @JsonProperty("SOURCES_PREVIOUS_CONVICTIONS")
     private boolean sourcesPreviousConvictions;
 
-    @RequiredGroupOnPage(value = 21, errorWhenInvalid = false)
+    @RequiredGroupOnPage(value = 20, errorWhenInvalid = false)
     @JsonProperty("SOURCES_CPS_DOCUMENTS")
     private boolean sourcesCPSDocuments;
 
-    @RequiredGroupOnPage(value = 21, errorWhenInvalid = false)
+    @RequiredGroupOnPage(value = 20, errorWhenInvalid = false)
     @JsonProperty("SOURCES_JUDGES_COMMENTS")
     private boolean sourcesJudgesComments;
 
-    @RequiredGroupOnPage(value = 21, errorWhenInvalid = false)
+    @RequiredGroupOnPage(value = 20, errorWhenInvalid = false)
     @JsonProperty("SOURCES_PAROLE_DOSSIER")
     private boolean sourcesParoleDossier;
 
-    @RequiredGroupOnPage(value = 21, errorWhenInvalid = false)
+    @RequiredGroupOnPage(value = 20, errorWhenInvalid = false)
     @JsonProperty("SOURCES_PREVIOUS_PAROLE_REPORTS")
     private boolean sourcesPreviousParoleReports;
 
-    @RequiredGroupOnPage(value = 21, errorWhenInvalid = false)
+    @RequiredGroupOnPage(value = 20, errorWhenInvalid = false)
     @JsonProperty("SOURCES_PRE_SENTENCE_REPORT")
     private boolean sourcesPreSentenceReport;
 
-    @RequiredGroupOnPage(value = 21, errorWhenInvalid = false)
+    @RequiredGroupOnPage(value = 20, errorWhenInvalid = false)
     @JsonProperty("SOURCES_PROBATION_CASE_RECORD")
     private boolean sourcesProbationCaseRecord;
 
-    @RequiredGroupOnPage(value = 21, errorWhenInvalid = false)
+    @RequiredGroupOnPage(value = 20, errorWhenInvalid = false)
     @JsonProperty("SOURCES_TARIFF")
     private boolean sourcesTariff;
 
-    @RequiredGroupOnPage(value = 21, errorWhenInvalid = false)
+    @RequiredGroupOnPage(value = 20, errorWhenInvalid = false)
     @JsonProperty("SOURCES_OTHER")
     private boolean sourcesOther;
 
-    @RequiredOnPage(value = 21, onlyIfField = "sourcesOther", message = "Enter the other case documents you have used")
+    @RequiredOnPage(value = 20, onlyIfField = "sourcesOther", message = "Enter the other case documents you have used")
     @JsonProperty("SOURCES_OTHER_DETAIL")
     private String sourcesOtherDetail;
 
-    @RequiredOnPage(value = 21, message = "Enter the reports, assessments and directions you have used")
+    @RequiredOnPage(value = 20, message = "Enter the reports, assessments and directions you have used")
     @JsonProperty("SOURCES_ASSESSMENT_LIST")
     private String sourcesAssessmentList;
 
-    @RequiredOnPage(value = 21, message = "Specify if there have been any omissions or limitations")
+    @RequiredOnPage(value = 20, message = "Specify if there have been any omissions or limitations")
     @JsonProperty("SOURCES_LIMITATIONS")
     private String sourceLimitations;
 
-    @RequiredOnPage(value = 21, message = "Enter the explanation", onlyIfField = "sourceLimitations", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 20, message = "Enter the explanation", onlyIfField = "sourceLimitations", onlyIfFieldMatchValue = "yes")
     @JsonProperty("SOURCES_LIMITATIONS_DETAIL")
     private String sourceLimitationsDetail;
 
-    // Page 23
-    @RequiredOnPage(value = 23, message = "Enter the report author")
+    // Page 21 - Check your report
+
+    // Page 22 - Signature
+
+    @RequiredOnPage(value = 22, message = "Enter the report author")
     @JsonProperty("SIGNATURE_NAME")
     private String signatureName;
 
-    @RequiredOnPage(value = 23, message = "Enter the NPS division and PDU")
+    @RequiredOnPage(value = 22, message = "Enter the NPS division and PDU")
     @JsonProperty("SIGNATURE_DIVISION")
     private String signatureDivision;
 
-    @RequiredOnPage(value = 23, message = "Enter the office address")
+    @RequiredOnPage(value = 22, message = "Enter the office address")
     @JsonProperty("SIGNATURE_OFFICE_ADDRESS")
     private String signatureOfficeAddress;
 
-    @RequiredOnPage(value = 23, message = "Enter the email address")
+    @RequiredOnPage(value = 22, message = "Enter the email address")
     @JsonProperty("SIGNATURE_EMAIL")
     private String signatureEmail;
 
-    @RequiredOnPage(value = 23, message = "Enter the telephone number and extension")
+    @RequiredOnPage(value = 22, message = "Enter the telephone number and extension")
     @JsonProperty("SIGNATURE_TELEPHONE")
     private String signatureTelephone;
 
-    @OnPage(value = 23)
+    @OnPage(value = 22)
     @JsonProperty("SIGNATURE_COUNTER_NAME")
     private String signatureCounterName;
 
-    @OnPage(value = 23)
+    @OnPage(value = 22)
     @JsonProperty("SIGNATURE_COUNTER_ROLE")
     private String signatureCounterRole;
 
@@ -636,7 +643,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
         return formattedDateFromDateParts("signatureDate");
     }
 
-    @RequiredDateOnPage(value = 23,
+    @RequiredDateOnPage(value = 22,
             message = "Enter the completion date",
             incompleteMessage = "Enter the completion date and include a day, month and year",
             invalidMessage = "Enter a real completion date",

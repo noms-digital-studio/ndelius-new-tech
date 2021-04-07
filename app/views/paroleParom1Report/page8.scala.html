@@ -10,29 +10,24 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@interventionsDetailHint = {
+@sentencePlanHint = {
     <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
-        <li>A basic list of all interventions completed throughout the sentence - not just those finished since the last report was submitted. Record these chronologically with dates. For example, programmes, courses, 121 work, education, training, employment and progression regimes.</li>
-        <li>Referrals and programme assessments - state if the prisoner was not deemed suitable.</li>
-        <li>Interventions the prisoner declined to attend or did not complete.</li>
+        <li>Current and future (If they remain in custody - closed or open conditions) sentence plan objectives and other agencies involved - this is different from the community supervision plan.</li>
+        <li>Evidence of the prisoner’s engagement in the process.</li>
+        <li>Evidence of the prisoner understanding the purpose of interventions and taking responsibility for their agreed objectives.</li>
+        <li>Objectives that meet all risk, need and responsivity considerations - explain any gaps.</li>
+        <li>Evidence of the 7 priority areas linked to women and their ability to stay safe and reduce the likelihood of further offending. They are substance misuse, mental health, emotion management, pro-social identity, control of daily life, family contact and resettlement and building social capital.</li>
+        <li>An objective, if relevant, to address specific child, adult or victim safeguarding - you should record if this cannot be completed at the current establishment or before release.</li>
+        <li>Encouragement to set positive goals to reduce the risk of further harmful behaviour if the prisoner is in denial. For example, working through possible domestic abuse and healthy relationship situations.</li>
+        <li>Planned activity responsive to the prisoner’s age, gender, race and cultural background.</li>
+        <li>Planned activity responsive to the prisoner’s psychosocial maturity and diversity considerations such as learning difficulties or disabilities.</li>
+        <li>Analysis of the prisoner’s response to their progress.</li>
+        <li>Analysis of the work the prisoner is required to complete if they are ineligible (pre-tariff or in hospital) for release, or if they are seeking a move to open conditions.</li>
+        <li>IPP Case File Reviews (CFR): Refer to discussions with psychology staff (usually the CFR writer but not always) rather than the CFR itself as these form part of a wider consultation process. This will prevent CFRs being requested and forming part of the dossier. Cutting and pasting from the CFR should not happen as part of sentence planning.</li>
+        <li>Consideration for comments made in specialist reports about their progress in custody on their sentence plan.</li>
     </ul>
 }
 
-@interventionsSummaryHint = {
-    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
-        <li>An analysis of any significant impact, or lack of, that an intervention has had to address risk factors. You do not have to analyse interventions individually - this is included in the dossier.</li>
-        <li>Successes, shifts in behaviour or attitude, responsivity and diversity considerations (for example IQ, learning disabilities, personality disorder or maturity) and capacity to change.</li>
-        <li>Application of learning, for example, evidence of using a new skill.</li>
-        <li>Consideration of the impact of gender-specific and trauma-informed interventions.</li>
-        <li>A focus on the overall application of learning to evidence any reduction in risk - don’t repeat what’s in the attitude to index offence and previous offending sections.</li>
-    </ul>
-}
-
-@popup(reportForm, encrypter, "Interventions", 8) {
-    @textarea(reportForm("interventionsDetail"), '_label -> "Detail the interventions the prisoner has completed", '_hint -> interventionsDetailHint, 'class -> "wide", 'required -> "true")
-
-    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
-
-    @textarea(reportForm("interventionsSummary"), '_label -> "Interventions analysis", '_hint -> interventionsSummaryHint, 'class -> "wide", 'required -> "true")
-
+@popup(reportForm, encrypter, "Prison sentence plan and response", 8) {
+    @textarea(reportForm("sentencePlan"), '_label -> "Detail their prison sentence plan. Include their response", '_hint -> sentencePlanHint, 'class -> "wide")
 }

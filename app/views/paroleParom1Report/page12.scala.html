@@ -11,9 +11,8 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@popup(reportForm, encrypter, "Current RoSH: community", 12) {
-
-    <p class="govuk-caption-xl govuk-!-margin-top-0 govuk-!-margin-bottom-4">Select the prisoner’s current RoSH in the community</p>
+@popup(reportForm, encrypter, "Current RoSH: custody", 12) {
+    <p class="govuk-caption-xl govuk-!-margin-top-0 govuk-!-margin-bottom-4">Select the prisoner’s current RoSH in custody</p>
 
     <div class="form-group" data-module="radios">
         <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
@@ -22,7 +21,7 @@
             </legend>
 
             @inputRadioGroup(
-                reportForm("roshCommunityPublic"),
+                reportForm("roshCustodyPublic"),
                 options(
                     "low" -> "Low",
                     "medium" -> "Medium",
@@ -40,7 +39,7 @@
             </legend>
 
             @inputRadioGroup(
-                reportForm("roshCommunityKnownAdult"),
+                reportForm("roshCustodyKnownAdult"),
                 options(
                     "low" -> "Low",
                     "medium" -> "Medium",
@@ -58,7 +57,7 @@
             </legend>
 
             @inputRadioGroup(
-                reportForm("roshCommunityChildren"),
+                reportForm("roshCustodyChildren"),
                 options(
                     "low" -> "Low",
                     "medium" -> "Medium",
@@ -76,7 +75,7 @@
             </legend>
 
             @inputRadioGroup(
-                reportForm("roshCommunityPrisoners"),
+                reportForm("roshCustodyPrisoners"),
                 options(
                     "low" -> "Low",
                     "medium" -> "Medium",
@@ -94,7 +93,7 @@
             </legend>
 
             @inputRadioGroup(
-                reportForm("roshCommunityStaff"),
+                reportForm("roshCustodyStaff"),
                 options(
                     "low" -> "Low",
                     "medium" -> "Medium",
@@ -104,5 +103,4 @@
             )
         </fieldset>
     </div>
-
 }

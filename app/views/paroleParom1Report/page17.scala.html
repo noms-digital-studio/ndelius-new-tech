@@ -11,39 +11,38 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@resettlementPlanDetailHint = {
+@supervisionPlanDetailHint = {
     <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
-        <li>Accommodation plans - with an assessment of suitability and likely compliance.</li>
-        <li>Clarification that a referral to Approved Premises has been accepted, if appropriate. If a referral has not been accepted explain why.</li>
-        <li>Analysis of the value an AP will add to risk management. Consideration of the impact of an AP placement away from the prisoner’s home area, for example, female estates are not available in every division.</li>
-        <li>Consideration if the prisoner entered custody as a juvenile, was a care leaver or has been in secure accommodation - they are unlikely to have experience of managing tenancies, budgeting and other life skills. State how they will be supported.</li>
-        <li>An explanation, with reasons, of all relevant licence conditions required to manage risk - matched to those in the RMP.</li>
-        <li>Victim and safeguarding issues, if appropriate.</li>
-        <li>Accommodation plans that take diversity into account.</li>
+        <li>A supervision plan which outlines what objectives the prisoner is required to complete upon release. The objectives should meet the required risk, need and responsivity considerations to help ensure the licence period is successful.</li>
+        <li>Evidence that the prisoner has engaged in the sentence plan process. Prisoners should be clear on the purpose of any interventions and be encouraged to take responsibility for the objectives they have agreed.</li>
+        <li>Objectives to address RoSH in child, adult and victim safeguarding cases.</li>
+        <li>A reference to the likelihood of compliance with supervision.</li>
+        <li>Analysis of additional factors to encourage and support compliance - this is pertinent for prisoners who have served long sentences or entered custody as a juvenile. They could feel institutionalised or struggle to manage the demands of life in the community, for example, claiming benefits or new technology.</li>
+        <li>A supervision plan that takes diversity into account.</li>
     </ul>
 }
 
-@popup(reportForm, encrypter, "Resettlement plan for release", 17) {
+@popup(reportForm, encrypter, "Supervision plan for release", 17) {
     <div class="form-group" data-module="radios">
         <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
             <legend class="govuk-fieldset__legend govuk-label">
-                Does the prisoner require a resettlement plan for release?
+                Does the prisoner require a supervision plan for release?
             </legend>
-            <span class="govuk-hint" id="resettlementPlanRequired-hint">The Parole Board do not require a resettlement plan if the prisoner is pre-tariff</span>
+            <span class="govuk-hint" id="supervisionPlanRequired-hint">The Parole Board do not require a supervision plan if the prisoner is pre-tariff</span>
 
             @inputRadioGroup(
-                reportForm("resettlementPlan"),
+                reportForm("supervisionPlanRequired"),
                 options(
                     "yes" -> "Yes",
                     "no" -> "No"
                 ),
                 '_inline -> "true",
-                Symbol("data-aria-controls") -> "resettlement-plan"
+                Symbol("data-aria-controls") -> "supervision-plan"
             )
         </fieldset>
 
-        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="resettlement-plan-yes">
-        @textarea(reportForm("resettlementPlanDetail"), '_label -> "Detail the resettlement plan for release", '_hint -> resettlementPlanDetailHint, 'class -> "wide")
+        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="supervision-plan-yes">
+        @textarea(reportForm("supervisionPlanDetail"), '_label -> "Detail the supervision plan for release", '_hint -> supervisionPlanDetailHint, 'class -> "wide")
         </div>
     </div>
 }

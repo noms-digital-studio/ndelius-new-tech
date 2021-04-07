@@ -11,13 +11,68 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@oralHearingHint = {
-    <p>For the MCA papers assessment stage, the author should assess whether the prisoner has any communication challenges such as difficulties reading and/or writing, English as a second language/need for an interpreter, or mental capacity or cognitive skills that would prevent them from understanding content of parole documents or the parole decision. Should Welsh be the prisoner’s preferred language, this should be stated, in line with the HMPPS Welsh Language Scheme.</p>
-    <p class="govuk-!-margin-top-2">Any relevant information which may impact on the prisoner’s ability to engage effectively at the oral hearing should be identified and explained, so appropriate provisions can be made. This could relate to the prisoner’s health, diversity or if there is particular security information. Examples could include ensuring the room the hearing is being conducted in has a working hearing loop and/or BSL, where the prisoner is hard of hearing, provision of an interpreter or intermediary where English is a second language or the prisoner is on six person unlock due to their behaviour and escort to the hearing will require more staff.</p>
-    <p class="govuk-!-margin-top-2">Consider whether the hearing could be conducted virtually or whether it is sufficiently complex to require face to face.</p>
-    <p class="govuk-!-margin-top-2">Where there are no identified concerns, a short statement confirming this will need to be included, so to show it has not been overlooked.</p>
+@sourcesAssessmentListHint = {
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+        <li>All written sources used (not the standard ones mentioned above) and the author’s name and completion date - this can show changes in attitudes, behaviours and risks. For example, sentence planning notes, psychology reports and previous convictions.</li>
+        <li>If the prisoner is part of the national IPP project and the psychology CFR has been completed.</li>
+        <li>If the prisoner’s case has been heard at an IPP progression panel.</li>
+        <li>Documents and oral information included in the MAPPA minutes - these must be obtained from the agency as you cannot cite MAPPA minutes in this section.</li>
+        <li>Information that can be shared with the prisoner. It must not contain information that could put others at risk, for example, the location of children or victims that prisoner is unaware of, MALRAP intelligence or the name and contact details of the VLO.</li>
+        <li>Contact PPCS if you have disclosure concerns. Contact the Victim Liaison Unit if you have concerns about victims.</li>
+    </ul>
 }
 
-@popup(reportForm, encrypter, "Oral hearing", 20) {
-    @textarea(reportForm("oralHearing"), '_label -> "Member case assessment and oral hearing considerations", '_hint -> oralHearingHint, 'class -> "wide", 'required -> "true", '_error -> "Enter the member case assessment and oral hearing considerations")
+@sourceLimitationsDetailHint = {
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+        <li>Limitations to the information, for example, an unavailable report.</li>
+        <li>An explanation of the impact of the limitations on the overall assessment - the Parole Board might wish to pursue missing evidence if it is highlighted in advance of the oral hearing.</li>
+        <li>Discrepancies between sources - evidence this.</li>
+    </ul>
+}
+
+@popup(reportForm, encrypter, "Sources", 20) {
+    <div class="govuk-form-group @if(!reportForm.errors("sourcesPreviousConvictions").isEmpty) { govuk-form-group--error}">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-label">Select all case documents you have used for this PAROM 1</legend>
+            <div class="govuk-checkboxes" data-module="checkboxes">
+                @checkbox(reportForm("sourcesPreviousConvictions"), '_label -> "Previous convictions")
+                @checkbox(reportForm("sourcesCPSDocuments"), '_label -> "Crown Prosecution Service (CPS) documents")
+                @checkbox(reportForm("sourcesJudgesComments"), '_label -> "Judges comments")
+                @checkbox(reportForm("sourcesParoleDossier"), '_label -> "Parole dossier")
+                @checkbox(reportForm("sourcesProbationCaseRecord"), '_label -> "Probation case records (nDelius)")
+                @checkbox(reportForm("sourcesPreviousParoleReports"), '_label -> "Previous parole reports")
+                @checkbox(reportForm("sourcesPreSentenceReport"), '_label -> "Pre-sentence report")
+                @checkbox(reportForm("sourcesTariff"), '_label -> "On/post Tariff Parole Custody Report")
+                @checkbox(reportForm("sourcesOther"), '_label -> "Other", Symbol("data-aria-controls") -> "other-sources")
+                <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="other-sources">
+                @textarea(reportForm("sourcesOtherDetail"), '_label -> "Detail any other case documents you have used", 'class -> "wide")
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
+    @textarea(reportForm("sourcesAssessmentList"), '_label -> "List all of the reports, assessments and directions you have used for this PAROM 1", '_hint -> sourcesAssessmentListHint, 'class -> "wide", 'required -> "true")
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
+    <div class="form-group" data-module="radios">
+        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Has any information not been made available to you, or are there any limitations to the sources?
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("sourceLimitations"),
+                options(
+                    "yes" -> "Yes",
+                    "no" -> "No"
+                ),
+                '_inline -> "true",
+                Symbol("data-aria-controls") -> "source-limitations"
+            )
+        </fieldset>
+
+        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="source-limitations-yes">
+        @textarea(reportForm("sourceLimitationsDetail"), '_label -> "Provide an explanation", '_hint -> sourceLimitationsDetailHint, 'class -> "wide")
+        </div>
+    </div>
+
 }

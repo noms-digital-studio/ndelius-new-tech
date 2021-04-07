@@ -12,8 +12,6 @@ Feature: Parole Report - Signature & date
     And Delius User completes the "Victims" UI within the Parole Report
     Then the user should be directed to the "OPD pathway" UI
     And Delius User completes the "OPD Pathway" UI within the Parole Report
-    Then the user should be directed to the "Behaviour in prison" UI
-    And Delius User completes the "Behaviour in prison" UI within the Parole Report
     Then the user should be directed to the "Interventions" UI
     And Delius User completes the "Interventions" UI within the Parole Report
     Then the user should be directed to the "Prison sentence plan and response" UI
