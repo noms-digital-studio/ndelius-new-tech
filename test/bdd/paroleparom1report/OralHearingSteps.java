@@ -16,7 +16,7 @@ public class OralHearingSteps {
 
     @Given("^Delius User completes the \"Oral hearing\" UI within the Parole Report$")
     public void deliusUserCompletesThePageWithinTheParoleReport() throws Throwable {
-        page.fillTextArea("Oral hearing considerations", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
+        page.fillTextArea("Member case assessment and oral hearing considerations", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
         page.clickButton("Continue");
     }
 }

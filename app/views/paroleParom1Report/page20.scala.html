@@ -12,14 +12,12 @@
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @oralHearingHint = {
-    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
-        <li>An explanation of the prisoner’s ability to effectively engage at the oral hearing so that appropriate provisions can be made.</li>
-        <li>Consideration of the prisoner’s health, diversity or security information. For example, there is a working hearing loop or BSL if the prisoner is deaf or hard of hearing, there is an interpreter or intermediary if English is a second language or there is sufficient staff if the prisoner is on 6 person unlock.</li>
-        <li>A statement confirming the necessary arrangements have been made.</li>
-        <li>A statement confirming oral hearing considerations have been addressed if there are no issues.</li>
-    </ul>
+    <p>For the MCA papers assessment stage, the author should assess whether the prisoner has any communication challenges such as difficulties reading and/or writing, English as a second language/need for an interpreter, or mental capacity or cognitive skills that would prevent them from understanding content of parole documents or the parole decision. Should Welsh be the prisoner’s preferred language, this should be stated, in line with the HMPPS Welsh Language Scheme.</p>
+    <p class="govuk-!-margin-top-2">Any relevant information which may impact on the prisoner’s ability to engage effectively at the oral hearing should be identified and explained, so appropriate provisions can be made. This could relate to the prisoner’s health, diversity or if there is particular security information. Examples could include ensuring the room the hearing is being conducted in has a working hearing loop and/or BSL, where the prisoner is hard of hearing, provision of an interpreter or intermediary where English is a second language or the prisoner is on six person unlock due to their behaviour and escort to the hearing will require more staff.</p>
+    <p class="govuk-!-margin-top-2">Consider whether the hearing could be conducted virtually or whether it is sufficiently complex to require face to face.</p>
+    <p class="govuk-!-margin-top-2">Where there are no identified concerns, a short statement confirming this will need to be included, so to show it has not been overlooked.</p>
 }
 
 @popup(reportForm, encrypter, "Oral hearing", 20) {
-    @textarea(reportForm("oralHearing"), '_label -> "Oral hearing considerations", '_hint -> oralHearingHint, 'class -> "wide", 'required -> "true", '_error -> "Enter the oral hearing considerations")
+    @textarea(reportForm("oralHearing"), '_label -> "Member case assessment and oral hearing considerations", '_hint -> oralHearingHint, 'class -> "wide", 'required -> "true", '_error -> "Enter the member case assessment and oral hearing considerations")
 }
