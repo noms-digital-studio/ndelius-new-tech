@@ -9,117 +9,172 @@
 
 @(reportForm: Form[ParoleParom1ReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
 
-@implicitField = @{ FieldConstructor(govukElements.f) }
-
-@natureOfRiskHint = {
-    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
-        <li>The nature of the risk to all victims who remain at risk now and in the future.</li>
-        <li>Consideration of the risk to victims from the index offence and from relevant previous offences.</li>
-        <li>Risks to the prisoner through self-harm or from others.</li>
-        <li>Consideration of cases when there has been a large volume of complaints from victims which, for possibly complex reasons, have not resulted in prosecution. Liaise with police to obtain and analyse reports to determine whether they contain relevant evidence to put before the Parole Board.</li>
-        <li>Do not comment on whether you believe any allegations or unconvicted behaviours are true or false. You should assess any impact the behaviours could have on the assessment if they were true or false. If you are unsure or are concerned that comments could lead to legal challenges, speak to PPCS.</li>
-        <li>Analysis and a clear indication of the nature of the risk, for example, physical, emotional, psychological or financial. Avoid</li>
-        <li>generalisations such as ‘violence’ - be specific, for example, ‘use of physical violence including strangulation’ or ‘emotional abuse in the form of controlling behaviours’.</li>
-        <li>A distinction between direct harm (for example, physical abuse or neglect) or indirect harm (for example, emotional harm due to witnessing domestic abuse), if risks to children have been identified.</li>
-        <li>Consideration for the impact on risk assessment and management that the judge's comments may have had.</li>
-    </ul>
+@implicitField = @{
+    FieldConstructor(govukElements.f)
 }
 
-@increaseFactorsHint = {
-    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
-        <li>An account for each victim, now and in the past - include risks to self.</li>
-        <li>Identification of triggers, factors, situations, people, places and other potential circumstances that might increase the risk, now and in the future. Record if they are currently present or absent.</li>
-        <li>A distinction between evidence gathered from convictions and evidence from allegations or complaints (not resulted in convictions). In certain cases it might be useful to produce 2 risk assessments - one clearly marked as information from additional untried evidence and one with evidence from convicted offences.</li>
-        <li>Do not comment on whether you believe any allegations or unconvicted behaviours are true or false. You should assess any impact the behaviours could have on the assessment if they were true or false. If you are unsure or are concerned that comments could lead to legal challenges, speak to PPCS.</li>
-        <li>A link between the original (this could include PSR or MALRAP) and the current risk assessments - include what has changed. Use the OASys assessment and other relevant assessments.</li>
-        <li>Information from prison staff, gender identity clinics or previous and current agencies. For example, a mental health professional can advise you about a prisoner’s behaviour if they stop taking medication.</li>
-        <li>Information from previous probation records might be useful, for example, how a prisoner coped with a difficult situation.</li>
-        <li>Information from ViSOR and MAPPA (If disclosable) meetings might be useful.</li>
-        <li>Consideration for women who may have been victimised or experienced physical or sexual abuse - how the risk might increase on their release.</li>
-        <li>Consideration of how non-compliance can link to increases in risk.</li>
-        <li>Diversity considerations.</li>
-        <li>Information from PD case formulations - specialists develop hypotheses about development, activation and maintenance of problems. Note the differences in specialist reports, if provided, around factors linked to an increase in risk.</li>
-        <li>Factors linked to risk from previous Parole Board direction letters.</li>
-        <li>Consideration for previous offences and paralleling behaviours linked to risk.</li>
-        <li>A full analysis - not bulleted points without description. The factors you have identified in this section will need to be addressed in the ‘Contingency plan’ section of the RMP for all on and post-tariff prisoners.</li>
-        <li>A distinction between risk in custody and the community.</li>
-    </ul>
+@currentSituationHint = {
+    <p class="govuk-body">Provide a brief summary of the case, areas of risk and current motivation to engage with the plan.</p>
+    <p class="govuk-body govuk-!-margin-top-4">Include the OASys generated text as well as the summary provided by the author.</p>
+    <p class="govuk-body govuk-!-margin-top-4">This summary should provide a reader an overview of how these strategies fit with the risk and situation presented.</p>
+    <p class="govuk-body govuk-!-margin-top-4">For detailed guidance see Risk of Serious Harm Guidance or OASys help section</p>
 }
 
-@decreaseFactorsHint = {
-    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
-        <li>An account for each victim, now and in the past - include risks to self.</li>
-        <li>OASys and relevant assessments supported by evidence.</li>
-        <li>Do not comment on whether you believe any allegations or unconvicted behaviours are true or false. You should assess any impact the behaviours could have on the assessment if they were true or false. If you are unsure or are concerned that comments could lead to legal challenges, speak to PPCS.</li>
-        <li>Consideration of IPP progression and lifer review panels.</li>
-        <li>Identification of positive and protective factors, for example, support networks and personal strengths (things like good communication skills, resilience or confidence) that promote desistance.</li>
-        <li>Identification of restrictive measures and specific interventions such as approved premises, civil orders and additional licence conditions.</li>
-        <li>Factors that have prevented the prisoner from causing harm, for example, engagement with statutory and non-statutory agencies or the identification of specific work.</li>
-        <li>Consideration for specific interventions and support for women, young adults or any other protective characteristic group.</li>
-        <li>Diversity considerations.</li>
-        <li>Information from PD case formulations - specialists can identify risk reduction factors. Note the differences in specialist reports, if provided, around factors linked to a reduction in risk.</li>
-        <li>Consideration for potential referrals related to adult and child safeguarding, existing child protection plans or care and support plans.</li>
-        <li>A full analysis - not bulleted points without description</li>
+@supervisionHint = {
+    <p class="govuk-body">Having contact with the person. This is not limited to the HMPPS staff working with the them but includes engagement with any other agencies.</p>
+    <p class="govuk-body govuk-!-margin-top-4">Outline:</p>
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-top-2">
+        <li>the frequency of contact</li>
+        <li>the need for supervised accommodation</li>
+        <li>any activity to develop protective factors</li>
+        <li>the role of supervision such as focussing on compliance and motivational work</li>
     </ul>
+    <p class="govuk-body govuk-!-margin-top-4">Examples of supervision include:</p>
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-top-2">
+        <li>office-based supervision/li>
+        <li>home visits (from all parties)</li>
+        <li>contact with healthcare professionals / treatment providers</li>
+        <li>interaction with staff in Approved Premises</li>
+        <li>tenancy support from Housing Associations</li>
+        <li>employment advocacy</li>
+        <li>education</li>
+        <li>mentoring</li>
+    </ul>
+    <p class="govuk-body govuk-!-margin-top-4">For detailed guidance see Risk of Serious Harm Guidance or OASys help section</p>
 }
 
-@likelihoodFurtherOffendingHint = {
-    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
-        <li>A Reference to static and dynamic assessment tools such as OGRS, OGP, OVP, RSR and other specialist assessments such as RM2k, HCR-20, SARN, SARA, and PCLR. The scores are stated elsewhere in the report - explain what they mean here.</li>
-        <li>A distinction between evidence gathered from convictions and evidence from allegations or complaints (not resulted in convictions). In certain cases it might be useful to produce 2 risk assessments - one clearly marked as information from additional untried evidence and one with evidence from convicted offences.</li>
-        <li>Do not comment on whether you believe any allegations or unconvicted behaviours are true or false. You should assess any impact the behaviours could have on the assessment if they were true or false. If you are unsure or are concerned that comments could lead to legal challenges, speak to PPCS.</li>
-        <li>Evidenced professional judgement if there is a deviation from the assessment tool score.</li>
-        <li>A link between the original and the current risk assessments - include what has changed. In some instances, it might be that the current offender manager did not agree with the original assessment.</li>
-        <li>Analysis of the likelihood of further offending - not a basic description such as low, medium, high, very high or imminent.</li>
-        <li>Consideration for the type of re-offending that might take place and the time frame in which it could occur.</li>
+@monitoringControlHint = {
+    <p class="govuk-body">The strategies you design to detect the build up to serious harm and prevent it happening.</p>
+    <p class="govuk-body govuk-!-margin-top-4">Monitoring can take many forms including:</p>
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-top-2">
+        <li>monitoring of internet use through monitoring software or limiting use to a specific device</li>
+        <li>Overnight stays (community) to test implementation of learning and test out resettlement plans</li>
+        <li>direct surveillance</li>
+        <li>sharing information and asking for updates from risk management partners</li>
+        <li>polygraph testing</li>
+        <li>drug testing </li>
+        <li>electronic and location monitoring</li>
     </ul>
+    <p class="govuk-body govuk-!-margin-top-4">Control is the part of the plan that aims to reduce the opportunities for an offender to cause serious harm and usually refers to different types of restriction such as:</p>
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-top-2">
+        <li>the use of licence conditions including restrictions on accommodation, associations, activities and movements</li>
+        <li>electronic monitoring to enforce a curfew or exclusion zone</li>
+        <li>the use of restrictive orders such as Sexual Harm Prevention Orders or Gang Injunctions</li>
+        <li>the use of warning markers to notify staff of specific risks, such as weapons</li>
+        <li>custody restrictions</li>
+    </ul>
+    <p class="govuk-body govuk-!-margin-top-4">For detailed guidance see Risk of Serious Harm Guidance or OASys help section</p>
 }
 
-@riskOfAbscondingDetailsHint = {
-    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
-        <li>A summary of the absconding risk.</li>
-        <li>Concerns while the prisoner is in closed conditions. Ascertain from the prison if there is security intelligence to suggest a risk - the risk assessment and RMP should reflect these. It should be clearly recorded in the contingency plan.</li>
-        <li>Liaison with relevant agencies such as the police - ensure this is done.</li>
+@interventionsTreatmentHint = {
+    <p class="govuk-body">Work that develops internal controls.</p>
+    <p class="govuk-body govuk-!-margin-top-4">Likely to involve accredited programmes, developing protective factors such as strengths and personal resources, or engaging in treatment.</p>
+    <p class="govuk-body govuk-!-margin-top-4">They may:</p>
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-top-2">
+        <li>include proven accredited programmes</li>
+        <li>involve a number of agencies and personnel</li>
+        <li>be delivered one-to-one</li>
+        <li>comprise a number of actions and activities that require coordination and sequencing</li>
+        <li>●	involve use of the <a class="govuk-link govuk-link--no-visited-state" href="http://nomsintranet.org.uk/roh/roh/4-risk_management/04_02_03.htm" target="_blank">good lives model</a></li>
     </ul>
+    <p class="govuk-body govuk-!-margin-top-4">For detailed guidance see Risk of Serious Harm Guidance or OASys help section</p>
 }
 
-@popup(reportForm, encrypter, "RoSH analysis", 15) {
+@victimSafetyPlanningHint = {
+    <p class="govuk-body">Record what steps to safeguard Individuals.  These may be the victims of the index offence, or identified people who you assess to be at risk.</p>
+    <p class="govuk-body govuk-!-margin-top-4">Diversity considerations</p>
+    <p class="govuk-body govuk-!-margin-top-4">Examples of victim safety actions include:</p>
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-top-2">
+        <li>the disclosure of information to third parties</li>
+        <li>action by Children’s Social Care</li>
+        <li>exclusion zones and non-contact licence conditions</li>
+        <li>restraining and other orders</li>
+        <li>visits being restricted via the measures in the <a class="govuk-link govuk-link--no-visited-state" href="https://www.justice.gov.uk/downloads/offenders/psipso/psi-2016/psi-18-2016-pi-17-2016-public-protection-manual.pdf" target="_blank">Public Protection Manual</a></li>
+        <li>supervised visits to a vulnerable adult relative</li>
+        <li>safeguarding flagging on relevant addresses</li>
+    </ul>
+    <p class="govuk-body govuk-!-margin-top-4">For detailed guidance see Risk of Serious Harm Guidance or OASys help section</p>
+}
 
-    @textarea(reportForm("natureOfRisk"), '_label -> "Detail the nature of the risk of serious harm to all relevant groups", '_help -> "Explain why they are at risk", '_hint -> natureOfRiskHint, 'class -> "wide", 'required -> "true", '_error -> "Enter the nature of the risk of serious harm")
+@contingencyPlanHint = {
+    <p class="govuk-body">Link contingency plans to the factors identified in the risk assessment and are most helpful in the format: if X happens then Y must be done, and why.</p>
+    <p class="govuk-body govuk-!-margin-top-4">Include action to ensure victim safety, prevent offending through controls and through interventions and supervision to offer greater support.</p>
+    <p class="govuk-body govuk-!-margin-top-4">Consider when and why recall/breach action should be considered and any immediate safeguarding activity may be required</p>
+    <p class="govuk-body govuk-!-margin-top-4">Diversity considerations</p>
+    <p class="govuk-body govuk-!-margin-top-4">For detailed guidance see Risk of Serious Harm Guidance or OASys help section</p>
+}
 
-    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+@popup(reportForm, encrypter, "Risk Management Plan (RMP)", 15) {
 
-    @textarea(reportForm("increaseFactors"), '_label -> "What factors might increase the risk of serious harm to the relevant groups?", '_hint -> increaseFactorsHint, 'class -> "wide", 'required -> "true", '_error -> "Enter the factors that might increase the risk of serious harm")
+    <div class="govuk-warning-text moj-warning-text">
+        <span aria-hidden="true" class="govuk-warning-text__icon">!</span>
+        <strong class="govuk-warning-text__text">
+            <span class="govuk-warning-text__assistive">Warning</span>
+            You must complete the RMP for all on or post-tariff prisoners, even if you are not supporting release or they are subject to deportation
+        </strong>
+    </div>
 
-    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+    <h2 class="govuk-fieldset__heading">
+        <p class="govuk-caption-xl govuk-!-margin-top-0 govuk-!-margin-bottom-0">Detail the risk management plan (RMP)</p>
+    </h2>
 
-    @textarea(reportForm("decreaseFactors"), '_label -> "What factors might decrease the risk of serious harm to the relevant groups?", '_hint -> decreaseFactorsHint, 'class -> "wide", 'required -> "true", '_error -> "Enter the factors that might decrease the risk of serious harm")
+    <details class="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-6 no-margin-top margin-bottom medium">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">RMP guidance</span>
+        </summary>
+        <div class="govuk-details__text panel panel-border-narrow">
+            <p>If the prisoner is pre-tariff the parole board do not require an RMP - it should be in the supporting OASys document.</p>
+            <p>The community RMP must include what other agencies will do to manage the risk presented by the offender.</p>
+            <p>Providing a custodial (closed or open prison) based RMP will not assist the Parole Board to make an informed decision about release.</p>
+            <p>Failure to provide a community RMP when one is required could cause further delay to proceedings and the prisoner pursuing action.</p>
+            <p>The accompanying OASys can detail both a custodial and community RMP.</p>
+            <p>For those on or post-tariff, your report must consider the Parole Board’s statutory release test: ‘that it is no longer necessary for the protection of the public that the offender be confined.’</p>
+            <p>You do not need to state the test definition but you should be clear that manageability in the community has been considered, assessed and applied.</p>
 
-    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
-
-    @textarea(reportForm("likelihoodFurtherOffending"), '_label -> "Analyse the likelihood of further offending", '_hint -> likelihoodFurtherOffendingHint, 'class -> "wide", 'required -> "true", '_error -> "Enter your analysis of the likelihood of further offending")
-
-    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+        </div>
+    </details>
 
     <div class="form-group" data-module="radios">
         <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
             <legend class="govuk-fieldset__legend govuk-label">
-                Does the prisoner pose a risk of absconding?
+                Does the prisoner require a community RMP?
             </legend>
 
             @inputRadioGroup(
-                reportForm("riskOfAbsconding"),
+                reportForm("riskManagementPlanRequired"),
                 options(
                     "yes" -> "Yes",
                     "no" -> "No"
                 ),
                 '_inline -> "true",
-                Symbol("data-aria-controls") -> "risk-of-absconding"
+                Symbol("data-aria-controls") -> "risk-management-plan"
             )
         </fieldset>
 
-        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="risk-of-absconding-yes">
-            @textarea(reportForm("riskOfAbscondingDetails"), '_label -> "Provide details of the absconding risk", '_hint -> riskOfAbscondingDetailsHint, 'class -> "wide", 'required -> "true", 'error -> "Enter the details of the absconding risk")
+        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="risk-management-plan-yes">
+
+            @textarea(reportForm("currentSituation"), '_label -> "Current situation", '_hint -> currentSituationHint, 'class -> "wide")
+
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+
+            @textarea(reportForm("supervision"), '_label -> "Supervision", '_hint -> supervisionHint, 'class -> "wide")
+
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+
+            @textarea(reportForm("monitoringControl"), '_label -> "Monitoring / Control", '_hint -> monitoringControlHint, 'class -> "wide")
+
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+
+            @textarea(reportForm("interventionsTreatment"), '_label -> "Interventions / Treatment", '_hint -> interventionsTreatmentHint, 'class -> "wide")
+
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+
+            @textarea(reportForm("victimSafetyPlanning"), '_label -> "Victim safety planning", '_form_hint -> "Do not record here any information about the victim that will compromise their safety.", '_hint -> victimSafetyPlanningHint, 'class -> "wide")
+
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+
+            @textarea(reportForm("contingencyPlan"), '_label -> "Contingency plan", '_hint -> contingencyPlanHint, 'class -> "wide")
+
         </div>
     </div>
 

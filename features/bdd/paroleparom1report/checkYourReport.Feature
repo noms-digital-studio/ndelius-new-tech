@@ -15,9 +15,9 @@ Feature: Parole Report
 
   Scenario: Delius user has not completed any fields in the "Behaviour in Prison" UI
 
-    Given that the Delius user has not completed any fields in the "Behaviour in Prison" UI
+    Given that the Delius user has not completed any fields in the "Resettlement plan for release" UI
     When  they are select "Check your report" link on the navigation menu
-    Then  the button for "Behaviour in prison" must display "NOT STARTED"
+    Then  the button for "Resettlement plan for release" must display "NOT STARTED"
 
   Scenario: Delius user wants to complete the fields within the "Prisoner Contact"
 

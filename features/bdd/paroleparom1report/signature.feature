@@ -12,8 +12,6 @@ Feature: Parole Report - Signature & date
     And Delius User completes the "Victims" UI within the Parole Report
     Then the user should be directed to the "OPD pathway" UI
     And Delius User completes the "OPD Pathway" UI within the Parole Report
-    Then the user should be directed to the "Behaviour in prison" UI
-    And Delius User completes the "Behaviour in prison" UI within the Parole Report
     Then the user should be directed to the "Interventions" UI
     And Delius User completes the "Interventions" UI within the Parole Report
     Then the user should be directed to the "Prison sentence plan and response" UI
@@ -48,7 +46,6 @@ Feature: Parole Report - Signature & date
     And the button for "RoSH at point of sentence" must display "SAVED"
     And the button for "Victims" must display "SAVED"
     And the button for "OPD pathway" must display "SAVED"
-    And the button for "Behaviour in prison" must display "SAVED"
     And the button for "Interventions" must display "SAVED"
     And the button for "Prison sentence plan" must display "SAVED"
     And the button for "MAPPA" must display "SAVED"

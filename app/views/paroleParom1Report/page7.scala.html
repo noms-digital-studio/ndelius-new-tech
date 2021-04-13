@@ -1,6 +1,5 @@
 @import data._
 @import helper._
-@import paroleParom1Report.hiddenInputs._
 @import play.Environment
 @import data.viewModel.PageStatus
 @import org.webjars.play.WebJarsUtil
@@ -11,41 +10,29 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@behaviourDetailHint = {
+@interventionsDetailHint = {
     <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
-        <li>A holistic analysis, from liaison with all relevant prison staff, of the prisoner’s positive and negative prison behaviour. </li>
-        <li>Record this chronologically - similar concerns or behaviours can be grouped together.</li>
-        <li>Changes in behaviour and offence paralleling behaviours, for example, bullying when there is a history of manipulation.</li>
-        <li>Prison and security information such as adjudications, drug tests, wing reports, the IEP scheme and the MAPPA F for MAPPA offenders.</li>
-        <li>Information from your local probation intelligence manager and counter-terrorism unit.</li>
-        <li>Relevant information from other reports and what it means to your assessment. If they’re in the dossier already don’t copy them out.</li>
-        <li>Positive and negative behaviour linked to letters, telephone calls and visits the prisoner has received. This can provide an understanding of their support network or potential risk concerns, for example, visits from people who have a history of abusive or manipulative behaviour.</li>
-        <li>The reasons for, and impact of unavailable information.</li>
-        <li>An awareness of unconscious bias, stereotyping and diversity - to ensure that you do not inappropriately represent the prisoner’s race, socio-economic background, culture or religious beliefs as concerning.</li>
-        <li>An awareness of disguised compliance – when the prisoner gives the appearance of co-operation to do things like avert suspicion, allay professional concerns or avoid interventions.</li>
-        <li>The prisoner’s opinion on, and explanation for their behaviour. If the prisoner refused to engage, you should state this.</li>
+        <li>A basic list of all interventions completed throughout the sentence - not just those finished since the last report was submitted. Record these chronologically with dates. For example, programmes, courses, 121 work, education, training, employment and progression regimes.</li>
+        <li>Referrals and programme assessments - state if the prisoner was not deemed suitable.</li>
+        <li>Interventions the prisoner declined to attend or did not complete.</li>
     </ul>
 }
 
-@summaryHint = {
+@interventionsSummaryHint = {
     <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
-        <li>An assessment of how any resettlement release links to the sentence plan, for example, training, employment or maintaining family ties in the community.</li>
-        <li>An evaluation of: nature of the offence, the activity for which release is proposed, the number of RoTL’s (past and future), impact on victims, restrictions of court orders or outstanding proceedings, feedback from previous RoTL’s, Enhanced Behaviour Monitoring (EBM) file information, MAPPA and ViSOR, security, P-NOMIS, health and safety and child or adult safeguarding. You do not need to write all of this out - just an evaluation of the information.</li>
-        <li>Consideration of an unacceptable risk of harm, re-offending or absconding. If the prisoner is on the basic regime RoTL can only be considered in exceptional circumstances.</li>
-        <li>Diversity considerations.</li>
-        <li>The prisoner’s RoTL status - ineligible, unsuitable, eligible or undertaking.</li>
-        <li><strong>Ineligible or unsuitable</strong> - an analytical explanation and their eligibility date, if relevant. You should record if the prisoner is ineligible due to absconding from open conditions. Include Police or MAPPA consultation.</li>
-        <li><strong>Eligible</strong> - an analytical explanation, dates for resettlement day and overnight release and where they are working or residing - link this to the sentence plan. Include Police, MAPPA, family and friends consultation.</li>
-        <li><strong>Undertaking</strong> - an explanation of progress and concerns - record past or future RoTL dates and venues. Include Police, MAPPA, family and friends consultation.</li>
+        <li>An analysis of any significant impact, or lack of, that an intervention has had to address risk factors. You do not have to analyse interventions individually - this is included in the dossier.</li>
+        <li>Successes, shifts in behaviour or attitude, responsivity and diversity considerations (for example IQ, learning disabilities, personality disorder or maturity) and capacity to change.</li>
+        <li>Application of learning, for example, evidence of using a new skill.</li>
+        <li>Consideration of the impact of gender-specific and trauma-informed interventions.</li>
+        <li>A focus on the overall application of learning to evidence any reduction in risk - don’t repeat what’s in the attitude to index offence and previous offending sections.</li>
     </ul>
 }
 
-@popup(reportForm, encrypter, "Behaviour in prison", 7) {
+@popup(reportForm, encrypter, "Interventions", 7) {
+    @textarea(reportForm("interventionsDetail"), '_label -> "Detail the interventions the prisoner has completed", '_hint -> interventionsDetailHint, 'class -> "wide", 'required -> "true")
 
-    @textarea(reportForm("behaviourDetail"), '_label -> "Detail the prisoner`s behaviour whilst in prison", '_hint -> behaviourDetailHint, 'class -> "wide", 'required -> "true", '_error -> "Enter details of the prisoner's behaviour in prison")
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
 
-    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0" />
-
-    @textarea(reportForm("rotlSummary"), '_label -> "RoTL summary", '_hint -> summaryHint, 'class -> "wide", 'required -> "true", '_error -> "Enter the RoTL summary")
+    @textarea(reportForm("interventionsSummary"), '_label -> "Interventions analysis", '_hint -> interventionsSummaryHint, 'class -> "wide", 'required -> "true")
 
 }

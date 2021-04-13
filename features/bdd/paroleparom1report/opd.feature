@@ -31,7 +31,7 @@ Feature: Parole report - OPD Pathway
     Given they enter the date "YESTERDAY" for "Date of OPD screening"
     And they select the "No" option on the "Has the prisoner been screened into the OPD pathway (OPD criteria met)?"
     When  they select the "Continue" button
-    Then  the user should be directed to the "Behaviour in prison" UI
+    Then  the user should be directed to the "Interventions" UI
 
 
   Scenario: Delius user specifies that the prisoner has been screened and wants to continue completing the parole report
@@ -39,7 +39,7 @@ Feature: Parole report - OPD Pathway
     Given they enter the date "YESTERDAY" for "Date of OPD screening"
     And they select the "Yes" option on the "Has the prisoner been screened into the OPD pathway (OPD criteria met)?"
     When they select the "Continue" button
-    Then the user should be directed to the "Behaviour in prison" UI
+    Then the user should be directed to the "Interventions" UI
 
   Scenario: Delius user wants to leave the parole report
     When  they select the "Close" button
