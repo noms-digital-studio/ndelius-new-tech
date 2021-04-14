@@ -1,7 +1,8 @@
 @import helper._
 
 @(reportForm: Form[_])
-
+@inputHidden(reportForm("prisonerDetailsAge"))
+@inputHidden(reportForm("prisonerDetailsDateOfBirth"))
 @inputHidden(reportForm("prisonerDetailsPrisonInstitution"))
 @inputHidden(reportForm("prisonerDetailsPrisonersFullName"))
 @inputHidden(reportForm("prisonerDetailsPrisonNumber"))
