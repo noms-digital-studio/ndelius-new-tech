@@ -83,7 +83,7 @@ public class OffenderHelper {
             .surname("Fizz")
             .middleNames(ImmutableList.of("Jammy", "Fred"))
             .otherIds(ImmutableMap.of("pncNumber", "2018/123456N", "nomsNumber", "M123456"))
-            .dateOfBirth("2000-06-22")
+            .dateOfBirth("1999-06-22")
             .gender("male")
             .build();
     }
