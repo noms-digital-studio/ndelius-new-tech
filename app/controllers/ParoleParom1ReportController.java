@@ -66,11 +66,9 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
     protected Map<String, String> storeOffenderDetails(Map<String, String> params, OffenderApi.Offender offender) {
         params.put("gender", offender.getGender());
 
-        Logger.debug("prisonerDetailsDateOfBirth: " + offender.getDateOfBirth());
-
+        params.put("isYoungAdult", "false");
         ofNullable(offender.getDateOfBirth()).ifPresent(dob -> {
-            params.put("prisonerDetailsDateOfBirth", format(dob));
-            params.put("prisonerDetailsAge", String.format("%d", calculateAge(dob, systemUTC())));
+            params.put("isYoungAdult", String.valueOf(calculateAge(dob, systemUTC()) > 20));
         });
 
         ofNullable(offender.getOtherIds())
@@ -129,8 +127,7 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
                         .put("prisonerDetailsPrisonInstitution", offender.getInstitution().getDescription())
                         .put("prisonerDetailsPrisonNumber", offender.getMostRecentPrisonerNumber())
                         .put("prisonerDetailsPrisonersFullName", offender.displayName())
-                        //.put("prisonerDetailsDateOfBirth", format(offender.getDateOfBirth()))
-                        //.put("prisonerDetailsAge", String.format("%d", calculateAge(offender.getDateOfBirth(), systemUTC())))
+                        .put("isYoungAdult", String.valueOf(calculateAge(Optional.ofNullable(offender.getDateOfBirth()).orElse("1970-01-01"), systemUTC()) < 21))
                         .put("prisonerStatus", "ok")
                         .put("prisonerImageOneTimeRef", OffenderController.generateOneTimeImageReference(encrypter, nomsNumber, bearerToken))
                         .build())
