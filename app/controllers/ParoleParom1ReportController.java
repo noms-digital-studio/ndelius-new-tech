@@ -68,7 +68,7 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
 
         params.put("isYoungAdult", "false");
         ofNullable(offender.getDateOfBirth()).ifPresent(dob -> {
-            params.put("isYoungAdult", String.valueOf(calculateAge(dob, systemUTC()) > 20));
+            params.put("isYoungAdult", String.valueOf(calculateAge(dob, systemUTC()) < 21));
         });
 
         ofNullable(offender.getOtherIds())
