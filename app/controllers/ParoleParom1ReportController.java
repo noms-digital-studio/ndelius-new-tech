@@ -129,6 +129,8 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
                         .put("prisonerDetailsPrisonInstitution", offender.getInstitution().getDescription())
                         .put("prisonerDetailsPrisonNumber", offender.getMostRecentPrisonerNumber())
                         .put("prisonerDetailsPrisonersFullName", offender.displayName())
+                        .put("prisonerDetailsDateOfBirth", format(offender.getDateOfBirth()))
+                        .put("prisonerDetailsAge", String.format("%d", calculateAge(offender.getDateOfBirth(), systemUTC())))
                         .put("prisonerStatus", "ok")
                         .put("prisonerImageOneTimeRef", OffenderController.generateOneTimeImageReference(encrypter, nomsNumber, bearerToken))
                         .build())
