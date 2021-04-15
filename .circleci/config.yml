@@ -341,15 +341,12 @@ workflows:
       - deploy:
           name: deploy_to_test
           context: hmpps-delius-deploy-to-ecs-test
-          container-name: newtechweb
-          service-name: del-delius-newtechweb-pri-ecs
-          family: del-delius-newtechweb-pri-ecs
           env-vars: >-
-            container=newtechweb,name=DELIUS_API_BASE_URL,            value=http://offenderapi.ecs.cluster:8080/api/,
-            container=newtechweb,name=PDF_GENERATOR_URL,              value=http://pdfgenerator.ecs.cluster:8080/,
-            container=newtechweb,name=HMPPS_AUTH_BASE_URL,            value=https://sign-in-dev.hmpps.service.justice.gov.uk/,
-            container=newtechweb,name=PROBATION_OFFENDER_SEARCH_URL,  value=https://probation-offender-search-dev.hmpps.service.justice.gov.uk/,
-            container=newtechweb,name=NOMIS_API_BASE_URL,             value=https://api-dev.prison.service.justice.gov.uk/
+            container=new-tech,name=DELIUS_API_BASE_URL,            value=http://community-api.ecs.cluster:8080/api/,
+            container=new-tech,name=PDF_GENERATOR_URL,              value=http://pdf-generator.ecs.cluster:8080/,
+            container=new-tech,name=HMPPS_AUTH_BASE_URL,            value=https://sign-in-dev.hmpps.service.justice.gov.uk/,
+            container=new-tech,name=PROBATION_OFFENDER_SEARCH_URL,  value=https://probation-offender-search-dev.hmpps.service.justice.gov.uk/,
+            container=new-tech,name=NOMIS_API_BASE_URL,             value=https://api-dev.prison.service.justice.gov.uk/
           requires:
             - deploy_to_dev
           filters:
@@ -362,34 +359,28 @@ workflows:
       - deploy:
           name: deploy_to_stage
           context: hmpps-delius-deploy-to-ecs-stage
-          container-name: newtechweb
-          service-name: del-delius-newtechweb-pri-ecs
-          family: del-delius-newtechweb-pri-ecs
           env-vars: >-
-            container=newtechweb,name=DELIUS_API_BASE_URL,            value=http://offenderapi.ecs.cluster:8080/api/,
-            container=newtechweb,name=PDF_GENERATOR_URL,              value=http://pdfgenerator.ecs.cluster:8080/,
-            container=newtechweb,name=HMPPS_AUTH_BASE_URL,            value=https://sign-in-preprod.hmpps.service.justice.gov.uk/,
-            container=newtechweb,name=PROBATION_OFFENDER_SEARCH_URL,  value=https://probation-offender-search-preprod.hmpps.service.justice.gov.uk/,
-            container=newtechweb,name=NOMIS_API_BASE_URL,             value=https://api-preprod.prison.service.justice.gov.uk/
-          requires:
-            - request-pre-prod-approval
-      - deploy:
-          name: deploy_to_pre_prod
-          context: hmpps-delius-deploy-to-ecs-pre-prod
-          container-name: newtechweb
-          service-name: del-delius-newtechweb-pri-ecs
-          family: del-delius-newtechweb-pri-ecs
-          env-vars: >-
-            container=newtechweb,name=DELIUS_API_BASE_URL,            value=http://offenderapi.ecs.cluster:8080/api/,
-            container=newtechweb,name=PDF_GENERATOR_URL,              value=http://pdfgenerator.ecs.cluster:8080/,
-            container=newtechweb,name=HMPPS_AUTH_BASE_URL,            value=https://sign-in-preprod.hmpps.service.justice.gov.uk/,
-            container=newtechweb,name=PROBATION_OFFENDER_SEARCH_URL,  value=https://probation-offender-search-preprod.hmpps.service.justice.gov.uk/,
-            container=newtechweb,name=NOMIS_API_BASE_URL,             value=https://api-preprod.prison.service.justice.gov.uk/
+            container=new-tech,name=DELIUS_API_BASE_URL,            value=http://community-api.ecs.cluster:8080/api/,
+            container=new-tech,name=PDF_GENERATOR_URL,              value=http://pdf-generator.ecs.cluster:8080/,
+            container=new-tech,name=HMPPS_AUTH_BASE_URL,            value=https://sign-in-preprod.hmpps.service.justice.gov.uk/,
+            container=new-tech,name=PROBATION_OFFENDER_SEARCH_URL,  value=https://probation-offender-search-preprod.hmpps.service.justice.gov.uk/,
+            container=new-tech,name=NOMIS_API_BASE_URL,             value=https://api-preprod.prison.service.justice.gov.uk/
           requires:
             - request-pre-prod-approval
       - deploy:
           name: deploy_to_perf
           context: hmpps-delius-deploy-to-ecs-perf
+          env-vars: >-
+            container=new-tech,name=DELIUS_API_BASE_URL,            value=http://community-api.ecs.cluster:8080/api/,
+            container=new-tech,name=PDF_GENERATOR_URL,              value=http://pdf-generator.ecs.cluster:8080/,
+            container=new-tech,name=HMPPS_AUTH_BASE_URL,            value=https://sign-in-preprod.hmpps.service.justice.gov.uk/,
+            container=new-tech,name=PROBATION_OFFENDER_SEARCH_URL,  value=https://probation-offender-search-preprod.hmpps.service.justice.gov.uk/,
+            container=new-tech,name=NOMIS_API_BASE_URL,             value=https://api-preprod.prison.service.justice.gov.uk/
+          requires:
+            - request-pre-prod-approval
+      - deploy:
+          name: deploy_to_pre_prod
+          context: hmpps-delius-deploy-to-ecs-pre-prod
           container-name: newtechweb
           service-name: del-delius-newtechweb-pri-ecs
           family: del-delius-newtechweb-pri-ecs
