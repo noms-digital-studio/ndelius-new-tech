@@ -37,6 +37,7 @@ public class StubPrisonerApi implements PrisonerApi, PrisonerCategoryApi {
                     .builder()
                     .firstName("Jane")
                     .surname("Suzi")
+                    .dateOfBirth("2000-06-22")
                     .mostRecentPrisonerNumber("4815")
                     .institution(Institution.builder().description("HMP Leeds").build())
                     .build()));
@@ -45,6 +46,7 @@ public class StubPrisonerApi implements PrisonerApi, PrisonerCategoryApi {
                 .builder()
                 .firstName("Sam")
                 .surname("Jones")
+                .dateOfBirth("1980-12-01")
                 .mostRecentPrisonerNumber("4815")
                 .institution(Institution.builder().description("HMP Leeds").build())
                 .build()));

@@ -25,6 +25,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 import static controllers.SessionKeys.OFFENDER_API_BEARER_TOKEN;
+import static helpers.DateTimeHelper.calculateAge;
+import static helpers.DateTimeHelper.format;
+import static java.time.Clock.systemUTC;
 import static java.util.Optional.ofNullable;
 
 public class ParoleParom1ReportController extends ReportGeneratorWizardController<ParoleParom1ReportData> {
@@ -62,6 +65,11 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
     @Override
     protected Map<String, String> storeOffenderDetails(Map<String, String> params, OffenderApi.Offender offender) {
         params.put("gender", offender.getGender());
+
+        params.put("isYoungAdult", "false");
+        ofNullable(offender.getDateOfBirth()).ifPresent(dob -> {
+            params.put("isYoungAdult", String.valueOf(calculateAge(dob, systemUTC()) < 21));
+        });
 
         ofNullable(offender.getOtherIds())
             .filter(otherIds -> otherIds.containsKey("nomsNumber"))
@@ -113,11 +121,13 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
 
     private Map<String, String> storeCustodyData(Map<String, String> params, String bearerToken, Optional<PrisonerApi.Offender> maybeOffender, Optional<PrisonerCategoryApi.Category> maybeCategory) {
         val nomsNumber = params.get("prisonerDetailsNomisNumber");
+
         params.putAll(maybeOffender
                 .map(offender -> ImmutableMap.<String, String>builder()
                         .put("prisonerDetailsPrisonInstitution", offender.getInstitution().getDescription())
                         .put("prisonerDetailsPrisonNumber", offender.getMostRecentPrisonerNumber())
                         .put("prisonerDetailsPrisonersFullName", offender.displayName())
+                        .put("isYoungAdult", String.valueOf(calculateAge(Optional.ofNullable(offender.getDateOfBirth()).orElse("1970-01-01"), systemUTC()) < 21))
                         .put("prisonerStatus", "ok")
                         .put("prisonerImageOneTimeRef", OffenderController.generateOneTimeImageReference(encrypter, nomsNumber, bearerToken))
                         .build())

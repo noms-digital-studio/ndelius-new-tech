@@ -31,6 +31,15 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     // Page 2
 
     @Encrypted
+    @OnPage(2)
+    @JsonProperty("_DATE_OF_BIRTH_")
+    private String prisonerDetailsDateOfBirth;
+
+    @OnPage(2)
+    @JsonProperty("IS_YOUNG_ADULT")
+    private String isYoungAdult;
+
+    @Encrypted
     @RequiredOnPage(2)
     @JsonProperty("GENDER")
     private String gender;

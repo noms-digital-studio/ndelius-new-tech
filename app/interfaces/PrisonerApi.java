@@ -20,6 +20,7 @@ public interface PrisonerApi {
     class Offender {
         private String firstName;
         private String surname;
+        private String dateOfBirth;
         private Institution institution;
         private String mostRecentPrisonerNumber;
 

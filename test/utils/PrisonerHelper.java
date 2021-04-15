@@ -19,6 +19,7 @@ public class PrisonerHelper {
         return Offender.builder()
                 .firstName("John")
                 .surname("Smith")
+                .dateOfBirth("1973-08-12")
                 .mostRecentPrisonerNumber("4815")
                 .institution(PrisonerApi.Institution.builder()
                         .description("HMP Wandsworth")
