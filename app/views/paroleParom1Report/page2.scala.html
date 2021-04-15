@@ -34,7 +34,7 @@
                 Current prison category
             </legend>
 
-            @if("male".equalsIgnoreCase(reportForm("gender").value) && reportForm("prisonerDetailsAge").value.toInt >= 21) {
+            @if("male".equalsIgnoreCase(reportForm("gender").value)) {
                 @inputRadioGroup(
                     reportForm("prisonerDetailsPrisonersCategory"),
                     options(
