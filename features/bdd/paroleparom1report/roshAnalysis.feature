@@ -11,7 +11,6 @@ Feature: Parole Report
       | What factors might increase the risk of serious harm to the relevant groups? | Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat                  |
       | What factors might decrease the risk of serious harm to the relevant groups? | Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.                      |
       | Analyse the likelihood of further offending                                  | Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum               |
-    And they select the "No" option on the "Does the prisoner pose a risk of absconding?"
     When they select the "Continue" button
     Then the user should be directed to the "Risk Management Plan (RMP)" UI
 
