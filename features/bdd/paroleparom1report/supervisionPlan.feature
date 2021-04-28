@@ -18,9 +18,8 @@ Feature: Parole Report - Supervision plan for release UI
   Scenario: Delius user wants to enter Resettlement details for an offender within their Parole report
 
     When  they enter the following information
-      | Detail the supervision plan for release | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
-    Then this information should be saved in the report
-    And the following information should be saved in the report
-      | supervisionPlanRequired | yes |
-    When  they select the "Continue" button
+      | Detail the supervision plan for release | Some supervision plan for release text |
+    Then the following information should be saved in the report
+      | supervisionPlanDetail | Some supervision plan for release text |
+    And  they select the "Continue" button
     Then  the user should be directed to the "Recommendation" UI

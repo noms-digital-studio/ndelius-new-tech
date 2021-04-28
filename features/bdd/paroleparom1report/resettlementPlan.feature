@@ -7,7 +7,9 @@ Feature: Parole Report
   Scenario: Delius user wants to enter Resettlement details for an offender within their Parole report
 
     When  they enter the following information
-      | Detail the resettlement plan for release | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
+      | Detail the resettlement plan for release | Some resettlement plan for release text  |
+    Then the following information should be saved in the report
+      | resettlementPlanDetail | Some resettlement plan for release text |
     When they select the "Continue" button
     Then the user should be directed to the "Supervision plan for release" UI
 
