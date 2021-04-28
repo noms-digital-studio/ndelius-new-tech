@@ -134,48 +134,25 @@
         </div>
     </details>
 
-    <div class="form-group" data-module="radios">
-        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
-            <legend class="govuk-fieldset__legend govuk-label">
-                Does the prisoner require a community RMP?
-            </legend>
+    @textarea(reportForm("currentSituation"), '_label -> "Current situation", '_hint -> currentSituationHint, 'class -> "wide")
 
-            @inputRadioGroup(
-                reportForm("riskManagementPlanRequired"),
-                options(
-                    "yes" -> "Yes",
-                    "no" -> "No"
-                ),
-                '_inline -> "true",
-                Symbol("data-aria-controls") -> "risk-management-plan"
-            )
-        </fieldset>
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
 
-        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="risk-management-plan-yes">
+    @textarea(reportForm("supervision"), '_label -> "Supervision", '_hint -> supervisionHint, 'class -> "wide")
 
-            @textarea(reportForm("currentSituation"), '_label -> "Current situation", '_hint -> currentSituationHint, 'class -> "wide")
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
 
-            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+    @textarea(reportForm("monitoringControl"), '_label -> "Monitoring / Control", '_hint -> monitoringControlHint, 'class -> "wide")
 
-            @textarea(reportForm("supervision"), '_label -> "Supervision", '_hint -> supervisionHint, 'class -> "wide")
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
 
-            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+    @textarea(reportForm("interventionsTreatment"), '_label -> "Interventions / Treatment", '_hint -> interventionsTreatmentHint, 'class -> "wide")
 
-            @textarea(reportForm("monitoringControl"), '_label -> "Monitoring / Control", '_hint -> monitoringControlHint, 'class -> "wide")
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
 
-            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+    @textarea(reportForm("victimSafetyPlanning"), '_label -> "Victim safety planning", '_form_hint -> "Do not record here any information about the victim that will compromise their safety.", '_hint -> victimSafetyPlanningHint, 'class -> "wide")
 
-            @textarea(reportForm("interventionsTreatment"), '_label -> "Interventions / Treatment", '_hint -> interventionsTreatmentHint, 'class -> "wide")
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
 
-            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
-
-            @textarea(reportForm("victimSafetyPlanning"), '_label -> "Victim safety planning", '_form_hint -> "Do not record here any information about the victim that will compromise their safety.", '_hint -> victimSafetyPlanningHint, 'class -> "wide")
-
-            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
-
-            @textarea(reportForm("contingencyPlan"), '_label -> "Contingency plan", '_hint -> contingencyPlanHint, 'class -> "wide")
-
-        </div>
-    </div>
-
+    @textarea(reportForm("contingencyPlan"), '_label -> "Contingency plan", '_hint -> contingencyPlanHint, 'class -> "wide")
 }

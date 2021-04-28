@@ -16,7 +16,6 @@ public class ResettlementPlanSteps {
 
     @Given("^Delius User completes the \"Resettlement plan for release\" UI within the Parole Report$")
     public void deliusUserCompletesThePageWithinTheParoleReport() throws Throwable {
-        page.clickRadioButtonWithLabelWithinLegend("Yes", "Does the prisoner require a resettlement plan for release?");
         page.fillTextArea("Detail the resettlement plan for release", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
         page.clickButton("Continue");
     }

@@ -14,7 +14,6 @@ public class RiskManagementPlanSteps {
 
     @Given("^Delius User completes the \"Risk Management Plan\" UI within the Parole Report$")
     public void deliusUserCompletesThePageWithinTheParoleReport() throws Throwable {
-        page.clickRadioButtonWithLabelWithinLegend("Yes", "Does the prisoner require a community RMP?");
         page.fillTextArea("Current situation", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
         page.fillTextArea("Supervision", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
         page.fillTextArea("Monitoring / Control", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
