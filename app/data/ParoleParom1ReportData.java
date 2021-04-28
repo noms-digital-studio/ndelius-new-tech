@@ -487,14 +487,6 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("LIKELIHOOD_FURTHER_OFFENDING")
     private String likelihoodFurtherOffending;
 
-    @RequiredOnPage(value = 14, message = "Specify if the prisoner poses a risk of absconding")
-    @JsonProperty("RISK_OF_ABSCONDING")
-    private String riskOfAbsconding;
-
-    @RequiredOnPage(value = 14, message = "Enter the details of the absconding risk", onlyIfField = "riskOfAbsconding", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("RISK_OF_ABSCONDING_DETAILS")
-    private String riskOfAbscondingDetails;
-
     // Page 15 - Risk Management Plan (RMP)
 
     @RequiredOnPage(value = 15, message = "Enter the current situation")

@@ -20,8 +20,6 @@ public class RoshAnalysisSteps {
         page.fillTextArea("What factors might increase the risk of serious harm to the relevant groups?", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
         page.fillTextArea("What factors might decrease the risk of serious harm to the relevant groups?", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
         page.fillTextArea("Analyse the likelihood of further offending", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
-        page.clickRadioButtonWithLabelWithinLegend("Yes", "Does the prisoner pose a risk of absconding?");
-        page.fillTextArea("Provide details of the absconding risk", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
         page.clickButton("Continue");
     }
 }
