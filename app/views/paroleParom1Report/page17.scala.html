@@ -23,26 +23,5 @@
 }
 
 @popup(reportForm, encrypter, "Supervision plan for release", 17) {
-    <div class="form-group" data-module="radios">
-        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
-            <legend class="govuk-fieldset__legend govuk-label">
-                Does the prisoner require a supervision plan for release?
-            </legend>
-            <span class="govuk-hint" id="supervisionPlanRequired-hint">The Parole Board do not require a supervision plan if the prisoner is pre-tariff</span>
-
-            @inputRadioGroup(
-                reportForm("supervisionPlanRequired"),
-                options(
-                    "yes" -> "Yes",
-                    "no" -> "No"
-                ),
-                '_inline -> "true",
-                Symbol("data-aria-controls") -> "supervision-plan"
-            )
-        </fieldset>
-
-        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="supervision-plan-yes">
-        @textarea(reportForm("supervisionPlanDetail"), '_label -> "Detail the supervision plan for release", '_hint -> supervisionPlanDetailHint, 'class -> "wide")
-        </div>
-    </div>
+    @textarea(reportForm("supervisionPlanDetail"), '_label -> "Detail the supervision plan for release", '_hint -> supervisionPlanDetailHint, 'class -> "wide")
 }

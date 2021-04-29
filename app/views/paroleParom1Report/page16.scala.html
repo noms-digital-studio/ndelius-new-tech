@@ -24,26 +24,5 @@
 }
 
 @popup(reportForm, encrypter, "Resettlement plan for release", 16) {
-    <div class="form-group" data-module="radios">
-        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
-            <legend class="govuk-fieldset__legend govuk-label">
-                Does the prisoner require a resettlement plan for release?
-            </legend>
-            <span class="govuk-hint" id="resettlementPlanRequired-hint">The Parole Board do not require a resettlement plan if the prisoner is pre-tariff</span>
-
-            @inputRadioGroup(
-                reportForm("resettlementPlan"),
-                options(
-                    "yes" -> "Yes",
-                    "no" -> "No"
-                ),
-                '_inline -> "true",
-                Symbol("data-aria-controls") -> "resettlement-plan"
-            )
-        </fieldset>
-
-        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="resettlement-plan-yes">
-        @textarea(reportForm("resettlementPlanDetail"), '_label -> "Detail the resettlement plan for release", '_hint -> resettlementPlanDetailHint, 'class -> "wide")
-        </div>
-    </div>
+    @textarea(reportForm("resettlementPlanDetail"), '_label -> "Detail the resettlement plan for release", '_hint -> resettlementPlanDetailHint, 'class -> "wide")
 }

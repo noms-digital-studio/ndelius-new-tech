@@ -489,51 +489,39 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
 
     // Page 15 - Risk Management Plan (RMP)
 
-    @RequiredOnPage(value = 15, message = "Specify if the prisoner requires a community RMP")
-    @JsonProperty("RISK_MANAGEMENT_PLAN_REQUIRED")
-    private String riskManagementPlanRequired;
-
-    @RequiredOnPage(value = 15, message = "Enter the current situation", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 15, message = "Enter the current situation")
     @JsonProperty("RMP_CURRENT_SITUATION")
     private String currentSituation;
 
-    @RequiredOnPage(value = 15, message = "Enter the supervision", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 15, message = "Enter the supervision")
     @JsonProperty("RMP_SUPERVISION")
     private String supervision;
 
-    @RequiredOnPage(value = 15, message = "Enter the monitoring / control", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 15, message = "Enter the monitoring / control")
     @JsonProperty("RMP_MONITORING_CONTROL")
     private String monitoringControl;
 
-    @RequiredOnPage(value = 15, message = "Enter the interventions / treatment", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 15, message = "Enter the interventions / treatment")
     @JsonProperty("RMP_INTERVENTIONS_TREATMENT")
     private String interventionsTreatment;
 
-    @RequiredOnPage(value = 15, message = "Enter the victim safety planning", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 15, message = "Enter the victim safety planning")
     @JsonProperty("RMP_VICTIM_SAFETY_PLANNING")
     private String victimSafetyPlanning;
 
-    @RequiredOnPage(value = 15, message = "Enter the contingency plan", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 15, message = "Enter the contingency plan")
     @JsonProperty("RMP_CONTINGENCY_PLAN")
     private String contingencyPlan;
 
     // Page 16 - Resettlement plan for release
 
-    @RequiredOnPage(value = 16, message = "Specify if the prisoner requires a resettlement plan for release")
-    @JsonProperty("RESETTLEMENT_PLAN")
-    private String resettlementPlan;
-
-    @RequiredOnPage(value = 16, message = "Enter the resettlement plan for release", onlyIfField = "resettlementPlan", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 16, message = "Enter the resettlement plan for release")
     @JsonProperty("RESETTLEMENT_PLAN_DETAIL")
     private String resettlementPlanDetail;
 
     // Page 17 - Supervision plan for release
 
-    @RequiredOnPage(value = 17, message = "Specify if the prisoner requires a supervision plan for release")
-    @JsonProperty("SUPERVISION_PLAN_REQUIRED")
-    private String supervisionPlanRequired;
-
-    @RequiredOnPage(value = 17, message = "Enter the supervision plan for release", onlyIfField = "supervisionPlanRequired", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 17, message = "Enter the supervision plan for release")
     @JsonProperty("SUPERVISION_PLAN_DETAIL")
     private String supervisionPlanDetail;
 
