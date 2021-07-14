@@ -4,10 +4,17 @@ const updateFormData = ($formData) => {
   }
   const RICH_TEXT = '<!-- RICH_TEXT -->'
   $formData.forEach(($item, $key) => {
-    let textSample = $item.substr(0, 30);
+    let textSample = $item.substr(0, 50);
 
+    // Correct an edge case where this is wrapped in a paragraph
     if (textSample.indexOf(`<p>${ RICH_TEXT }</p>`) !== -1) {
-      $item = $item.replace(`<p>${ RICH_TEXT }</p>`, '') // Correct an edge case where this is wrapped in a paragraph
+      $item = $item.replace(`<p>${ RICH_TEXT }</p>`, '')
+      textSample = $item.substr(0, 30);
+    }
+
+    // Correct a further edge case where this is bold and wrapped in a paragraph
+    if (textSample.indexOf(`<p><strong>${ RICH_TEXT }</strong></p>`) !== -1) {
+      $item = $item.replace(`<p><strong>${ RICH_TEXT }</strong></p>`, '')
       textSample = $item.substr(0, 30);
     }
 
